@@ -59,10 +59,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     <section class="content">
-        <p>Testing</p>
       <!-- Your Page Content Here -->
-      <!--@yield('content')-->
-        <p>Testing 2</p>
+      @yield('content')
     </section>
     <!-- /.content -->
   </div>
