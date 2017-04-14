@@ -7,6 +7,20 @@
  *           Please visit http://opensource.org/licenses/MIT for more information
 !*/
 /*
+Odin theming
+*/
+.odin-logo{
+  width: 60%;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.list-divider{
+  padding-top: 5px;
+  margin: 10px;
+  border-bottom: 1px solid #663974;
+}
+/*
  * Core: General Layout Style
  * -------------------------
  */
@@ -97,6 +111,10 @@ body {
   min-height: 100%;
   background-color: #ecf0f5;
   z-index: 800;
+  background-color: #ffffff;
+  background-color: #ffffff;
+  border: 0.5px;
+ /* border-bottom: none;*/
 }
 .main-footer {
   background: #fff;
@@ -166,7 +184,8 @@ h6,
 }
 /* General Links */
 a {
-  color: #3c8dbc;
+  /*color: #3c8dbc;*/
+  color: #663974;
 }
 a:hover,
 a:active,
@@ -310,11 +329,14 @@ a:focus {
 }
 .content-header {
   position: relative;
-  padding: 15px 15px 0 15px;
+  padding: 5px 15px 5px 15px;
+  background-color: #e1e1e1;
+  border: 1px solid rgb(210, 214, 222);
 }
 .content-header > h1 {
   margin: 0;
   font-size: 24px;
+  color: #444;
 }
 .content-header > h1 > small {
   font-size: 15px;
@@ -418,6 +440,9 @@ a:focus {
   top: 0;
   left: 0;
   padding-top: 50px;
+  background-color:#eae6ee;
+  border: 0.1px solid rgb(210, 214, 222);
+  color:#663974;
   min-height: 100%;
   width: 230px;
   z-index: 810;
@@ -516,8 +541,9 @@ a:focus {
   padding: 0;
 }
 .sidebar-menu > li > a {
-  padding: 12px 5px 12px 15px;
+  padding: 5px 5px 5px 15px;
   display: block;
+  color: #663974;
 }
 .sidebar-menu > li > a > .fa,
 .sidebar-menu > li > a > .glyphicon,
@@ -532,7 +558,7 @@ a:focus {
   margin-top: 3px;
 }
 .sidebar-menu li.header {
-  padding: 10px 25px 10px 15px;
+  padding: 0px 25px 10px 15px;
   font-size: 12px;
 }
 .sidebar-menu li > a > .fa-angle-left,

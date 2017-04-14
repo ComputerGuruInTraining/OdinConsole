@@ -12,7 +12,7 @@
         <!-- Ionicons -->
         <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css">
         <!-- Theme style -->
-        <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/dist/css/AdminLTE.min.css")}}" type="text/css">
+        <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/dist/css/AdminLTE.css")}}" type="text/css">
         <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
                 page. However, you can choose any other skin. Make sure you
                 apply the skin class to the body tag so the changes take effect.
@@ -25,19 +25,6 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <style>
-            /*body {
-                margin-top: 1%;
-            }*/
-            .sidebar-menu li>a{
-                color: #663974;
-            }
-            .odin-logo{
-                width: 60%;
-                padding-left: 10px;
-                padding-top: 5px;
-            }
-        </style>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
             <!--<body>
@@ -53,11 +40,11 @@
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
+                <!-- Content Header 1 -->
                 <section class="content-header">
                 <h1>
-                    @yield('title')
-                    <small> {{$page_description or null}} </small>
+                    @yield('title-item')
+                    <!--<small> {{$page_description or null}} </small>-->
                 </h1>
                 <!-- You can dynamically generate bread crumb here -->
                 <!--<ol class="breadcrumb">
@@ -65,11 +52,19 @@
                     <li class="active">Here</li>
                 </ol>-->
                 </section>
-
                 <!-- Main content -->
                 <section class="content">
                 <!-- Your Page Content Here -->
-                @yield('content')
+                @yield('content-item')
+                </section>
+                <!-- Content Header 2 -->
+                <section class="content-header">
+                <h1>
+                    @yield('title-list')
+                </h1>
+                </section>
+                <section class="content">
+                @yield('content-list')
                 </section>
                 <!-- /.content -->
             </div>

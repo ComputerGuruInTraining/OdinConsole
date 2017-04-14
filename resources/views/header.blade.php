@@ -10,6 +10,8 @@
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
+        <!--FIXME: menu toggle button is not visible after first being pressed.
+        Probably started occuring after odin logo added to header. -->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
