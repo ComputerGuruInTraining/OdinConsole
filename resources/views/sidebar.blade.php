@@ -1,20 +1,22 @@
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
+<aside class="main-sidebar" style="background-color:#eae6ee;color:#663974;">
 
-    <!-- sidebar: style can be found in sidebar.less -->
+    <!-- sidebar: style can be found in sidebar.less and AdminLTE.min.css
+    included in project via /bower_components/adminlte/dist/css/AdminLTE.min.css-->
+
     <section class="sidebar">
 
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel">
+        <!--<div class="user-panel">
             <div class="pull-left image">
                 <img src="{{ asset("/bower_components/adminlte/dist/img/avatar3.png") }}" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
                 <p>Admin Team</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <!--<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
-        </div>
+        </div>-->
 
         <!-- search form (Optional) -->
         <form action="#" method="get" class="sidebar-form">
@@ -29,11 +31,11 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><h3>Admin Dashboard</h3></li>
+            <li class="header"><h4>QUICK LINKS</h4></li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="#"><span>Create User</span></a></li>
             <li class="active"><a href="#"><span>Employees</span></a></li>
-            <li><a href="#"><span>Locations</span></a></li>
+            <li class="active"><a href="/locations"><span>Locations</span></a></li>
             <li class="treeview">
                 <a href="#"><span>View Shift</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
