@@ -1,5 +1,5 @@
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar" style="background-color:#eae6ee;color:#663974;">
+<aside class="main-sidebar">
 
     <!-- sidebar: style can be found in sidebar.less and AdminLTE.min.css
     included in project via /bower_components/adminlte/dist/css/AdminLTE.min.css-->
@@ -22,28 +22,46 @@
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
-<span class="input-group-btn">
-  <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
-</span>
+                    <span class="input-group-btn">
+                        <button type='submit' name='search' id='search-btn' class="btn btn-flat">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
             </div>
         </form>
         <!-- /.search form -->
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><h4>QUICK LINKS</h4></li>
+            <li class="header"><h4>Quick Links</h></li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><span>Create User</span></a></li>
+            <li class="active"><a href="#"><span>Dashboard</span></a></li>
             <li class="active"><a href="#"><span>Employees</span></a></li>
+            <li class="active"><a href="#"><span>Roster</span></a></li>
             <li class="active"><a href="/locations"><span>Locations</span></a></li>
+            <li class="active"><a href="#"><span>Clients</span></a></li>
+            <li class="active"><a href="#"><span>Reports</span></a></li>
+            <div class="list-divider"></div>
+            <li class="header"><h4>My Links</h></li><!--TODO: v2: personalised links, at least most frequent by default-->
+            <li class="active"><a href="#"><span>Create User</span></a></li>
             <li class="treeview">
-                <a href="#"><span>View Shift</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><span>View Map</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Shifts</a></li>
+                    <li><a href="#">Who's on Duty</a></li>
+                    <li><a href="#">Locations</a></li>
                 </ul>
             </li>
-        </ul><!-- /.sidebar-menu -->
+
+            <div class="list-divider"></div>
+            <li class="header"><h4>@yield('my side-menu') Links</h4></li>
+            <!-- Optionally, you can add icons to the links -->
+            <li class="active"><a href="#"><span>Create</span></a></li>
+            <li class="active"><a href="#"><span>Edit</span></a></li>
+            <li class="active"><a href="/locations"><span>Delete</span></a></li>
+        </ul>
+        
+        
+        <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
 </aside>
