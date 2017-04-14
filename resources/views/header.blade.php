@@ -2,7 +2,7 @@
 <header class="main-header">
 
     <!-- Logo -->
-    <a href="index2.html" class="logo"><b>Admin Console</a>
+    <a href="index2.html" class="logo"><b>Odin Lite Console</a>
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">

@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Odin Management Console | Admin</title>
+  <title>Odin Management Console | Locations</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -59,10 +59,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     <section class="content">
-        <p>Testing</p>
+
       <!-- Your Page Content Here -->
-      <!--@yield('content')-->
-        <p>Testing 2</p>
+      @yield('content')
+
     </section>
     <!-- /.content -->
   </div>

@@ -33,7 +33,7 @@
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="#"><span>Create User</span></a></li>
             <li class="active"><a href="#"><span>Employees</span></a></li>
-            <li><a href="#"><span>Locations</span></a></li>
+            <li class="active"><a href="/locations"><span>Locations</span></a></li>
             <li class="treeview">
                 <a href="#"><span>View Shift</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">

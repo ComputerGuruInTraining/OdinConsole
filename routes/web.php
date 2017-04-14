@@ -11,19 +11,19 @@
 |
 */
 
-Route::get('/admin', function () {
-    return view('admin_template');
-});
-//Route::get('/', function () {
+// Route::get('/', function () {
 //    return view('admin_template');
-//});
+// });
 
-//Route::get('home', 'HomeController@getIndex');
 Route::get('/', 'HomeController@getIndex');
 
 Route::post('home', 'HomeController@postIndex');
 
+Route::get('/admin', function () {
+    return view('admin_template');
+});
+
 Route::resource('/user', 'UserController');
-//Route::resource('/user', 'UserController');
-//Route::controller('/', 'HomeController');
-//Route::controller('/login', 'HomeController@getIndex');
+
+//get('url extension', 'ControllerName@functionName')
+Route::get('locations', 'HomeController@showLocations');
