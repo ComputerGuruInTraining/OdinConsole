@@ -6,6 +6,10 @@
     Location
 @stop
 
+@section('create_link')
+    <a href="/create-location"><span>Create Location</span></a>
+@stop
+
 @section('title-item')
     Selected Location
 @stop

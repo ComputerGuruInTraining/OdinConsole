@@ -38,6 +38,8 @@
             <!-- Sidebar -->
             @include('sidebar')
 
+            {{--TODO: adapt display to have a content_layout file for main pages
+            so can display differently for create pages etc.?? depending on whether dialog box or not--}}
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header 1 -->
