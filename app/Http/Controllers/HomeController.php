@@ -47,8 +47,4 @@ class HomeController extends BaseController
 		return Redirect::to('/');
 	}
 
-	public function showLocations(){
-		return view('locations');
-	}
-
 }

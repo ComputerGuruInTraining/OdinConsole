@@ -20,6 +20,11 @@ Odin theming
   margin: 10px;
   border-bottom: 1px solid #663974;
 }
+
+.form-buttons{
+  position: absolute;
+  right: 15px;
+}
 /*
  * Core: General Layout Style
  * -------------------------
@@ -114,7 +119,7 @@ body {
   background-color: #ffffff;
   background-color: #ffffff;
   border: 0.5px;
- /* border-bottom: none;*/
+  /* border-bottom: none;*/
 }
 .main-footer {
   background: #fff;
@@ -159,13 +164,11 @@ body.hold-transition .main-header .logo {
   transition: none;
 }
 /* Content */
-.content {
+.content, .form-pages{
   min-height: 250px;
   padding: 15px;
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
 }
 /* H1 - H6 font */
 h1,
