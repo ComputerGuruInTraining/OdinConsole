@@ -55,7 +55,7 @@
             <div class="list-divider"></div>
             <li class="header"><h4>@yield('my side-menu') Links</h4></li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><span>Create</span></a></li>
+            <li class="active">@yield('create_link')</li>
             <li class="active"><a href="#"><span>Edit</span></a></li>
             <li class="active"><a href="/locations"><span>Delete</span></a></li>
         </ul>

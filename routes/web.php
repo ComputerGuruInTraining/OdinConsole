@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +27,8 @@ Route::get('/admin', function () {
 Route::resource('/user', 'UserController');
 
 //get('url extension', 'ControllerName@functionName')
-Route::get('locations', 'HomeController@showLocations');
+Route::get('/locations', 'HomeController@showLocations');
+
+Route::get('/create-location', 'LocationController@createLocations');
+
+Route::post('/create-location', 'LocationController@doCreate');
