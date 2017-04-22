@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Input;
+use Form;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Http\Controllers;
@@ -19,14 +22,17 @@ class LocationController extends BaseController
         $location = new Location;
         //from the form, only address can be added to the locations table
         //the address needs to be converted to a latitude and longitude
+        $location->name = Input::get('name');
         $location->address = Input::get('address');
+        $location->latitude = 'todolatitude';
+        $location->longitude = 'todolongitude';
 
-        $client = Input::get('client');//TODO: use the form data in $client
-        $addressGroup = Input::get('address_group');//TODO use the form data in $addressGroup
+//        $client = Input::get('client');//TODO: use the form data in $client
+//        $addressGroup = Input::get('address_group');//TODO use the form data in $addressGroup
 
         $location->save();
         //display confirmation page
-        return View::make('layouts/confirm_layout');
+        return view('layouts/confirm_layout');
     }
 
 }
