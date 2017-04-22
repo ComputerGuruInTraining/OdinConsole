@@ -19,6 +19,16 @@
             {{--@endforeach--}}
         {{--@endif--}}
 
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         {{ Form::open(['role' => 'form', 'url' => '/create-location']) }}
 
         <div class='form-group'>
@@ -26,6 +36,7 @@
             {{ Form::text('name', null, ['placeholder' => 'eg Building 25 UC', 'class' => 'form-control']) }}
         </div>
 
+        {{--TODO: address fields with state and postcode etc to ensure address adequate to convert to geoCode--}}
         <div class='form-group'>
             {{ Form::label('address', 'Address') }}
             {{ Form::text('address', null, ['placeholder' => 'eg Building 25, University of Canberra Pantowora St, Bruce ACT', 'class' => 'form-control']) }}
@@ -47,6 +58,7 @@
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
+            {{--TODO: cancel btn code--}}
             {{ Form::button('Cancel', ['class' => 'btn btn-primary']) }}
         </div>
 

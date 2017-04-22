@@ -7,11 +7,11 @@ use Form;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-use App\Http\Controllers;
-use Illuminate\Routing\Controller;
+//use App\Http\Controllers\Controller;
+//use Illuminate\Routing\Controller;
 use Illuminate\Routing\Controller as BaseController;
 
-class LocationController extends BaseController
+class LocationController extends Controller
 {
     public function showLocations(){
         return view('home/location/locations');
@@ -21,13 +21,29 @@ class LocationController extends BaseController
         return view('home/location/create_locations');
     }
 
-    public function doCreate(){
+    /*
+     * Store a new location
+     *
+     * @param Request $request
+     * @return Response (automatically generated if validation fails)
+     */
+    public function doCreate(Request $request){
+
+        //validate data
+        //TODO: validate address as complete so geoCode can be obtained
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'address' => 'required|max:255',
+        ]);
+
+        //store the data in the db
         $location = new Location;
         $location->name = Input::get('name');
         $location->address = Input::get('address');
-        //TODO: the address needs to be converted to a latitude and longitude
-        $location->latitude = 'todolatitude';
-        $location->longitude = 'todolongitude';
+        $address = Input::get('address');
+        $geoCoords = $this->geoCode($address);
+        $location->latitude = $geoCoords->results[0]->geometry->location->lat;
+        $location->longitude = $geoCoords->results[0]->geometry->location->lng;
         $location->save();
         //display confirmation page
         $locationName = Input::get('name');
@@ -37,4 +53,11 @@ class LocationController extends BaseController
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
     }
+
+  public function geoCode($address){
+      $prepAddr = str_replace(' ','+',$address);
+      $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
+      $output = json_decode($geocode);
+      return $output;
+  }
 }
