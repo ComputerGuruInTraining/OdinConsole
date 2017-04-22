@@ -27,7 +27,7 @@ Route::get('/admin', function () {
 Route::resource('/user', 'UserController');
 
 //get('url extension', 'ControllerName@functionName')
-Route::get('/locations', 'HomeController@showLocations');
+Route::get('/locations', 'LocationController@showLocations');
 
 Route::get('/create-location', 'LocationController@createLocations');
 

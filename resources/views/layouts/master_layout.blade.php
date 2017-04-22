@@ -2,7 +2,7 @@
 <html lang='en'>
     <head>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
-        <title>@yield('title') | User Admin</title>
+        <title>@yield('title')</title>
         <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
                 <!-- Font Awesome -->
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
@@ -38,39 +38,22 @@
             <!-- Sidebar -->
             @include('sidebar')
 
-            {{--TODO: adapt display to have a content_layout file for main pages
-            so can display differently for create pages etc.?? depending on whether dialog box or not--}}
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
-                <!-- Content Header 1 -->
                 <section class="content-header">
-                <h1>
+                    <h1>
                     @yield('title-item')
                     <!--<small> {{$page_description or null}} </small>-->
-                </h1>
-                <!-- You can dynamically generate bread crumb here -->
-                <!--<ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol>-->
+                    </h1>
+                    <!-- You can dynamically generate bread crumb here -->
+                    <!--<ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                        <li class="active">Here</li>
+                    </ol>-->
                 </section>
-                <!-- Main content -->
-                <section class="content">
-                <!-- Your Page Content Here -->
-                @yield('content-item')
-                </section>
-                <!-- Content Header 2 -->
-                <section class="content-header">
-                <h1>
-                    @yield('title-list')
-                </h1>
-                </section>
-                <section class="content">
-                @yield('content-list')
-                </section>
-                <!-- /.content -->
+                @yield('page-content')
             </div>
-        <!-- /.content-wrapper -->
+            <!-- /.content-wrapper -->
 
 
             <!-- Footer -->

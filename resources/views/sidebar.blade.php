@@ -33,7 +33,7 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><h4>Quick Links</h></li>
+            <li class="header"><h4>Quick Links</h4></li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="#"><span>Dashboard</span></a></li>
             <li class="active"><a href="#"><span>Employees</span></a></li>
@@ -42,22 +42,19 @@
             <li class="active"><a href="#"><span>Clients</span></a></li>
             <li class="active"><a href="#"><span>Reports</span></a></li>
             <div class="list-divider"></div>
-            <li class="header"><h4>My Links</h></li><!--TODO: v2: personalised links, at least most frequent by default-->
+            <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->
+            <li class="header"><h4>My Links</h4></li>
             <li class="active"><a href="#"><span>Create User</span></a></li>
             <li class="treeview">
-                <a href="#"><span>View Map</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><span>Map</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="#">Who's on Duty</a></li>
-                    <li><a href="#">Locations</a></li>
+                    <li><a href="#">View My Locations</a></li>
                 </ul>
             </li>
 
             <div class="list-divider"></div>
-            <li class="header"><h4>@yield('my side-menu') Links</h4></li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="active">@yield('create_link')</li>
-            <li class="active"><a href="#"><span>Edit</span></a></li>
-            <li class="active"><a href="/locations"><span>Delete</span></a></li>
+            @yield('custom-menu')
         </ul>
         
         

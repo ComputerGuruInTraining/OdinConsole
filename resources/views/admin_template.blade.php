@@ -1,5 +1,6 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
+@extends('layouts.list')
 
 @section('my side-menu')
     Demo

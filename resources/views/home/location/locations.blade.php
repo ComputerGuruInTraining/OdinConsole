@@ -1,13 +1,18 @@
-@extends('layouts.master_layout')
+@extends('layouts.list')
 @extends('sidebar')
+@extends('sidebar_custom')
 
 
-@section('my side-menu')
+@section('title')
+    Locations
+@stop
+
+@section('custom-menu-title')
     Location
 @stop
 
-@section('create_link')
-    <a href="/create-location"><span>Create Location</span></a>
+@section('create-link')
+   "/create-location"
 @stop
 
 @section('title-item')
