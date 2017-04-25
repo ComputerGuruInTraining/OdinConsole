@@ -2,21 +2,17 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
 
-
-@section('my side-menu')
-    Create Location
-@stop
-
 @section('title-item')
-    Create Location
+    Edit Location
 @stop
+
 @section('page-content')
     <div class='col-lg-4 col-lg-offset-4 form-pages'>
 
         {{--@if ($errors->has())--}}
-            {{--@foreach ($errors->all() as $error)--}}
-                {{--<div class='bg-danger alert'>{{ $error }}</div>--}}
-            {{--@endforeach--}}
+        {{--@foreach ($errors->all() as $error)--}}
+        {{--<div class='bg-danger alert'>{{ $error }}</div>--}}
+        {{--@endforeach--}}
         {{--@endif--}}
 
         @if (count($errors) > 0)
@@ -29,17 +25,17 @@
             </div>
         @endif
 
-        {{ Form::open(['role' => 'form', 'url' => '/create-location']) }}
+        {{ Form::open(['role' => 'form', 'url' => '/edit-location/'. $location->id]) }}
 
         <div class='form-group'>
             {{ Form::label('name', 'Address alias') }}
-            {{ Form::text('name', null, ['placeholder' => 'eg Building 25 UC', 'class' => 'form-control']) }}
+            {{ Form::text('name', $location->name) }}
         </div>
 
         {{--TODO: address fields with state and postcode etc to ensure address adequate to convert to geoCode--}}
         <div class='form-group'>
             {{ Form::label('address', 'Address') }}
-            {{ Form::text('address', null, ['placeholder' => 'eg Building 25, University of Canberra Pantowora St, Bruce ACT', 'class' => 'form-control']) }}
+            {{ Form::text('address', $location->address) }}
         </div>
 
         {{--TODO: Drop-down with a list of Current Clients and a New Client option to create ones not in the list (simply create name,

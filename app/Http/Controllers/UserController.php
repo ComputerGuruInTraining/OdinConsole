@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Input;
+use Form;
+//use View;
+//use app\functions;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -20,7 +25,7 @@ class UserController extends Controller
 	{
 		$users = User::all();
 
-		return View::make('user.index', ['users' => $users]);
+		return view('home/user/index', ['users' => $users]);
 	}
 
 	/**

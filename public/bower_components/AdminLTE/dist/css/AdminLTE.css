@@ -25,6 +25,23 @@ Odin theming
   position: absolute;
   right: 15px;
 }
+
+#map{
+  /*position:absolute;*/
+  /*z-index: */
+  height:50%;
+  margin:0;
+}
+
+#autocomplete {
+  width: 100%;
+  height: 25px;
+}
+
+#address-catch{
+  display: none;
+}
+
 /*
  * Core: General Layout Style
  * -------------------------
