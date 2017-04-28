@@ -33,13 +33,10 @@
 @stop
 
 {{--TODO: improve display--}}
-{{--TODO: sort ascending order--}}
+{{--TODO: sort ascending order or by client--}}
 @section('content-list')
     @foreach($locations as $dbLocation)
-        {{--<button onclick={{$controller->selectedLocation($dbLocation)}}>--}}
-            {{--{{$controller->selectedLocation($this->dbLocation)}}'>--}}
-          <li>{{ $dbLocation->name }}</li><a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-      {{--</button>--}}
+          <li>{{ $dbLocation->name }}<a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a></li><br>
     @endforeach
 @stop
 
