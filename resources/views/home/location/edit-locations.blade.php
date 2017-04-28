@@ -25,7 +25,8 @@
             </div>
         @endif
 
-        {{ Form::open(['role' => 'form', 'url' => '/edit-location/'. $location->id]) }}
+{{--        {{ Form::open(['role' => 'form', 'url' => '/edit-location/'. $location->id, 'method' => 'PUT']) }}--}}
+        {{ Form::model($location, ['route' => ['location.update', $location->id], 'method' => 'put']) }}
 
         <div class='form-group'>
             {{ Form::label('name', 'Address alias') }}

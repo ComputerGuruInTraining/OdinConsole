@@ -4,6 +4,7 @@
 {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
 
     <input type="text" id="autocomplete">
+
     {{--<a href="{{route('LocationController@setAddress')}}">--}}
         {{--<button type="button">Submit</button></a>--}}
     <div id="map"></div>

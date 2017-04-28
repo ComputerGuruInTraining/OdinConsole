@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Input;
 use Form;
+use Model;
 //use app\functions;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -44,27 +45,21 @@ class LocationController extends Controller
         return view('home/location/create-locations');
     }
 
-    public function edit($id)
-    {
-        $location = Location::find($id);
-        return view('home/location/edit-locations')->with('location', $location);
-    }
-
     /*
-     * Store a new location
-     *
-     * @param Request $request
-     * @return Response (automatically generated if validation fails)
-     */
+ * Store a new location
+ *
+ * @param Request $request
+ * @return Response (automatically generated if validation fails)
+ */
 //    public function doCreate(Request $request)
-    public function doCreate()
+    public function store()
     {
 
         //validate data
         //TODO: validate address as complete so geoCode can be obtained
         //TODO: unique alias ie name
 //        $this->validate($request, [
-//            'name' => 'required|max:255',
+////            'name' => 'required|max:255',
 //            'address' => 'required|max:255',
 //        ]);
 
@@ -77,12 +72,14 @@ class LocationController extends Controller
 //      TODO: create a new column address_details (nullable) in the locations table & consider need for name column.
 //      User probably doesn't need to name the location and perhaps no value added.
 //      Until then, place address_details in name column.
-        $location->name = Input::get('info');
+
+
+        $location->address = Input::get('address');
+        $location->name = Input::get('name');
         //cater for possibility of no further infomation being provided in additional address details input field.
         if($location->name == null){
             $location->name = "None Given";
         }
-        $location->address = Input::get('address');
         $address = $location->address;
 //        TODO: catch for incorrect addresses
 //        get geoCoords from GeoCoding result, ask user if correct address, if not please enter correct address or proceed with address typed, but will be error displaying on map as address not recognized by the address validation service
@@ -91,13 +88,21 @@ class LocationController extends Controller
         $location->longitude = $geoCoords->results[0]->geometry->location->lng;
         $location->save();
         //display confirmation page
-        $address = Input::get('address');
+//        $address = Input::get('address');
         return view('confirm')->with('theData', $address);
 
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
     }
+
+    public function edit($id)
+    {
+        $location = Location::find($id);
+        return view('home/location/edit-locations')->with('location', $location);
+    }
+
+
 
 //    public function setAddress(){
 //        $auto = Input::get('autocomplete');
