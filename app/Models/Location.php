@@ -16,4 +16,9 @@ class Location extends Eloquent
 
     protected $table ="locations";
 
+//    public function getLocations(){
+//
+//
+//    }
+
 }

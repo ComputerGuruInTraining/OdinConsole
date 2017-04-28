@@ -5,7 +5,9 @@
     <!-- Main content area 1-->
     <section class="content">
         <!-- Your Page Content Here -->
+        <div id="list-item">
         @yield('content-item')
+        </div>
     </section>
     <!-- Content Header 2 -->
     <section class="content-header">

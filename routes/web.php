@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LocationController;
+//use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,9 +14,9 @@
 |
 */
 
-Route::get('/', function () {
-   return view('admin_template');
-});
+//Route::get('/', function () {
+//   return view('admin_template');
+//});
 
 Route::get('/', 'HomeController@getIndex');
 
@@ -26,9 +28,8 @@ Route::get('/admin', function () {
 
 Route::resource('/user', 'UserController');
 
-//get('url extension', 'ControllerName@functionName')
-Route::get('/locations', 'LocationController@showLocations');
+Route::resource('/location', 'LocationController');
 
-Route::get('/create-location', 'LocationController@createLocations');
+//TODO: change url
+Route::post('/location/created', 'LocationController@store');
 
-Route::post('/create-location', 'LocationController@doCreate');

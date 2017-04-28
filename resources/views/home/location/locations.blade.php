@@ -12,7 +12,11 @@
 @stop
 
 @section('create-link')
-   "/create-location"
+   "location/create"
+@stop
+
+@section('edit-link')
+    {{--"location/{{$locations->id}}/edit-location"--}}
 @stop
 
 @section('title-item')
@@ -20,15 +24,19 @@
 @stop
 
 @section('content-item')
-    Details about the selected location including client, link to view on map, address 
+
+    {{ $displayItem->name }}
 @stop
 
 @section('title-list')
     Locations
 @stop
 
+{{--TODO: improve display--}}
+{{--TODO: sort ascending order or by client--}}
 @section('content-list')
-    Location 1<br />
-    Location 2
+    @foreach($locations as $dbLocation)
+          <li>{{ $dbLocation->name }}<a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a></li><br>
+    @endforeach
 @stop
 
