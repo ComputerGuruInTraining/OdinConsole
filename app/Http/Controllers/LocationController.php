@@ -47,12 +47,6 @@ class LocationController extends Controller
  */
     public function store(Request $request)
     {
-//        $mapLocation = $_POST['mapData'];
-
-//        echo $mapLocation;
-//        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
-//        return view('map-location');
-
         //validate data
         //TODO: validate address as complete so geoCode can be obtained
         //TODO: unique alias ie name
@@ -63,13 +57,14 @@ class LocationController extends Controller
 
         //store the data in the db
         $location = new Location;
-
         $location->name = Input::get('name');
         $address = Input::get('mapData');
         $location->additional_info = Input::get('info');
-//        $address = $mapLocation;
         $location->address = $address;
         //TODO: catch for incorrect addresses or addresses that can not be selected via map
+        //FIXME: HIGH v1 cater for enter being pressed when location selected from drop-down list on map input.
+        //Atm: the form is submitted, but needs to not be submitted when enter pressed in map input field.
+        //Could provide a message to user to not press enter to select the address at the very least.
         $geoCoords = $this->geoCode($address);
         $location->latitude = $geoCoords->results[0]->geometry->location->lat;
         $location->longitude = $geoCoords->results[0]->geometry->location->lng;
@@ -77,7 +72,6 @@ class LocationController extends Controller
 
         //display confirmation page
         return view('confirm')->with('theData', $location->address);
-//        return view('home/location/create-location')->with('theAddress', $mapLocation);
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
@@ -94,9 +88,6 @@ class LocationController extends Controller
         $location = Location::find($id);
 
         //validate data
-        //TODO: check values have been changed before updating the record
-        //TODO: validate address as complete so geoCode can be obtained
-        //TODO: unique alias ie name
         //TODO: unique alias ie name
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -107,9 +98,8 @@ class LocationController extends Controller
         $location->name = Input::get('name');
         $address = Input::get('address');
         $location->additional_info = Input::get('info');
-
         $location->address = $address;
-//        TODO: catch for incorrect addresses
+        //TODO: catch for incorrect addresses
         $geoCoords = $this->geoCode($address);
         $location->latitude = $geoCoords->results[0]->geometry->location->lat;
         $location->longitude = $geoCoords->results[0]->geometry->location->lng;
@@ -131,17 +121,6 @@ class LocationController extends Controller
         $output = json_decode($geocode);
         return $output;
     }
-
-//    public static function mapLocation(){
-////        return view('confirm')->with('theData', $mapLocation);
-//        $mapLocation = $_POST['mapData'];
-//
-////        echo $mapLocation;
-////        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
-////        return view('map-location');
-//        return view('home/location/create-location')->with('theAddress', $mapLocation);
-//
-//    }
 
 //    public function setAddress(){
 //        $auto = Input::get('autocomplete');
