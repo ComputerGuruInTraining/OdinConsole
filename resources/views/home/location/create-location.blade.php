@@ -9,6 +9,7 @@
 @stop
 
 @section('page-content')
+    @include('map')
 {{--TODO: fix display in Microsoft Edge. The page content shows as approx. 1/3 of main content area--}}
     <div class='col-lg-4 col-lg-offset-4 form-pages'>
 
@@ -25,7 +26,7 @@
         {{ Form::open(['role' => 'form', 'url' => '/location/created']) }}
 {{--            {{ Form::model(['route' => ['/location.store'], 'method' => 'put']) }}--}}
             {{--['route' => ['location.update', $location->id], 'method' => 'put'])--}}
-            @include('map')
+
             {{--FIXME: the app needs to run entirely independent of technical support. Therefore, the address input needs to check the address is right or interpretable,
              and if not not allow the entry to be added. Possibly via a service that checks the address is valid, or otherwise using the entered address to allow
              user flexibility but this may mean the address will not display on the map, unless a segment of the address can be taken and interpreted into a valid geo-code.--}}

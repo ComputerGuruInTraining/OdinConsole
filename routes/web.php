@@ -30,13 +30,14 @@ Route::resource('/user', 'UserController');
 
 Route::resource('/location', 'LocationController');
 
-//Route::post('/location/created', 'LocationController@store');
+Route::post('/location/created', 'LocationController@store');
 //Route::post('/map', function(){
 //
 //    return view('map-location.php');
 //});
 
-Route::post('/location/created', 'LocationController@mapLocation');
+//Route::post('/location/created', 'LocationController@mapLocation');
+
 //Route::post('/location/map', function(){
 //
 //    return view('map');

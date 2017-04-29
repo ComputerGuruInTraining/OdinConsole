@@ -47,23 +47,28 @@ class LocationController extends Controller
  */
     public function store(Request $request)
     {
+//        $mapLocation = $_POST['mapData'];
+
+//        echo $mapLocation;
+//        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
+//        return view('map-location');
 
         //validate data
         //TODO: validate address as complete so geoCode can be obtained
         //TODO: unique alias ie name
         $this->validate($request, [
            'name' => 'required|max:255',
-        'address' => 'required|max:255',
+        'mapData' => 'required|max:255',
         ]);
 
         //store the data in the db
         $location = new Location;
 
         $location->name = Input::get('name');
-        $address = Input::get('address');
+        $address = Input::get('mapData');
         $location->additional_info = Input::get('info');
-
-        $location->address = $address ;
+//        $address = $mapLocation;
+        $location->address = $address;
         //TODO: catch for incorrect addresses or addresses that can not be selected via map
         $geoCoords = $this->geoCode($address);
         $location->latitude = $geoCoords->results[0]->geometry->location->lat;
@@ -72,7 +77,7 @@ class LocationController extends Controller
 
         //display confirmation page
         return view('confirm')->with('theData', $location->address);
-
+//        return view('home/location/create-location')->with('theAddress', $mapLocation);
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
@@ -127,16 +132,16 @@ class LocationController extends Controller
         return $output;
     }
 
-    public static function mapLocation(){
-//        return view('confirm')->with('theData', $mapLocation);
-        $mapLocation = $_POST['mapData'];
-
-//        echo $mapLocation;
-//        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
-//        return view('map-location');
-        return view('home/location/create-location')->with('theAddress', $mapLocation);
-
-    }
+//    public static function mapLocation(){
+////        return view('confirm')->with('theData', $mapLocation);
+//        $mapLocation = $_POST['mapData'];
+//
+////        echo $mapLocation;
+////        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
+////        return view('map-location');
+//        return view('home/location/create-location')->with('theAddress', $mapLocation);
+//
+//    }
 
 //    public function setAddress(){
 //        $auto = Input::get('autocomplete');
