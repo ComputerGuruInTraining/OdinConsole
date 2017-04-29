@@ -35,9 +35,9 @@ class LocationController extends Controller
     }
 
     public function create()
-    {
+{
         return view('home/location/create-locations');
-    }
+}
 
     /*
  * Store a new location
@@ -125,6 +125,17 @@ class LocationController extends Controller
         $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
         $output = json_decode($geocode);
         return $output;
+    }
+
+    public static function mapLocation(){
+//        return view('confirm')->with('theData', $mapLocation);
+        $mapLocation = $_POST['mapData'];
+
+//        echo $mapLocation;
+//        echo "<script>console.log( 'Debug Objects: " . $mapLocation . "' );</script>";
+//        return view('map-location');
+        return view('home/location/create-location')->with('theAddress', $mapLocation);
+
     }
 
 //    public function setAddress(){

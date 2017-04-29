@@ -1,10 +1,15 @@
+{{--@extends('layouts.master_layout')--}}
+{{--@extends('sidebar')--}}
+{{--@section('page-content')--}}
 <section class="map">
 <!-- Google Maps Javascript API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
 {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
-
-    <input type="text" id="autocomplete">
-
+    <form>
+        <input type="text" id="autocomplete" name="mapData"/>
+        <input type="submit"/>
+    </form>
+{{--    <input type="submit" value="Submit" onclick="{{\App\Http\Controllers\LocationController::mapLocation($mapAddress)}}">--}}
     {{--<a href="{{route('LocationController@setAddress')}}">--}}
         {{--<button type="button">Submit</button></a>--}}
     <div id="map"></div>
@@ -45,8 +50,11 @@
                 infoWindow.open(map, marker);
 
             });
-            var autoAddress = document.getElementById('autoAddress');
-            autoAddress.value = place.formatted_address;
+//            var autoAddress = document.getElementById('autoAddress');
+//            autoAddress.value = place.formatted_address;
+{{--            {{\App\Http\Controllers\LocationController::mapLocation(place.formatted_address)}};--}}
+
         });
     </script>
 </section>
+{{--@stop--}}

@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fd3d3311-ed96-40cc-9f22-c35ae4565603" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/home/location/create-locations.blade.php" afterPath="$PROJECT_DIR$/resources/views/home/location/create-locations.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php" afterPath="$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/home/location/locations.blade.php" afterPath="$PROJECT_DIR$/resources/views/home/location/locations.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/map.blade.php" afterPath="$PROJECT_DIR$/resources/views/map.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/web.php" afterPath="$PROJECT_DIR$/routes/web.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,10 +36,68 @@
       <file leaf-file-name="LocationController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LocationController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="73" column="66" lean-forward="false" selection-start-line="73" selection-start-column="66" selection-end-line="73" selection-end-column="66" />
+            <state relative-caret-position="345">
+              <caret line="134" column="24" lean-forward="true" selection-start-line="133" selection-start-column="22" selection-end-line="134" selection-end-column="24" />
               <folding>
                 <element signature="e#40#50#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="create-location.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home/location/create-location.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="31" column="38" lean-forward="true" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+              <folding>
+                <marker date="1493442489922" expanded="true" signature="102:125" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="136:145" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="158:170" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="208:222" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="568:576" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="683:745" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="948:953" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="1483:1494" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="1558:1598" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="1619:1712" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="1790:1827" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="1848:1968" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="2046:2097" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="2118:2253" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="2464:2518" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="2577:2633" ph="..." />
+                <marker date="1493442489922" expanded="true" signature="5734:5749" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sidebar.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/sidebar.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-339">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1493350652619" expanded="true" signature="422:480" ph="..." />
+                <marker date="1493350652619" expanded="true" signature="2687:2700" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sidebar_custom.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/sidebar_custom.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1492845893172" expanded="true" signature="9:18" ph="..." />
+                <marker date="1492845893172" expanded="true" signature="30:43" ph="..." />
+                <marker date="1492845893172" expanded="true" signature="86:105" ph="..." />
+                <marker date="1492845893172" expanded="true" signature="161:174" ph="..." />
+                <marker date="1492845893172" expanded="true" signature="243:254" ph="..." />
+                <marker date="1492845893172" expanded="true" signature="321:334" ph="..." />
               </folding>
             </state>
           </provider>
@@ -48,8 +106,8 @@
       <file leaf-file-name="edit-locations.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
-              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <state relative-caret-position="378">
+              <caret line="21" column="40" lean-forward="true" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
               <folding>
                 <marker date="1493353978569" expanded="true" signature="75:98" ph="..." />
                 <marker date="1493353978569" expanded="true" signature="109:118" ph="..." />
@@ -74,92 +132,66 @@
       <file leaf-file-name="create-locations.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/home/location/create-locations.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="39" column="36" lean-forward="true" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="36" />
+            <state relative-caret-position="234">
+              <caret line="31" column="42" lean-forward="false" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="42" />
               <folding>
-                <marker date="1493354134141" expanded="true" signature="102:125" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="136:145" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="158:170" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="208:222" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="465:473" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="580:642" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="666:671" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1237:1277" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1298:1391" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1469:1506" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1527:1647" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1725:1776" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="1797:1932" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2151:2205" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2272:2328" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2557:2600" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2625:2720" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2810:2853" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="2878:2997" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3143:3186" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3211:3305" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3450:3483" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3508:3565" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3655:3686" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3711:3767" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3857:3894" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="3919:3978" ph="..." />
-                <marker date="1493354134141" expanded="true" signature="5197:5212" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="102:125" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="136:145" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="158:170" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="208:222" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="568:576" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="683:745" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="766:832" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="948:953" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="1487:1498" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="1566:1606" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="1627:1720" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="1798:1835" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="1856:1976" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2054:2105" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2126:2261" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2472:2526" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2585:2641" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2890:2933" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="2966:3061" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3175:3218" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3251:3370" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3548:3591" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3624:3718" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3895:3928" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="3961:4018" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="4132:4163" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="4196:4252" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="4366:4403" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="4436:4495" ph="..." />
+                <marker date="1493442456124" expanded="true" signature="5742:5757" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="composer.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/composer.json">
+      <file leaf-file-name="map.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/map.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12" column="81" lean-forward="false" selection-start-line="12" selection-start-column="81" selection-end-line="12" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LocationTableSeeder.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/seeds/LocationTableSeeder.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="17" column="38" lean-forward="false" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserTableSeeder.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/seeds/UserTableSeeder.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/UserController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="37" column="24" lean-forward="false" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
+            <state relative-caret-position="342">
+              <caret line="19" column="21" lean-forward="true" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
               <folding>
-                <marker date="1493350652383" expanded="true" signature="44:45" ph="..." />
-                <marker date="1493350652383" expanded="true" signature="409:441" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="409:1885" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="447:518" ph=" Show the form for creating a new user. ..." />
-                <marker date="1493350652383" expanded="true" signature="546:588" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="594:665" ph=" Store a newly created user in storage. ..." />
-                <marker date="1493350652383" expanded="true" signature="692:1012" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="1018:1117" ph=" Show the form for editing the specified user. ..." />
-                <marker date="1493350652383" expanded="true" signature="1146:1235" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="1241:1332" ph=" Update the specified user in storage. ..." />
-                <marker date="1493350652383" expanded="true" signature="1363:1690" ph="{...}" />
-                <marker date="1493350652383" expanded="true" signature="1696:1789" ph=" Remove the specified user from storage. ..." />
-                <marker date="1493350652383" expanded="true" signature="1821:1882" ph="{...}" />
+                <marker date="1493442540547" expanded="true" signature="13:36" ph="..." />
+                <marker date="1493442540547" expanded="true" signature="55:64" ph="..." />
+                <marker date="1493442540547" expanded="true" signature="83:97" ph="..." />
+                <marker date="1493442540547" expanded="true" signature="571:637" ph="..." />
+                <marker date="1493442540547" expanded="true" signature="2326:2404" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/web.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="684">
+              <caret line="38" column="67" lean-forward="true" selection-start-line="38" selection-start-column="67" selection-end-line="38" selection-end-column="67" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -168,7 +200,7 @@
         <entry file="file://$PROJECT_DIR$/resources/views/home/location/locations.blade.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="288">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding>
                 <marker date="1493353426701" expanded="true" signature="9:23" ph="..." />
                 <marker date="1493353426701" expanded="true" signature="34:43" ph="..." />
@@ -190,29 +222,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <file leaf-file-name="map-location.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/map-location.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state relative-caret-position="198">
+              <caret line="11" column="18" lean-forward="true" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="master_layout.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/layouts/master_layout.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="954">
-              <caret line="53" column="38" lean-forward="false" selection-start-line="53" selection-start-column="38" selection-end-line="53" selection-end-column="38" />
-              <folding>
-                <marker date="1493350652601" expanded="true" signature="143:150" ph="..." />
-                <marker date="1493350652601" expanded="true" signature="449:518" ph="..." />
-                <marker date="1493350652601" expanded="true" signature="894:952" ph="..." />
-                <marker date="1493350652601" expanded="true" signature="1238:1307" ph="..." />
-                <marker date="1493350652601" expanded="true" signature="2836:2844" ph="..." />
-                <marker date="1493350652601" expanded="true" signature="3583:3592" ph="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -269,15 +284,17 @@
         <option value="$PROJECT_DIR$/public/bower_components/AdminLTE/dist/css/AdminLTE.css" />
         <option value="$PROJECT_DIR$/resources/views/home/location/map.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/layouts/master_layout.blade.php" />
-        <option value="$PROJECT_DIR$/resources/views/map.blade.php" />
         <option value="$PROJECT_DIR$/../LyndaAuthApp/app/views/hello.php" />
         <option value="$PROJECT_DIR$/../LyndaAuthApp-master/app/views/hello.php" />
-        <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/database/migrations/2017_04_28_034901_update_locations.php" />
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/resources/views/home/location/locations.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php" />
+        <option value="$PROJECT_DIR$/app/map-location.php" />
+        <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/resources/views/home/location/create-locations.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/home/location/create-location.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/map.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" />
       </list>
     </option>
@@ -383,6 +400,312 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Changed Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="storage">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="routes">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="resources">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="resources">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="layouts">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="resources">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="home">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="resources">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="home">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="location">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="resources">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="public">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="public">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="js">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="database">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="database">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="seeds">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="database">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="migrations">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="config">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="Http">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="OdinConsole">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="Http">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="Controllers">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -676,316 +999,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Changed Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="External Dependencies">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="C:">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="wamp64">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="www">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="storage">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="routes">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="views">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="views">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="layouts">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="views">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="home">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="views">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="home">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="location">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="resources">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="public">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="database">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="database">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="seeds">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="database">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="migrations">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="config">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="app">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="app">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="Http">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="OdinConsole">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="app">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="Http">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="Controllers">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -994,6 +1007,9 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wamp64\www\OdinConsole\resources\views\home\location" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wamp64\www\OdinConsole\resources\views" />
       <recent name="C:\wamp64\www\OdinConsole\resources\views\home\location" />
@@ -1102,11 +1118,12 @@
       <workItem from="1493021892006" duration="5611000" />
       <workItem from="1493086478586" duration="18864000" />
       <workItem from="1493336502871" duration="7773000" />
+      <workItem from="1493434965910" duration="7465000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="90775000" />
+    <option name="totallyTimeSpent" value="98240000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1125,31 +1142,20 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.178125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1183,31 +1189,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/database/migrations/2017_04_21_042435_create_locations.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="15" column="29" lean-forward="true" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/seeds/LocationTableSeeder.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="85" lean-forward="false" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LocationController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="17" column="50" lean-forward="false" selection-start-line="17" selection-start-column="50" selection-end-line="17" selection-end-column="50" />
-          <folding>
-            <element signature="e#40#50#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/migrations/2014_10_12_100000_create_password_resets_table.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -1336,13 +1317,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/sidebar_custom.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/route.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1415,17 +1389,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/sidebar.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="4" lean-forward="false" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="29" />
-          <folding>
-            <marker date="1493350652619" expanded="true" signature="422:480" ph="..." />
-            <marker date="1493350652619" expanded="true" signature="2687:2700" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/layouts/master_layout.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="954">
@@ -1459,31 +1422,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1493342132705" expanded="true" signature="206:230" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1296:1332" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1376:1413" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1430:1454" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1472:1509" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1526:1554" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1572:1596" ph="..." />
-            <marker date="1493342132705" expanded="true" signature="1608:1623" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/map.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="27" lean-forward="false" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/web.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1519,30 +1457,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding>
-            <marker date="1493353978569" expanded="true" signature="75:98" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="109:118" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="130:142" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="178:192" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="434:442" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="549:641" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="692:730" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="747:784" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="850:885" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="902:945" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="1011:1062" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="1079:1169" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="1248:1302" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="1392:1448" ph="..." />
-            <marker date="1493353978569" expanded="true" signature="1477:1492" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/seeds/LocationTableSeeder.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -1561,22 +1475,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/UserController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
+        <state relative-caret-position="576">
           <caret line="37" column="24" lean-forward="false" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
           <folding>
             <marker date="1493350652383" expanded="true" signature="44:45" ph="..." />
             <marker date="1493350652383" expanded="true" signature="409:441" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="409:1885" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="447:518" ph=" Show the form for creating a new user. ..." />
-            <marker date="1493350652383" expanded="true" signature="546:588" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="594:665" ph=" Store a newly created user in storage. ..." />
-            <marker date="1493350652383" expanded="true" signature="692:1012" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="1018:1117" ph=" Show the form for editing the specified user. ..." />
-            <marker date="1493350652383" expanded="true" signature="1146:1235" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="1241:1332" ph=" Update the specified user in storage. ..." />
-            <marker date="1493350652383" expanded="true" signature="1363:1690" ph="{...}" />
-            <marker date="1493350652383" expanded="true" signature="1696:1789" ph=" Remove the specified user from storage. ..." />
-            <marker date="1493350652383" expanded="true" signature="1821:1882" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1584,7 +1487,7 @@
     <entry file="file://$PROJECT_DIR$/resources/views/home/location/locations.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding>
             <marker date="1493353426701" expanded="true" signature="9:23" ph="..." />
             <marker date="1493353426701" expanded="true" signature="34:43" ph="..." />
@@ -1605,47 +1508,163 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/sidebar.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-339">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1493350652619" expanded="true" signature="422:480" ph="..." />
+            <marker date="1493350652619" expanded="true" signature="2687:2700" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/sidebar_custom.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1492845893172" expanded="true" signature="9:18" ph="..." />
+            <marker date="1492845893172" expanded="true" signature="30:43" ph="..." />
+            <marker date="1492845893172" expanded="true" signature="86:105" ph="..." />
+            <marker date="1492845893172" expanded="true" signature="161:174" ph="..." />
+            <marker date="1492845893172" expanded="true" signature="243:254" ph="..." />
+            <marker date="1492845893172" expanded="true" signature="321:334" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/location/edit-locations.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="40" lean-forward="true" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+          <folding>
+            <marker date="1493353978569" expanded="true" signature="75:98" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="109:118" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="130:142" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="178:192" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="434:442" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="549:641" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="692:730" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="747:784" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="850:885" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="902:945" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="1011:1062" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="1079:1169" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="1248:1302" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="1392:1448" ph="..." />
+            <marker date="1493353978569" expanded="true" signature="1477:1492" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/map-location.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="18" lean-forward="true" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="38" column="67" lean-forward="true" selection-start-line="38" selection-start-column="67" selection-end-line="38" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/home/location/create-locations.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="39" column="36" lean-forward="true" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="36" />
+        <state relative-caret-position="234">
+          <caret line="31" column="42" lean-forward="false" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="42" />
           <folding>
-            <marker date="1493354134141" expanded="true" signature="102:125" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="136:145" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="158:170" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="208:222" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="465:473" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="580:642" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="666:671" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1237:1277" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1298:1391" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1469:1506" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1527:1647" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1725:1776" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="1797:1932" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2151:2205" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2272:2328" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2557:2600" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2625:2720" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2810:2853" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="2878:2997" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3143:3186" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3211:3305" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3450:3483" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3508:3565" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3655:3686" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3711:3767" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3857:3894" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="3919:3978" ph="..." />
-            <marker date="1493354134141" expanded="true" signature="5197:5212" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="102:125" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="136:145" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="158:170" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="208:222" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="568:576" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="683:745" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="766:832" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="948:953" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="1487:1498" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="1566:1606" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="1627:1720" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="1798:1835" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="1856:1976" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2054:2105" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2126:2261" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2472:2526" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2585:2641" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2890:2933" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="2966:3061" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3175:3218" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3251:3370" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3548:3591" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3624:3718" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3895:3928" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="3961:4018" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="4132:4163" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="4196:4252" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="4366:4403" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="4436:4495" ph="..." />
+            <marker date="1493442456124" expanded="true" signature="5742:5757" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/map.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="19" column="21" lean-forward="true" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+          <folding>
+            <marker date="1493442540547" expanded="true" signature="13:36" ph="..." />
+            <marker date="1493442540547" expanded="true" signature="55:64" ph="..." />
+            <marker date="1493442540547" expanded="true" signature="83:97" ph="..." />
+            <marker date="1493442540547" expanded="true" signature="571:637" ph="..." />
+            <marker date="1493442540547" expanded="true" signature="2326:2404" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/location/create-location.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="31" column="38" lean-forward="true" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+          <folding>
+            <marker date="1493442489922" expanded="true" signature="102:125" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="136:145" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="158:170" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="208:222" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="568:576" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="683:745" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="948:953" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="1483:1494" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="1558:1598" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="1619:1712" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="1790:1827" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="1848:1968" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="2046:2097" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="2118:2253" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="2464:2518" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="2577:2633" ph="..." />
+            <marker date="1493442489922" expanded="true" signature="5734:5749" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LocationController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="73" column="66" lean-forward="false" selection-start-line="73" selection-start-column="66" selection-end-line="73" selection-end-column="66" />
+        <state relative-caret-position="345">
+          <caret line="134" column="24" lean-forward="true" selection-start-line="133" selection-start-column="22" selection-end-line="134" selection-end-column="24" />
           <folding>
             <element signature="e#40#50#0#PHP" expanded="true" />
           </folding>
