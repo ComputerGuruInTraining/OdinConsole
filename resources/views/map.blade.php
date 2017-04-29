@@ -1,12 +1,10 @@
 <section class="map">
 <!-- Google Maps Javascript API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
 {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
+    {{--If user inputs an address, and then selects a different address, need a catch or code to update the input field value--}}
 
-    <input type="text" id="autocomplete">
-
-    {{--<a href="{{route('LocationController@setAddress')}}">--}}
-        {{--<button type="button">Submit</button></a>--}}
+    <input type="text" id="autocomplete" name="mapData"/>
     <div id="map"></div>
 
     <script>
@@ -21,6 +19,11 @@
             types: ['geocode']
         };
         var autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'),acOptions);
+        //for all addresses (although unable to notice much difference on quick inspection use following code instead.
+        //however, concern that addresses may not be able to be converted to geoCode addresses, and therefore a catch will need to be added
+        //if this is the case.
+        //        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'));
+
         autocomplete.bindTo('bounds',map);
         var infoWindow = new google.maps.InfoWindow();
         var marker = new google.maps.Marker({
@@ -43,10 +46,13 @@
             google.maps.event.addListener(marker,'click',function(e){
 
                 infoWindow.open(map, marker);
+                document.getElementById('autocomplete').value = place.formatted_address;
+                console.log(place);
 
             });
-            var autoAddress = document.getElementById('autoAddress');
-            autoAddress.value = place.formatted_address;
+
         });
+
+//        google.maps.event.addListener(marker, 'click')
     </script>
 </section>

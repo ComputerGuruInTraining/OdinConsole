@@ -30,6 +30,5 @@ Route::resource('/user', 'UserController');
 
 Route::resource('/location', 'LocationController');
 
-//TODO: change url
 Route::post('/location/created', 'LocationController@store');
 
