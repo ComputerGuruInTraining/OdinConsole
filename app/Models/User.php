@@ -3,10 +3,10 @@
 
 namespace App\Models;
 
-
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
-class Users extends Eloquent
+class User extends Eloquent
 {
 	
 protected $table ="users";
