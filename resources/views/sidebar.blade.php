@@ -42,6 +42,7 @@
             <li class="active"><a href="#"><span>Clients</span></a></li>
             <li class="active"><a href="#"><span>Reports</span></a></li>
             <div class="list-divider"></div>
+
             <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->
             <li class="header"><h4>My Links</h4></li>
             <li class="active"><a href="#"><span>Create User</span></a></li>
@@ -52,8 +53,8 @@
                     <li><a href="#">View My Locations</a></li>
                 </ul>
             </li>
-
             <div class="list-divider"></div>
+
             @yield('custom-menu')
         </ul>
         
