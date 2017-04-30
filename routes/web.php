@@ -32,3 +32,10 @@ Route::resource('/location', 'LocationController');
 
 Route::post('/location/created', 'LocationController@store');
 
+//error if the url format is for eg Route::get('/location/{theId}/'....);
+Route::get('/{theId}/location/', function($theId){
+
+    $locationView = LocationController::select($theId);
+    return $locationView;
+
+});

@@ -16,7 +16,7 @@ use Illuminate\Routing\Controller as BaseController;
 class LocationController extends Controller
 {
     protected $locations;
-    protected $selected;
+//    protected $selected = "Please select an item from the list";
 
     public function __construct()
     {
@@ -28,10 +28,13 @@ class LocationController extends Controller
         //retrieve all records from locations table via Location Model
         $locations = Location::all();
         $this->locations = $locations;
-        $this->selected = $locations[0];
+        $location = $locations[0];
+//        $this->selected =;
         //TODO: sort the locations into a sorted array
         //TODO: the first location in the sorted list will be in the top section of the webpage
-        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $this->selected, 'controller' => $this));
+//        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $this->selected, 'controller' => $this));
+        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $location));
+
     }
 
     public function create()
@@ -77,10 +80,29 @@ class LocationController extends Controller
         //$addressGroup = Input::get('address_group');
     }
 
+//    public function console(){
+////        $selected = $this->locations.selectedLocation($this->locations, dbLocation);
+////        echo $selected;
+////        echo "<script>console.log( 'Debug Objects: " . $selected . "' );</script>";
+//        $data = "It Works!";
+//        return view('confirm')->with('theData', $data);
+//    }
+
     public function edit($id)
     {
         $location = Location::find($id);
         return view('home/location/edit-locations')->with('location', $location);
+    }
+
+    public static function select($id){
+//      $this->selected = $this->locations[2];
+//      echo("<script>console.log('PHP: ".$this->selected."');</script>");
+
+//      return $selected;
+        $location = Location::find($id);
+        $locations = Location::all();
+        return view('home/location/locations')->with(array('locations' => $locations, 'displayItem' => $location));
+//        return view('home/location/edit-locations')->with('location', $location);
     }
 
     public function update($id, Request $request){
@@ -130,13 +152,7 @@ class LocationController extends Controller
 //    }
 
 
-//  public function select(){
-//      $this->selected = $this->locations[2];
-//      echo("<script>console.log('PHP: ".$this->selected."');</script>");
-//
-////      return $selected;
-//
-//  }
+
 
 //  public function selectedLocation($dbLocation){
 ////      locations = Location::all();

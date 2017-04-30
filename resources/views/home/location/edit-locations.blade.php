@@ -20,7 +20,7 @@
         @endif
 
         {{ Form::model($location, ['route' => ['location.update', $location->id], 'method' => 'put']) }}
-
+{{--{{Form::open(['role' => 'form'])}}--}}
         <div class='form-group'>
             {{ Form::label('name', 'Address alias') }}
             {{ Form::text('name', $location->name) }}

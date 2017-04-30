@@ -24,8 +24,16 @@
 @stop
 
 @section('content-item')
+    {{$displayItem}}
 
-    {{ $displayItem->name }}
+@stop
+
+@section('content-list')
+    @foreach($locations as $dbLocation)
+
+    <li>{{ $dbLocation->name }}<a href="/{{ $dbLocation->id }}/location/" class="btn btn-info pull-left" style="margin-right: 3px;">Details</a><a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a></li>
+<br>
+    @endforeach
 @stop
 
 @section('title-list')
@@ -34,9 +42,5 @@
 
 {{--TODO: improve display--}}
 {{--TODO: sort ascending order or by client--}}
-@section('content-list')
-    @foreach($locations as $dbLocation)
-          <li>{{ $dbLocation->name }}<a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a></li><br>
-    @endforeach
-@stop
+
 
