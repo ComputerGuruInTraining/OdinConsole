@@ -23,15 +23,23 @@
     Selected Location
 @stop
 
+{{--TODO: as using an absolute url, change the url once deploying and domain set.--}}
 @section('content-item')
-    {{$displayItem}}
+    {{$displayItem->name}}
+    <a href="http://localhost:8000/location/{{ $displayItem->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
+    <a href="/confirm-delete/{{ $displayItem->id }}/" class="btn btn-info pull-left" style="margin-right: 3px;">Delete</a>
 
+
+    {{--<a href="/{{ $displayItem->id }}/delete" class="btn btn-info pull-left" style="margin-right: 3px;" >Delete {{ method_field('DELETE') }}</a>--}}
+    {{--{{ Form::model($locations, ['route' => ['location.destroy', $locations[$displayItem->id]], 'method' => 'delete']) }}--}}
+    {{--<button type="submit" class="btn btn-sm btn-default"><a href="http://localhost:8000/location/{{ $displayItem->id }}" class="btn btn-info pull-left" style="margin-right: 3px;">Delete</a></button>--}}
+    {{--{{ Form::close() }}--}}
 @stop
 
 @section('content-list')
     @foreach($locations as $dbLocation)
 
-    <li>{{ $dbLocation->name }}<a href="/{{ $dbLocation->id }}/location/" class="btn btn-info pull-left" style="margin-right: 3px;">Details</a><a href="location/{{ $dbLocation->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a></li>
+    <li><a href="/{{ $dbLocation->id }}/">{{ $dbLocation->name }}</a></li>
 <br>
     @endforeach
 @stop

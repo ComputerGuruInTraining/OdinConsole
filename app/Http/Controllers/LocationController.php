@@ -74,7 +74,7 @@ class LocationController extends Controller
         $location->save();
 
         //display confirmation page
-        return view('confirm')->with('theData', $location->address);
+        return view('confirm')->with(array('theData'=> $location->address, 'theAction' => 'added'));
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
@@ -93,6 +93,12 @@ class LocationController extends Controller
         $location = Location::find($id);
         return view('home/location/edit-locations')->with('location', $location);
     }
+
+//    public function delete($id)
+//    {
+//        $location = Location::find($id);
+//        return view('home/location/delete-locations')->with('location', $location);
+//    }
 
     public static function select($id){
 //      $this->selected = $this->locations[2];
@@ -130,11 +136,23 @@ class LocationController extends Controller
         //display confirmation page
         //TODO: change msg on confirm page
         $locationName = Input::get('name');
-        return view('confirm')->with('theData', $locationName);
+        return view('confirm')->with(array('theData'=> $locationName, 'theAction' => 'edited'));
 
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
+    }
+
+    public function destroy($id)
+    {
+        $location = Location::find($id);
+        Location::destroy($id);
+        return view('confirm')->with(array('theData'=> $location->name, 'theAction' => 'deleted'));
+    }
+
+    public static function confirmDelete($id){
+        $location = Location::find($id);
+        return view('confirm-delete')->with('deleting', $location);
     }
 
     public function geoCode($address){
