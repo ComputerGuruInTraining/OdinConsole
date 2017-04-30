@@ -5,6 +5,12 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
 
+
+{{--<script type="text/javascript">--}}
+    {{--function noenter() {--}}
+        {{--return !(window.event && window.event.keyCode == 13); }--}}
+{{--</script>--}}
+
 @section('title-item')
     Create Location
 @stop
@@ -32,12 +38,12 @@
             @include('map')
             <div class='form-group'>
                 {{ Form::label('name', 'Address Alias *') }}
-                {{ Form::text('name', null, ['placeholder' => 'eg UC Building 25', 'class' => 'form-control']) }}
+                {{ Form::text('name', null, ['placeholder' => 'eg UC Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
             </div>
 
             <div class='form-group'>
                 {{ Form::label('info', 'Additional Address Details') }}
-                {{ Form::text('info', null, ['placeholder' => 'ie Building Number or Name, Unit Number, Company Name, etc.', 'class' => 'form-control']) }}
+                {{ Form::text('info', null, ['placeholder' => 'ie Building Number or Name, Unit Number, Company Name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
             </div>
 
             <div class='form-group form-buttons'>

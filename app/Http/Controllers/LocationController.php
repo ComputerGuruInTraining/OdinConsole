@@ -16,7 +16,6 @@ use Illuminate\Routing\Controller as BaseController;
 class LocationController extends Controller
 {
     protected $locations;
-    protected $selected;
 
     public function __construct()
     {
@@ -28,16 +27,17 @@ class LocationController extends Controller
         //retrieve all records from locations table via Location Model
         $locations = Location::all();
         $this->locations = $locations;
-        $this->selected = $locations[0];
+        $location = $locations[0];
         //TODO: sort the locations into a sorted array
         //TODO: the first location in the sorted list will be in the top section of the webpage
-        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $this->selected, 'controller' => $this));
+        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $location));
+
     }
 
     public function create()
-{
+    {
         return view('home/location/create-locations');
-}
+    }
 
     /*
  * Store a new location
@@ -45,6 +45,7 @@ class LocationController extends Controller
  * @param Request $request
  * @return Response (automatically generated if validation fails)
  */
+//    TODO v1 high_priority: test geocodes and ensure they correspond to the selected address correctly.
     public function store(Request $request)
     {
         //validate data
@@ -57,21 +58,18 @@ class LocationController extends Controller
 
         //store the data in the db
         $location = new Location;
-        $location->name = Input::get('name');
+        $location->name = ucfirst(Input::get('name'));
         $address = Input::get('mapData');
-        $location->additional_info = Input::get('info');
         $location->address = $address;
-        //TODO: catch for incorrect addresses or addresses that can not be selected via map
-        //FIXME: HIGH v1 cater for enter being pressed when location selected from drop-down list on map input.
-        //Atm: the form is submitted, but needs to not be submitted when enter pressed in map input field.
-        //Could provide a message to user to not press enter to select the address at the very least.
+        //TODO v1 or v2??: catch for incorrect addresses or addresses that can not be selected via map
         $geoCoords = $this->geoCode($address);
         $location->latitude = $geoCoords->results[0]->geometry->location->lat;
         $location->longitude = $geoCoords->results[0]->geometry->location->lng;
+        $location->additional_info = ucfirst(Input::get('info'));
         $location->save();
 
         //display confirmation page
-        return view('confirm')->with('theData', $location->address);
+        return view('confirm')->with(array('theData'=> $address, 'theAction' => 'added'));
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
@@ -81,6 +79,13 @@ class LocationController extends Controller
     {
         $location = Location::find($id);
         return view('home/location/edit-locations')->with('location', $location);
+    }
+
+
+    public static function select($id){
+        $location = Location::find($id);
+        $locations = Location::all();
+        return view('home/location/locations')->with(array('locations' => $locations, 'displayItem' => $location));
     }
 
     public function update($id, Request $request){
@@ -95,9 +100,11 @@ class LocationController extends Controller
         ]);
 
         //store the data in the db
-        $location->name = Input::get('name');
-        $address = Input::get('address');
-        $location->additional_info = Input::get('info');
+        $locationName = ucfirst(Input::get('name'));
+        $location->name = $locationName;
+//        TODO v2: should edit address be a map??
+        $address = ucfirst(Input::get('address'));
+        $location->additional_info = ucfirst(Input::get('info'));
         $location->address = $address;
         //TODO: catch for incorrect addresses
         $geoCoords = $this->geoCode($address);
@@ -106,13 +113,22 @@ class LocationController extends Controller
         $location->save();
 
         //display confirmation page
-        //TODO: change msg on confirm page
-        $locationName = Input::get('name');
-        return view('confirm')->with('theData', $locationName);
+        return view('confirm')->with(array('theData'=> $locationName, 'theAction' => 'edited'));
 
         //TODO: associate location with a client and perhaps group addresses. Modify form also
         //$client = Input::get('client');
         //$addressGroup = Input::get('address_group');
+    }
+
+    public function destroy($id){
+        $location = Location::find($id);
+        Location::destroy($id);
+        return view('confirm')->with(array('theData'=> $location->name, 'theAction' => 'deleted'));
+    }
+
+    public static function confirmDelete($id){
+        $location = Location::find($id);
+        return view('confirm-delete')->with('deleting', $location);
     }
 
     public function geoCode($address){
@@ -130,13 +146,7 @@ class LocationController extends Controller
 //    }
 
 
-//  public function select(){
-//      $this->selected = $this->locations[2];
-//      echo("<script>console.log('PHP: ".$this->selected."');</script>");
-//
-////      return $selected;
-//
-//  }
+
 
 //  public function selectedLocation($dbLocation){
 ////      locations = Location::all();

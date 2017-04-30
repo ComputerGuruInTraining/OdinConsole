@@ -20,26 +20,24 @@
         @endif
 
         {{ Form::model($location, ['route' => ['location.update', $location->id], 'method' => 'put']) }}
-
         <div class='form-group'>
             {{ Form::label('name', 'Address alias') }}
-            {{ Form::text('name', $location->name) }}
+            {{ Form::text('name', $location->name, ['onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group'>
             {{ Form::label('address', 'Address') }}
-            {{ Form::text('address', $location->address) }}
+            {{ Form::text('address', $location->address, ['onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group'>
             {{ Form::label('info', 'Additional Address Details') }}
-            {{ Form::text('info', null, ['placeholder' => 'eg Building 25', 'class' => 'form-control']) }}
+            {{ Form::text('info', $location->additional_info, ['placeholder' => 'eg Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
-            {{--TODO: cancel btn code, see button attributes allowed--}}
-            {{ Form::button('Cancel', ['class' => 'btn btn-primary']) }}
+            {{ Form::submit('Save', ['class' => 'btn btn-info']) }}
+            <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
         {{ Form::close() }}

@@ -32,3 +32,41 @@ Route::resource('/location', 'LocationController');
 
 Route::post('/location/created', 'LocationController@store');
 
+//error if the url format is for eg Route::get('/location/{theId}/'....);
+//Route::get('/{theURL}/', function($theURL){
+//
+//    $locationView = LocationController::select($theURL);
+//    return $locationView;
+//
+//});
+
+Route::get('/{theId}/',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+    $locationView = LocationController::select($theId);
+    return $locationView;
+
+});
+
+Route::get('/confirm-delete/{theId}/',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+    $locationView = LocationController::confirmDelete($theId);
+    return $locationView;
+
+});
+
+//Route::delete('/{theId}/delete',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+//    $locationView = LocationController::destroy($theId);
+//    return $locationView;
+//
+//});
+
+///{theId}/location/', function($theId){
+//
+//    $locationView = LocationController::select($theId);
+//    return $locationView;
+//
+//});

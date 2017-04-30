@@ -27,7 +27,7 @@ class UpdateLocations extends Migration
     public function down()
     {
         //
-        Schems::table('locations', function($newcolumn){
+        Schema::table('locations', function($newcolumn){
 
             $newcolumn->dropColumn('additional_info');
         });

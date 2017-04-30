@@ -25,17 +25,23 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        <script type="text/javascript">
+            function noenter() {
+                return !(window.event && window.event.keyCode == 13); }
+        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
             <!--<body>
     <div class='container-fluid'>-->
         <div class="wrapper">
+            {{--FIXME: scroll-bar change height as a bit buggy--}}
+            {{--FIXME: when press menu icon if menu not showing depending on device size, sometimes doesn't show --}}
             <!-- Main Header
             <header class="main-header">  -->
             @include('header')
 
             <!-- Sidebar -->
-            @include('sidebar')
+            {{--@include('sidebar')--}}
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">

@@ -1,10 +1,14 @@
 <section class="map">
 <!-- Google Maps Javascript API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
+    {{--<script type="text/javascript">--}}
+        {{--function noenter() {--}}
+            {{--return !(window.event && window.event.keyCode == 13); }--}}
+    {{--</script>--}}
 {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
     {{--If user inputs an address, and then selects a different address, need a catch or code to update the input field value--}}
 
-    <input type="text" id="autocomplete" name="mapData"/>
+    <input type="text" id="autocomplete" name="mapData" onkeypress="return noenter()"/>
     <div id="map"></div>
 
     <script>
