@@ -27,6 +27,9 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+Route::resource('employees', 'EmployeeController');
+Route::get('/employees', 'EmployeeController@index');
+Route::post('/employee','EmployeeController@store');
 
 Route::resource('/location', 'LocationController');
 

@@ -29,6 +29,11 @@
             function noenter() {
                 return !(window.event && window.event.keyCode == 13); }
         </script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+
+
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
             <!--<body>
@@ -75,6 +80,18 @@
         <script src="bower_components/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
         <!-- AdminLTE App -->
         <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
+
+        {{-- Date of birth Picker --}}
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+        $( function() {
+          $( "#datepicker" ).datepicker({
+            changeMonth: true,
+            changeYear: true
+          });
+        } );
+        </script>
 
         <!-- Optionally, you can add Slimscroll and FastClick plugins.
             Both of these plugins are recommended to enhance the
