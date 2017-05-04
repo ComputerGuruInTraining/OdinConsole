@@ -12,9 +12,9 @@
         @endforeach
     @endif
 
-    <h1><i class='fa fa-user'></i> Add User</h1>
+    <h1><i class='fa fa-user'></i> Edit User</h1>
 
-    {{ Form::open(['role' => 'form', 'url' => '/user']) }}
+    {{ Form::model($user, ['role' => 'form', 'url' => '/user/' . $user->id, 'method' => 'PUT']) }}
 
     <div class='form-group'>
         {{ Form::label('first_name', 'First Name') }}

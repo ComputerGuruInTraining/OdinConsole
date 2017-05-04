@@ -20,13 +20,18 @@ use App\Http\Controllers\LocationController;
 
 Route::get('/', 'HomeController@getIndex');
 
-Route::post('home', 'HomeController@postIndex');
+Route::post('/', 'HomeController@postIndex');
 
 Route::get('/admin', function () {
     return view('admin_template');
 });
 
 Route::resource('/user', 'UserController');
+
+Route::get('login', 'HomeController@getLogin()');
+
+Route::get('Logout', 'HomeController@getLogout()');
+
 Route::resource('employees', 'EmployeeController');
 Route::get('/employees', 'EmployeeController@index');
 Route::post('/employee','EmployeeController@store');
