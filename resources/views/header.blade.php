@@ -1,12 +1,17 @@
 <!-- Main Header -->
-<header class="main-header">
+<header class="main-header" style="background-color:#ffffff;">
 
     <!-- Logo -->
-    <a href="index2.html" class="logo"><b>Admin Console</a>
+    <!--<a href="index2.html" class="logo"><b>Odin Lite Console</a>-->
+    <div class="pull-left image" style="max-width:200px;">
+        <img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo" alt="Odin Logo" />
+    </div>
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
+        <!--FIXME: menu toggle button is not visible after first being pressed.
+        Probably started occuring after odin logo added to header. -->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>

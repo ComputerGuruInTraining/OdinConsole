@@ -7,10 +7,7 @@ use Illuminate\Support\MessageBag;
 use App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+//use Illuminate\Support\Facades\View;
 //use View;
 
 class HomeController extends BaseController
@@ -18,8 +15,8 @@ class HomeController extends BaseController
 
 	public function getIndex()
 	{ 
-		return View::make('home.index');
-		//return view('home.index');
+		//return View::make('home.index');
+		return view('home.index');
 	}
 
 	public function postIndex()

@@ -1,22 +1,19 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
+use Input;
+use Form;
+//use View;
+//use app\functions;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\Users;
 
 class UserController extends Controller
 {
     public function __construct()
 	{
 		//$this->beforeFilter('auth');
-		$this->middleware('auth');
 	}
 
 	/**
@@ -26,9 +23,9 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-		$users = Users::all();
+		$users = User::all();
 
-		return View::make('user.index', ['users' => $users]);
+		return view('home/user/index', ['users' => $users]);
 	}
 
 	/**
