@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LocationController;
+//use App\Http\Controllers\LocationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,23 +14,59 @@
 |
 */
 
-//Route::get('/admin', function () {
-//    return view('admin_template');
+//Route::get('/', function () {
+//   return view('admin_template');
 //});
 
 Route::get('/', 'HomeController@getIndex');
-//Route::get('/', 'HomeController@getIndex');
 
-Route::post('/', 'HomeController@postIndex');
+Route::post('home', 'HomeController@postIndex');
 
+Route::get('/admin', function () {
+    return view('admin_template');
+});
 
-//Route::controller('/', 'HomeController');
-//user route
 Route::resource('/user', 'UserController');
 
-//login and logout route
-Route::get('login', 'HomeController@getLogin()');
+Route::resource('/location', 'LocationController');
 
-Route::get('Logout', 'HomeController@getLogout()');
+Route::post('/location/created', 'LocationController@store');
 
-//user route
+//error if the url format is for eg Route::get('/location/{theId}/'....);
+//Route::get('/{theURL}/', function($theURL){
+//
+//    $locationView = LocationController::select($theURL);
+//    return $locationView;
+//
+//});
+
+Route::get('/{theId}/',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+    $locationView = LocationController::select($theId);
+    return $locationView;
+
+});
+
+Route::get('/confirm-delete/{theId}/',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+    $locationView = LocationController::confirmDelete($theId);
+    return $locationView;
+
+});
+
+//Route::delete('/{theId}/delete',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+//    $locationView = LocationController::destroy($theId);
+//    return $locationView;
+//
+//});
+
+///{theId}/location/', function($theId){
+//
+//    $locationView = LocationController::select($theId);
+//    return $locationView;
+//
+//});
