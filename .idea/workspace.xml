@@ -361,10 +361,10 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1358" />
-    <option name="y" value="-120" />
-    <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -1337,7 +1337,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/bower_components/AdminLTE/dist/css/AdminLTE.css">
+    <entry file="file://$PROJECT_DIR$/app/User.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="71" column="0" lean-forward="true" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
@@ -1504,7 +1504,25 @@
         <state relative-caret-position="414">
           <caret line="80" column="74" lean-forward="false" selection-start-line="80" selection-start-column="74" selection-end-line="80" selection-end-column="74" />
           <folding>
-            <element signature="e#40#50#0#PHP" expanded="true" />
+            <marker date="1491882150000" expanded="true" signature="9:25" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="37:44" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="74:83" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="238:246" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="344:434" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="477:518" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="531:623" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="677:716" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="729:819" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="873:910" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="923:1011" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1065:1096" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1109:1192" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1246:1283" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1296:1382" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1436:1494" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1507:1614" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1668:1723" ph="..." />
+            <marker date="1491882150000" expanded="true" signature="1744:1759" ph="..." />
           </folding>
         </state>
       </provider>
