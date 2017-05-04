@@ -9,7 +9,6 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('admin_template');
-// });
-
+Route::get('/', function () {
+    return view('admin_template');
+});
