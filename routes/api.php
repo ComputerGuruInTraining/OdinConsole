@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Route::middleware('auth:api')->get('/location', function (Request $request) {
 //    return $request->location();
 //});
+
+//Route::middleware('auth:api')->get('/location', function (Request $request) {
+//    return $request->location();
+//});
