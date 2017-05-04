@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Input;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -42,7 +43,9 @@ class EmployeeController extends Controller
         $employee = new Employee;
         $employee->first_name = Input::get('first_name');
         $employee->last_name = Input::get('last_name');
-        $employee->dob = Input::get('dob');
+        // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
+        $employee->dob= Carbon::parse($request->datepicker);
+        // date("Y-m-d", strtotime($request->datepicker))
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
         $employee->email = Input::get('email');
