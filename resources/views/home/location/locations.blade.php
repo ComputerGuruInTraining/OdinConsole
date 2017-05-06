@@ -1,5 +1,4 @@
 @extends('layouts.list')
-{{--@extends('sidebar')--}}
 @extends('sidebar_custom')
 
 

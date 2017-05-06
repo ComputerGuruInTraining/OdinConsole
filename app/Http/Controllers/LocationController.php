@@ -5,23 +5,23 @@ namespace App\Http\Controllers;
 use Input;
 use Form;
 use Model;
-//use app\functions;
 use App\Models\Location;
 use Illuminate\Http\Request;
-//use App/
 use Illuminate\Support\MessageBag;
-//use App\Http\Controllers\Controller;
-//use Illuminate\Routing\Controller;
 use Illuminate\Routing\Controller as BaseController;
+
+//FIXME: line1 ?? LocationController seems to be an issue in web.php.
+// FIXME: line2 ?? If a route to a resource is after the route to the location resource, the resource urls do not work.
+// FIXME: line3 ?? Possible Cause: LocationController manually typed. So Possible Fix: create in cmd line and copy code into methods.
 
 class LocationController extends Controller
 {
     protected $locations;
 
-    public function __construct()
-    {
-
-    }
+//    public function __construct()
+//    {
+//
+//    }
 
     public function index()
     {
@@ -58,6 +58,7 @@ class LocationController extends Controller
         ]);
 
         //store the data in the db
+        //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field to type address and select from dropdown
         $location = new Location;
         $location->name = ucfirst(Input::get('name'));
         $address = Input::get('mapData');
