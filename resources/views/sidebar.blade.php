@@ -37,7 +37,7 @@
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="#"><span>Dashboard</span></a></li>
             <li class="active"><a href="/employee"><span>Employees</span></a></li>
-            <li class="active"><a href="#"><span>Roster</span></a></li>
+            <li class="active"><a href="/rosters"><span>Roster</span></a></li>
             <li class="active"><a href="/location"><span>Locations</span></a></li>
             <li class="active"><a href="#"><span>Clients</span></a></li>
             <li class="active"><a href="#"><span>Reports</span></a></li>

@@ -13,7 +13,6 @@ class ChangeLocationsName extends Migration
      */
     public function up()
     {
-        //
         Schema::table('locations', function(Blueprint $column){
 //            $column->string('name', 50)->unique()->change();
             $column->string('address', 150)->unique()->change();
@@ -29,7 +28,6 @@ class ChangeLocationsName extends Migration
      */
     public function down()
     {
-        //
         Schema::table('locations', function($column){
 
             $column->dropColumn('additional_info');
