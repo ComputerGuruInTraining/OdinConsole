@@ -137,7 +137,7 @@ class JobsTableSeeder extends Seeder
             'client_id' => 2,//TODO: consider need for client_id in our app
             'assigned_user_id' => 2,
             'job_scheduled_for' => date("2017-05-04 9:00:00"),
-            'estimated_job_duration' => 9,
+            'estimated_job_duration' => 9,//TODO: consider using a double, but integer suffices. Just not 100% accurate
             'locations' => 'Market Cafe, USF'//location_name//TODO: consider a new table job_locations to optimize db design
         ]);
 

@@ -55,6 +55,7 @@
     @include('sidebar')
 
     <!-- Content Wrapper. Contains page content -->
+        {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}
         <div class="content-wrapper">
             <section class="content-header">
                 <h1>

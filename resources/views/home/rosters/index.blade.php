@@ -1,7 +1,6 @@
 @extends('layouts.list')
 @extends('sidebar_custom')
 
-
 @section('title')
     Rosters
 @stop
