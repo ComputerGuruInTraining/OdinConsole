@@ -13,7 +13,6 @@ class UpdateLocations extends Migration
      */
     public function up()
     {
-        //
         Schema::table('locations', function($column){
             $column->string('additional_info')->nullable();
         });

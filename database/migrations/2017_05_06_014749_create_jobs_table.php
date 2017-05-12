@@ -27,9 +27,7 @@ class CreateJobsTable extends Migration
 
             $table->datetime('job_scheduled_start');
 
-            $table->integer('estimated_job_duration');
-
-            $table->string('locations');
+            $table->datetime('job_scheduled_end');
 
             $table->timestamps();
 
