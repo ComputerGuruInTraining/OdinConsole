@@ -13,6 +13,16 @@
 @section('page-content')
     <div id="notify-via-form">{{$theMsg}}</div>
 
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
         {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
         <div class='form-group'>

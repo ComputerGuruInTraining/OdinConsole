@@ -15,8 +15,7 @@ use App\Http\Controllers\EmployeeController;
 
 class RosterController extends Controller
 {
-    protected $theMsg = "Please complete all fields";
-//    protected $dateStart, $timeStart, $dateEnd, $timeEnd;
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +39,7 @@ class RosterController extends Controller
         $checks = $this->checksCollection();
 
         //        FIXME: bg displaying when page first loads. Shouldn't be.
-        return view('home/rosters/create')->with(array('empList' => $empList, 'locList' =>$locList, 'checks' =>$checks, 'theMsg' => $this->theMsg));
+        return view('home/rosters/create')->with(array('empList' => $empList, 'locList' =>$locList, 'checks' =>$checks));
     }
 
     public function employeeList(){
@@ -68,7 +67,6 @@ class RosterController extends Controller
 //    TODO: assigned_user_id to be changed to assigned_employee_id perhaps. Wait upon User/Employee setup in Web Console
     public function store(Request $request)
     {
-//        TODO v1 lower priority: improve validatation of input. ATM not validating start date or start time because
 //        TODO: save shift with a name that is auto
 //        TODO: need the saved name added to job table as a column
 //        TODO cont.: lower priority v1, after basic in place.
@@ -85,7 +83,11 @@ class RosterController extends Controller
 
         $this->validate($request, [
             'assigned_user_id' => 'required',//TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
-            'locations' => 'required'
+            'locations' => 'required',
+            'startDateTxt' => 'required',
+            'startTime' => 'required',
+            'endDateTxt' => 'required',
+            'endTime' => 'required'
         ]);
 
         $job = new Job;
@@ -103,63 +105,18 @@ class RosterController extends Controller
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
 
-        //validate the inputs laravel does not validate
-        if(($dateStart!=null)&&($dateEnd!=null)&&($timeStart!=null)&&($timeEnd!=null)) {
+        //process start date and time before adding to db
+        $carbonStart = $this->jobDateTime($dateStart, $timeStart);
+        $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
+        $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
 
-            //process start date and time before adding to db
-            $carbonStart = $this->jobDateTime($dateStart, $timeStart);
-            $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
-            $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
+        //add data to table
+        $job->job_scheduled_for = $carbonStart;
+        $job->estimated_job_duration = $lengthH;
 
-            //add data to table
-            $job->job_scheduled_for = $carbonStart;
-            $job->estimated_job_duration = $lengthH;
+        $job->save();
 
-            $job->save();
-
-//            $this->notifyViaForm(true);
-            return view('confirm-create')->with(array('theData' => $location, 'entity' => 'Shift'));
-        }
-        else{
-//            $this->notifyViaForm(false);
-
-//            echo"<script>
-//                console.log(element);
-//                var element = document.getElementById('notify-via-form').innerHTML;
-//
-//                element.style.backgroundColor = 'green';
-//            </script>";
-            //user input invalid, user stays on form page
-            $this->theMsg = "The form cannot be submitted until all fields are completed.";
-            return view('home/rosters/create')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks, 'theMsg' => $this->theMsg));
-        }
-    }
-
-
-    public function notifyViaForm($status){
-        echo "<script>console.log( 'Eg of console log' );</script>";
-//        if($status == true) {
-//            echo "<script>
-//                var notifyElement = document.getElementById('notify-via-form');
-//                notifyElement.style.backgroundColor = '#00a65a';
-//                notifyElement.style.color = 'white';
-//                notifyElement.style.padding = '15px';
-//                notifyElement.style.display = 'block';
-//
-//            </script>";
-//        }
-        if($status == false){
-//            echo "<script>console.log( 'function called' );</script>";
-            echo "<script>var notifyElement = document.getElementById('notify-via-form');console.log(notifyElement);</script>";
-            $this->theMsg = "Please complete all fields before submitting form.";
-
-        }
-        //             /*   notifyElement.style.backgroundColor = 'red';
-//                notifyElement.style.color = 'white';
-//                notifyElement.style.padding = '15px';
-//                notifyElement.style.display = 'block';
-//        echo "<script>console.log( 'Eg of console log' );</script>";
-
+        return view('confirm-create')->with(array('theData' => $location, 'entity' => 'Shift'));
     }
 
     public function jobDateTime($date, $time){
@@ -218,7 +175,11 @@ class RosterController extends Controller
 
         $this->validate($request, [
             'assigned_user_id' => 'required',//TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
-            'locations' => 'required'
+            'locations' => 'required',
+            'startDateTxt' => 'required',
+            'startTime' => 'required',
+            'endDateTxt' => 'required',
+            'endTime' => 'required'
         ]);
         $job = Job::find($id);
 
@@ -236,37 +197,20 @@ class RosterController extends Controller
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
 
-        //validate the inputs laravel does not validate
-        if(($dateStart!=null)&&($dateEnd!=null)&&($timeStart!=null)&&($timeEnd!=null)) {
+        //process start date and time before adding to db
+        $carbonStart = $this->jobDateTime($dateStart, $timeStart);
+        $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
+        $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
 
-            //process start date and time before adding to db
-            $carbonStart = $this->jobDateTime($dateStart, $timeStart);
-            $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
-            $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
+        //add data to table
+        $job->job_scheduled_for = $carbonStart;
+        $job->estimated_job_duration = $lengthH;
 
-            //add data to table
-            $job->job_scheduled_for = $carbonStart;
-            $job->estimated_job_duration = $lengthH;
-
-            $job->save();
+        $job->save();
 
 //            $this->notifyViaForm(true);
-            $theAction = 'edited the shift: ';
-            return view('confirm')->with(array('theData' => $location,  'theAction' => $theAction));
-        }
-        else{
-//            $this->notifyViaForm(false);
-
-//            echo"<script>
-//                console.log(element);
-//                var element = document.getElementById('notify-via-form').innerHTML;
-//
-//                element.style.backgroundColor = 'green';
-//            </script>";
-            //user input invalid, user stays on form page
-            $this->theMsg = "The form cannot be submitted until all fields are completed.";
-            return view('home/rosters/create')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks, 'theMsg' => $this->theMsg));
-        }
+        $theAction = 'edited the shift: ';
+        return view('confirm')->with(array('theData' => $location,  'theAction' => $theAction));
     }
 
     /**
