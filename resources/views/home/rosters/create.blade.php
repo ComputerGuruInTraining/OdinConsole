@@ -11,8 +11,6 @@
 @stop
 
 @section('page-content')
-    <div id="notify-via-form">{{$theMsg}}</div>
-
     @if (count($errors) > 0)
         <div class="alert alert-danger">
             <ul>

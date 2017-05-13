@@ -53,7 +53,7 @@ class RosterController extends Controller
     }
 
     public function checksCollection(){
-        $checks = collect([0,1,2,3,4,5]);
+        $checks = collect([1,2,3,4,5]);
         return $checks;
     }
 
