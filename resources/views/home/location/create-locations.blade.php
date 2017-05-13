@@ -36,7 +36,7 @@
              and if not not allow the entry to be added. Possibly via a service that checks the address is valid, or otherwise using the entered address to allow
              user flexibility but this may mean the address will not display on the map, unless a segment of the address can be taken and interpreted into a valid geo-code.--}}
             @include('map')
-            <div class='form-group'>
+            <div class='form-group' id="address-alias">
                 {{ Form::label('name', 'Address Alias *') }}
                 {{ Form::text('name', null, ['placeholder' => 'eg UC Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
             </div>

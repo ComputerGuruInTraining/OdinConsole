@@ -1,34 +1,38 @@
 @extends('layouts.list')
 
 @extends('sidebar_custom')
-{{--FIXME: v1 duplicate html rendering Probably due to use of Resourc Controller, perhaps clock picker causes multiple renders--}}
 
 @section('title')
     Create Roster
 @stop
 
 @section('title-item')
-    Create Shift
+    Add Shift to Roster
 @stop
 
 @section('page-content')
+    <div id="notify-via-form">{{$theMsg}}</div>
+
     <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
         {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
         <div class='form-group'>
             {!! Form::Label('employees', 'Select Employee:') !!}
-            <select class="form-control" name="employee_id">
+            <select class="form-control" name="assigned_user_id">
                 @foreach($empList as $emp)
                     <option value="{{$emp->id}}">{{$emp->first_name}}</option>
                 @endforeach
             </select>
         </div>
+        {{--TODO: lower priority v1: capability to add multiple locations at the one time, by holding ctrl key when select
+        also for employees: necessary enhancement for the bare minimum usability--}}
 {{--TODO lower priority v1: an add button, to add another location
+
 Functionally, it will operate such that:
 add button is pressed, a function is called which echos js to create an element on the view
 every time add button pressed--}}
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
-            <select class="form-control" name="location_name">
+            <select class="form-control" name="locations">
                 @foreach($locList as $loc)
                     <option value="{{$loc->name}}">{{$loc->name}}</option>
                 @endforeach

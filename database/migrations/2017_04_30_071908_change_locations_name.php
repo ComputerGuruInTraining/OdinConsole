@@ -30,10 +30,9 @@ class ChangeLocationsName extends Migration
     {
         Schema::table('locations', function($column){
 
-            $column->dropColumn('additional_info');
-            $column->dropColumn('address');
-            $column->dropColumn('longitude');
-            $column->dropColumn('latitude');
+            $column->string('address', 150)->change();
+            $column->string('address', 20)->change();
+            $column->string('longitude', 20)->change();
         });
     }
 }
