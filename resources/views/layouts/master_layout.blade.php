@@ -51,8 +51,8 @@
             <header class="main-header">  -->
     @include('header')
 
-    <!-- Sidebar -->
-    @include('sidebar')
+    {{--<!-- Sidebar -->--}}
+    {{--@include('sidebar')--}}
 
     <!-- Content Wrapper. Contains page content -->
         {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}

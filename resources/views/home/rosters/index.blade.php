@@ -34,7 +34,8 @@
     </table>
     <div>
         <p>Btn or just link in sidebar??</p>
-        <a href="/rosters/create" class="btn btn-info" style="margin-right: 3px;">Create</a>
+        <a href="/rosters/create" class="btn btn-info" style="margin-right: 3px;">Add Shift</a>
+        <a href="/rosters/1/edit" class="btn btn-info" style="margin-right: 3px;">Edit Shift</a>
         {{--<a href="#" class="btn btn-info" style="margin-right: 3px;">Edit</a>--}}
         {{--<a href="#" class="btn btn-danger" style="margin-right: 3px;">Delete</a>--}}
     </div>

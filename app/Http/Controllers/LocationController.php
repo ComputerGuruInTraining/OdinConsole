@@ -51,17 +51,16 @@ class LocationController extends Controller
     {
         //validate data
         //TODO: validate address as complete so geoCode can be obtained
-        //TODO: unique alias ie name
         $this->validate($request, [
-           'name' => 'required|max:255',
-        'mapData' => 'required|max:255',
+           'name' => 'required|unique:locations|max:255',
+        'address' => 'required|unique:locations|max:255',
         ]);
 
         //store the data in the db
         //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field to type address and select from dropdown
         $location = new Location;
         $location->name = ucfirst(Input::get('name'));
-        $address = Input::get('mapData');
+        $address = Input::get('address');
         $location->address = $address;
         //TODO v1 or v2??: catch for incorrect addresses or addresses that can not be selected via map
         $geoCoords = $this->geoCode($address);
@@ -95,10 +94,9 @@ class LocationController extends Controller
         $location = Location::find($id);
 
         //validate data
-        //TODO: unique alias ie name
         $this->validate($request, [
-            'name' => 'required|max:255',
-            'address' => 'required|max:255',
+            'name' => 'required|unique:locations|max:255',
+            'address' => 'required|unique:locations|max:255',
         ]);
 
         //store the data in the db
