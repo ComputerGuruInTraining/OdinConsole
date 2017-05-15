@@ -27,10 +27,11 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+Route::resource('/add_user', 'UserController@store');
 
-Route::get('login', 'HomeController@getLogin()');
+Route::get('/login', 'HomeController@getLogin');
 
-Route::get('Logout', 'HomeController@getLogout()');
+Route::get('logout', 'HomeController@getLogout');
 
 Route::resource('employees', 'EmployeeController');
 Route::get('/employees', 'EmployeeController@index');

@@ -9,7 +9,8 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\Users;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -26,7 +27,7 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-		$users = Users::all();
+		$users = User::all();
 
 		return View::make('user.index', ['users' => $users]);
 	}
