@@ -27,9 +27,13 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
-Route::resource('employees', 'EmployeeController');
-Route::get('/employees', 'EmployeeController@index');
-Route::post('/employee','EmployeeController@store');
+Route::resource('/employees', 'EmployeeController');
+
+// Route::get('employees/create', 'EmployeeController@create');
+// Route::get('employees', 'EmployeeController@index');
+// Route::post('employees','EmployeeController@store');
+// Route::get('/employees/{employee}', 'EmployeeController@show');
+// Route::get('/edit-employee/{employee}', 'EmployeeController@show');
 
 Route::resource('/location', 'LocationController');
 
