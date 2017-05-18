@@ -24,10 +24,12 @@
 <div class='form-group'>
     {{ Form::label('dob', 'Date of Birth') }}
     {{--{{ Form::text('date', 'dob', $employee->dob, ['id'=>'datepicker']) }}--}}
+{{--    {{ Form::text('date', $employee->dob, array('class' => 'datepicker')) }}--}}
+    {{ Form::input('date', 'dob',Carbon\Carbon::create('Y-m-d',$employee->dob)->format('d-m-Y')) }}
 
-    {{--{{ Form::text('date', $employee->dob, array('id' => 'datepicker')) }}--}}
-    {{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->dob, 'id' =>'datepicker']) }}
-    
+
+    {{--{{ Form::text('date',$employee->dob, array('id' => 'datepicker')) }}--}}
+
 </div>
 
 

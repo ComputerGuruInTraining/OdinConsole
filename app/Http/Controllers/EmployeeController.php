@@ -104,9 +104,12 @@ class EmployeeController extends Controller
         //store the data in the db
         $employee->first_name = Input::get('first_name');
         $employee->last_name = Input::get('last_name');
-        // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
+         $employee->dob = Input::get('dob');
+//         Carbon::parse($request->datepicker);
 
-        $employee->dob= Carbon::parse($request->datepicker);
+//        $employee->dob= Carbon::parse($request->datepicker);
+//        $employee->dob=Carbon::createFromFormat('d/m/yyyy', $request->input('dob'))->format('Y-m-d');
+
         // date("Y-m-d", strtotime($request->datepicker))
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
