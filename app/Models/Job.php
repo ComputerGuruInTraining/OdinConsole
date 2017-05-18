@@ -1,14 +1,11 @@
 <?php
 
-
 namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Eloquent
+class Job extends Model
 {
-	
-protected $table ="users";
-
+    protected $table ="jobs";
 }
