@@ -23,7 +23,7 @@
 
 <div class='form-group'>
   {{ Form::label('dob', 'Date of Birth') }}
-  {{ Form::text('date', '', array('id' => 'datepicker')) }}
+  {{ Form::text('date', '', array('class' => 'datepicker')) }}
 </div>
 
 
