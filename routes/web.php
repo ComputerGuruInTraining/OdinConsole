@@ -33,9 +33,22 @@ Route::get('/login', 'HomeController@getLogin');
 
 Route::get('logout', 'HomeController@getLogout');
 
-Route::resource('employees', 'EmployeeController');
-Route::get('/employees', 'EmployeeController@index');
-Route::post('/employee','EmployeeController@store');
+Route::resource('/employees', 'EmployeeController');
+
+
+
+Route::get('/clock', function(){
+    return view('clock-picker');
+
+});
+
+Route::resource('rosters', 'RosterController');
+
+//Route::get('rosters/create', function(){
+//
+//
+//   return view('home/rosters/create');
+//});
 
 Route::resource('/location', 'LocationController');
 
@@ -65,6 +78,8 @@ Route::get('/confirm-delete/{theId}/',  function($theId){
 
 });
 
+
+
 //Route::delete('/{theId}/delete',  function($theId){
 
 //    $theURL = URL::route//array('as' => 'selected',
@@ -79,3 +94,5 @@ Route::get('/confirm-delete/{theId}/',  function($theId){
 //    return $locationView;
 //
 //});
+
+
