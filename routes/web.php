@@ -1,4 +1,4 @@
-php
+<?php
 
 use App\Http\Controllers\LocationController;
 //use App\Http\Controllers\LocationController;
@@ -37,9 +37,9 @@ Route::resource('/user', 'UserController');
 
 Route::resource('/employees', 'EmployeeController');
 
-Route::get('login', 'HomeController@getLogin()');
-
-Route::get('Logout', 'HomeController@getLogout()');
+//Route::get('login', 'HomeController@getLogin()');
+//
+//Route::get('Logout', 'HomeController@getLogout()');
 
 
 Route::get('/clock', function(){

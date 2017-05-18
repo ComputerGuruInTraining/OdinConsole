@@ -26,7 +26,8 @@
     {{--{{ Form::text('date', 'dob', $employee->dob, ['id'=>'datepicker']) }}--}}
 
     {{--{{ Form::text('date', $employee->dob, array('id' => 'datepicker')) }}--}}
-    {{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->dob, 'id' =>'datepicker']) }}
+    {{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->do
+    b, 'class' =>'datepicker']) }}
     
 </div>
 
