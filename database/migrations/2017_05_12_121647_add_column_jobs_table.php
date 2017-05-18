@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateLocations extends Migration
+class AddColumnJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateLocations extends Migration
      */
     public function up()
     {
-        Schema::table('locations', function($column){
-            $column->string('additional_info')->nullable();
+        Schema::table('jobs', function($column){
+            $column->integer('checks')->nullable();
         });
     }
 
@@ -25,9 +25,9 @@ class UpdateLocations extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function($newcolumn){
+        Schema::table('jobs', function($dropnewcolumn){
 
-            $newcolumn->dropColumn('additional_info');
+            $dropnewcolumn->dropColumn('checks');
         });
     }
 }

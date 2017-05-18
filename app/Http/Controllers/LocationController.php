@@ -5,23 +5,23 @@ namespace App\Http\Controllers;
 use Input;
 use Form;
 use Model;
-//use app\functions;
 use App\Models\Location;
 use Illuminate\Http\Request;
-//use App/
 use Illuminate\Support\MessageBag;
-//use App\Http\Controllers\Controller;
-//use Illuminate\Routing\Controller;
 use Illuminate\Routing\Controller as BaseController;
+
+//FIXME: line1 ?? LocationController seems to be an issue in web.php.
+// FIXME: line2 ?? If a route to a resource is after the route to the location resource, the resource urls do not work.
+// FIXME: line3 ?? Possible Cause: LocationController manually typed. So Possible Fix: create in cmd line and copy code into methods.
 
 class LocationController extends Controller
 {
     protected $locations;
 
-    public function __construct()
-    {
-
-    }
+//    public function __construct()
+//    {
+//
+//    }
 
     public function index()
     {
@@ -51,16 +51,16 @@ class LocationController extends Controller
     {
         //validate data
         //TODO: validate address as complete so geoCode can be obtained
-        //TODO: unique alias ie name
         $this->validate($request, [
-           'name' => 'required|max:255',
-        'mapData' => 'required|max:255',
+           'name' => 'required|unique:locations|max:255',
+        'address' => 'required|unique:locations|max:255',
         ]);
 
         //store the data in the db
+        //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field to type address and select from dropdown
         $location = new Location;
         $location->name = ucfirst(Input::get('name'));
-        $address = Input::get('mapData');
+        $address = Input::get('address');
         $location->address = $address;
         //TODO v1 or v2??: catch for incorrect addresses or addresses that can not be selected via map
         $geoCoords = $this->geoCode($address);
@@ -94,10 +94,9 @@ class LocationController extends Controller
         $location = Location::find($id);
 
         //validate data
-        //TODO: unique alias ie name
         $this->validate($request, [
-            'name' => 'required|max:255',
-            'address' => 'required|max:255',
+            'name' => 'required|unique:locations|max:255',
+            'address' => 'required|unique:locations|max:255',
         ]);
 
         //store the data in the db

@@ -27,6 +27,18 @@ Odin theming
     right: 15px;
 }
 
+/*#success{*/
+    /*padding: 15px;*/
+    /*background-color: #00a65a;*/
+    /*color: white;*/
+
+/*}*/
+
+.padding{
+    padding: 15px;
+
+}
+
 #map{
     /*position:absolute;*/
     /*z-index: */
@@ -41,6 +53,10 @@ Odin theming
 
 #address-catch{
     display: none;
+}
+
+#address-alias{
+    padding-top: 15px;
 }
 
 .manage-btns{
@@ -78,6 +94,11 @@ Odin theming
     padding-top: 10px;
     padding-bottom: 10px;
     color: #4d4d4d;
+}
+
+.container-fluid{
+    padding-left: 0px;
+
 }
 
 /*

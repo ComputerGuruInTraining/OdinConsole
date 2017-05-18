@@ -1,4 +1,4 @@
-<?php
+php
 
 use App\Http\Controllers\LocationController;
 //use App\Http\Controllers\LocationController;
@@ -20,20 +20,40 @@ use App\Http\Controllers\LocationController;
 
 Route::get('/', 'HomeController@getIndex');
 
-Route::post('home', 'HomeController@postIndex');
+Route::post('/', 'HomeController@postIndex');
 
 Route::get('/admin', function () {
     return view('admin_template');
 });
 
 Route::resource('/user', 'UserController');
-Route::resource('/employees', 'EmployeeController');
+
 
 // Route::get('employees/create', 'EmployeeController@create');
 // Route::get('employees', 'EmployeeController@index');
 // Route::post('employees','EmployeeController@store');
 // Route::get('/employees/{employee}', 'EmployeeController@show');
 // Route::get('/edit-employee/{employee}', 'EmployeeController@show');
+
+Route::resource('/employees', 'EmployeeController');
+
+Route::get('login', 'HomeController@getLogin()');
+
+Route::get('Logout', 'HomeController@getLogout()');
+
+
+Route::get('/clock', function(){
+    return view('clock-picker');
+
+});
+
+Route::resource('rosters', 'RosterController');
+
+//Route::get('rosters/create', function(){
+//
+//
+//   return view('home/rosters/create');
+//});
 
 Route::resource('/location', 'LocationController');
 
@@ -63,6 +83,8 @@ Route::get('/confirm-delete/{theId}/',  function($theId){
 
 });
 
+
+
 //Route::delete('/{theId}/delete',  function($theId){
 
 //    $theURL = URL::route//array('as' => 'selected',
@@ -77,3 +99,5 @@ Route::get('/confirm-delete/{theId}/',  function($theId){
 //    return $locationView;
 //
 //});
+
+
