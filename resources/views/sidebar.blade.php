@@ -36,7 +36,8 @@
             <li class="header"><h4>Quick Links</h4></li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="#"><span>Dashboard</span></a></li>
-            <li class="active"><a href="/employee"><span>Employees</span></a></li>
+
+            <li class="active"><a href="/employees"><span>Employees</span></a></li>
             <li class="active"><a href="/rosters"><span>Roster</span></a></li>
             <li class="active"><a href="/location"><span>Locations</span></a></li>
             <li class="active"><a href="#"><span>Clients</span></a></li>
