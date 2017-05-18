@@ -27,19 +27,14 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+Route::resource('/add_user', 'UserController@store');
 
+Route::get('/login', 'HomeController@getLogin');
 
-// Route::get('employees/create', 'EmployeeController@create');
-// Route::get('employees', 'EmployeeController@index');
-// Route::post('employees','EmployeeController@store');
-// Route::get('/employees/{employee}', 'EmployeeController@show');
-// Route::get('/edit-employee/{employee}', 'EmployeeController@show');
+Route::get('logout', 'HomeController@getLogout');
 
 Route::resource('/employees', 'EmployeeController');
 
-//Route::get('login', 'HomeController@getLogin()');
-//
-//Route::get('Logout', 'HomeController@getLogout()');
 
 
 Route::get('/clock', function(){
