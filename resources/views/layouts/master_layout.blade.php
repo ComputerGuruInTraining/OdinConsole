@@ -57,7 +57,8 @@
     <!-- Content Wrapper. Contains page content -->
         {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}
         <div class="content-wrapper">
-            <section class="content-header">
+
+<section class="content-header">
                 <h1>
                 @yield('title-item')
                 <!--<small> {{$page_description or null}} </small>-->
@@ -95,10 +96,13 @@
 
     <script>
         $( function() {
+
             $( ".datepicker" ).datepicker({
-                changeMonth: true,
-                changeYear: true
+                changeMonth: true,               
+                changeYear: true,
+                yearRange: "-80:+0"
             });
+
         } );
     </script>
 

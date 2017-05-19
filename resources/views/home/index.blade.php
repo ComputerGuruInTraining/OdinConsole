@@ -6,7 +6,7 @@
 
 <div class='col-lg-4 col-lg-offset-4'>
 
-   @if ($errors->has('username'))
+   @if (count( $errors ) > 0)
         @foreach ($errors->all() as $error)
             <div class='bg-danger alert'>{{ $error }}</div>
         @endforeach
