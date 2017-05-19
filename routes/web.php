@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocationController;
-//use App\Http\Controllers\LocationController;
+use App\Http\Controllers\RosterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,11 +70,19 @@ Route::get('/{theId}/',  function($theId){
 
 });
 
-Route::get('/confirm-delete/{theId}/',  function($theId){
+Route::get('/confirm-delete-location/{theId}/',  function($theId){
 
 //    $theURL = URL::route//array('as' => 'selected',
-    $locationView = LocationController::confirmDelete($theId);
-    return $locationView;
+    $deleteView = LocationController::confirmDelete($theId);
+    return $deleteView;
+
+});
+
+Route::get('/confirm-delete-shift/{theId}/',  function($theId){
+
+//    $theURL = URL::route//array('as' => 'selected',
+    $deleteView = RosterController::confirmDelete($theId);
+    return $deleteView;
 
 });
 
