@@ -11,10 +11,10 @@ class Employee extends Eloquent
     //
    protected $table= "employees";
    protected $dates = ['dob'];
-
+//
    public function setDobAttribute($dob){
 
-       $this->attributes['dob']  = Carbon::parse($dob);
+       $this->attributes['dob']  = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
    }
 
    public function getDobAttribute($dob){
