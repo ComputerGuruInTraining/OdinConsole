@@ -28,7 +28,7 @@ class LocationController extends Controller
         //retrieve all records from locations table via Location Model
         $locations = Location::all();
         $this->locations = $locations;
-        $location = $locations[0];
+        $location = $locations[0];//TODO: auto-select an item rather than hardcode
         //TODO: sort the locations into a sorted array
         //TODO: the first location in the sorted list will be in the top section of the webpage
         return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $location));
@@ -128,7 +128,10 @@ class LocationController extends Controller
 
     public static function confirmDelete($id){
         $location = Location::find($id);
-        return view('confirm-delete')->with('deleting', $location);
+        $name = $location->name;
+        $id = $location->id;
+        $url = 'location';
+        return view('confirm-delete')->with(array('fieldDesc' => $name, 'id' => $id, 'url' => $url));
     }
 
     public function geoCode($address){

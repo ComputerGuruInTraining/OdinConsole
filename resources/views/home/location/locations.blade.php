@@ -19,7 +19,7 @@
 @stop
 
 @section('delete-link')
-    "/confirm-delete/{{ $displayItem->id }}/"
+    "/confirm-delete-location/{{ $displayItem->id }}/"
 @stop
 
 @section('title-item')
@@ -45,7 +45,7 @@
     </table>
     <div class="manage-btns">
         <a href="http://localhost:8000/location/{{ $displayItem->id }}/edit" class="btn btn-info" style="margin-right: 3px;">Edit</a>
-        <a href="/confirm-delete/{{ $displayItem->id }}/" class="btn btn-danger" style="margin-right: 3px;">Delete</a>
+        <a href="/confirm-delete-location/{{ $displayItem->id }}/" class="btn btn-danger" style="margin-right: 3px;">Delete</a>
     </div>
 @stop
 

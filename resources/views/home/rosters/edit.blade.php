@@ -64,8 +64,8 @@
                 </div>
 
                 <div class='form-group'>
-                    {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
-                    {{ Form::button('Cancel', ['class' => 'btn btn-primary']) }}
+                    {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
+                    <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
                 </div>
             {{ Form::close() }}
         </div>

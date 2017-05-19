@@ -52,7 +52,7 @@
                 {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
                 {{--/>--}}
                 {{--TODO: cancel btn code--}}
-                {{ Form::button('Cancel', ['class' => 'btn btn-primary']) }}
+                <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
             </div>
 
             {{--TODO: include?? If the user cannot select the address from the map in some rare cases--}}

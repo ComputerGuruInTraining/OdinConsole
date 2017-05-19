@@ -15,6 +15,8 @@ use App\Http\Controllers\EmployeeController;
 
 class RosterController extends Controller
 {
+//    TODO: HIGH select roster
+// TODO: HIGH view entire roster
 
     /**
      * Display a listing of the resource.
@@ -24,7 +26,8 @@ class RosterController extends Controller
     public function index()
     {
         //
-        return view('home/rosters/index');
+        $jobs = Job::all();
+        return view('home/rosters/index')->with('jobs', $jobs);
     }
 
     /**
@@ -140,7 +143,10 @@ class RosterController extends Controller
      */
     public function show($id)
     {
-        //
+        //TODO: format date that displays on view
+        $jobs = Job::all();
+        $selectedJob = Job::find($id);
+        return view('home/rosters/show')->with(array('jobs' => $jobs, 'selected' => $selectedJob));
     }
 
     /**
@@ -168,6 +174,7 @@ class RosterController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //TODO: HIGH auto-populate fields on edit page
         //variables for passing to view
         $empList = $this->employeeList();
         $locList = $this->locationList();
@@ -221,6 +228,15 @@ class RosterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $job = Job::find($id);
+        Job::destroy($id);
+        return view('confirm')->with(array('theData'=> $job->locations, 'theAction' => 'deleted'));
+    }
+
+    public static function confirmDelete($id){
+        $job = Job::find($id);
+        $desc = 'the shift at '.$job->locations.' on '.$job->job_scheduled_for;
+        $id = $job->id;
+        return view('confirm-delete')->with(array('fieldDesc' => $desc, 'id' => $id, 'url' => 'rosters'));
     }
 }

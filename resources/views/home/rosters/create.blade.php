@@ -79,7 +79,7 @@ every time add button pressed--}}
 
         <div class='form-group'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-            {{ Form::button('Cancel', ['class' => 'btn btn-primary']) }}
+            <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
         {{ Form::close() }}
