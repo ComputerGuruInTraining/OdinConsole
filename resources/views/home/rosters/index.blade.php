@@ -47,8 +47,8 @@
 @stop
 
 {{--@section('page-content')--}}
-    {{--@foreach($jobs->sortBy('locations') as $job)--}}
-        {{--<div class="list"><a href="/rosters/{{ $job->id }}">{{$job->locations}}</a></div>--}}
+    {{--@foreach($formattedJobs->sortBy('locations') as $formattedJob)--}}
+        {{--<div class="list"><a href="/rosters/{{ $formattedJob->id }}">{{$formattedJob->locations}}</a></div>--}}
         {{--<br>--}}
     {{--@endforeach--}}
 {{--@stop--}}
@@ -65,22 +65,21 @@
         <div class='table-responsive'>
             <table class="table  table-hover">
                 <tr>
-                    <th>Assigned to</th>
-                    <th>Locations</th>
-                    <th>Visits Required</th>
                     <th>Start Date</th>
-                    <th>Duration</th>
+                    <th>Locations (Checks)</th>
+                    <th>Assigned to</th>
+                    <th>Time</th>
                     <th>Actions</th>
                 </tr>
-                @foreach($jobs->sortBy('locations') as $job)
+
+                @foreach($formattedJobs as $formattedJob)
                     <tr>
-                        <td>{{$job->assigned_user_id}}</td>
-                        <td>{{$job->locations}}</td>
-                        <td>{{$job->checks}}</td>
-                        <td>{{$job->job_scheduled_for}}</td>
-                        <td>{{$job->estimated_job_duration}}</td>
+                        <td>{{$formattedJob['startDate']}}</td>
+                        <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
+                        <td>{{$formattedJob['employees']}}</td>
+                        <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->
                         <td>
-                            <a href="/rosters/{{ $job->id }}">View</a> | <a href="/rosters/{{$job->id}}/edit">Edit</a>
+                            <a href="/rosters/{{ $formattedJob['id'] }}">View</a> | <a href="/rosters/{{$formattedJob['id']}}/edit">Edit</a>
                         </td>
                     </tr>
                 @endforeach

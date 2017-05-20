@@ -9,6 +9,8 @@ use App\Models\Employee;
 use App\Models\Location;
 use Input;
 use Carbon\Carbon;
+use DateTime;
+use DateInterval;
 //use View;
 
 use App\Http\Controllers\EmployeeController;
@@ -25,9 +27,8 @@ class RosterController extends Controller
      */
     public function index()
     {
-        //
-        $jobs = Job::all();
-        return view('home/rosters/index')->with('jobs', $jobs);
+        $formattedJobs = $this->jobList();
+        return view('home/rosters/index')->with('formattedJobs', $formattedJobs);
     }
 
     /**
@@ -45,28 +46,12 @@ class RosterController extends Controller
         return view('home/rosters/create')->with(array('empList' => $empList, 'locList' =>$locList, 'checks' =>$checks));
     }
 
-    public function employeeList(){
-        $empList = Employee::all('id', 'first_name');
-        return $empList;
-    }
-
-    public function locationList(){
-        $locList = Location::all('id', 'name');
-        return $locList;
-    }
-
-    public function checksCollection(){
-        $checks = collect([1,2,3,4,5]);
-        return $checks;
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
 //    TODO: assigned_user_id to be changed to assigned_employee_id perhaps. Wait upon User/Employee setup in Web Console
     public function store(Request $request)
     {
@@ -122,19 +107,6 @@ class RosterController extends Controller
         return view('confirm-create')->with(array('theData' => $location, 'entity' => 'Shift'));
     }
 
-    public function jobDateTime($date, $time){
-        $dtStr = $date . " " . $time;
-        $carbonDT = Carbon::parse($dtStr);
-        return $carbonDT;
-    }
-
-    public function jobDuration($carbonStart, $carbonEnd){
-        //calculate duration based on start date and time and end date and time
-        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
-        $lengthH = ($lengthM / 60);//convert to hours
-        return $lengthH;
-    }
-
     /**
      * Display the specified resource.
      *
@@ -144,7 +116,7 @@ class RosterController extends Controller
     public function show($id)
     {
         //TODO: format date that displays on view
-        $jobs = Job::all();
+        $jobs = $this->jobList();
         $selectedJob = Job::find($id);
         return view('home/rosters/show')->with(array('jobs' => $jobs, 'selected' => $selectedJob));
     }
@@ -232,6 +204,103 @@ class RosterController extends Controller
         Job::destroy($id);
         return view('confirm')->with(array('theData'=> $job->locations, 'theAction' => 'deleted'));
     }
+
+    public function jobList(){
+        //define $formattedJobs collection to store formatted data after conversion of data from db
+        $formattedJobs = collect([]);
+
+        //retrieve ordered data from db
+        $jobs = Job::orderBy('job_scheduled_for','asc')->orderBy('locations')->get();
+
+        foreach($jobs as $job) {
+            //process job_scheduled_for and duration and convert into start and end date and times
+            $dbdt = $job->job_scheduled_for;
+            $duration = $job->estimated_job_duration;
+
+            //extract date and time from job_scheduled_for datetime
+            $dtm = new DateTime($dbdt);
+            $startDate = $this->stringDate($dtm);
+            $startTime = $this->stringTime($dtm);
+
+            //calculate end date and time using duration and job_scheduled_for
+            $edt = $this->endDT($dbdt, $duration);//datetime format
+
+            //extract date and time from end datetime object
+            $endDate = $this->stringDate($edt);
+            $endTime = $this->stringTime($edt);
+
+            $employee = Employee::find($job->assigned_user_id);
+            $employeeName = $employee->first_name." ".$employee->last_name;
+
+            $formattedJobs->push(array(
+                'id'=>$job->id,
+                'locations'=>$job->locations,
+                'checks'=>$job->checks,
+                'employees' =>$employeeName,
+                'startDate' => $startDate,
+                'startTime' => $startTime,
+                'endDate' => $endDate,
+                'endTime' => $endTime
+            ));
+        }
+        return $formattedJobs;
+    }
+
+    public function employeeList(){
+        $empList = Employee::all('id', 'first_name');
+        return $empList;
+    }
+
+    public function locationList(){
+        $locList = Location::all('id', 'name');
+        return $locList;
+    }
+
+    public function checksCollection(){
+        $checks = collect([1,2,3,4,5]);
+        return $checks;
+    }
+
+    public function endDT($startTime, $duration){
+        $dt = new DateTime($startTime);//DateTime object
+        $interval = 'PT'.$duration.'H';
+        $edt = $dt->add(new DateInterval($interval));
+        return $edt;
+    }
+
+    public function stringDate($dt){
+        $date = $dt->format('m/d/Y');
+        return $date;
+    }
+
+    public function stringTime($tm){
+        $time = $tm->format("g"). '.' .$tm->format("i"). ' ' .$tm->format("a");
+
+        if($time == '12.00 AM')
+        {
+            $time = 'Midnight';
+
+        }
+//        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
+        return $time;
+    }
+
+    public function jobDateTime($date, $time){
+        $dtStr = $date . " " . $time;
+        $carbonDT = Carbon::parse($dtStr);
+        return $carbonDT;
+    }
+
+    public function jobDuration($carbonStart, $carbonEnd){
+        //calculate duration based on start date and time and end date and time
+        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
+        $lengthH = ($lengthM / 60);//convert to hours
+        //        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
+
+        return $lengthH;
+    }
+
+
 
     public static function confirmDelete($id){
         $job = Job::find($id);
