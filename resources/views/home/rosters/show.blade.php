@@ -56,8 +56,8 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Shift
         </button>
     </div>
-    @foreach($jobs->sortBy('locations') as $job)
-        <div class="list"><a href="/rosters/{{ $job->id }}">{{$job->locations}}</a></div>
+    @foreach($jobs as $job)
+        <div class="list"><a href="/rosters/{{ $job['id'] }}">{{$job['locations']}}</a></div>
         <br>
     @endforeach
 @stop

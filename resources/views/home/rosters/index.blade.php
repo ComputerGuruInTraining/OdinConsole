@@ -63,7 +63,7 @@
         </div>
 {{--TODO low, v2 or v1 after other tasks implemented: if no checks, input 0--}}
         <div class='table-responsive'>
-            <table class="table  table-hover">
+            <table class="table  table-hover list-view">
                 <tr>
                     <th>Start Date</th>
                     <th>Locations (Checks)</th>
@@ -74,7 +74,9 @@
 
                 @foreach($formattedJobs as $formattedJob)
                     <tr>
+                        {{--@if($formattedJob['startDate'] == ""){<td></td>}--}}
                         <td>{{$formattedJob['startDate']}}</td>
+                        {{--@endif--}}
                         <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
                         <td>{{$formattedJob['employees']}}</td>
                         <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->

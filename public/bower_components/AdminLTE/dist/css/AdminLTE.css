@@ -101,6 +101,10 @@ Odin theming
 
 }
 
+.list-view tr:nth-child(even) {
+    background-color: #ebf9f9;/*ebf9f9 or e6ffee*/
+}
+
 /*
  * Core: General Layout Style
  * -------------------------
