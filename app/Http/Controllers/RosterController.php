@@ -224,7 +224,10 @@ class RosterController extends Controller
             //extract date and time from job_scheduled_for datetime
             $dtm = new DateTime($dbdt);
             $modifiedJobs[$i]->startDate = $this->stringDate($dtm);
+            $modifiedJobs[$i]->uniqueDate = $this->stringDate($dtm);
+
             $modifiedJobs[$i]->startTime = $this->stringTime($dtm);
+
 
             //calculate end date and time using duration and job_scheduled_for
             $edt = $this->endDT($dbdt, $duration);//datetime format
@@ -238,20 +241,40 @@ class RosterController extends Controller
 
             echo "<script>console.log( 'Array Start Date: " . $job->startDate . "' );</script>";
         }
+        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate');
 
-        for ($i = 0; $i < $modifiedJobs->count(); $i++) {
-            for ($j = 0; $j < $modifiedJobs->count(); $j++) {
-                if ($modifiedJobs[$i]['startDate'] == $modifiedJobs[$j]['startDate']) {
-                    if (($i == $j) || ($i < $j)) {
-                        $modifiedJobs[$i]['startDate'] = $modifiedJobs[$i]['startDate'];//keep current value
-
-                    } else if ($i > $j) {
-                        $modifiedJobs[$i]['startDate'] = null;
-                    }
-                }
-            }
-        }
         return $modifiedJobs;
+    }
+
+    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue = null){
+//        if($value) {
+            for ($i = 0; $i < $modifiedJobs->count(); $i++) {
+                for ($j = 0; $j < $modifiedJobs->count(); $j++) {
+                        if ($modifiedJobs[$i][$value] == $modifiedJobs[$j][$value]) {
+
+
+                            if ($modifiedJobs[$i][$modifiedValue] == $modifiedJobs[$j][$modifiedValue]) {
+                                    if (($i == $j) || ($i < $j)) {
+                                        $modifiedJobs[$i][$modifiedValue] = $modifiedJobs[$i][$modifiedValue];//keep current value
+
+                                    } else if ($i > $j) {
+                                        $modifiedJobs[$i][$modifiedValue] = null;
+                                    }
+                            }
+                            if($optionalValue){
+
+
+                            }
+
+
+                        }
+                    }
+//            }
+        }
+
+
+        return $modifiedJobs;
+
     }
 
     public function employeeList(){

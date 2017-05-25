@@ -67,7 +67,7 @@
 
                 @foreach($formattedJobs as $formattedJob)
                     <tr>
-                        <td>{{$formattedJob['startDate']}}</td>
+                        <td>{{$formattedJob['uniqueDate']}}</td>
                         <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->
                         <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
                         <td>{{$formattedJob['employeeName']}}</td>
