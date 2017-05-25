@@ -243,7 +243,8 @@ class RosterController extends Controller
         }
 //        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate');
         $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'startTime', 'endTime');
-
+        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
+//        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
 
 
         return $modifiedJobs;
