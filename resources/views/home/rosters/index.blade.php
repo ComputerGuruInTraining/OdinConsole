@@ -66,23 +66,23 @@
             <table class="table  table-hover list-view">
                 <tr>
                     <th>Start Date</th>
-                    <th>Locations (Checks)</th>
-                    <th>Assigned to</th>
-                    <th>Time</th>
-                    <th>Actions</th>
+                    {{--<th>Locations (Checks)</th>--}}
+                    {{--<th>Assigned to</th>--}}
+                    {{--<th>Time</th>--}}
+                    {{--<th>Actions</th>--}}
                 </tr>
 
                 @foreach($formattedJobs as $formattedJob)
                     <tr>
-                        {{--@if($formattedJob['startDate'] == ""){<td></td>}--}}
-                        <td>{{$formattedJob['startDate']}}</td>
+{{--                        @if($formattedJob['startDate'] == ""){<td></td>}--}}
+                        <td>{{$formattedJob['job_scheduled_for']}}</td>
                         {{--@endif--}}
-                        <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
-                        <td>{{$formattedJob['employees']}}</td>
-                        <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->
-                        <td>
-                            <a href="/rosters/{{ $formattedJob['id'] }}">View</a> | <a href="/rosters/{{$formattedJob['id']}}/edit">Edit</a>
-                        </td>
+                        {{--<td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>--}}
+                        {{--<td>{{$formattedJob['employees']}}</td>--}}
+                        {{--<td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->--}}
+                        {{--<td>--}}
+                            {{--<a href="/rosters/{{ $formattedJob['id'] }}">View</a> | <a href="/rosters/{{$formattedJob['id']}}/edit">Edit</a>--}}
+                        {{--</td>--}}
                     </tr>
                 @endforeach
 
