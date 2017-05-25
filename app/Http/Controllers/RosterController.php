@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
-use App\Models\Job_Location;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Location;
@@ -13,7 +12,7 @@ use DateTime;
 use DateInterval;
 //use View;
 
-use App\Http\Controllers\EmployeeController;
+//use App\Http\Controllers\EmployeeController;
 
 class RosterController extends Controller
 {
@@ -30,7 +29,6 @@ class RosterController extends Controller
     public function index()
     {
         $formattedJobs = $this->jobList();
-//        $unique = $this->removeDups();
         return view('home/rosters/index')->with('formattedJobs', $formattedJobs);
     }
 
@@ -135,10 +133,7 @@ class RosterController extends Controller
     {
         $job = Job::find($id);
         $locationName = $job->locations;
-//        $locationString = (string)$locationName;
         $employee = Employee::find($job->assigned_user_id);
-//        $locationRecord = Location::where('name', '=', $locationString);
-//        echo "<script>console.log( 'Location: " . $locationRecord->name . "' );</script>";
 
         $empList = $this->employeeList();
         $locList = $this->locationList();
@@ -214,259 +209,50 @@ class RosterController extends Controller
         Job::destroy($id);
         return view('confirm')->with(array('theEntity'=> '', 'theData'=> $job->locations, 'theAction' => 'deleted'));
     }
-//
-//    public function removeDups(){
-//
-//        $jobsCompare = array();
-////        $jobsCompare2 = collect();
-//
-//        for ($c = 0; $c < $this->formattedJobs->count(); $c++) {
-//            $jobsCompare[$c] = $this->formattedJobs[$c]['startDate'];
-////            $jobsCompare2[$c] = $this->formattedJobs[$c]['startDate'];
-//            echo "<script>console.log( 'Array Compare: " . $jobsCompare[$c] . "' );</script>";
-//        }
-//
-////        $intersect = $jobsCompare->intersect($jobsCompare2);
-//
-//        $unique = array_unique($jobsCompare);
-//
-//
-//        foreach($unique as $item){
-//
-//            echo "<script>console.log( 'Array Unique: " . $item . "' );</script>";
-//        }
-//
-//        return $unique;
-
-//    }
 
     public function jobList()
     {
-        //define $formattedJobs collection to store formatted data after conversion of data from db
-//        $this->formattedJobs = collect([]);
-//        $arrayCompare = collect([]);
-//        echo "<script>console.log( 'Array Declared line 215: " . $arrayCompare . "' );</script>";
-
-//        $comparedJobs = collect([]);
-
         //retrieve ordered data from db
         $jobs = Job::orderBy('job_scheduled_for', 'asc')->orderBy('locations')->get();
-//        $jobsGrouped = $jobs->groupBy('job_scheduled_for');
         $modifiedJobs = $jobs;
 
-        foreach ($modifiedJobs as $job) {
+        foreach ($modifiedJobs as $i => $job) {
             //process job_scheduled_for and duration and convert into start and end date and times
             $dbdt = $job->job_scheduled_for;//string returned from db
             $duration = $job->estimated_job_duration;
 
             //extract date and time from job_scheduled_for datetime
             $dtm = new DateTime($dbdt);
-            $startDate = $this->stringDate($dtm);
-            $startTime = $this->stringTime($dtm);
+            $modifiedJobs[$i]->startDate = $this->stringDate($dtm);
+            $modifiedJobs[$i]->startTime = $this->stringTime($dtm);
 
             //calculate end date and time using duration and job_scheduled_for
             $edt = $this->endDT($dbdt, $duration);//datetime format
 
             //extract date and time from end datetime object
-            $endDate = $this->stringDate($edt);
-            $endTime = $this->stringTime($edt);
+            $modifiedJobs[$i]->endDate = $this->stringDate($edt);
+            $modifiedJobs[$i]->endTime = $this->stringTime($edt);
 
             $employee = Employee::find($job->assigned_user_id);
-            $employeeName = $employee->first_name . " " . $employee->last_name;
-//            $job->checks = 5;
-            $job->job_scheduled_for = $startDate;
-            echo "<script>console.log( 'Array Grouped: " . $job->job_scheduled_for . "' );</script>";
+            $modifiedJobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
 
-
-
-//            $this->formattedJobs->push(array(
-//                'id' => $job->id,
-//                'locations' => $job->locations,
-//                'checks' => $job->checks,
-//                'employees' => $employeeName,
-//                'startDate' => $startDate,
-//                'startTime' => $startTime,
-//                'endDate' => $endDate,
-//                'endTime' => $endTime,
-//            ));
+            echo "<script>console.log( 'Array Start Date: " . $job->startDate . "' );</script>";
         }
 
-//        $comparedJobs = $this->formattedJobs;
-//        $groupedJobs = collect([]);
         for ($i = 0; $i < $modifiedJobs->count(); $i++) {
             for ($j = 0; $j < $modifiedJobs->count(); $j++) {
-                if ($modifiedJobs[$i]['job_scheduled_for'] == $modifiedJobs[$j]['job_scheduled_for']) {
+                if ($modifiedJobs[$i]['startDate'] == $modifiedJobs[$j]['startDate']) {
                     if (($i == $j) || ($i < $j)) {
-                        $modifiedJobs[$i]['job_scheduled_for'] = $modifiedJobs[$i]['job_scheduled_for'];//keep current value
+                        $modifiedJobs[$i]['startDate'] = $modifiedJobs[$i]['startDate'];//keep current value
 
                     } else if ($i > $j) {
-                        $modifiedJobs[$i]['job_scheduled_for'] = null;
-
+                        $modifiedJobs[$i]['startDate'] = null;
                     }
                 }
-
-
             }
         }
-//
-//
-//
-//
-//
-//            }
-//
-//
-//
-//
-//        }
-
         return $modifiedJobs;
     }
-
-        //collection transform through the collection and
-        //if the date matches the date of other items in the collection
-        //and the location matches the location
-        //return the items that match this criteria (intersect)
-
-
-        //loop through arrayCompare
-//        for ($c = 0; $c < $this->formattedJobs->count(); $c++) {
-            //loop through formattedJobs
-//            for ($j = 0; $j < $this->formattedJobs->count(); $j++) {
-//                //loop through formattedJobs again to compare the values in the array
-//                $dateToArray = false;
-//                for ($i = 1; $i < $this->formattedJobs->count(); $i++) {
-//
-//                    if ($this->formattedJobs[$i]['startDate'] == $this->formattedJobs[$j]['startDate']){
-//                        if($dateToArray == false){
-//                            $arrayCompare[$j] = $this->formattedJobs[$j]['startDate'];
-//                            $arrayCompare[$i] = "";
-////                        $arrayCompare->push(array(
-////                        'startDate' => $this->formattedJobs[$j]['startDate'],
-////
-//////                        'startDate' => "a",
-////                        'locations' => $this->formattedJobs[$i]['locations'],
-//
-////                        'locations' => "a"
-//
-////));
-////                        $arrayCompare[$i]
-//
-////                    echo "<script>console.log( 'Assigned Value: " . $this->formattedJobs[$j]['locations'] . "' );</script>";
-//                        echo "<script>console.log( 'Array Values: " . $arrayCompare[$j] . "' );</script>";
-//                        echo "<script>console.log( 'Array Values: " . $arrayCompare[$i] . "' );</script>";
-//
-//
-////                        echo "<script>console.log( 'ssigned Value: " . $arrayCompare[$i]['startDate'] . "' );</script>";
-//
-//
-//
-//                    $dateToArray = true;
-//
-//                }
-//                else if(($this->formattedJobs[$i]['startDate'] == $this->formattedJobs[$j]['startDate'])&&($dateToArray == true)){
-//                    $arrayCompare[$j] = "";
-//
-//                }
-//                }
-//            }
-//        }
-//        echo "<script>console.log( 'Array: " . $arrayCompare. "' );</script>";
-//
-//
-////        for ($p = 0; $p < $this->formattedJobs->count(); $p++) {
-////            $this->formattedJobs[$p]->put('datesFiltered', $arrayCompare[$p]);
-////
-////
-////        }
-////        for ($x = 0; $x <= $this->formattedJobs->count(); $x++) {
-//        for ($x = 0; $x < 20; $x++) {
-//
-////            if ($this->formattedJobs[$x]){
-//            echo "<script>console.log( 'Array in Loop: " . $arrayCompare[1] . "' );</script>";
-//
-////            if($arrayCompare[$x]) {
-//                $comparedJobs->push(array(
-//
-//                    'id' => $this->formattedJobs[$x]['id'],
-//                    'locations' => $this->formattedJobs[$x]['locations'],
-//                    'checks' => $this->formattedJobs[$x]['checks'],
-//                    'employees' => $this->formattedJobs[$x]['employees'],
-//
-//                        'startDate' => $arrayCompare[$x+1],
-//
-//                    'startTime' => $this->formattedJobs[$x]['startTime'],
-//                    'endDate' => $this->formattedJobs[$x]['endDate'],
-//                    'endTime' => $this->formattedJobs[$x]['endTime']
-//
-//                ));
-//            }
-//
-////        }
-//                    $comparedJobs->push(array(
-//                'id' => $this->formattedJobs['id'],
-////            'locations' => $this->formattedJobs->locations,
-//                'checks' => $this->formattedJobs[$x]['checks'],
-//                'employees' => $this->formattedJobs[$x]['employees'],
-//                'startDate' => $arrayCompare[$x],
-//                'startTime' => $this->formattedJobs[$x]['startTime'],
-//                'endDate' => $this->formattedJobs[$x]['endDate'],
-//                'endTime' => $this->formattedJobs[$x]['endTime']
-//            ));
-
-//        return $comparedJobs;
-        //        foreach($this->formattedJobs as $formattedJob)
-//        {
-//            for($i=0; $i < $formattedJobs->count(); $i++ )
-//            {
-//                if($formattedJobs[$i]['startDate'] == $formattedJob['startDate']) {
-//                    if($formattedJobs[$i]['locations'] == $formattedJob['locations'])
-//                    {
-//                        echo "<script>console.log( 'Assigned Value: " . $formattedJobs[$i]['locations'] . "' );</script>";
-//                        echo "<script>console.log( 'Assigned Value: " . $formattedJob['locations'] . "' );</script>";
-//
-//
-//                        $formattedJob['locations'] = "As Above";
-//
-//                        echo "<script>console.log( 'Assigned Value: " . $formattedJob['locations'] . "' );</script>";
-//
-//                    }
-//                }
-//            }
-//        }
-        //loop through the entire array
-//        for($i=0; $i < $formattedJobs->count(); $i++ ) {
-
-//            $groupedLocation = $this->formattedJobs->map(function ($item, $key) {
-////            callback fn to reassign values of the array if necessary
-////            $comparedLocation = $formattedJobs->map(function ($item, $key) {
-//
-////                        $this->formattedJobs)
-//                foreach($this->formattedJobs as $formattedJob) {
-//                    if (($item['startDate'] == $formattedJob['startDate']) && ($item['locations'] == $formattedJob['locations'])) {
-////                    if($item['startTime'] == $formattedJob['startTime']) {
-//                        echo "<script>console.log( 'Assigned Value: " . $item['locations'] . "' );</script>";
-////                        echo "<script>console.log( 'Assigned Value: " . $this->formattedJobs[$this->i]['locations'] . "' );</script>";
-//
-////                        if($item)
-//                        $item['locations'] = "As Above";
-//
-//                        echo "<script>console.log( 'Assigned Value: " . $item['locations'] . "' );</script>";
-//
-//                    } else {
-//                        $item['locations'] = $item['locations'];
-//                    }
-////                }
-//
-//
-//                    return $item;
-//
-//                }
-//            });
-////        });
-
-
-
 
     public function employeeList(){
         $empList = Employee::all('id', 'first_name', 'last_name');
