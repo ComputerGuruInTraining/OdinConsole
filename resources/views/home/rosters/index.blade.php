@@ -68,8 +68,20 @@
                 @foreach($formattedJobs as $formattedJob)
                     <tr>
                         <td>{{$formattedJob['uniqueDate']}}</td>
-                        <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->
-                        <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
+                        @if($formattedJob['endTime'] != null)
+                            <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td>
+                        @else
+                            <td></td>
+                        @endif
+                        @if($formattedJob['locations'] != null)
+                            <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
+                        @else
+                            <td></td>
+                        @endif
+
+
+                        {{--<td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->--}}
+                        {{--<td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>--}}
                         <td>{{$formattedJob['employeeName']}}</td>
                         <td>
                             <a href="/rosters/{{ $formattedJob['id'] }}">View</a> | <a href="/rosters/{{$formattedJob['id']}}/edit">Edit</a>

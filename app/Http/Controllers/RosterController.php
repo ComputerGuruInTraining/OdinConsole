@@ -241,12 +241,15 @@ class RosterController extends Controller
 
             echo "<script>console.log( 'Array Start Date: " . $job->startDate . "' );</script>";
         }
-        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate');
+//        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate');
+        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'startTime', 'endTime');
+
+
 
         return $modifiedJobs;
     }
 
-    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue = null){
+    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null){
 //        if($value) {
             for ($i = 0; $i < $modifiedJobs->count(); $i++) {
                 for ($j = 0; $j < $modifiedJobs->count(); $j++) {
@@ -261,7 +264,21 @@ class RosterController extends Controller
                                         $modifiedJobs[$i][$modifiedValue] = null;
                                     }
                             }
-                            if($optionalValue){
+                            if(($optionalValue1)&&($optionalValue2)){
+                                    if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])&&($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2]))
+                                    {
+                                        if (($i == $j) || ($i < $j)) {
+                                            //keep current values
+                                            $modifiedJobs[$i][$optionalValue1] = $modifiedJobs[$i][$optionalValue1];
+                                            $modifiedJobs[$i][$optionalValue2] = $modifiedJobs[$j][$optionalValue2];
+
+                                        } else if ($i > $j) {
+                                            $modifiedJobs[$i][$optionalValue1] = null;
+                                            $modifiedJobs[$i][$optionalValue2] = null;
+                                        }
+                                    }
+
+                                }
 
 
                             }
@@ -270,7 +287,7 @@ class RosterController extends Controller
                         }
                     }
 //            }
-        }
+
 
 
         return $modifiedJobs;
