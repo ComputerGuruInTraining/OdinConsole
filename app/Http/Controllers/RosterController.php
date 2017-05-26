@@ -25,11 +25,15 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
     protected $formattedJobs;
+    protected $count;
 
     public function index()
     {
-        $formattedJobs = $this->jobList();
-        return view('home/rosters/index')->with('formattedJobs', $formattedJobs);
+       $jobs = $this->jobList();
+       $groupJobs = $this->groupByDate($jobs);
+
+
+        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs));
     }
 
     /**
@@ -239,7 +243,6 @@ class RosterController extends Controller
             $employee = Employee::find($job->assigned_user_id);
             $modifiedJobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
 
-            echo "<script>console.log( 'Array Start Date: " . $job->startDate . "' );</script>";
         }
 
 //        display blank data for same date and also for same date and same start and end time
@@ -247,7 +250,96 @@ class RosterController extends Controller
 //        display blank data for same location and checks when same date
         $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
 
+        $groupedJobs = $modifiedJobs->groupBy(function($modifiedJob, $key){return $modifiedJob['startDate'];});
+//        echo "<script>console.log( 'Grouped Array: Index = ".$groupedJobs. "' );</script>";
+//        $allJobs = $groupedJobs->all();//returns the underlying array from a collection
+//        echo "<script>console.log( 'Grouped Array: Index = ".$allJobs['05/02/2017']. "' );</script>";
+
+        $groupedJobs->toArray();
+
+//
         return $modifiedJobs;
+    }
+
+    public function groupByDate($jobs)
+    {
+        $groupedJobs = $jobs->groupBy(function ($job, $key) {
+            $job->key = $key;
+            if((($job->key)%2) == 0) {
+//                echo "<script>console.log( 'Key for grouped = " . $job->key . "' );</script>";
+            }
+
+            return $job['startDate'];
+        });
+//        $groupedArray = $groupedJobs->toArray();
+//        if(is_array($groupedArray)) {
+//            echo "<script>console.log( 'Array Keys = array' );</script>";
+//
+//            echo "<script>console.log( 'Array Keys = " . $groupedArray['05/02/2017']->locations . "' );</script>";
+//        }
+//        else{
+//            echo "<script>console.log( 'Array Keys isnt array' );</script>";
+//
+//
+//        }
+//        echo "<script>console.log( 'Grouped Array: Index = " . $groupedJobs . "' );</script>";
+//
+        foreach($jobs as $job) {
+////            $uniqueDate = $job->uniqueDate;//many different values
+////            if($uniqueDate != null) {
+//                foreach ($groupedJobs->get($job->uniqueDate) as $shift) {
+//                    echo "<script>console.log( 'Shift Employee Name = " . $shift->employeeName . "' );</script>";
+//                    echo "<script>console.log( 'Shift Employee Key = " . $shift . "' );</script>";
+//
+//                    echo "<script>console.log( 'Shift Employee Key = " . $shift . "' );</script>";
+//                    $this->count = collect();
+//                    foreach($this->count as $counts) {
+//                        if ($shift->uniqueDate == $shift->startDate) {
+//                            $counts++;
+//                            echo "<script>console.log( Count = " . $counts . "' );</script>";
+//
+//
+//                        }
+//                    }
+//
+//                }
+////
+//        }
+//////        $allJobs = $groupedJobs->all();//returns the underlying array from a collection
+////        echo "<script>console.log( 'Grouped Array: Index = ".$allJobs['05/02/2017']. "' );</script>";
+        $count = 0;
+        foreach($groupedJobs as $index => $formattedJob) {
+////            $locations = 'locations';
+////            $assigned_user_id = 'assigned_user_id';
+//
+
+
+
+//            //conclusion: accesses $formattedJob at first index (with id = 2) but won't access the other indexes.
+            if ($index == $job->uniqueDate) {
+                echo "<script>console.log( 'Group Indexes = " . $index . "' );</script>";
+////                echo "<script>console.log( 'Grouped Looped = " . $formattedJob->find(2) . "' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
+//////                echo "<script>console.log( 'Grouped Property = " . $formattedJob->all('locations') . "' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
+////
+////            } else {
+////                echo "<script>console.log( 'Grouped Property not found' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
+////
+////
+            }
+            if($index == '05/28/2017'){
+//                echo "<script>console.log( 'Accessed Index = " . $index . "' );</script>";
+                $count++;
+
+//            $count = count($index == '05/03/2017');
+                echo "<script>console.log( 'Count of indexes = " . $count . "' );</script>";
+
+
+            }
+        }
+//
+        }
+
+        return $groupedJobs;
     }
 
     public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null, $optionalValue3 = null, $optionalValue4 = null)
@@ -265,30 +357,11 @@ class RosterController extends Controller
                             &&($modifiedJobs[$i][$optionalValue3] == $modifiedJobs[$j][$optionalValue3])
                             &&($modifiedJobs[$i][$optionalValue4] == $modifiedJobs[$j][$optionalValue4]))  {
                             if ($i > $j) {
-
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue1] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue2] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue3] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue4] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue1] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue2] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue3] . "' );</script>";
-                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue4] . "' );</script>";
                                 $modifiedJobs[$i][$optionalValue3] = null;
                                 $modifiedJobs[$i][$optionalValue4] = null;
                                 $modifiedJobs[$i][$optionalValue1] = null;
                                 $modifiedJobs[$i][$optionalValue2] = null;
                             }
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue1] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue2] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue3] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue4] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue1] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue2] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue3] . "' );</script>";
-                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue4] . "' );</script>";
-                            echo "<script>console.log( 'i Values: " . $i . "' );</script>";
-                            echo "<script>console.log( 'j Values: " . $j . "' );</script>";
                         }
                         else  if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])
                             && ($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2]))
