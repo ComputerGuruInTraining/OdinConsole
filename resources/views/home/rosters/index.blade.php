@@ -59,20 +59,17 @@
             <table class="table  table-hover list-view">
                 <tr>
                     <th>Start Date</th>
-                    <th>Time</th>
+
                     <th>Locations (Checks)</th>
                     <th>Assigned to</th>
+                    <th>Time</th>
                     <th>Actions</th>
                 </tr>
 
                 @foreach($formattedJobs as $formattedJob)
                     <tr>
                         <td>{{$formattedJob['uniqueDate']}}</td>
-                        @if($formattedJob['endTime'] != null)
-                            <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td>
-                        @else
-                            <td></td>
-                        @endif
+
                         @if($formattedJob['locations'] != null)
                             <td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>
                         @else
@@ -83,6 +80,11 @@
                         {{--<td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td><!--TODO convert from duration to start time end time following db restructure conversation-->--}}
                         {{--<td>{{$formattedJob['locations']}} ({{$formattedJob['checks']}})</td>--}}
                         <td>{{$formattedJob['employeeName']}}</td>
+                        @if($formattedJob['endTime'] != null)
+                            <td>{{$formattedJob['startTime']}}-{{$formattedJob['endTime']}}</td>
+                        @else
+                            <td></td>
+                        @endif
                         <td>
                             <a href="/rosters/{{ $formattedJob['id'] }}">View</a> | <a href="/rosters/{{$formattedJob['id']}}/edit">Edit</a>
                         </td>

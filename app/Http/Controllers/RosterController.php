@@ -241,58 +241,117 @@ class RosterController extends Controller
 
             echo "<script>console.log( 'Array Start Date: " . $job->startDate . "' );</script>";
         }
-//        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate');
-        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'startTime', 'endTime');
-        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
-//        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
 
+//        display blank data for same date and also for same date and same start and end time
+        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks', 'startTime', 'endTime');
+//        display blank data for same location and checks when same date
+        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
 
         return $modifiedJobs;
     }
 
-    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null){
+    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null, $optionalValue3 = null, $optionalValue4 = null)
+    {
 //        if($value) {
-            for ($i = 0; $i < $modifiedJobs->count(); $i++) {
-                for ($j = 0; $j < $modifiedJobs->count(); $j++) {
-                        if ($modifiedJobs[$i][$value] == $modifiedJobs[$j][$value]) {
+        for ($i = 0; $i < $modifiedJobs->count(); $i++) {
+            for ($j = 0; $j < $modifiedJobs->count(); $j++) {
+                //if for eg startDate the same, then:
+                if ($modifiedJobs[$i][$value] == $modifiedJobs[$j][$value]) {
 
-
-                            if ($modifiedJobs[$i][$modifiedValue] == $modifiedJobs[$j][$modifiedValue]) {
-                                    if (($i == $j) || ($i < $j)) {
-                                        $modifiedJobs[$i][$modifiedValue] = $modifiedJobs[$i][$modifiedValue];//keep current value
-
-                                    } else if ($i > $j) {
-                                        $modifiedJobs[$i][$modifiedValue] = null;
-                                    }
+//                    else if (($optionalValue1) && ($optionalValue2)) {
+//                        if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])
+//                            && ($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2]))
+//                            {
+//                            if (($i == $j) || ($i < $j)) {
+//                                //keep current values
+//                                $modifiedJobs[$i][$optionalValue1] = $modifiedJobs[$i][$optionalValue1];
+//                                $modifiedJobs[$i][$optionalValue2] = $modifiedJobs[$i][$optionalValue2];
+////                                $modifiedJobs[$i][$optionalValue3] = $modifiedJobs[$i][$optionalValue3];
+////                                $modifiedJobs[$i][$optionalValue4] = $modifiedJobs[$i][$optionalValue4];
+//
+//                            } else if ($i > $j) {
+//                                $modifiedJobs[$i][$optionalValue1] = null;
+//                                $modifiedJobs[$i][$optionalValue2] = null;
+////                                $modifiedJobs[$i][$optionalValue3] = null;
+////                                $modifiedJobs[$i][$optionalValue4] = null;
+//                            }
+//
+//                        }
+//                    }
+//                    locations, checks, startTime, endTime
+                    if (($optionalValue1) && ($optionalValue2)&&($optionalValue3)&&($optionalValue4)) {
+                        //if startDate same
+                    if ($modifiedJobs[$i][$modifiedValue] == $modifiedJobs[$j][$modifiedValue]) {
+//                        if (($i == $j) || ($i < $j)) {
+//                            //modify the value in a modifiedValue date property so as to keep values in original date property for ongoing comparison
+//                            $modifiedJobs[$i][$modifiedValue] = $modifiedJobs[$i][$modifiedValue];//keep current value
+//
+//                        } else
+                            if ($i > $j) {
+                            $modifiedJobs[$i][$modifiedValue] = null;
                             }
-                            if(($optionalValue1)&&($optionalValue2)){
-                                    if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])&&($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2]))
-                                    {
-                                        if (($i == $j) || ($i < $j)) {
-                                            //keep current values
-                                            $modifiedJobs[$i][$optionalValue1] = $modifiedJobs[$i][$optionalValue1];
-                                            $modifiedJobs[$i][$optionalValue2] = $modifiedJobs[$j][$optionalValue2];
+                        if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])
+                            && ($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2])
+                            &&($modifiedJobs[$i][$optionalValue3] == $modifiedJobs[$j][$optionalValue3])
+                            &&($modifiedJobs[$i][$optionalValue4] == $modifiedJobs[$j][$optionalValue4]))  {
+                            if ($i > $j) {
 
-                                        } else if ($i > $j) {
-                                            $modifiedJobs[$i][$optionalValue1] = null;
-                                            $modifiedJobs[$i][$optionalValue2] = null;
-                                        }
-                                    }
-
-                                }
-
-
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue1] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue2] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue3] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$j][$optionalValue4] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue1] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue2] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue3] . "' );</script>";
+                                echo "<script>console.log( 'Null Values: " . $modifiedJobs[$i][$optionalValue4] . "' );</script>";
+//                                $modifiedJobs[$i][$optionalValue1] = null;
+//                                $modifiedJobs[$i][$optionalValue2] = null;
+//                                $modifiedJobs[$i][$modifiedValue] = null;
+                                $modifiedJobs[$i][$optionalValue3] = null;
+                                $modifiedJobs[$i][$optionalValue4] = null;
+//                                                                $modifiedJobs[$i][$optionalValue1] = null;
+//                                $modifiedJobs[$i][$optionalValue2] = null;
                             }
-
-
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue1] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue2] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue3] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$j][$optionalValue4] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue1] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue2] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue3] . "' );</script>";
+                            echo "<script>console.log( 'Time Values: " . $modifiedJobs[$i][$optionalValue4] . "' );</script>";
+                            echo "<script>console.log( 'i Values: " . $i . "' );</script>";
+                            echo "<script>console.log( 'j Values: " . $j . "' );</script>";
+                        }
                         }
                     }
-//            }
+
+//                            if (($i == $j) || ($i < $j)) {
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$j][$optionalValue1] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$j][$optionalValue2] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$j][$optionalValue3] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$j][$optionalValue4] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$i][$optionalValue1] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$i][$optionalValue2] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$i][$optionalValue3] . "' );</script>";
+//                                echo "<script>console.log( 'Unique Values: " . $modifiedJobs[$i][$optionalValue4] . "' );</script>";
+//                                //keep current values
+////                                $modifiedJobs[$i][$optionalValue1] = $modifiedJobs[$i][$optionalValue1];
+////                                $modifiedJobs[$i][$optionalValue2] = $modifiedJobs[$j][$optionalValue2];
+//                                $modifiedJobs[$i][$optionalValue3] = $modifiedJobs[$i][$optionalValue3];
+//                                $modifiedJobs[$i][$optionalValue4] = $modifiedJobs[$i][$optionalValue4];
+//
+//                            } else
 
 
+
+
+
+                    }
+                }
+            }
 
         return $modifiedJobs;
-
     }
 
     public function employeeList(){

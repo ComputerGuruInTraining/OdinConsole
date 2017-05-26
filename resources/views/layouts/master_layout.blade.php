@@ -43,6 +43,7 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+{{--TODO: remove line from center of pages (occurs on long pages)--}}
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}
