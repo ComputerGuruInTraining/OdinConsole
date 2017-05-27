@@ -59,114 +59,43 @@
             <table class="table  table-hover list-view">
                 <tr>
                     <th>Start Date</th>
-
                     <th>Locations (Checks)</th>
                     <th>Assigned to</th>
                     <th>Time</th>
                     <th>Actions</th>
                 </tr>
-                @foreach($jobs as $job)
-                    @if($job->uniqueDate != null)
-                        @foreach($groupJobs->get($job->uniqueDate) as $shift)
-                            {{--@if((($job->key)%2) == 0)--}}
-                                {{--@foreach($groupJobs as $index => $value)--}}
-                                <tr class="unique-row">
-                                    <td rowspan="{{count($shift->uniqueDate == $shift->startDate)}}">{{$shift->uniqueDate}}</td>
-                                    @if($shift->locations != null)
-                                        <td >{{$shift->locations}} ({{$shift->checks}})</td>
-                                    @else
-                                        <td></td>
-                                    @endif
-                                    <td>{{$shift->employeeName}}</td>
-                                    @if($shift->endTime != null)
-                                        <td>{{$shift->startTime}}-{{$shift->endTime}}</td>
-                                    @else
-                                        <td></td>
-                                    @endif
-                                    <td>
-                                        <a href="/rosters/{{ $shift->id }}">View</a> | <a
-                                                href="/rosters/{{$shift->id}}/edit">Edit</a>
-                                    </td>
-                                </tr>
-                            {{--@elseif((($job->key)%2) != 0)--}}
-                                {{--<tr>--}}
-                                    {{--<td>{{$shift->uniqueDate}}</td>--}}
-                                    {{--@if($shift->locations != null)--}}
-                                        {{--<td>{{$shift->key}} ({{$shift->checks}})</td>--}}
-                                    {{--@else--}}
-                                        {{--<td></td>--}}
-                                    {{--@endif--}}
-                                    {{--<td>{{$shift->employeeName}}</td>--}}
-                                    {{--@if($shift->endTime != null)--}}
-                                        {{--<td>{{$shift->startTime}}-{{$shift->endTime}}</td>--}}
-                                    {{--@else--}}
-                                        {{--<td></td>--}}
-                                    {{--@endif--}}
-                                    {{--<td>--}}
-                                        {{--<a href="/rosters/{{ $shift->id }}">View</a> | <a--}}
-                                                {{--href="/rosters/{{$shift->id}}/edit">Edit</a>--}}
-                                    {{--</td>--}}
-                                {{--</tr>--}}
-                            {{--@endif--}}
+                @foreach($groupJobs as $index => $formattedJob)
+                    <tbody class="group-list">
+                    @foreach ($groupJobs->get($index) as $shift)
+                        @if($index == $shift->startDate)
 
-                        @endforeach
-                        {{--@elseif(($job->uniqueDate != null)&&($job->key%2 != 0))--}}
-                        {{--@foreach($groupJobs->get($job->uniqueDate) as $shift)--}}
-                        {{--@foreach($groupJobs as $index => $value)--}}
-                        {{----}}
-                        {{--@endforeach--}}
-                    @endif
+                            <tr>
+                                <td>{{$shift->uniqueDate}}</td>
+                                @if($shift->locations != null)
+                                    <td>{{$shift->locations}} ({{$shift->checks}})</td>
+                                @else
+                                    <td></td>
+                                @endif
+                                <td>{{$shift->employeeName}}</td>
+                                @if($shift->endTime != null)
+                                    <td>{{$shift->startTime}}-{{$shift->endTime}}</td>
+                                @else
+                                    <td></td>
+                                @endif
+                                <td>
+                                    <a href="/rosters/{{ $shift->id }}">View</a> | <a
+                                            href="/rosters/{{$shift->id}}/edit">Edit</a>
+                                </td>
+                            </tr>
 
+                        @endif
+                    @endforeach
+                    </tbody>
                 @endforeach
             </table>
         </div>
     </div>
 @stop
-
-{{--@foreach($jobs as $index => $job)--}}
-{{--@if($job['uniqueDate'] != null)--}}
-{{--<tr class="unique-row">--}}
-{{--@if($job['uniqueDate'] != null)--}}
-{{--<td>{{}}</td>--}}
-
-{{--@if($job['locations'] != null)--}}
-{{--@if($index == locations)--}}
-{{--<td>{{$job['locations']}} ({{$job['checks']}})</td>--}}
-{{--<td>{{$job['locations']}} ({{$job['checks']}})</td>--}}
-{{--@else--}}
-{{--<td></td>--}}
-{{--@endif--}}
-{{--<td>{{$job['employeeName']}}</td>--}}
-{{--@if($job['endTime'] != null)--}}
-{{--<td>{{$job['startTime']}}-{{$job['endTime']}}</td>--}}
-{{--@else--}}
-{{--<td></td>--}}
-{{--@endif--}}
-{{--<td>--}}
-{{--<a href="/rosters/{{ $job['id'] }}">View</a> | <a href="/rosters/{{$job['id']}}/edit">Edit</a>--}}
-{{--</td>--}}
-{{--</tr>--}}
-{{--@else--}}
-{{--<tr>--}}
-{{--<td></td>--}}
-{{--@if($job['locations'] != null)--}}
-{{--<td>{{$job['locations']}} ({{$job['checks']}})</td>--}}
-{{--@else--}}
-{{--<td></td>--}}
-{{--@endif--}}
-{{--<td>{{$job['employeeName']}}</td>--}}
-{{--@if($job['endTime'] != null)--}}
-{{--<td>{{$job['startTime']}}-{{$job['endTime']}}</td>--}}
-{{--@else--}}
-{{--<td></td>--}}
-{{--@endif--}}
-{{--<td>--}}
-{{--<a href="/rosters/{{ $job['id'] }}">View</a> | <a href="/rosters/{{$job['id']}}/edit">Edit</a>--}}
-{{--</td>--}}
-{{--</tr>--}}
-{{--@endif--}}-
-{{--@endforeach--}}
-
 
 
 

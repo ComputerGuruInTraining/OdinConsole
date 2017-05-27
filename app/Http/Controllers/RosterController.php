@@ -25,15 +25,19 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
     protected $formattedJobs;
-    protected $count;
+//    protected $grouped;
+//    protected $count;
 
     public function index()
     {
        $jobs = $this->jobList();
        $groupJobs = $this->groupByDate($jobs);
+       $counts = $this->countGroups($groupJobs);
+//        foreach ($counts as $counter) {
+//            echo "<script>console.log( 'counter = " . $counter . "' );</script>"; //7 but no results coming up below from 3-7./30
+//        }
 
-
-        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs));
+        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs, 'counts' => $counts));
     }
 
     /**
@@ -269,6 +273,7 @@ class RosterController extends Controller
 //                echo "<script>console.log( 'Key for grouped = " . $job->key . "' );</script>";
             }
 
+
             return $job['startDate'];
         });
 //        $groupedArray = $groupedJobs->toArray();
@@ -314,78 +319,137 @@ class RosterController extends Controller
 ////            $locations = 'locations';
 ////            $assigned_user_id = 'assigned_user_id';
 //
-        $count = 0;
-        $count2 = 0;
-        $count3 = 0;
+
+//        $count3 = 0;
+//        $countValue = 0;
+//        $count = collect();
 //        foreach($jobs as $job) {
-////            if($job->uniqueDate )
+//            if($job->uniqueDate )
 //            foreach ($groupedJobs->get($job->startDate) as $shift) {
 //
-//                foreach($groupedJobs as $index => $formattedJob) {
+//$count2++;
+//                echo "<script>console.log( 'count2 = " . $count2 . "' );</script>";//79 if unique Date 7
+//
+//                    foreach($groupedJobs as $index => $formattedJob) {
 //                    if($index == $shift->startDate) {
 //                        $count++;
 //                        echo "<script>console.log( 'Shift Start Date = " . $shift->startDate . "' );</script>";
-//                        echo "<script>console.log( 'Shift Start Date = " . $count . "' );</script>";//79 if unique Date 7
-//                    }
+//                        echo "<script>console.log( 'Count inner loop = " . $count . "' );</script>";//79 if unique Date 7
+////                    }
 //                }
 //
 //            }
 //        }
 //        foreach($jobs as $job) {
-            foreach($groupedJobs as $index => $formattedJob) {
-//            if($job->uniqueDate )
-
-                echo "<script>console.log( 'Index = " . $index . "' );</script>";
-
-            foreach ($groupedJobs->get($index) as $shift) {
-                if($index == $shift->startDate) {
-
-
-                    $count2++;
-                echo "<script>console.log( 'Data in 2nd loop = " . $shift->startDate . "' );</script>";
-
-                echo "<script>console.log( 'count2 = " . $count2 . "' );</script>"; //7 but no results coming up below from 3-7./30
-
-//                    $count3++;
-//                echo "<script>console.log( 'Data in 3rd loop = " . $shift->startDate . "' );</script>";
-
-                echo "<script>console.log( 'count3 = " . $count3 . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.//30
-//                    if($index == $shift->uniqueDate) {
-////                        foreach($jobs as $job){
-////                            $count++;
-////                            echo "<script>console.log( 'Data in last loop = " . $shift->startDate . "' );</script>";
-////                            echo "<script>console.log( 'count1 = " . $count . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.
-////                        }
-                    }
-                }
-
-            }
-//        }
+//        $count = 0;
+//        $count2 = 0;
+//        $counts = collect([]);
+//        foreach ($groupedJobs as $index => $formattedJob) {
+////
+//////                echo "<script>console.log( 'Index = " . $index . "' );</script>";
+////                count[0] = $countValue;
+////                $countValue++;
+////                $countValue = 0;
+////                $count++;
+//            echo "<script>console.log( 'Index = " . $index . "' );</script>";
+////            echo "<script>console.log( 'count1 = " . $count . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.
 //
+//
+////            foreach($counts as $count) {
+//              $count2 = 0;
+//                foreach ($groupedJobs->get($index) as $shift) {
+//                    if ($index == $shift->startDate) {
+////
+////
+//                        $count2++;
+////                    $count++;
+////                echo "<script>console.log( 'Data in 2nd loop = " . $shift->startDate . "' );</script>";
+//////
+//
+//////
+////////                    $count3++;
+////////                echo "<script>console.log( 'Data in 3rd loop = " . $shift->startDate . "' );</script>";
+//////
+//////                echo "<script>console.log( 'count3 = " . $count3 . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.//30
+//////                    if($index == $shift->uniqueDate) {
+////////                        foreach($jobs as $job){
+////////                            $count++;
+//
+////////                        }
+////                    }
+//                    }
+//
+//
+////                }
+//            }
+//            echo "<script>console.log( 'count2 = " . $count2 . "' );</script>"; //7 but no results coming up below from 3-7./30
+//            $counts->push($count2);
+//        }
+//        echo "<script>console.log( 'count2 = " . $counts . "' );</script>"; //7 but no results coming up below from 3-7./30
+////
 
 
 return $groupedJobs;
 }
-//            //conclusion: accesses $formattedJob at first index (with id = 2) but won't access the other indexes.
-//            if ($index == $job->uniqueDate) {
-//                echo "<script>console.log( 'Group Indexes = " . $index . "' );</script>";
-//////                echo "<script>console.log( 'Grouped Looped = " . $formattedJob->find(2) . "' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
-////////                echo "<script>console.log( 'Grouped Property = " . $formattedJob->all('locations') . "' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
-//////
-//////            } else {
-//////                echo "<script>console.log( 'Grouped Property not found' );</script>";//returns a collection instance with id = 2 if 2 passed as argument, nothing when 79 is although id = 79
-//////
-//////
-//            }
-//            if($index == '05/28/2017'){
-////                echo "<script>console.log( 'Accessed Index = " . $index . "' );</script>";
-//                $count++;
-//
-////            $count = count($index == '05/03/2017');
-//                echo "<script>console.log( 'Count of indexes = " . $count . "' );</script>";
-//
-//
 
+public function countGroups($groupedJobs){
+    $counts = collect([]);
+
+    foreach ($groupedJobs as $index => $formattedJob) {
+//
+////                echo "<script>console.log( 'Index = " . $index . "' );</script>";
+//                count[0] = $countValue;
+//                $countValue++;
+//                $countValue = 0;
+//                $count++;
+        echo "<script>console.log( 'Index = " . $index . "' );</script>";
+//            echo "<script>console.log( 'count1 = " . $count . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.
+
+
+//            foreach($counts as $count) {
+        $count2 = 0;
+        foreach ($groupedJobs->get($index) as $shift) {
+
+            if ($index == $shift->startDate) {
+//
+//
+                $count2++;
+//                    $count++;
+//                echo "<script>console.log( 'Data in 2nd loop = " . $shift->startDate . "' );</script>";
+////
+
+////
+//////                    $count3++;
+//////                echo "<script>console.log( 'Data in 3rd loop = " . $shift->startDate . "' );</script>";
+////
+////                echo "<script>console.log( 'count3 = " . $count3 . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.//30
+////                    if($index == $shift->uniqueDate) {
+//////                        foreach($jobs as $job){
+//////                            $count++;
+
+//////                        }
+//                    }
+            }
+//                echo "<script>console.log( 'count2 = " . $count . "' );</script>"; //7 but no results coming up below from 3-7./30
+
+
+//                }
+//            }
+        }
+        echo "<script>console.log( 'count2 = " . $count2 . "' );</script>"; //7 but no results coming up below from 3-7./30
+
+
+        $counts->push($count2);
+
+    }
+//    echo "<script>console.log( 'count2 = " . $counts[2] . "' );</script>"; //7 but no results coming up below from 3-7./30
+
+
+
+    return $counts;
+
+
+}
 
     public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null, $optionalValue3 = null, $optionalValue4 = null)
     {

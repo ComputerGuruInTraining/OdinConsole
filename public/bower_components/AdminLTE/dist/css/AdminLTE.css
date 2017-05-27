@@ -102,10 +102,14 @@ Odin theming
 }
 /*tr:nth-child(even)*/
 /*.list-view .unique-row:nth-child(even) - rows  1, 4, 6, 8, 9, 10, otherwise known as 1, 11, 21, 23,ie odds*/
-.list-view .unique-row
-{
+/*.list-view .unique-row*/
+/*{*/
+    /*background-color: #ebf9f9;*/
+    /*!*ebf9f9 or e6ffee*!*/
+/*}*/
+
+.group-list:nth-child(even){
     background-color: #ebf9f9;
-    /*ebf9f9 or e6ffee*/
 }
 
 
