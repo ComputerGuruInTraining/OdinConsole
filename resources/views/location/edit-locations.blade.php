@@ -19,15 +19,13 @@
             </div>
         @endif
 
-        {{ Form::model($location, ['route' => ['location.update', $location->id], 'method' => 'put']) }}
-        <div class='form-group'>
+        {{ Form::model($location, ['route' => ['locations.update', $location->id], 'method' => 'put']) }}
+
+            @include('map')
+
+        <div class='form-group padding-top'>
             {{ Form::label('name', 'Address alias') }}
             {{ Form::text('name', $location->name, ['onkeypress'=>'return noenter()']) }}
-        </div>
-
-        <div class='form-group'>
-            {{ Form::label('address', 'Address') }}
-            {{ Form::text('address', $location->address, ['onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group'>

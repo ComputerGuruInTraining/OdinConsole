@@ -27,16 +27,8 @@ Odin theming
     right: 15px;
 }
 
-/*#success{*/
-    /*padding: 15px;*/
-    /*background-color: #00a65a;*/
-    /*color: white;*/
-
-/*}*/
-
 .padding{
     padding: 15px;
-
 }
 
 #map{
@@ -55,7 +47,7 @@ Odin theming
     display: none;
 }
 
-#address-alias{
+.padding-top{
     padding-top: 15px;
 }
 
