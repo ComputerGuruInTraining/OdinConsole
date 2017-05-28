@@ -51,7 +51,6 @@ class RosterController extends Controller
         $locList = $this->locationList();
         $checks = $this->checksCollection();
 
-        //        FIXME: bg displaying when page first loads. Shouldn't be.
         return view('home/rosters/create')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks));
     }
 
@@ -117,7 +116,7 @@ class RosterController extends Controller
 
         $job->save();
 
-        return view('confirm-create')->with(array('theData' => $location, 'entity' => 'Shift'));
+        return view('confirm-create')->with(array('theData' => $location, 'entity' => 'Shift', 'url' => 'rosters'));
     }
 
     /**
@@ -149,8 +148,6 @@ class RosterController extends Controller
     public function edit($id)
     {
         $job = Job::find($id);
-//        $jobs = $this->jobList();
-//        $job = $jobs->find($id);//need the job from the jobList because the jobOject in jobList contains start time and end time etc. otherwise need to recompute
         $locationName = $job->locations;
         $employee = Employee::find($job->assigned_user_id);
 
@@ -158,7 +155,6 @@ class RosterController extends Controller
         $locList = $this->locationList();
         $checks = $this->checksCollection();
 
-//                echo "<script>console.log( 'Debug Objects: " . $ . "' );</script>";
         return view('home/rosters/edit')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks, 'job' => $job, 'employee' => $employee, 'locationName' => $locationName));
     }
 
@@ -170,13 +166,10 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
 //    TODO v1 after other functionality: ensure if start date is input as the same as i
+    //TODO: HIGH auto-populate fields on edit page
     public function update(Request $request, $id)
     {
-        //TODO: HIGH auto-populate fields on edit page
-//        //variables for passing to view
-//        $empList = $this->employeeList();
-//        $locList = $this->locationList();
-//        $checks = $this->checksCollection();
+
 
         $this->validate($request, [
             'assigned_user_id' => 'required',//TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations

@@ -1,7 +1,6 @@
 @extends('layouts.list')
 @extends('sidebar_custom')
 
-
 @section('title')
     Locations
 @stop
@@ -44,13 +43,18 @@
         </tr>
     </table>
     <div class="manage-btns">
-        <a href="http://localhost:8000/location/{{ $displayItem->id }}/edit" class="btn btn-info" style="margin-right: 3px;">Edit</a>
+        <a href="/locations/{{$displayItem->id}}/edit" class="btn btn-info" style="margin-right: 3px;">Edit</a>
         <a href="/confirm-delete-location/{{ $displayItem->id }}/" class="btn btn-danger" style="margin-right: 3px;">Delete</a>
     </div>
 @stop
 
 {{--TODO v2 or v1 low-priority: improve list so that doesn't run endlessly down the page--}}
 @section('content-list')
+    <div style="padding:15px 0px 10px 0px;">
+        <button type="button" class="btn btn-success" onclick="window.location.href='locations/create'">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Location
+        </button>
+    </div>
     @foreach($locations->sortBy('name') as $dbLocation)
         <div class="list"><a href="/{{ $dbLocation->id }}/">{{ $dbLocation->name }}</a></div>
         <br>

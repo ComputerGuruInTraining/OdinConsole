@@ -27,6 +27,7 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+
 Route::resource('/add_user', 'UserController@store');
 
 Route::get('/login', 'HomeController@getLogin');
@@ -42,7 +43,7 @@ Route::get('/clock', function(){
 
 });
 //move folders (both roster and locations) and change paths and make consistent urls for locations at the same time
-Route::resource('rosters', 'RosterController');
+Route::resource('/rosters', 'RosterController');
 
 //Route::get('rosters/create', function(){
 //
@@ -50,9 +51,9 @@ Route::resource('rosters', 'RosterController');
 //   return view('home/rosters/create');
 //});
 
-Route::resource('/location', 'LocationController');
+Route::resource('/locations', 'LocationController');
 
-Route::post('/location/created', 'LocationController@store');
+//Route::post('/location/created', 'LocationController@store');
 
 //error if the url format is for eg Route::get('/location/{theId}/'....);
 //Route::get('/{theURL}/', function($theURL){
@@ -62,45 +63,24 @@ Route::post('/location/created', 'LocationController@store');
 //
 //});
 
-Route::get('/{theId}/',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
-    $locationView = LocationController::select($theId);
-    return $locationView;
-
-});
+//Route::get('/{theId}/',  function($theId){
+//
+////    $theURL = URL::route//array('as' => 'selected',
+//    $locationView = LocationController::select($theId);
+//    return $locationView;
+//
+//});
 
 Route::get('/confirm-delete-location/{theId}/',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
     $deleteView = LocationController::confirmDelete($theId);
     return $deleteView;
 
 });
 
 Route::get('/confirm-delete-shift/{theId}/',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
     $deleteView = RosterController::confirmDelete($theId);
     return $deleteView;
-
 });
 
-
-
-//Route::delete('/{theId}/delete',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
-//    $locationView = LocationController::destroy($theId);
-//    return $locationView;
-//
-//});
-
-///{theId}/location/', function($theId){
-//
-//    $locationView = LocationController::select($theId);
-//    return $locationView;
-//
-//});
 
 

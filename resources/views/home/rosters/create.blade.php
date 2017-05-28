@@ -24,8 +24,9 @@
     <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
         {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
         <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee:') !!}
+            {{--{!! Form::Label('employees', 'Select Employee:') !!}--}}
             <select class="form-control" name="assigned_user_id">
+                <option value="" selected disabled>Select Employee:</option>
                 @foreach($empList as $emp)
                     <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                 @endforeach
@@ -39,8 +40,9 @@ Functionally, it will operate such that:
 add button is pressed, a function is called which echos js to create an element on the view
 every time add button pressed--}}
         <div class='form-group'>
-            {!! Form::Label('locations', 'Select Location:') !!}
+            {{--{!! Form::Label('locations', 'Select Location:') !!}--}}
             <select class="form-control" name="locations">
+                <option value="" selected disabled>Select Location:</option>
                 @foreach($locList as $loc)
                     <option value="{{$loc->name}}">{{$loc->name}}</option>
                 @endforeach
@@ -48,8 +50,9 @@ every time add button pressed--}}
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('checks', 'Number of Visits Required:') !!}
+            {{--{!! Form::Label('checks', 'Number of Visits Required:') !!}--}}
             <select class="form-control" name="checks">
+                <option value="" selected disabled>Select Visits Required:</option>
                 @foreach($checks as $check)
                     <option value="{{$check}}">{{$check}}</option>
                 @endforeach
