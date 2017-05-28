@@ -10,34 +10,32 @@ use Input;
 use Carbon\Carbon;
 use DateTime;
 use DateInterval;
+
 //use View;
 
 //use App\Http\Controllers\EmployeeController;
 
+// for console logging:
+//        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
 class RosterController extends Controller
 {
-//    TODO: HIGH select roster
-// TODO: HIGH view entire roster
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    protected $formattedJobs;
-//    protected $grouped;
+//    protected $formattedJobs;
+////    protected $grouped;
 //    protected $count;
-
+//        TODO: NOW: remove tr borders, instead tbody borders
     public function index()
     {
-       $jobs = $this->jobList();
-       $groupJobs = $this->groupByDate($jobs);
-       $counts = $this->countGroups($groupJobs);
-//        foreach ($counts as $counter) {
-//            echo "<script>console.log( 'counter = " . $counter . "' );</script>"; //7 but no results coming up below from 3-7./30
-//        }
+        //retrieve job collection from db with formatted values for start time and end time and values compared for duplicates
+        $jobs = $this->jobList();
+        //group the collection by startDate for grouping as tbody in the view
+        $groupJobs = $this->groupByDate($jobs);
 
-        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs, 'counts' => $counts));
+        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs));
     }
 
     /**
@@ -45,6 +43,8 @@ class RosterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //    TODO v1 after other functionality (lower): Do not auto-complete add shift with Employee and Location and Checks: instead have a select option: please select employee etc
+    //    TODO: low v2 or v1 after other functionality: sort select lists on add shift page in alpha order
     public function create()
     {
         $empList = $this->employeeList();
@@ -52,15 +52,19 @@ class RosterController extends Controller
         $checks = $this->checksCollection();
 
         //        FIXME: bg displaying when page first loads. Shouldn't be.
-        return view('home/rosters/create')->with(array('empList' => $empList, 'locList' =>$locList, 'checks' =>$checks));
+        return view('home/rosters/create')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+//    TODO High v1 possibly v2 but not very usable: If required fields are left blank, the validation message appears as expected, however
+//    TODO continued: the fields that haven't been completed are not saved so the user needs to complete all fields again and more risk that wrong item is created
+// TODO continued considering employee and location have default values.
+
 //    TODO: assigned_user_id to be changed to assigned_employee_id perhaps. Wait upon User/Employee setup in Web Console
     public function store(Request $request)
     {
@@ -97,7 +101,7 @@ class RosterController extends Controller
         $job->checks = Input::get('checks');
 
         //get data from form for non laravel validated inputs
-        $dateStart =Input::get('startDateTxt');//retrieved format = 05/01/2017
+        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
         $timeStart = Input::get('startTime');//hh:mm
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
@@ -119,27 +123,34 @@ class RosterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-//    TODO: either store and retrieve start time and start date in db for ease of use througout app, or find the item with the $id in the $jobList and use the $jobList values
-    public function show($id)
-    {
-        //TODO: format date that displays on view
-        $jobs = $this->jobList();
-        $selectedJob = Job::find($id);
-        return view('home/rosters/show')->with(array('jobs' => $jobs, 'selected' => $selectedJob));
-    }
+//NOTE: not using show at this point as index contains enough info
+//    public function show($id)
+//    {
+//
+//        $jobs = $this->jobList();
+////        foreach($jobs as $job) {
+////            $selectedJob = $jobs
+////        }
+//        $selectedJob = $jobs->find($id);
+//                echo "<script>console.log( 'Debug Objects: " . $selectedJob . "' );</script>";
+//
+//        return view('home/rosters/show')->with(array('jobs' => $jobs, 'selected' => $selectedJob));
+//    }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $job = Job::find($id);
+//        $jobs = $this->jobList();
+//        $job = $jobs->find($id);//need the job from the jobList because the jobOject in jobList contains start time and end time etc. otherwise need to recompute
         $locationName = $job->locations;
         $employee = Employee::find($job->assigned_user_id);
 
@@ -147,16 +158,18 @@ class RosterController extends Controller
         $locList = $this->locationList();
         $checks = $this->checksCollection();
 
-        return view('home/rosters/edit')->with(array('empList' => $empList, 'locList' =>$locList, 'checks' =>$checks, 'job'=> $job, 'employee'=>$employee, 'locationName' =>$locationName));
+//                echo "<script>console.log( 'Debug Objects: " . $ . "' );</script>";
+        return view('home/rosters/edit')->with(array('empList' => $empList, 'locList' => $locList, 'checks' => $checks, 'job' => $job, 'employee' => $employee, 'locationName' => $locationName));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
+//    TODO v1 after other functionality: ensure if start date is input as the same as i
     public function update(Request $request, $id)
     {
         //TODO: HIGH auto-populate fields on edit page
@@ -184,7 +197,7 @@ class RosterController extends Controller
         $job->checks = Input::get('checks');
 
         //get data from form for non laravel validated inputs
-        $dateStart =Input::get('startDateTxt');//retrieved format = 05/01/2017
+        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
         $timeStart = Input::get('startTime');//hh:mm
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
@@ -208,14 +221,15 @@ class RosterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $job = Job::find($id);
+//        $job = Job::find($id);
         Job::destroy($id);
-        return view('confirm')->with(array('theEntity'=> '', 'theData'=> $job->locations, 'theAction' => 'deleted'));
+        $theAction = 'deleted the shift';
+        return view('confirm')->with('theAction', $theAction);
     }
 
     public function jobList()
@@ -224,6 +238,7 @@ class RosterController extends Controller
         $jobs = Job::orderBy('job_scheduled_for', 'asc')->orderBy('locations')->get();
         $modifiedJobs = $jobs;
 
+//        the index is needed for reassigning a value to the collection item
         foreach ($modifiedJobs as $i => $job) {
             //process job_scheduled_for and duration and convert into start and end date and times
             $dbdt = $job->job_scheduled_for;//string returned from db
@@ -232,253 +247,76 @@ class RosterController extends Controller
             //extract date and time from job_scheduled_for datetime
             $dtm = new DateTime($dbdt);
             $modifiedJobs[$i]->startDate = $this->stringDate($dtm);
+            //also add the startDate values to uniqueDate which will be used later to update startDate values in uniqueDate, but preserve the values in startDate field
             $modifiedJobs[$i]->uniqueDate = $this->stringDate($dtm);
 
             $modifiedJobs[$i]->startTime = $this->stringTime($dtm);
-
 
             //calculate end date and time using duration and job_scheduled_for
             $edt = $this->endDT($dbdt, $duration);//datetime format
 
             //extract date and time from end datetime object
             $modifiedJobs[$i]->endDate = $this->stringDate($edt);
+
             $modifiedJobs[$i]->endTime = $this->stringTime($edt);
+
+            $modifiedJobs[$i]->uniqueLocations =  $job->locations;
 
             $employee = Employee::find($job->assigned_user_id);
             $modifiedJobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
-
         }
 
-//        display blank data for same date and also for same date and same start and end time
-        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks', 'startTime', 'endTime');
-//        display blank data for same location and checks when same date
-        $modifiedJobs = $this->compareValues($modifiedJobs,  'startDate', 'uniqueDate', 'locations', 'checks');
+//        pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
+        $modifiedJobs = $this->compareValues($modifiedJobs, 'startDate', 'uniqueDate', 'uniqueLocations', 'checks', 'startTime', 'endTime');
 
-        $groupedJobs = $modifiedJobs->groupBy(function($modifiedJob, $key){return $modifiedJob['startDate'];});
-//        echo "<script>console.log( 'Grouped Array: Index = ".$groupedJobs. "' );</script>";
-//        $allJobs = $groupedJobs->all();//returns the underlying array from a collection
-//        echo "<script>console.log( 'Grouped Array: Index = ".$allJobs['05/02/2017']. "' );</script>";
-
-        $groupedJobs->toArray();
-
-//
+        //if the time is 12:00am, convert to midnight for usability
+        foreach ($modifiedJobs as $i => $job) {
+            $modifiedJobs[$i]->startTime = $this->timeMidnight($modifiedJobs[$i]->startTime);
+            $modifiedJobs[$i]->endTime = $this->timeMidnight($modifiedJobs[$i]->endTime);
+        }
         return $modifiedJobs;
     }
 
     public function groupByDate($jobs)
     {
+        //group the collection by startDate for grouping as tbody in the view
         $groupedJobs = $jobs->groupBy(function ($job, $key) {
-            $job->key = $key;
-            if((($job->key)%2) == 0) {
-//                echo "<script>console.log( 'Key for grouped = " . $job->key . "' );</script>";
-            }
-
-
             return $job['startDate'];
         });
-//        $groupedArray = $groupedJobs->toArray();
-//        if(is_array($groupedArray)) {
-//            echo "<script>console.log( 'Array Keys = array' );</script>";
-//
-//            echo "<script>console.log( 'Array Keys = " . $groupedArray['05/02/2017']->locations . "' );</script>";
-//        }
-//        else{
-//            echo "<script>console.log( 'Array Keys isnt array' );</script>";
-//
-//
-//        }
-//        echo "<script>console.log( 'Grouped Array: Index = " . $groupedJobs . "' );</script>";
-//
-
-//////            $uniqueDate = $job->uniqueDate;//many different values
-//////            if($uniqueDate != null) {
-////                foreach ($groupedJobs->get($job->uniqueDate) as $shift) {
-////                    echo "<script>console.log( 'Shift Employee Name = " . $shift->employeeName . "' );</script>";
-////                    echo "<script>console.log( 'Shift Employee Key = " . $shift . "' );</script>";
-////
-////                    echo "<script>console.log( 'Shift Employee Key = " . $shift . "' );</script>";
-////                    $this->count = collect();
-////                    foreach($this->count as $counts) {
-////                        if ($shift->uniqueDate == $shift->startDate) {
-////                            $counts++;
-////                            echo "<script>console.log( Count = " . $counts . "' );</script>";
-////
-////
-////                        }
-////                    }
-////
-////                }
-//////
-//        }
-//////        $allJobs = $groupedJobs->all();//returns the underlying array from a collection
-////        echo "<script>console.log( 'Grouped Array: Index = ".$allJobs['05/02/2017']. "' );</script>";
-//        $count = 0;
-        //$object => string)||($string => $value(dt??)
-
-//            foreach()
-////            $locations = 'locations';
-////            $assigned_user_id = 'assigned_user_id';
-//
-
-//        $count3 = 0;
-//        $countValue = 0;
-//        $count = collect();
-//        foreach($jobs as $job) {
-//            if($job->uniqueDate )
-//            foreach ($groupedJobs->get($job->startDate) as $shift) {
-//
-//$count2++;
-//                echo "<script>console.log( 'count2 = " . $count2 . "' );</script>";//79 if unique Date 7
-//
-//                    foreach($groupedJobs as $index => $formattedJob) {
-//                    if($index == $shift->startDate) {
-//                        $count++;
-//                        echo "<script>console.log( 'Shift Start Date = " . $shift->startDate . "' );</script>";
-//                        echo "<script>console.log( 'Count inner loop = " . $count . "' );</script>";//79 if unique Date 7
-////                    }
-//                }
-//
-//            }
-//        }
-//        foreach($jobs as $job) {
-//        $count = 0;
-//        $count2 = 0;
-//        $counts = collect([]);
-//        foreach ($groupedJobs as $index => $formattedJob) {
-////
-//////                echo "<script>console.log( 'Index = " . $index . "' );</script>";
-////                count[0] = $countValue;
-////                $countValue++;
-////                $countValue = 0;
-////                $count++;
-//            echo "<script>console.log( 'Index = " . $index . "' );</script>";
-////            echo "<script>console.log( 'count1 = " . $count . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.
-//
-//
-////            foreach($counts as $count) {
-//              $count2 = 0;
-//                foreach ($groupedJobs->get($index) as $shift) {
-//                    if ($index == $shift->startDate) {
-////
-////
-//                        $count2++;
-////                    $count++;
-////                echo "<script>console.log( 'Data in 2nd loop = " . $shift->startDate . "' );</script>";
-//////
-//
-//////
-////////                    $count3++;
-////////                echo "<script>console.log( 'Data in 3rd loop = " . $shift->startDate . "' );</script>";
-//////
-//////                echo "<script>console.log( 'count3 = " . $count3 . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.//30
-//////                    if($index == $shift->uniqueDate) {
-////////                        foreach($jobs as $job){
-////////                            $count++;
-//
-////////                        }
-////                    }
-//                    }
-//
-//
-////                }
-//            }
-//            echo "<script>console.log( 'count2 = " . $count2 . "' );</script>"; //7 but no results coming up below from 3-7./30
-//            $counts->push($count2);
-//        }
-//        echo "<script>console.log( 'count2 = " . $counts . "' );</script>"; //7 but no results coming up below from 3-7./30
-////
-
-
-return $groupedJobs;
-}
-
-public function countGroups($groupedJobs){
-    $counts = collect([]);
-
-    foreach ($groupedJobs as $index => $formattedJob) {
-//
-////                echo "<script>console.log( 'Index = " . $index . "' );</script>";
-//                count[0] = $countValue;
-//                $countValue++;
-//                $countValue = 0;
-//                $count++;
-        echo "<script>console.log( 'Index = " . $index . "' );</script>";
-//            echo "<script>console.log( 'count1 = " . $count . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.
-
-
-//            foreach($counts as $count) {
-        $count2 = 0;
-        foreach ($groupedJobs->get($index) as $shift) {
-
-            if ($index == $shift->startDate) {
-//
-//
-                $count2++;
-//                    $count++;
-//                echo "<script>console.log( 'Data in 2nd loop = " . $shift->startDate . "' );</script>";
-////
-
-////
-//////                    $count3++;
-//////                echo "<script>console.log( 'Data in 3rd loop = " . $shift->startDate . "' );</script>";
-////
-////                echo "<script>console.log( 'count3 = " . $count3 . "' );</script>";//when count 1, 23. when count 2, 46 then 3-7 no results.//30
-////                    if($index == $shift->uniqueDate) {
-//////                        foreach($jobs as $job){
-//////                            $count++;
-
-//////                        }
-//                    }
-            }
-//                echo "<script>console.log( 'count2 = " . $count . "' );</script>"; //7 but no results coming up below from 3-7./30
-
-
-//                }
-//            }
-        }
-        echo "<script>console.log( 'count2 = " . $count2 . "' );</script>"; //7 but no results coming up below from 3-7./30
-
-
-        $counts->push($count2);
-
+        return $groupedJobs;
     }
-//    echo "<script>console.log( 'count2 = " . $counts[2] . "' );</script>"; //7 but no results coming up below from 3-7./30
 
-
-
-    return $counts;
-
-
-}
-
-    public function compareValues($modifiedJobs, $value, $modifiedValue, $optionalValue1 = null, $optionalValue2 = null, $optionalValue3 = null, $optionalValue4 = null)
+//function defined for global use
+    public function compareValues($modifiedJobs, $date, $uniqueDate, $uniqueLocations = null, $checks = null, $startTime = null, $endTime = null)
     {
-        if (($optionalValue1) && ($optionalValue2)&&($optionalValue3)&&($optionalValue4)) {
-        for ($i = 0; $i < $modifiedJobs->count(); $i++) {
-            for ($j = 0; $j < $modifiedJobs->count(); $j++) {
-                //if for eg startDate the same, then:
-                if ($modifiedJobs[$i][$value] == $modifiedJobs[$j][$value]) {
-                            if ($i > $j) {
-                            $modifiedJobs[$i][$modifiedValue] = null;
-                            }
-                        if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])
-                            && ($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2])
-                            &&($modifiedJobs[$i][$optionalValue3] == $modifiedJobs[$j][$optionalValue3])
-                            &&($modifiedJobs[$i][$optionalValue4] == $modifiedJobs[$j][$optionalValue4]))  {
-                            if ($i > $j) {
-                                $modifiedJobs[$i][$optionalValue3] = null;
-                                $modifiedJobs[$i][$optionalValue4] = null;
-                                $modifiedJobs[$i][$optionalValue1] = null;
-                                $modifiedJobs[$i][$optionalValue2] = null;
-                            }
+            for ($i = 0; $i < $modifiedJobs->count(); $i++) {
+                for ($j = 0; $j < $modifiedJobs->count(); $j++) {
+                    //if startDate the same, preserve the startDate values for future comparisons and use:
+                    //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
+                    if ($modifiedJobs[$i][$date] == $modifiedJobs[$j][$date]) {
+                        if ($i > $j) {
+                            $modifiedJobs[$i][$uniqueDate] = null;
                         }
-                        else  if (($modifiedJobs[$i][$optionalValue1] == $modifiedJobs[$j][$optionalValue1])
-                            && ($modifiedJobs[$i][$optionalValue2] == $modifiedJobs[$j][$optionalValue2]))
-                            {
-                                if ($i > $j) {
-                                    $modifiedJobs[$i][$optionalValue1] = null;
-                                    $modifiedJobs[$i][$optionalValue2] = null;
-                                }
+                        //if locations and checks and startTime and endTime the same,
+                        //change values of these fields to null for the duplicates:
+                        if (($modifiedJobs[$i][$uniqueLocations] == $modifiedJobs[$j][$uniqueLocations])
+                            && ($modifiedJobs[$i][$checks] == $modifiedJobs[$j][$checks])
+                            && ($modifiedJobs[$i][$startTime] == $modifiedJobs[$j][$startTime])
+                            && ($modifiedJobs[$i][$endTime] == $modifiedJobs[$j][$endTime])
+                        ) {
+                            if ($i > $j) {
+                                $modifiedJobs[$i][$startTime] = null;
+                                $modifiedJobs[$i][$endTime] = null;
+                                $modifiedJobs[$i][$uniqueLocations] = null;
+                                $modifiedJobs[$i][$checks] = null;
+                            }
+                            //if only locations and checks the same, then:
+                        } else if (($modifiedJobs[$i][$uniqueLocations] == $modifiedJobs[$j][$uniqueLocations])
+                            && ($modifiedJobs[$i][$checks] == $modifiedJobs[$j][$checks])
+                        ) {
+                            if ($i > $j) {
+                                $modifiedJobs[$i][$uniqueLocations] = null;
+                                $modifiedJobs[$i][$checks] = null;
                             }
                         }
                     }
@@ -487,66 +325,75 @@ public function countGroups($groupedJobs){
         return $modifiedJobs;
     }
 
-    public function employeeList(){
+    public function employeeList()
+    {
         $empList = Employee::all('id', 'first_name', 'last_name');
         return $empList;
     }
 
-    public function locationList(){
+    public function locationList()
+    {
         $locList = Location::all('id', 'name');
         return $locList;
     }
 
-    public function checksCollection(){
-        $checks = collect([1,2,3,4,5]);
+    public function checksCollection()
+    {
+        $checks = collect([1, 2, 3, 4, 5]);
         return $checks;
     }
 
-    public function endDT($startTime, $duration){
+    public function endDT($startTime, $duration)
+    {
         $dt = new DateTime($startTime);//DateTime object
-        $interval = 'PT'.$duration.'H';
+        $interval = 'PT' . $duration . 'H';
         $edt = $dt->add(new DateInterval($interval));
         return $edt;
     }
 
-    public function stringDate($dt){
+    public function stringDate($dt)
+    {
         $date = $dt->format('m/d/Y');
         return $date;
     }
 
-    public function stringTime($tm){
-//        $time = $tm->format("g"). '.' .$tm->format("i"). ' ' .$tm->format("a");
-        $time = $tm->format("G"). '.' .$tm->format("i");
 
-//        if($time == '12.00 AM')
-//        {
-//            $time = 'Midnight';
-//
-//        }
-//        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
+    public function stringTime($tm)
+    {
+        $time = $tm->format("g"). '.' .$tm->format("i"). ' ' .$tm->format("a");
         return $time;
     }
 
-    public function jobDateTime($date, $time){
+    public function timeMidnight($time){
+        if($time != null) {
+            if($time == '12.00 am')
+            {
+                $time = 'Midnight';
+            }
+        }
+        return $time;
+    }
+
+    public function jobDateTime($date, $time)
+    {
         $dtStr = $date . " " . $time;
         $carbonDT = Carbon::parse($dtStr);
         return $carbonDT;
     }
 
-    public function jobDuration($carbonStart, $carbonEnd){
+    public function jobDuration($carbonStart, $carbonEnd)
+    {
         //calculate duration based on start date and time and end date and time
         $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
         $lengthH = ($lengthM / 60);//convert to hours
-        //        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
-
         return $lengthH;
     }
 
 
-
-    public static function confirmDelete($id){
+    public static function confirmDelete($id)
+    {
         $job = Job::find($id);
-        $desc = 'the shift at '.$job->locations.' on '.$job->job_scheduled_for;
+        $desc = 'the shift at ' . $job->locations . ' on ' . $job->job_scheduled_for;
         $id = $job->id;
         return view('confirm-delete')->with(array('fieldDesc' => $desc, 'id' => $id, 'url' => 'rosters'));
     }

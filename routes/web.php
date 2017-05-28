@@ -41,7 +41,7 @@ Route::get('/clock', function(){
     return view('clock-picker');
 
 });
-
+//move folders (both roster and locations) and change paths and make consistent urls for locations at the same time
 Route::resource('rosters', 'RosterController');
 
 //Route::get('rosters/create', function(){

@@ -54,40 +54,38 @@
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Shift
             </button>
         </div>
-        {{--TODO low, v2 or v1 after other tasks implemented: if no checks, input 0--}}
+        {{--TODO low, v2 or v1 after other tasks implemented: if only 1 check, input 1--}}
         <div class='table-responsive'>
-            <table class="table  table-hover list-view">
+            <table class="table table-hover">
                 <tr>
                     <th>Start Date</th>
                     <th>Locations (Checks)</th>
-                    <th>Assigned to</th>
                     <th>Time</th>
+                    <th>Assigned to</th>
                     <th>Actions</th>
                 </tr>
                 @foreach($groupJobs as $index => $formattedJob)
                     <tbody class="group-list">
                     @foreach ($groupJobs->get($index) as $shift)
                         @if($index == $shift->startDate)
-
-                            <tr>
+                            <tr class="group-table">
                                 <td>{{$shift->uniqueDate}}</td>
-                                @if($shift->locations != null)
-                                    <td>{{$shift->locations}} ({{$shift->checks}})</td>
+                                {{--TODO: v2 or lower v1: group locations for better display--}}
+                                @if($shift->uniqueLocations != null)<!--locations is null if duplicate location-->
+                                    <td class="group-data">{{$shift->uniqueLocations}} ({{$shift->checks}})</td>
                                 @else
-                                    <td></td>
+                                <td></td>
                                 @endif
-                                <td>{{$shift->employeeName}}</td>
-                                @if($shift->endTime != null)
+                                @if($shift->endTime != null)<!--endTime is null if duplicate startTime and endTime-->
                                     <td>{{$shift->startTime}}-{{$shift->endTime}}</td>
                                 @else
                                     <td></td>
                                 @endif
+                                <td>{{$shift->employeeName}}</td>
                                 <td>
-                                    <a href="/rosters/{{ $shift->id }}">View</a> | <a
-                                            href="/rosters/{{$shift->id}}/edit">Edit</a>
+                                    <a href="/rosters/{{$shift->id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->id}}/" style="color: #cc0000;">Delete</a>
                                 </td>
                             </tr>
-
                         @endif
                     @endforeach
                     </tbody>
