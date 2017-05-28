@@ -101,6 +101,25 @@ Odin theming
 
 }
 
+.group-list:nth-child(even){
+    background-color: #ebf9f9;
+}
+
+/*.group-table>td{*/
+    /*border-bottom-color: transparent !important;*/
+    /*border-top-color: #transparent !important;*/
+/*}*/
+
+.group-data{
+    font-weight: 800;
+
+}
+
+/*.group-location:nth-child(even){*/
+    /*background-color: red;*/
+/*}*/
+
+
 /*
  * Core: General Layout Style
  * -------------------------

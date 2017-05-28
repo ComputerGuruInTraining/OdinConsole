@@ -14,18 +14,17 @@
 @stop
 
 @section('title-item')
-    Most Recent Roster or ??
+    Selected Shift:
 @stop
 @section('content-item')
     <table>
-
         <tr class="details-tr">
             <td class="item-details">Shift Date:</td>
-            <td>{{$selected->job_scheduled_for}}</td>
+            <td>{{$selected->startDate}}</td>
         </tr>
         <tr class="details-tr">
             <td class="item-details">Shift Duration:</td>
-            <td>{{$selected->estimated_job_duration}}</td>
+            <td>{{$selected->startTime}} - {{$selected->endTime}}</td>
         </tr>
         <tr class="details-tr">
             <td class="item-details">Location:</td>
@@ -37,7 +36,7 @@
         </tr>
         <tr class="details-tr">
             <td class="item-details">Employee:</td>
-            <td>{{$selected->assigned_user_id}}</td>
+            <td>{{$selected->employeeName}}</td>
         </tr>
     </table>
     <div>
@@ -47,7 +46,7 @@
 @stop
 
 @section('title-list')
-    Rosters
+    Shifts
 @stop
 
 @section('content-list')
@@ -56,8 +55,8 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Shift
         </button>
     </div>
-    @foreach($jobs->sortBy('locations') as $job)
-        <div class="list"><a href="/rosters/{{ $job->id }}">{{$job->locations}}</a></div>
+    @foreach($jobs as $job)
+        <div class="list"><a href="/rosters/{{ $job['id'] }}">{{$job['locations']}}</a></div>
         <br>
     @endforeach
 @stop

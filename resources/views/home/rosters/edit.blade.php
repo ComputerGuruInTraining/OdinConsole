@@ -23,24 +23,36 @@
                 <div class='form-group'>
                     {!! Form::Label('employees', 'Select Employee:') !!}
                     <select class="form-control" name="assigned_user_id">
+                        <option value="{{$employee->id}}">{{$employee->first_name}} {{$employee->last_name}}</option>
                         @foreach($empList as $emp)
-                            <option value="{{$emp->id}}">{{$emp->first_name}}</option>
+                            @if($emp->id != $job->assigned_user_id){
+                            <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                            }
+                            @endif
                         @endforeach
                     </select>
                 </div>
                 <div class='form-group'>
                     {!! Form::Label('locations', 'Select Location:') !!}
                     <select class="form-control" name="locations">
+                        <option value="{{$locationName}}">{{$locationName}}</option>
                         @foreach($locList as $loc)
+                            @if($loc->name != $locationName){
                             <option value="{{$loc->name}}">{{$loc->name}}</option>
+                            }
+                            @endif
                         @endforeach
                     </select>
                 </div>
                 <div class='form-group'>
                     {!! Form::Label('checks', 'Number of Visits Required:') !!}
                     <select class="form-control" name="checks">
+                        <option value="{{$job->checks}}">{{$job->checks}}</option>
                         @foreach($checks as $check)
+                            @if($check != $job->checks){
                             <option value="{{$check}}">{{$check}}</option>
+                            }
+                            @endif
                         @endforeach
                     </select>
                 </div>

@@ -27,7 +27,7 @@
             {!! Form::Label('employees', 'Select Employee:') !!}
             <select class="form-control" name="assigned_user_id">
                 @foreach($empList as $emp)
-                    <option value="{{$emp->id}}">{{$emp->first_name}}</option>
+                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                 @endforeach
             </select>
         </div>

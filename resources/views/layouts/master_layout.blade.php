@@ -8,7 +8,8 @@
     <!-- Font Awesome -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     {{--Bootstrap stylesheet--}}
-    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}"
+          type="text/css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css">
     <!-- Theme style -->
@@ -17,16 +18,20 @@
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect.
     -->
-    <link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css" >
+    <link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
 
     {{--Clock Picker Stylesheet and Scripts--}}
     {{--see source https://weareoutman.github.io/clockpicker/jquery.html--}}
-    <link rel="stylesheet" href="{{ asset('/bower_components/adminlte/plugins/clockpicker/css/jquery-clockpicker.min.css')}}" type="text/css">
-    <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
-    <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
+    <link rel="stylesheet"
+          href="{{ asset('/bower_components/adminlte/plugins/clockpicker/css/jquery-clockpicker.min.css')}}"
+          type="text/css">
+    <script type="text/javascript"
+            src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
+    <script type="text/javascript"
+            src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,12 +42,14 @@
 
     <script type="text/javascript">
         function noenter() {
-            return !(window.event && window.event.keyCode == 13); }
+            return !(window.event && window.event.keyCode == 13);
+        }
     </script>
 
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+{{--TODO: remove line from center of pages (occurs on long pages)--}}
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}
@@ -58,7 +65,7 @@
         {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}
         <div class="content-wrapper">
 
-<section class="content-header">
+            <section class="content-header">
                 <h1>
                 @yield('title-item')
                 <!--<small> {{$page_description or null}} </small>-->
@@ -95,15 +102,15 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script>
-        $( function() {
+        $(function () {
 
-            $( ".datepicker" ).datepicker({
-                changeMonth: true,               
+            $(".datepicker").datepicker({
+                changeMonth: true,
                 changeYear: true,
                 yearRange: "-80:+0"
             });
 
-        } );
+        });
     </script>
 
     {{--Clock Picker--}}
