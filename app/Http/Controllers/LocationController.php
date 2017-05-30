@@ -68,7 +68,8 @@ class LocationController extends Controller
             $location->save();
 
             //display confirmation page
-            return view('confirm-create')->with(array('theData' => $address, 'entity' => 'Location', 'url' => 'locations'));
+            $theData = "You have successfully added the location $location->name";
+            return view('confirm-create')->with(array('theData' => $theData, 'url' => 'locations'));
 
         } catch (\ErrorException $error) {
             if ($error->getMessage() == 'Undefined offset: 0') {
@@ -146,12 +147,12 @@ class LocationController extends Controller
                 $location->save();
 
                 //display confirmation page
-                $theAction = 'edited the address. The address stored in the system is: ' . $address;
+                $theAction = 'You have successfully edited the address. The address stored in the system is: ' . $address;
                 return view('confirm')->with(array('theAction' => $theAction));
             }
             //no data changed, but save btn pressed
             else{
-                $theAction = 'made no changes';
+                $theAction = 'No changes were made to the location.';
                 return view('confirm')->with(array('theAction' => $theAction));
 
             }
@@ -175,7 +176,7 @@ class LocationController extends Controller
     public function destroy($id)
     {
         $location = Location::find($id);
-        $theAction = 'deleted ' . $location->name;
+        $theAction = 'You have successfully deleted ' . $location->name;
         Location::destroy($id);
         return view('confirm')->with('theAction', $theAction);
     }

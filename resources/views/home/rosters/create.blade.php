@@ -22,11 +22,16 @@
     @endif
 
     <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
+        <div>
+            {{--TODO: consider having a tip with info icon and then press for this tip:--}}
+            Press ctrl to add more than one.
+            Don't press ctrl to scroll the list.
+        </div>
         {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
         <div class='form-group'>
-            {{--{!! Form::Label('employees', 'Select Employee:') !!}--}}
-            <select class="form-control" name="assigned_user_id">
-                <option value="" selected disabled>Select Employee:</option>
+            {!! Form::Label('employees', 'Select Employee:') !!}
+            <select class="form-control" name="employees[]" multiple="multiple" onkeypress="return noenter()">
+                {{--<option value="" selected disabled>Select Employee:</option>--}}
                 @foreach($empList as $emp)
                     <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                 @endforeach
@@ -39,10 +44,12 @@
 Functionally, it will operate such that:
 add button is pressed, a function is called which echos js to create an element on the view
 every time add button pressed--}}
+
+        {{--TODO: note to user: 1.. 2. A new shift can be used to add several employees and locations for the 1 shift, but the amount of visits required will be the same for all locations. To customize the amount of checks, add a new shift each time., To add varying check amounts per locations, a new shift will need to be added each time.--}}
         <div class='form-group'>
-            {{--{!! Form::Label('locations', 'Select Location:') !!}--}}
-            <select class="form-control" name="locations">
-                <option value="" selected disabled>Select Location:</option>
+            {!! Form::Label('locations', 'Select Location:') !!}
+            <select class="form-control" multiple="multiple" name="locations[]" size="15" onkeypress="return noenter()">
+                {{--<option value="" selected disabled>Select Location:</option>--}}
                 @foreach($locList as $loc)
                     <option value="{{$loc->name}}">{{$loc->name}}</option>
                 @endforeach
@@ -50,35 +57,42 @@ every time add button pressed--}}
         </div>
 
         <div class='form-group'>
-            {{--{!! Form::Label('checks', 'Number of Visits Required:') !!}--}}
-            <select class="form-control" name="checks">
-                <option value="" selected disabled>Select Visits Required:</option>
-                @foreach($checks as $check)
-                    <option value="{{$check}}">{{$check}}</option>
-                @endforeach
-            </select>
+            {!! Form::Label('checks', 'Number of Visits Required:') !!}
+            {{ Form::text('checks', null, ['class' => 'form-control']) }}
+
+            {{--<select class="form-control" name="checks">--}}
+                {{--<option value="" selected disabled>Select Visits Required:</option>--}}
+                {{--@foreach($checks as $check)--}}
+                    {{--<option value="{{$check}}">{{$check}}</option>--}}
+                {{--@endforeach--}}
+            {{--</select>--}}
+        </div>
+        <div>
+            Important: A new shift can be used to add several employees and locations for the 1 shift,
+            but the amount of visits required will be the same for all locations.
         </div>
 
 {{--TODO v2: improvement: change padding rather than adding spaces--}}
         <div class='form-group'>
             {{--<div class="container">--}}
                 {{ Form::label('startDate', 'Start Date') }}
-                {{ Form::text('startDateTxt', '', array('class' => 'datepicker')) }}
+                {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
                 &nbsp;&nbsp;&nbsp;
                 {{ Form::label('startTime', 'Start Time') }}
-                <input class="input-a" value="" name="startTime" data-default="12:30">
+                <input class="input-a" value="" name="startTime" data-default="9:00" >
             {{--</div>--}}
             @include('clock-picker')
         </div>
 
         <div class='form-group'>
             {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
-            {{ Form::text('endDateTxt', '', array('class' => 'datepicker')) }}
+            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
             &nbsp;&nbsp;&nbsp;
             {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
-            <input class="input-b" value="" name="endTime" data-default="20:30">
+            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()">
             @include('clock-picker')
         </div>
+            {{--TODO: cater for shifts extending 2 dates--}}
 
         <div class='form-group'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
