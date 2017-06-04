@@ -34,7 +34,7 @@
 
         <div class='form-group'>
             {{ Form::label('info', 'Additional Address Details') }}
-            {{ Form::text('info', null, ['placeholder' => 'ie Building Number or Name, Unit Number, Company Name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{ Form::text('info', null, ['placeholder' => 'ie Building Number, Unit Number, Company Name, etc. or instructions particular to the location', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group form-buttons'>

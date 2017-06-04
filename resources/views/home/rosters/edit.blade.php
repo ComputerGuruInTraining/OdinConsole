@@ -23,38 +23,35 @@
                 <div class='form-group'>
                     {!! Form::Label('employees', 'Select Employee:') !!}
                     <select class="form-control" name="assigned_user_id">
+                        {{--for the employee associated with the shift being edited, display at the top of the select list--}}
+                    @if($employee != null)
                         <option value="{{$employee->id}}">{{$employee->first_name}} {{$employee->last_name}}</option>
+                        @endif
+                            {{--for all other items:--}}
                         @foreach($empList as $emp)
-                            @if($emp->id != $job->assigned_user_id){
+
+                            @if(($emp->id != $job->assigned_user_id)||($employee == null))
                             <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                            }
                             @endif
                         @endforeach
                     </select>
                 </div>
+
                 <div class='form-group'>
                     {!! Form::Label('locations', 'Select Location:') !!}
                     <select class="form-control" name="locations">
                         <option value="{{$locationName}}">{{$locationName}}</option>
                         @foreach($locList as $loc)
-                            @if($loc->name != $locationName){
+                            @if($loc->name != $locationName)
                             <option value="{{$loc->name}}">{{$loc->name}}</option>
-                            }
                             @endif
                         @endforeach
                     </select>
                 </div>
+
                 <div class='form-group'>
                     {!! Form::Label('checks', 'Number of Visits Required:') !!}
-                    <select class="form-control" name="checks">
-                        <option value="{{$job->checks}}">{{$job->checks}}</option>
-                        @foreach($checks as $check)
-                            @if($check != $job->checks){
-                            <option value="{{$check}}">{{$check}}</option>
-                            }
-                            @endif
-                        @endforeach
-                    </select>
+                    {{ Form::text('checks', null, array('class' => 'form-control')) }}
                 </div>
 
                 <div class='form-group'>

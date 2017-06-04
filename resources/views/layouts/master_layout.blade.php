@@ -79,12 +79,12 @@
             @yield('page-content')
         </div>
         <!-- /.content-wrapper -->
-
+    </div>
+    <!-- ./wrapper -->
         <!-- Footer -->
         @include('footer')
 
-    </div>
-    <!-- ./wrapper -->
+
 
     <!-- REQUIRED JS SCRIPTS -->
     {{-- Date of birth Picker --}}
