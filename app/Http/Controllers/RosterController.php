@@ -253,31 +253,42 @@ class RosterController extends Controller
         $modifiedJobs = $jobs;
 
 //        the index is needed for reassigning a value to the collection item
+//        foreach($jobs as $i => $job)//better implemenatation
         foreach ($modifiedJobs as $i => $job) {
-            //process job_scheduled_for and duration and convert into start and end date and times
-            $dbdt = $job->job_scheduled_for;//string returned from db
-            $duration = $job->estimated_job_duration;
 
-            //extract date and time from job_scheduled_for datetime
-            $dtm = new DateTime($dbdt);
-            $modifiedJobs[$i]->startDate = $this->stringDate($dtm);
-            //also add the startDate values to uniqueDate which will be used later to update startDate values in uniqueDate, but preserve the values in startDate field
-            $modifiedJobs[$i]->uniqueDate = $this->stringDate($dtm);
+                //process job_scheduled_for and duration and convert into start and end date and times
+                $dbdt = $job->job_scheduled_for;//string returned from db
+                $duration = $job->estimated_job_duration;
 
-            $modifiedJobs[$i]->startTime = $this->stringTime($dtm);
+                //extract date and time from job_scheduled_for datetime
+                $dtm = new DateTime($dbdt);
+                $modifiedJobs[$i]->startDate = $this->stringDate($dtm);
+                //also add the startDate values to uniqueDate which will be used later to update startDate values in uniqueDate, but preserve the values in startDate field
+                $modifiedJobs[$i]->uniqueDate = $this->stringDate($dtm);
+//            $modifiedJobs[$i]->uniqueDate = $modifiedJobs[$i]->startDate;//better implementation
+                $modifiedJobs[$i]->startTime = $this->stringTime($dtm);
 
-            //calculate end date and time using duration and job_scheduled_for
-            $edt = $this->endDT($dbdt, $duration);//datetime format
+                //calculate end date and time using duration and job_scheduled_for
+                $edt = $this->endDT($dbdt, $duration);//datetime format
 
-            //extract date and time from end datetime object
-            $modifiedJobs[$i]->endDate = $this->stringDate($edt);
+                //extract date and time from end datetime object
+                $modifiedJobs[$i]->endDate = $this->stringDate($edt);
 
-            $modifiedJobs[$i]->endTime = $this->stringTime($edt);
+                $modifiedJobs[$i]->endTime = $this->stringTime($edt);
 
-            $modifiedJobs[$i]->uniqueLocations =  $job->locations;
+                $modifiedJobs[$i]->uniqueLocations = $job->locations;
 
-            $employee = Employee::find($job->assigned_user_id);
-            $modifiedJobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
+                //if employee exists
+            if(Employee::find($job->assigned_user_id) != null) {
+                $employee = Employee::find($job->assigned_user_id);
+                $modifiedJobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
+            }
+            else{
+                $modifiedJobs[$i]->employeeName = 'not found';
+
+            }
+
+
         }
 
 //        pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values

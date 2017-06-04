@@ -58,7 +58,7 @@ every time add button pressed--}}
 
         <div class='form-group'>
             {!! Form::Label('checks', 'Number of Visits Required:') !!}
-            {{ Form::text('checks', null, ['class' => 'form-control']) }}
+            {{ Form::text('checks', null, array('class' => 'form-control')) }}
 
             {{--<select class="form-control" name="checks">--}}
                 {{--<option value="" selected disabled>Select Visits Required:</option>--}}
