@@ -107,6 +107,11 @@ Odin theming
 
 }
 
+/*styling for location list table Action btns*/
+.column-width{
+    width: 15%;
+}
+
 /*.group-location:nth-child(even){*/
     /*background-color: red;*/
 /*}*/

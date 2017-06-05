@@ -54,25 +54,25 @@ class RosterController extends Controller
 
     public function store(Request $request)
     {
-        //variables for passing to view
-        $empList = $this->employeeList();
-        $locList = $this->locationList();
+           //variables for passing to view
+           $empList = $this->employeeList();
+           $locList = $this->locationList();
 
-//        $this->validate($request, [
-//            'assigned_user_id' => 'required',//TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
-//            'locations_array[]' => 'required',
-//            'startDateTxt' => 'required',
-//            'startTime' => 'required',
-//            'endDateTxt' => 'required',
-//            'endTime' => 'required'
-//        ]);
+        //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
+        $this->validate($request, [
+        'employees' => 'required',
+        'locations' => 'required',
+        'startDateTxt' => 'required',
+        'startTime' => 'required',
+        'endDateTxt' => 'required',
+        'endTime' => 'required'
+        ]);
 
-        //get the data from the form and perform necessary calculations prior to inserting into db
-       $dateStart =  $this->formData($request);
-       $theData = "the $dateStart";
+           //get the data from the form and perform necessary calculations prior to inserting into db
+           $dateStart = $this->formData($request);
+           $theData = "the $dateStart";
+           return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
 
-//TODO: proper catch for when the create btn pressed, shift not added to db because processing failed due to rostercontroller functions, but currently confirm page showing.
-        return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
     }
 
     /**
@@ -127,14 +127,13 @@ class RosterController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-//    TODO v1 after other functionality: ensure if start date is input as the same as i
-    //TODO: HIGH auto-populate fields on edit page
+
     public function update(Request $request, $id)
     {
         $this->validate($request, [
             //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
-            'assigned_user_id' => 'required',
-            'locations' => 'required',
+//            'assigned_user_id' => 'required',
+//            'locations' => 'required',
             'startDateTxt' => 'required',
             'startTime' => 'required',
             'endDateTxt' => 'required',
@@ -350,7 +349,6 @@ class RosterController extends Controller
         $date = $dt->format('m/d/Y');
         return $date;
     }
-
 
     public function stringTime($tm)
     {

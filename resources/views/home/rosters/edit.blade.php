@@ -25,11 +25,10 @@
                     <select class="form-control" name="assigned_user_id">
                         {{--for the employee associated with the shift being edited, display at the top of the select list--}}
                     @if($employee != null)
-                        <option value="{{$employee->id}}">{{$employee->first_name}} {{$employee->last_name}}</option>
+                        <option value="{{$employee->id}}" selected>{{$employee->first_name}} {{$employee->last_name}}</option>
                         @endif
                             {{--for all other items:--}}
                         @foreach($empList as $emp)
-
                             @if(($emp->id != $job->assigned_user_id)||($employee == null))
                             <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                             @endif
@@ -40,7 +39,7 @@
                 <div class='form-group'>
                     {!! Form::Label('locations', 'Select Location:') !!}
                     <select class="form-control" name="locations">
-                        <option value="{{$locationName}}">{{$locationName}}</option>
+                        <option value="{{$locationName}}" selected>{{$locationName}}</option>
                         @foreach($locList as $loc)
                             @if($loc->name != $locationName)
                             <option value="{{$loc->name}}">{{$loc->name}}</option>
