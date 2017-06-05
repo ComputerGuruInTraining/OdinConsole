@@ -18,7 +18,7 @@
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect.
     -->
-    <link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">
+    {{--<link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">--}}
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
@@ -49,20 +49,17 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-{{--TODO: remove line from center of pages (occurs on long pages)--}}
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}
-    {{--FIXME: when press menu icon if menu not showing depending on device size, sometimes doesn't show--}}
     <!-- Main Header
             <header class="main-header">  -->
     @include('header')
 
-    {{--<!-- Sidebar -->--}}
+    <!-- Sidebar -->
     {{--@include('sidebar')--}}
 
     <!-- Content Wrapper. Contains page content -->
-        {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}
         <div class="content-wrapper">
 
             <section class="content-header">
@@ -97,7 +94,7 @@
     <!-- Bootstrap 3.3.6 -->
     <script src="bower_components/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- AdminLTE App -->
+    <!-- AdminLTE App --><!-- This file controls sidebar toggle functionality-->
     <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
 
     <script>
@@ -130,7 +127,6 @@
         Both of these plugins are recommended to enhance the
         user experience. Slimscroll is required when using the
         fixed layout. -->
-{{--</body>--}}
 <!--<div class='row'>
                 {{--@yield('content')--}}
         </div>-->
