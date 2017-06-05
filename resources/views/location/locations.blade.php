@@ -1,5 +1,5 @@
 @extends('layouts.list')
-{{--@extends('sidebar_custom')--}}
+@extends('sidebar')
 
 @section('title')
     Locations

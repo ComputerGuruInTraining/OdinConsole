@@ -1,5 +1,5 @@
 @extends('layouts.master_layout')
-{{--@include('sidebar')--}}
+@include('sidebar')
 
 {{--@section('title')--}}
     {{--Create Roster--}}

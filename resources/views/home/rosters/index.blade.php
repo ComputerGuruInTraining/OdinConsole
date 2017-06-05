@@ -1,5 +1,5 @@
 @extends('layouts.master_layout')
-{{--@extends('sidebar')--}}
+@extends('sidebar')
 
 {{--@section('title')--}}
 {{--Rosters--}}
