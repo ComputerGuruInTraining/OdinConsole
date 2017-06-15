@@ -36,7 +36,7 @@ Route::get('logout', 'HomeController@getLogout');
 
 Route::resource('/employees', 'EmployeeController');
 
-
+Route::get('/reports', 'ReportController@reportList');
 
 Route::get('/clock', function(){
     return view('clock-picker');

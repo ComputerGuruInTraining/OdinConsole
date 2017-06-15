@@ -39,6 +39,8 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
  * Make a request to the api endpoint
  */
 
+require "../vendor/autoload.php";
+
 $client = new GuzzleHttp\Client;
 $clientGet = new GuzzleHttp\Client;
 
@@ -46,11 +48,11 @@ $clientGet = new GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
 try {
-    $response = $client->post('http://localhost:8000/oauth/token', [
+    $response = $client->post('http://odinlite.com/public/oauth/token', [
         'form_params' => [
-            'client_id' => 3,
+            'client_id' => 2,
             // The secret generated when you ran: php artisan passport:install
-            'client_secret' => 'JfyQ4LuipiCwFoECBn5IdOT4JzhGxYsgCey75isV',
+            'client_secret' => 'q41fEWYFbMS6cU6Dh63jMByLRPYI4gHDj13AsjoM',
             'grant_type' => 'password',
             'username' => 'bernadettecar77@hotmail.com',
             'password' => 'password',
@@ -62,29 +64,47 @@ try {
 
     // You'd typically save this payload in the session
     $auth = json_decode( (string) $response->getBody() );
+
+    $response = $client->get('http://odinlite.com/public/api/reportcases/list', [
+        'headers' => [
+            'Authorization' => 'Bearer '.$auth->access_token,
+        ]
+    ]);
+
+    $todos = json_decode( (string) $response->getBody() );
+
+
+    foreach($todos as $todo) {
+        echo "<li>{$todo->location_id} {$todo->total_hours}</li>";
+    }
+
+
+
+
+
 //    dd($auth);
 //    dd($auth->access_token);
 
-
-
-    $request = new Request('GET', 'http://localhost:8000/api/report-case-notes/list',
-        [
-
-        'Authorization' => 'Bearer '.$auth->access_token
-        ]);
-
-//    dd($request);
-    //error in following code:
-    $clientGet->send($request);
-    dd($request);
-
-//    $response = $client->request('GET', '/get', ('http://localhost:8000/api/report-case-notes/list', [
+//
+//
+//    $request = new Request('GET', 'http://localhost:8000/api/reports/all',
+//        [
+//
+//        'Authorization' => 'Bearer '.$auth->access_token
+//        ]);
+//
+////    dd($request)$response = $client->request('GET', '/get', ('http://localhost:8000/api/report-case-notes/list', [
 //        'headers' => [
 //            'Content-Type', 'application/x-www-form-urlencoded',
 //            'Accept' => 'application/json',
 //            'Authorization' => 'Bearer '.$auth->access_token,
 //        ]
-//    ]);
+//    ]);;
+//    //error in following code:
+//    $clientGet->send($request);
+//    dd($request);
+
+//
 //    dd($auth->access_token);
 //    dd($request, $response);
 //    $reports = json_decode( (string) $response->getBody() );
@@ -97,7 +117,7 @@ try {
 //    echo "<ul>{$reportList}</ul>";
 
 } catch (GuzzleHttp\Exception\BadResponseException $e) {
-    echo "Unable to retrieve access token.";
+    echo $e;
 }
 
 
