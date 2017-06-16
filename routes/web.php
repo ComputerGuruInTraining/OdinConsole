@@ -18,6 +18,9 @@ use App\Http\Controllers\RosterController;
 //   return view('admin_template');
 //});
 
+//FIXME: get url from api worked with an empty model in api 1st attempt didn't work with a model with custom code, but 1st attempt was also in localhost so cause may not have been model.
+//FIXME: cont. If url not working, need to check the model in api and test with empty model.
+
 Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
@@ -36,9 +39,11 @@ Route::get('logout', 'HomeController@getLogout');
 
 Route::resource('/employees', 'EmployeeController');
 
-Route::get('/reports', 'ReportController@reportList');
+Route::resource('/reports', 'ReportController');
 
-Route::get('/reports/create', 'ReportController@create');
+//Route::get('/reports', 'ReportController@reportList');
+//
+//Route::get('/reports/create', 'ReportController@create');
 
 Route::get('/clock', function(){
     return view('clock-picker');

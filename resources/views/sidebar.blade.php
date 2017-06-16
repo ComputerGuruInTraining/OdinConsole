@@ -41,7 +41,7 @@
             <li class="active"><a href="/rosters"><span>Roster</span></a></li>
             <li class="active"><a href="/locations"><span>Locations</span></a></li>
             <li class="active"><a href="#"><span>Clients</span></a></li>
-            <li class="active"><a href="#"><span>Reports</span></a></li>
+            <li class="active"><a href="/reports"><span>Reports</span></a></li>
             <div class="list-divider"></div>
 
             <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->
