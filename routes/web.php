@@ -38,6 +38,8 @@ Route::resource('/employees', 'EmployeeController');
 
 Route::get('/reports', 'ReportController@reportList');
 
+Route::get('/reports/create', 'ReportController@create');
+
 Route::get('/clock', function(){
     return view('clock-picker');
 

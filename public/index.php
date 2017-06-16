@@ -39,13 +39,13 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
  * Make a request to the api endpoint
  */
 
-require "../vendor/autoload.php";
+//require "../vendor/autoload.php";
 
 $client = new GuzzleHttp\Client;
 $clientGet = new GuzzleHttp\Client;
 
 //use GuzzleHttp\RequestOptions::Headers;
-use GuzzleHttp\Psr7\Request;
+//use GuzzleHttp\Psr7\Request;
 
 try {
     $response = $client->post('http://odinlite.com/public/oauth/token', [

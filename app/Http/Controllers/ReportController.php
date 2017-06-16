@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 //use Illuminate\Http\Request;
-use vendor\GuzzleHttp\Psr7\Request;
+use GuzzleHttp;
 
 class ReportController extends Controller
 {
@@ -15,7 +15,7 @@ class ReportController extends Controller
     {
 //    require "../vendor/autoload.php";
 
-        $client = new vendor\GuzzleHttp\Client;
+        $client = new GuzzleHttp\Client;
 //        $clientGet = new GuzzleHttp\Client;
 
 //use GuzzleHttp\RequestOptions::Headers;
@@ -40,14 +40,14 @@ class ReportController extends Controller
 
             $response = $client->get('http://odinlite.com/public/api/reportcases/list', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $auth->access_token,
+                    'Authorization' => 'Bearer ' . $auth->access_token,//TODO: Access_token saved for global use
                 ]
             ]);
 
             $reports = json_decode((string)$response->getBody());
 
-
-            return view('report/reports')->with('reports', $reports);
+//TODO: pass through case notes and report data
+            return view('report/case_notes/reports')->with('reports', $reports);
 //    dd($auth->access_token);
 
 //
@@ -84,6 +84,13 @@ class ReportController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
         }
+    }
+
+    public function create(){
+
+        return view('report/create');
+
+
     }
 
 
