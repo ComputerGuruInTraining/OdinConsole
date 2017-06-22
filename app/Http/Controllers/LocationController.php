@@ -2,172 +2,200 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Input;
 use Form;
 use Model;
 use App\Models\Location;
-use Illuminate\Http\Request;
-use Illuminate\Support\MessageBag;
-use Illuminate\Routing\Controller as BaseController;
-
-//FIXME: line1 ?? LocationController seems to be an issue in web.php.
-// FIXME: line2 ?? If a route to a resource is after the route to the location resource, the resource urls do not work.
-// FIXME: line3 ?? Possible Cause: LocationController manually typed. So Possible Fix: create in cmd line and copy code into methods.
 
 class LocationController extends Controller
 {
-    protected $locations;
-
-//    public function __construct()
-//    {
-//
-//    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function index()
     {
         //retrieve all records from locations table via Location Model
         $locations = Location::all();
         $this->locations = $locations;
-        $location = $locations[0];
-        //TODO: sort the locations into a sorted array
+        $location = $locations[0];//TODO: auto-select an item rather than hardcod
         //TODO: the first location in the sorted list will be in the top section of the webpage
-        return view('home/location/locations')->with(array('locations' => $this->locations, 'displayItem' => $location));
-
+        return view('location/locations')->with(array('locations' => $this->locations, 'displayItem' => $location));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        return view('home/location/create-locations');
+        return view('location/create-locations');
     }
 
-    /*
- * Store a new location
- *
- * @param Request $request
- * @return Response (automatically generated if validation fails)
- */
-//    TODO v1 high_priority: test geocodes and ensure they correspond to the selected address correctly.
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    //TODO: improve validation for adding location (see update-location)
     public function store(Request $request)
     {
-        //validate data
-        //TODO: validate address as complete so geoCode can be obtained
-        $this->validate($request, [
-           'name' => 'required|unique:locations|max:255',
-        'address' => 'required|unique:locations|max:255',
-        ]);
+        try {
+            //validate data
+            $this->validate($request, [
+                'name' => 'required|unique:locations|max:255',
+                'address' => 'required|unique:locations|max:255',
+            ]);
 
-        //store the data in the db
-        //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field to type address and select from dropdown
-        $location = new Location;
-        $location->name = ucfirst(Input::get('name'));
-        $address = Input::get('address');
-        $location->address = $address;
-        //TODO v1 or v2??: catch for incorrect addresses or addresses that can not be selected via map
-        $geoCoords = $this->geoCode($address);
-        $location->latitude = $geoCoords->results[0]->geometry->location->lat;
-        $location->longitude = $geoCoords->results[0]->geometry->location->lng;
-        $location->additional_info = ucfirst(Input::get('info'));
-        $location->save();
 
-        //display confirmation page
-        return view('confirm')->with(array('theData'=> $address, 'theAction' => 'added'));
-        //TODO: associate location with a client and perhaps group addresses. Modify form also
-        //$client = Input::get('client');
-        //$addressGroup = Input::get('address_group');
+            //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field
+            // to type address and select from dropdown
+            //store the data in the db
+            $location = new Location;
+            $location->name = ucfirst(Input::get('name'));
+            $address = Input::get('address');
+            $location->address = $address;
+            $geoCoords = $this->geoCode($address);
+            $location->latitude = $geoCoords->results[0]->geometry->location->lat;
+            $location->longitude = $geoCoords->results[0]->geometry->location->lng;
+
+            $location->additional_info = ucfirst(Input::get('info'));
+            $location->save();
+
+            //display confirmation page
+            $theData = "You have successfully added the location $location->name";
+            return view('confirm-create')->with(array('theData' => $theData, 'url' => 'locations'));
+
+        } catch (\ErrorException $error) {
+            if ($error->getMessage() == 'Undefined offset: 0') {
+                $e = 'Please provide a valid address';
+                $errors = collect($e);
+                return view('location/create-locations')->with('errors', $errors);
+            } else {
+                return view("location/create-locations");
+            }
+        }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         $location = Location::find($id);
-        return view('home/location/edit-locations')->with('location', $location);
+        return view('location/edit-locations')->with('location', $location);
     }
 
-
-    public static function select($id){
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
         $location = Location::find($id);
-        $locations = Location::all();
-        return view('home/location/locations')->with(array('locations' => $locations, 'displayItem' => $location));
+        try {
+            //get the data from the form for validation against other location items, not this location being edited
+            $locationName = ucfirst(Input::get('name'));
+            $address = Input::get('address');
+            $additional = ucfirst(Input::get('info'));
+
+            //validate the data and store the data in the db if it is has been modified
+            if(($locationName != $location->name)||($address != $location->address)||($additional != $location->additional_info)) {
+                if ($locationName != $location->name) {
+                    $this->validate($request, [
+                        'name' => 'required|unique:locations|max:255',
+                    ]);
+                    $location->name = $locationName;
+                }
+
+                if ($address != $location->address) {
+                    $this->validate($request, [
+                        'address' => 'required|unique:locations|max:255'
+                    ]);
+
+                    $geoCoords = $this->geoCode($address);
+                    $location->latitude = $geoCoords->results[0]->geometry->location->lat;
+                    $location->longitude = $geoCoords->results[0]->geometry->location->lng;
+                    $location->address = $address;
+                }
+
+                if ($additional != $location->additional_info) {
+                    $location->additional_info = $additional;
+                }
+                $location->save();
+
+                //display confirmation page
+                $theAction = 'You have successfully edited the address. The address stored in the system is: ' . $address;
+                return view('confirm')->with(array('theAction' => $theAction));
+            }
+            //no data changed, but save btn pressed
+            else{
+                $theAction = 'No changes were made to the location.';
+                return view('confirm')->with(array('theAction' => $theAction));
+
+            }
+        } catch (\ErrorException $error) {
+            if ($error->getMessage() == 'Undefined offset: 0') {
+                $e = 'Please provide a valid address';
+                $errors = collect($e);
+                return view("location/edit-locations")->with(array('errors' => $errors, 'location' => $location));
+            } else {
+                return view("location/edit-locations")->with(array('errors' => 'Validation error found', 'location' => $location));
+            }
+        }
     }
 
-    public function update($id, Request $request){
-        //find the location object
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
         $location = Location::find($id);
-
-        //validate data
-        $this->validate($request, [
-            'name' => 'required|unique:locations|max:255',
-            'address' => 'required|unique:locations|max:255',
-        ]);
-
-        //store the data in the db
-        $locationName = ucfirst(Input::get('name'));
-        $location->name = $locationName;
-//        TODO v2: should edit address be a map??
-        $address = ucfirst(Input::get('address'));
-        $location->additional_info = ucfirst(Input::get('info'));
-        $location->address = $address;
-        //TODO: catch for incorrect addresses
-        $geoCoords = $this->geoCode($address);
-        $location->latitude = $geoCoords->results[0]->geometry->location->lat;
-        $location->longitude = $geoCoords->results[0]->geometry->location->lng;
-        $location->save();
-
-        //display confirmation page
-        return view('confirm')->with(array('theData'=> $locationName, 'theAction' => 'edited'));
-
-        //TODO: associate location with a client and perhaps group addresses. Modify form also
-        //$client = Input::get('client');
-        //$addressGroup = Input::get('address_group');
-    }
-
-    public function destroy($id){
-        $location = Location::find($id);
+        $theAction = 'You have successfully deleted ' . $location->name;
         Location::destroy($id);
-        return view('confirm')->with(array('theData'=> $location->name, 'theAction' => 'deleted'));
+        return view('confirm')->with('theAction', $theAction);
     }
 
-    public static function confirmDelete($id){
+    public static function confirmDelete($id)
+    {
         $location = Location::find($id);
-        return view('confirm-delete')->with('deleting', $location);
+        $name = $location->name;
+        $id = $location->id;
+        $url = 'locations';
+        return view('confirm-delete')->with(array('fieldDesc' => $name, 'id' => $id, 'url' => $url));
     }
 
-    public function geoCode($address){
-        $prepAddr = str_replace(' ','+',$address);
-        $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
+    public function geoCode($address)
+    {
+        $prepAddr = str_replace(' ', '+', $address);
+        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
         $output = json_decode($geocode);
         return $output;
+
     }
-
-//    public function setAddress(){
-//        $auto = Input::get('autocomplete');
-//
-//        Input::merge(['address' => $auto]);
-//        return view('confirm')->with('theData', $auto);
-//    }
-
-
-
-
-//  public function selectedLocation($dbLocation){
-////      locations = Location::all();
-//
-//      //change the top section of the webpage
-//
-//      echo("<script>
-//        var dbLocation = $dbLocation;
-//        document.getElementById('list-item').innerHTML = dbLocation->name;
-//
-//
-//
-//        </script>\");
-//
-//      //return view('home/location/locations')->with(array('locations'=>$this->locations, 'displayItem'=>$dbLocation, 'controller' => $this));
-//
-////          'displayItem'=>));
-//  }
-
-//  public function getLocations(){
-//
-//      return $locations();
-//  }
 }

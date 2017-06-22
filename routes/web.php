@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocationController;
-//use App\Http\Controllers\LocationController;
+use App\Http\Controllers\RosterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,9 @@ use App\Http\Controllers\LocationController;
 //   return view('admin_template');
 //});
 
+//FIXME: get url from api worked with an empty model in api 1st attempt didn't work with a model with custom code, but 1st attempt was also in localhost so cause may not have been model.
+//FIXME: cont. If url not working, need to check the model in api and test with empty model.
+
 Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
@@ -31,18 +34,26 @@ Route::resource('employees', 'EmployeeController');
 
 Route::get('/dashboard', 'DashboardController@index');
 //Route::get('/dashboard', 'DashboardController@testFunction');
+Route::resource('/add_user', 'UserController@store');
 
-Route::get('login', 'HomeController@getLogin()');
+Route::get('/login', 'HomeController@getLogin');
 
-Route::get('Logout', 'HomeController@getLogout()');
+Route::get('logout', 'HomeController@getLogout');
 
+Route::resource('/employees', 'EmployeeController');
+
+Route::resource('/reports', 'ReportController');
+
+//Route::get('/reports', 'ReportController@reportList');
+//
+//Route::get('/reports/create', 'ReportController@create');
 
 Route::get('/clock', function(){
     return view('clock-picker');
 
 });
-
-Route::resource('rosters', 'RosterController');
+//move folders (both roster and locations) and change paths and make consistent urls for locations at the same time
+Route::resource('/rosters', 'RosterController');
 
 //Route::get('rosters/create', function(){
 //
@@ -51,9 +62,9 @@ Route::resource('rosters', 'RosterController');
 //});
 
 
-Route::resource('/location', 'LocationController');
+Route::resource('/locations', 'LocationController');
 
-Route::post('/location/created', 'LocationController@store');
+//Route::post('/location/created', 'LocationController@store');
 
 //error if the url format is for eg Route::get('/location/{theId}/'....);
 //Route::get('/{theURL}/', function($theURL){
@@ -63,37 +74,24 @@ Route::post('/location/created', 'LocationController@store');
 //
 //});
 
-Route::get('/{theId}/',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
-    $locationView = LocationController::select($theId);
-    return $locationView;
-
-});
-
-Route::get('/confirm-delete/{theId}/',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
-    $locationView = LocationController::confirmDelete($theId);
-    return $locationView;
-
-});
-
-
-
-//Route::delete('/{theId}/delete',  function($theId){
-
-//    $theURL = URL::route//array('as' => 'selected',
-//    $locationView = LocationController::destroy($theId);
-//    return $locationView;
+//Route::get('/{theId}/',  function($theId){
 //
-//});
-
-///{theId}/location/', function($theId){
-//
+////    $theURL = URL::route//array('as' => 'selected',
 //    $locationView = LocationController::select($theId);
 //    return $locationView;
 //
 //});
+
+Route::get('/confirm-delete-location/{theId}/',  function($theId){
+    $deleteView = LocationController::confirmDelete($theId);
+    return $deleteView;
+
+});
+
+Route::get('/confirm-delete-shift/{theId}/',  function($theId){
+    $deleteView = RosterController::confirmDelete($theId);
+    return $deleteView;
+});
+
 
 

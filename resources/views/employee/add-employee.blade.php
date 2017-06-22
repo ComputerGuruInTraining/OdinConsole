@@ -26,6 +26,7 @@
   {{ Form::text('dateOfBirth', '', array('class' => 'datepicker')) }}
     {{--{{ Form::label('startDate', 'Start Date') }}--}}
     {{--{{ Form::text('startDateTxt', '', array('class' => 'datepicker')) }}--}}
+
 </div>
 
 

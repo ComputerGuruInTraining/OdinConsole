@@ -8,7 +8,8 @@
     <!-- Font Awesome -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     {{--Bootstrap stylesheet--}}
-    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}"
+          type="text/css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css">
     <!-- Theme style -->
@@ -17,7 +18,7 @@
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect.
     -->
-    <link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css" >
+    {{--<link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">--}}
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
@@ -29,6 +30,7 @@
     <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
     <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
 
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -38,7 +40,8 @@
 
     <script type="text/javascript">
         function noenter() {
-            return !(window.event && window.event.keyCode == 13); }
+            return !(window.event && window.event.keyCode == 13);
+        }
     </script>
 
 </head>
@@ -47,19 +50,17 @@
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}
-    {{--FIXME: when press menu icon if menu not showing depending on device size, sometimes doesn't show--}}
     <!-- Main Header
             <header class="main-header">  -->
     @include('header')
 
-    {{--<!-- Sidebar -->--}}
+    <!-- Sidebar -->
     {{--@include('sidebar')--}}
 
     <!-- Content Wrapper. Contains page content -->
-        {{--FIXME: v1 Page content requires a bigger height than current style as footer overlaps--}}
         <div class="content-wrapper">
 
-<section class="content-header">
+            <section class="content-header">
                 <h1>
                 @yield('title-item')
                 <!--<small> {{$page_description or null}} </small>-->
@@ -73,14 +74,17 @@
             @yield('page-content')
         </div>
         <!-- /.content-wrapper -->
-
+    </div>
+    <!-- ./wrapper -->
         <!-- Footer -->
         @include('footer')
 
-    </div>
-    <!-- ./wrapper -->
+
 
     <!-- REQUIRED JS SCRIPTS -->
+    {{-- Date of birth Picker --}}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- jQuery-->
     <script src="bower_components/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -88,21 +92,20 @@
     <!-- Bootstrap 3.3.6 -->
     <script src="bower_components/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- AdminLTE App -->
+    <!-- AdminLTE App --><!-- This file controls sidebar toggle functionality-->
     <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
 
-    {{-- Date of birth Picker --}}
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
     <script>
-        $( function() {
-          $( ".datepicker" ).datepicker({
-              changeMonth: true,
-              changeYear: true,
-              yearRange: "-80:+5"
-          });
-        } );
+
+        $(function () {
+
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-80:+0"
+            });
+
+        });
     </script>
 
     {{--Clock Picker--}}
@@ -124,7 +127,6 @@
         Both of these plugins are recommended to enhance the
         user experience. Slimscroll is required when using the
         fixed layout. -->
-{{--</body>--}}
 <!--<div class='row'>
                 {{--@yield('content')--}}
         </div>-->

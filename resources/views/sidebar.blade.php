@@ -19,16 +19,16 @@
         </div>-->
 
         <!-- search form (Optional) -->
-        <form action="#" method="get" class="sidebar-form">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search..."/>
-                    <span class="input-group-btn">
-                        <button type='submit' name='search' id='search-btn' class="btn btn-flat">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-            </div>
-        </form>
+        {{--<form action="#" method="get" class="sidebar-form">--}}
+            {{--<div class="input-group">--}}
+                {{--<input type="text" name="q" class="form-control" placeholder="Search..."/>--}}
+                    {{--<span class="input-group-btn">--}}
+                        {{--<button type='submit' name='search' id='search-btn' class="btn btn-flat">--}}
+                            {{--<i class="fa fa-search"></i>--}}
+                        {{--</button>--}}
+                    {{--</span>--}}
+            {{--</div>--}}
+        {{--</form>--}}
         <!-- /.search form -->
 
         <!-- Sidebar Menu -->
@@ -39,9 +39,9 @@
 
             <li class="active"><a href="/employees"><span>Employees</span></a></li>
             <li class="active"><a href="/rosters"><span>Roster</span></a></li>
-            <li class="active"><a href="/location"><span>Locations</span></a></li>
+            <li class="active"><a href="/locations"><span>Locations</span></a></li>
             <li class="active"><a href="#"><span>Clients</span></a></li>
-            <li class="active"><a href="#"><span>Reports</span></a></li>
+            <li class="active"><a href="/reports"><span>Reports</span></a></li>
             <div class="list-divider"></div>
 
             <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->

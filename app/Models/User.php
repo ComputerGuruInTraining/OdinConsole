@@ -1,13 +1,18 @@
 <?php
 
-namespace App;
+
+namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class User extends Authenticatable
+
+class User extends Eloquent
 {
-   // use Notifiable;
+	
+protected $table ="users";
+
+use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,8 +38,15 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getFullName()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
+    
+/**
+	 * Get the user's full name by concatenating the first and last names
+	 *
+	 * @return string
+	 */
+	public function getFullName()
+	{
+		return $this->first_name . ' ' . $this->last_name;
+	}
+
 }

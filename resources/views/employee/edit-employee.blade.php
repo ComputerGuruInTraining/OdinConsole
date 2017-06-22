@@ -26,6 +26,10 @@
     {{ Form::text('dateOfBirth', $employee->dob, array('class' => 'datepicker')) }}
 
 
+
+    {{--{{ Form::text('date', $employee->dob, array('id' => 'datepicker')) }}--}}
+    {{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->dob, 'class' =>'datepicker']) }}
+    
 </div>
 
 

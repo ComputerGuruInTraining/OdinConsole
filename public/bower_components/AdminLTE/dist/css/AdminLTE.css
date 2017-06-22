@@ -27,16 +27,8 @@ Odin theming
     right: 15px;
 }
 
-/*#success{*/
-    /*padding: 15px;*/
-    /*background-color: #00a65a;*/
-    /*color: white;*/
-
-/*}*/
-
 .padding{
     padding: 15px;
-
 }
 
 #map{
@@ -55,7 +47,7 @@ Odin theming
     display: none;
 }
 
-#address-alias{
+.padding-top{
     padding-top: 15px;
 }
 
@@ -100,6 +92,30 @@ Odin theming
     padding-left: 0px;
 
 }
+
+.group-list:nth-child(even){
+    background-color: #ebf9f9;
+}
+
+/*.group-table>td{*/
+    /*border-bottom-color: transparent !important;*/
+    /*border-top-color: #transparent !important;*/
+/*}*/
+
+.group-data{
+    font-weight: 800;
+
+}
+
+/*styling for location list table Action btns*/
+.column-width{
+    width: 15%;
+}
+
+/*.group-location:nth-child(even){*/
+    /*background-color: red;*/
+/*}*/
+
 
 /*
  * Core: General Layout Style
@@ -359,11 +375,12 @@ a:focus {
     content: "\f0c9";
 }
 .main-header .sidebar-toggle:hover {
-    color: #fff;
+    color: #663974;
 }
 .main-header .sidebar-toggle:focus,
 .main-header .sidebar-toggle:active {
     background: transparent;
+    color: #663974;
 }
 .main-header .sidebar-toggle .icon-bar {
     display: none;
