@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Input;
+use Hash;
 use Carbon\Carbon;
 use Session;
 use Redirect;
@@ -51,11 +52,13 @@ class EmployeeController extends Controller
         $employee->first_name = Input::get('first_name');
         $employee->last_name = Input::get('last_name');
         // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
-        $employee->dob= Carbon::parse($request->datepicker);
+        $employee->dob = Input::get('dateOfBirth');
+//        $employee->dob= Carbon::parse($request->datepicker);
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
         $employee->email = Input::get('email');
-        $employee->password=  Input::get('password');
+        $employee->password=  Hash::make(Input::get('password'));
+
         $employee->save();
         // redirect('employees');
         $employees = Employee::latest()->get();
@@ -104,14 +107,16 @@ class EmployeeController extends Controller
         //store the data in the db
         $employee->first_name = Input::get('first_name');
         $employee->last_name = Input::get('last_name');
-        // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
+        $employee->dob = Input::get('dateOfBirth');
+//         Carbon::parse($request->datepicker);
 
-        $employee->dob= Carbon::parse($request->datepicker);
-        // date("Y-m-d", strtotime($request->datepicker))
+//        $employee->dob= Carbon::parse($request->datepicker);
+//        $employee->dob=Carbon::createFromFormat('d/m/yyyy', $request->input('dob'))->format('Y-m-d');
+
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
         $employee->email = Input::get('email');
-        $employee->password=  Input::get('password');
+        $employee->password=  Hash::make(Input::get('password'));
         $employee->save();
 
         //redirect to employees listing page after updating an employee detail

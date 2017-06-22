@@ -23,7 +23,10 @@
 
 <div class='form-group'>
   {{ Form::label('dob', 'Date of Birth') }}
-  {{ Form::text('date', '', array('class' => 'datepicker')) }}
+  {{ Form::text('dateOfBirth', '', array('class' => 'datepicker')) }}
+    {{--{{ Form::label('startDate', 'Start Date') }}--}}
+    {{--{{ Form::text('startDateTxt', '', array('class' => 'datepicker')) }}--}}
+
 </div>
 
 

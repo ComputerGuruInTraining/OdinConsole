@@ -30,7 +30,10 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+Route::resource('employees', 'EmployeeController');
 
+Route::get('/dashboard', 'DashboardController@index');
+//Route::get('/dashboard', 'DashboardController@testFunction');
 Route::resource('/add_user', 'UserController@store');
 
 Route::get('/login', 'HomeController@getLogin');
@@ -57,6 +60,7 @@ Route::resource('/rosters', 'RosterController');
 //
 //   return view('home/rosters/create');
 //});
+
 
 Route::resource('/locations', 'LocationController');
 

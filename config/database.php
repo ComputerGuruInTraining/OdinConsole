@@ -41,16 +41,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'odin-console.cmiaodenkash.ap-southeast-2.rds.amazonaws.com'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'homestead'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'pass'),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
+            'database' => env('DB_DATABASE', 'odin_db'),
+            'username' => env('DB_USERNAME', 'odin_db'),
+            'password' => env('DB_PASSWORD', 'Odin$321'),
+
         ],
 
         'pgsql' => [
