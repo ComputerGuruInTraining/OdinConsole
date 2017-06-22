@@ -8,6 +8,8 @@ use GuzzleHttp;
 
 class ReportController extends Controller
 {
+    protected $accessToken;
+//    protected $client;
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +17,36 @@ class ReportController extends Controller
      */
     public function index()
     {
+        //TODO: this fn needs to be called at login
+        $this->oauth();
+
+        //retrieve token needed for authorized http requests
+        $token = $this->accessToken();
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->get('http://odinlite.com/public/api/reports/list', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+            ]
+        ]);
+
+        $reports = json_decode((string)$response->getBody());
+
+        return view('report/reports')->with('reports', $reports);
+
+//    $reportList = "";
+//    foreach ($reports as $report) {
+//        $reportList .= "<li>{$report->location_id}</li>";
+//    }
+//
+//    echo "<ul>{$reportList}</ul>";
+
+    }
+
+    //TODO: improve so pass in username and password
+    //TODO: move fn to a utility file or authservice file
+    public function oauth(){
         $client = new GuzzleHttp\Client;
 
         try {
@@ -30,58 +62,20 @@ class ReportController extends Controller
                 ]
             ]);
 
-
-            // You'd typically save this payload in the session
             $auth = json_decode((string)$response->getBody());
 
-            $response = $client->get('http://odinlite.com/public/api/reportcases/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $auth->access_token,//TODO: Access_token saved for global use
-                ]
-            ]);
-
-            $reports = json_decode((string)$response->getBody());
-
-//TODO: pass through case notes and report data
-            return view('report/case_notes/reports')->with('reports', $reports);
-//    dd($auth->access_token);
-
-//
-//
-//    $request = new Request('GET', 'http://localhost:8000/api/reports/all',
-//        [
-//
-//        'Authorization' => 'Bearer '.$auth->access_token
-//        ]);
-//
-////    dd($request)$response = $client->request('GET', '/get', ('http://localhost:8000/api/report-case-notes/list', [
-//        'headers' => [
-//            'Content-Type', 'application/x-www-form-urlencoded',
-//            'Accept' => 'application/json',
-//            'Authorization' => 'Bearer '.$auth->access_token,
-//        ]
-//    ]);;
-//    //error in following code:
-//    $clientGet->send($request);
-//    dd($request);
-
-//
-//    dd($auth->access_token);
-//    dd($request, $response);
-//    $reports = json_decode( (string) $response->getBody() );
-////    dd($report);
-//    $reportList = "";
-//    foreach ($reports as $report) {
-//        $reportList .= "<li>{$report->location_id}</li>";
-//    }
-//
-//    echo "<ul>{$reportList}</ul>";
+            //TODO: You'd typically save this payload in the session
+            $this->accessToken = $auth->access_token;
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+            echo 'oauth fn error';
         }
     }
 
+    //TODO: move fn to a utility file or authservice file
+    public function accessToken(){
+       return $this->accessToken;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -89,7 +83,8 @@ class ReportController extends Controller
      */
     public function create()
     {
-        return view('report/create');
+        $locations = Location::all('id','name');
+        return view('report/create')->with();
     }
 
     /**
@@ -111,7 +106,38 @@ class ReportController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+
+            $this->oauth();
+
+            $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get('http://odinlite.com/public/api/reports/'.$id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $reportCaseNotes = json_decode((string)$response->getBody());
+
+//            foreach($cases as $case){
+//                dd($case->id);
+//
+//            }
+
+            //need to retrieve the case notes for the
+
+            return view('report/case_notes/show')->with('cases', $reportCaseNotes);
+
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e){
+            $error = "show fn error";
+            echo $error;
+//            TODO: go back to previous view or redirect without having to pass through values again
+
+        }
     }
 
     /**

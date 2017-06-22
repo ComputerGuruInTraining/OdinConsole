@@ -15,28 +15,34 @@
         </div>
 
         <div class='table-responsive'>
-            <h3>Case Notes Report</h3>
             <table class="table table-hover">
                 <tr>
-                    <th>Date Range (??or report name??)</th>
-                    <th>Location</th>
-                    <th>Total Hours Monitoring Location</th>
-                    <th>Guard Presence at Location (?? or list the names of the guards??)</th>
-                    <th>Case Notes</th>
+                    <th>Report Type</th>
+                    <th>Date Range</th>
+
+                    {{--<th>Location</th>--}}
+                    {{--<th>Total Hours Monitoring Location</th>--}}
+                    {{--<th>Guard Presence at Location (?? or list the names of the guards??)</th>--}}
                     <th>Actions</th>
                 </tr>
                 @foreach($reports as $report)
                     <tr>
+                        <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
+                        <td>{{$report->date_start}} - {{$report->date_end}}</td>
                         <td></td>
-                        <td>{{$report->location_id}}</td>
-                        <td>{{$report->total_hours}}</td>
-                        <td>{{$report->total_guards}}</td>
+                        {{--<td>{{$report->total_hours}}</td>--}}
+                        {{--<td>{{$report->total_guards}}</td>--}}
                         <td></td>
+
                         <td class="column-width">
-                            <a href="/reports/{{$report->id}}/edit">Edit</a> | <a href="/confirm-delete-location/{{$report->id}}/" style="color: #cc0000;">Delete</a>
+                            <a href="/reports/{{$report->id}}">View</a> | <a href="#" style="color: #cc0000;">Delete</a>
                         </td>
                     </tr>
                 @endforeach
+
+                {{--@foreach($cases as $case)--}}
+                    {{--<td>{{$case->id}}</td>--}}
+                {{--@endforeach--}}
             </table>
         </div>
 
