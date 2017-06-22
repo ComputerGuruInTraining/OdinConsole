@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Input;
+use Hash;
 use Carbon\Carbon;
 use Session;
 use Redirect;
@@ -56,7 +57,8 @@ class EmployeeController extends Controller
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
         $employee->email = Input::get('email');
-        $employee->password=  Input::get('password');
+        $employee->password=  Hash::make(Input::get('password'));
+
         $employee->save();
         // redirect('employees');
         $employees = Employee::latest()->get();
@@ -114,7 +116,7 @@ class EmployeeController extends Controller
         $employee->gender = Input::get('sex');
         $employee->mobile = Input::get('mobile');
         $employee->email = Input::get('email');
-        $employee->password=  Input::get('password');
+        $employee->password=  Hash::make(Input::get('password'));
         $employee->save();
 
         //redirect to employees listing page after updating an employee detail

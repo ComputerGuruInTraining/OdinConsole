@@ -25,6 +25,7 @@
     {{--Clock Picker Stylesheet and Scripts--}}
     {{--see source https://weareoutman.github.io/clockpicker/jquery.html--}}
     <link rel="stylesheet" href="{{ asset('/bower_components/adminlte/plugins/clockpicker/css/jquery-clockpicker.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
     <script type="text/javascript" src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
 
@@ -117,6 +118,7 @@
             autoclose: true
         });
     </script>
+
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
         Both of these plugins are recommended to enhance the

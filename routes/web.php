@@ -29,8 +29,8 @@ Route::get('/admin', function () {
 Route::resource('/user', 'UserController');
 Route::resource('employees', 'EmployeeController');
 
-
-Route::resource('/employees', 'EmployeeController');
+Route::get('/dashboard', 'DashboardController@index');
+//Route::get('/dashboard', 'DashboardController@testFunction');
 
 Route::get('login', 'HomeController@getLogin()');
 
