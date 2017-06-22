@@ -1,10 +1,9 @@
-@extends('layouts.list')
+@extends('layouts.master_layout')
+@include('sidebar')
 
-@extends('sidebar_custom')
-
-@section('title')
-    Create Roster
-@stop
+{{--@section('title')--}}
+    {{--Create Roster--}}
+{{--@stop--}}
 
 @section('title-item')
     Add Shift to Roster

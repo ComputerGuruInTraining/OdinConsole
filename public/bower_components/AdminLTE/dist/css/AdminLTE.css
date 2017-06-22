@@ -107,6 +107,11 @@ Odin theming
 
 }
 
+/*styling for location list table Action btns*/
+.column-width{
+    width: 15%;
+}
+
 /*.group-location:nth-child(even){*/
     /*background-color: red;*/
 /*}*/
@@ -370,11 +375,12 @@ a:focus {
     content: "\f0c9";
 }
 .main-header .sidebar-toggle:hover {
-    color: #fff;
+    color: #663974;
 }
 .main-header .sidebar-toggle:focus,
 .main-header .sidebar-toggle:active {
     background: transparent;
+    color: #663974;
 }
 .main-header .sidebar-toggle .icon-bar {
     display: none;

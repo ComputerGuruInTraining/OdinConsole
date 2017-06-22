@@ -1,5 +1,5 @@
 @extends('layouts.list')
-@extends('sidebar_custom')
+@extends('sidebar')
 
 @section('title')
     Locations
@@ -38,7 +38,7 @@
             <td>{{$displayItem->address}}</td>
         </tr>
         <tr class="details-tr">
-        <td class="item-details">Additional Info:</td>
+            <td class="item-details">Additional Info:</td>
             <td>{{$displayItem->additional_info or 'None Provided'}}</td>
         </tr>
     </table>
@@ -48,22 +48,44 @@
     </div>
 @stop
 
-{{--TODO v2 or v1 low-priority: improve list so that doesn't run endlessly down the page--}}
-@section('content-list')
-    <div style="padding:15px 0px 10px 0px;">
-        <button type="button" class="btn btn-success" onclick="window.location.href='locations/create'">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Location
-        </button>
-    </div>
-    @foreach($locations->sortBy('name') as $dbLocation)
-        <div class="list"><a href="/{{ $dbLocation->id }}/">{{ $dbLocation->name }}</a></div>
-        <br>
-    @endforeach
-@stop
 
 @section('title-list')
     Locations
 @stop
+
+@section('content-list')
+    <div class="col-md-12">
+
+        <div style="padding:15px 0px 10px 0px;">
+            <button type="button" class="btn btn-success" onclick="window.location.href='locations/create'">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Location
+            </button>
+        </div>
+
+        <div class='table-responsive'>
+            <table class="table table-hover">
+                <tr>
+                    <th>Alias</th>
+                    <th>Address</th>
+                    <th>Additional Info</th>
+                    <th>Actions</th>
+                </tr>
+                @foreach($locations->sortBy('name') as $location)
+                    <tr>
+                        <td>{{$location->name}}</td>
+                        <td>{{$location->address}}</td>
+                        <td>{{$location->additional_info}}</td>
+                        <td class="column-width">
+                            <a href="/locations/{{$location->id}}/edit">Edit</a> | <a href="/confirm-delete-location/{{$location->id}}/" style="color: #cc0000;">Delete</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+
+    </div>
+@stop
+
 
 
 

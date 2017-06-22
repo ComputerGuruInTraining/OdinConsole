@@ -1,5 +1,5 @@
 @extends('layouts.master_layout')
-@extends('sidebar_custom')
+@extends('sidebar')
 
 {{--@section('title')--}}
 {{--Rosters--}}
@@ -70,7 +70,6 @@
                         @if($index == $shift->startDate)
                             <tr class="group-table">
                                 <td>{{$shift->uniqueDate}}</td>
-                                {{--TODO: v2 or lower v1: group locations for better display--}}
                                 @if($shift->uniqueLocations != null)<!--locations is null if duplicate location-->
                                     <td class="group-data">{{$shift->uniqueLocations}} ({{$shift->checks}})</td>
                                 @else
