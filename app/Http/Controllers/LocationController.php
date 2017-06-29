@@ -21,9 +21,6 @@ class LocationController extends Controller
 
     public function index()
     {
-        //retrieve all records from locations table via Location Model
-//        $locations = Location::all();
-//        $this->locations = $locations;
 
         $this->oauth();
 
@@ -89,24 +86,18 @@ class LocationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //FIXME: TS POST
     //TODO: improve validation for adding location (see update-location)
+    //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field
     public function store(Request $request)
     {
-//        return view('admin_template');
-//    }
-
         try {
-            //validate data
-//            $this->validate($request, [
-//                'name' => 'required|unique:locations|max:255',
-//                'address' => 'required|unique:locations|max:255',
-//            ]);
-//
-//
-//            //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field
-//            // to type address and select from dropdown
-//
-//            dd($request);
+//            validate data
+            $this->validate($request, [
+                'name' => 'required|max:255',
+                'address' => 'required|max:255',
+            ]);
+
 //            //gather data from input fields
             $name = ucfirst(Input::get('name'));
             $address = Input::get('address');
@@ -122,52 +113,37 @@ class LocationController extends Controller
             $token = $this->accessToken();
 
             $client = new GuzzleHttp\Client;
-            $body = 'name='.$name.'&address='.$address.'&latitude='.$latitude.'&longitude='.$longitude.'&notes='.$notes;
-//dd($body);
-            //doesn't add to db, but goes smoothly
-//            $response = $client->post('http://odinlite.com/public/api/locations', ['json' => ["access_token" => $token, 'name' => $name,
-//                'address'=> $address,
-//                'latitude' => $latitude,
-//                'longitude'=>$longitude,
-//                'notes'=> $notes,
-//                ]
-//            ]);
-        $response = $client->post('http://odinlite.com/public/api/locations',[
-                'form_params' => [
-                'Authorization' => 'Bearer ' . $token,
-                 ]
-        ]);
-//            ['body' => $body],[
-//            'headers' => [
-//                'Authorization' => 'Bearer ' . $token,
-//                'Content-Type' => 'application/x-www-form-urlencoded',
-//                'Accept'     => 'application/json',
-//
-//            ]
-//                ]
 
+            $response = $client->post('http://odinlite.com/public/api/locations', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array('name' => $name, 'address' => $address,
+                    'latitude' => $latitude, 'longitude' => $longitude,
+                        'notes' => $notes
+                    )
+                )
+            );
 
-//
-//           dd($response);
-//
-////            $response = $client->send($request,  ['headers' => [
-////                    'Authorization' => 'Bearer ' . $token,
-////                ]
-////            ]);
-////            request('PUT', '/put', ['json' => ['foo' => 'bar']])
-//
-//            $apiResponse = json_decode((string)$response->getBody());
-//
-                dd($response);//null even when just returning success is true or false
-//
-//            //display confirmation page
-            $theData = 'You have successfully added the location'.$name;
-            return view('confirm-create')->with(array('theData' => $theData, 'url' => 'locations'));
+            //$apiResponse = json_decode((string)$response->getBody());
+
+            //display confirmation page
+            return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-                dd($e);
+            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $errors = collect($err);
+            return view('location/create-locations')->with('errors', $errors);
+        }
+        catch (\ErrorException $error) {
+                $e = 'Please fill in all required fields';
+                $errors = collect($e);
+                return view('location/create-locations')->with('errors', $errors);
         }
     }
+
+    //before api request, just retrieving from db
 //    public function store(Request $request)
 //    {
 //        try {
@@ -255,7 +231,6 @@ class LocationController extends Controller
         ]);
 
         $location = json_decode((string)$response->getBody());
-//        dd($location);
         return view('location/edit-locations')->with('location', $location);
     }
 
@@ -345,11 +320,8 @@ class LocationController extends Controller
 
             $responseMsg = json_decode((string)$response->getBody());
 
-//        return view('location/locations')->with(array('locations' => $locations));
-//
-//        $location = Location::find($id);
             $theAction = 'You have successfully deleted the location';
-//        Location::destroy($id);
+
             return view('confirm')->with('theAction', $theAction);
 
         }
@@ -390,13 +362,12 @@ class LocationController extends Controller
 
             $location = json_decode((string)$response->getBody());
 
-//            $location = Location::find($id);
             $name = $location->name;
             $id = $location->id;
             $url = 'locations';
             return view('confirm-delete')->with(array('fieldDesc' => $name, 'id' => $id, 'url' => $url));
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
+            echo $e;
         }
     }
 
@@ -406,6 +377,5 @@ class LocationController extends Controller
         $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
         $output = json_decode($geocode);
         return $output;
-
     }
 }
