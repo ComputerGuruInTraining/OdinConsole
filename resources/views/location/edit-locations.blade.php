@@ -7,8 +7,8 @@
 @stop
 
 @section('page-content')
-    <div class='col-lg-4 col-lg-offset-4 form-pages'>
-
+    {{--<div class='col-lg-4 col-lg-offset-4 form-pages'>--}}
+    <div class="form-pages">
         @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <ul>
@@ -21,21 +21,26 @@
 
         {{ Form::model($location, ['route' => ['locations.update', $location->id], 'method' => 'put']) }}
 
+        <div class='form-group padding-top'>
+            {{ Form::label('address', 'Address:') }}
+            <p>{{$location->address}}</p>
+        </div>
+
             @include('map')
 
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address alias') }}
-            {{ Form::text('name', $location->name, ['onkeypress'=>'return noenter()']) }}
+            {{ Form::text('name', $location->name, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
-        <div class='form-group'>
+        <div class='form-group padding-top'>
             {{ Form::label('info', 'Additional Address Details') }}
-            {{ Form::text('info', $location->additional_info, ['placeholder' => 'eg Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{ Form::text('info', $location->notes, ['placeholder' => 'eg Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Save', ['class' => 'btn btn-info']) }}
-            <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
         {{ Form::close() }}

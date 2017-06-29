@@ -10,12 +10,13 @@ use Input;
 use Carbon\Carbon;
 use DateTime;
 use DateInterval;
+use GuzzleHttp;
 
-// for console logging:
-//        echo "<script>console.log( 'Debug Objects: " . $formattedTime . "' );</script>";
-//                dd($job);
 class RosterController extends Controller
 {
+    //global class variables
+    protected $accessToken;
+
     /**
      * Display a listing of the resource.
      *
@@ -24,12 +25,87 @@ class RosterController extends Controller
 
     public function index()
     {
-        //retrieve job collection from db with formatted values for start time and end time and values compared for duplicates
-        $jobs = $this->jobList();
-        //group the collection by startDate for grouping as tbody in the view
-        $groupJobs = $this->groupByDate($jobs);
+        try {
+            $this->oauth();
 
-        return view('home/rosters/index')->with(array('jobs' => $jobs, 'groupJobs' => $groupJobs));
+            //retrieve token needed for authorized http requests
+            $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get('http://odinlite.com/public/api/assignedshifts/list', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                ]
+            ]);
+
+            $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+
+            foreach($assigned as $i => $item){
+                //add the extracted date to each of the objects
+                $s = $item->start;
+                $sdt = new DateTime($s);
+                $sdate = $sdt->format('m/d/Y');
+                $stime = $sdt->format('H:i:s');
+
+                $e = $item->end;
+                $edt = new DateTime($e);
+                $edate = $edt->format('m/d/Y');
+                $etime = $edt->format('H:i:s');
+
+                $assigned[$i]->start_date = $sdate;
+                $assigned[$i]->start_time = $stime;
+                $assigned[$i]->end_time = $etime;
+
+                //save date and location into a new object property for later use (ie to reject duplicate values for the view)
+                $assigned[$i]->unique_date = $assigned[$i]->start_date;
+                $assigned[$i]->unique_locations = $assigned[$i]->location;
+            }
+
+            //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
+            $assigned = $this->compareValues($assigned, 'start_date', 'unique_date',
+                'unique_locations', 'checks', 'start_time', 'end_time');
+
+            //change to collection datatype from array for using groupBy fn
+            $assigned = collect($assigned);
+
+            //group by date for better view
+            $assigned = $this->groupByDate($assigned);
+
+            return view('home/rosters/index')->with(array('assigned' => $assigned));
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+        }
+    }
+
+    public function oauth(){
+        $client = new GuzzleHttp\Client;
+
+        try {
+            $response = $client->post('http://odinlite.com/public/oauth/token', [
+                'form_params' => [
+                    'client_id' => 2,
+                    // The secret generated when you ran: php artisan passport:install
+                    'client_secret' => 'q41fEWYFbMS6cU6Dh63jMByLRPYI4gHDj13AsjoM',
+                    'grant_type' => 'password',
+                    'username' => 'bernadettecar77@hotmail.com',
+                    'password' => 'password',
+                    'scope' => '*',
+                ]
+            ]);
+
+            $auth = json_decode((string)$response->getBody());
+
+            $this->accessToken = $auth->access_token;
+
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+        }
+    }
+
+    public function accessToken(){
+        return $this->accessToken;
     }
 
     /**
@@ -186,96 +262,47 @@ class RosterController extends Controller
         return view('confirm')->with('theAction', $theAction);
     }
 
-    public function jobList()
-    {
-        //retrieve ordered data from db
-        $jobs = Job::orderBy('job_scheduled_for', 'asc')->orderBy('locations')->get();
 
-//        the index is needed for reassigning a value to the collection item
-        foreach ($jobs as $i => $job) {
-
-                //process job_scheduled_for and duration and convert into start and end date and times
-                $dbdt = $job->job_scheduled_for;//string returned from db
-                $duration = $job->estimated_job_duration;
-
-                //extract date and time from job_scheduled_for datetime
-                $dtm = new DateTime($dbdt);
-                $jobs[$i]->startDate = $this->stringDate($dtm);
-                //also add the startDate values to uniqueDate which will be used later to update startDate values in uniqueDate, but preserve the values in startDate field
-                $jobs[$i]->uniqueDate = $jobs[$i]->startDate;
-                $jobs[$i]->startTime = $this->stringTime($dtm);
-
-                //calculate end date and time using duration and job_scheduled_for
-                $edt = $this->endDT($dbdt, $duration);//datetime format
-
-                //extract date and time from end datetime object
-                $jobs[$i]->endDate = $this->stringDate($edt);
-
-                $jobs[$i]->endTime = $this->stringTime($edt);
-
-                $jobs[$i]->uniqueLocations = $job->locations;
-
-                //if employee exists
-            if(Employee::find($job->assigned_user_id) != null) {
-                $employee = Employee::find($job->assigned_user_id);
-                $jobs[$i]->employeeName = $employee->first_name . " " . $employee->last_name;
-            }
-            else{
-                $jobs[$i]->employeeName = 'not found';
-
-            }
-        }
-//        pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
-        $jobs = $this->compareValues($jobs, 'startDate', 'uniqueDate', 'uniqueLocations', 'checks', 'startTime', 'endTime');
-
-        //if the time is 12:00am, convert to midnight for usability
-        foreach ($jobs as $i => $job) {
-            $jobs[$i]->startTime = $this->timeMidnight($jobs[$i]->startTime);
-            $jobs[$i]->endTime = $this->timeMidnight($jobs[$i]->endTime);
-        }
-        return $jobs;
-    }
-
-    public function groupByDate($jobs)
+    public function groupByDate($assigned)
     {
         //group the collection by startDate for grouping as tbody in the view
-        $groupedJobs = $jobs->groupBy(function ($job, $key) {
-            return $job['startDate'];
-        });
-        return $groupedJobs;
+        $groupedAssigned = $assigned->groupBy('start_date');
+        return $groupedAssigned;
     }
 
 //function defined for global use
-    public function compareValues($jobs, $date, $uniqueDate, $uniqueLocations = null, $checks = null, $startTime = null, $endTime = null)
+    public function compareValues($jobs, $date, $uniqueDate, $uniqueLocations, $checks, $startTime, $endTime)
     {
-            for ($i = 0; $i < $jobs->count(); $i++) {
-                for ($j = 0; $j < $jobs->count(); $j++) {
+            for ($i = 0; $i < 10; $i++) {
+                for ($j = 0; $j < 10; $j++) {
+
                     //if startDate the same, preserve the startDate values for future comparisons and use:
                     //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
-                    if ($jobs[$i][$date] == $jobs[$j][$date]) {
+                    if ($jobs[$i]->$date == $jobs[$j]->$date) {
+//                        dd($jobs[$i]->$date);
                         if ($i > $j) {
-                            $jobs[$i][$uniqueDate] = null;
+                            $jobs[$i]->$uniqueDate = null;
                         }
                         //if locations and checks and startTime and endTime the same,
                         //change values of these fields to null for the duplicates:
-                        if (($jobs[$i][$uniqueLocations] == $jobs[$j][$uniqueLocations])
-                            && ($jobs[$i][$checks] == $jobs[$j][$checks])
-                            && ($jobs[$i][$startTime] == $jobs[$j][$startTime])
-                            && ($jobs[$i][$endTime] == $jobs[$j][$endTime])
+                        if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
+                            && ($jobs[$i]->$checks == $jobs[$j]->$checks)
+                            && ($jobs[$i]->$startTime == $jobs[$j]->$startTime)
+                            && ($jobs[$i]->$endTime == $jobs[$j]->$endTime)
                         ) {
                             if ($i > $j) {
-                                $jobs[$i][$startTime] = null;
-                                $jobs[$i][$endTime] = null;
-                                $jobs[$i][$uniqueLocations] = null;
-                                $jobs[$i][$checks] = null;
+                                $jobs[$i]->$startTime = null;
+                                $jobs[$i]->$endTime = null;
+                                $jobs[$i]->$uniqueLocations = null;
+                                $jobs[$i]->$checks = null;
                             }
                             //if only locations and checks the same, then:
-                        } else if (($jobs[$i][$uniqueLocations] == $jobs[$j][$uniqueLocations])
-                            && ($jobs[$i][$checks] == $jobs[$j][$checks])
+                        } else if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
+                            && ($jobs[$i]->$checks == $jobs[$j]->$checks)
                         ) {
                             if ($i > $j) {
-                                $jobs[$i][$uniqueLocations] = null;
-                                $jobs[$i][$checks] = null;
+                                $jobs[$i]->$uniqueLocations = null;
+                                $jobs[$i]->$checks = null;
                             }
                         }
                     }

@@ -64,6 +64,8 @@ Route::resource('/rosters', 'RosterController');
 
 Route::resource('/locations', 'LocationController');
 
+//Route::get('/location/add', 'LocationController@create');
+
 //Route::post('/location/created', 'LocationController@store');
 
 //error if the url format is for eg Route::get('/location/{theId}/'....);

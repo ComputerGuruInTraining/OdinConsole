@@ -40,7 +40,6 @@
             <li class="active"><a href="/employees"><span>Employees</span></a></li>
             <li class="active"><a href="/rosters"><span>Roster</span></a></li>
             <li class="active"><a href="/locations"><span>Locations</span></a></li>
-            <li class="active"><a href="#"><span>Clients</span></a></li>
             <li class="active"><a href="/reports"><span>Reports</span></a></li>
             <div class="list-divider"></div>
 
