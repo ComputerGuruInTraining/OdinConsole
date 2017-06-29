@@ -13,7 +13,7 @@
 @section('page-content')
 
     {{--TODO: fix display in Microsoft Edge. The page content shows as approx. 1/3 of main content area--}}
-    <div class='col-lg-4 col-lg-offset-4 form-pages'>
+    <div class='form-pages'>
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -39,7 +39,7 @@
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
-            <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}
     </div>
