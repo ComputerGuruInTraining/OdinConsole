@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
+    <div class='form-pages'>
         <div style="color: #dd4b39; padding-bottom: 8px;">
             {{--TODO: consider having a tip with info icon and then press for this tip:--}}
             Press ctrl to add more than one employee or location.
@@ -31,7 +31,9 @@
             {!! Form::Label('employees', 'Select Employee:') !!}
             <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
                 @foreach($empList as $emp)
-                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                    {{--<option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>--}}
+                    <option value="{{$emp->id}}">{{$emp->name}}</option>
+
                 @endforeach
             </select>
         </div>
@@ -40,7 +42,7 @@
             <select class="form-control" multiple="multiple" name="locations[]" size="10" onkeypress="return noenter()">
                 {{--<option value="" selected disabled>Select Location:</option>--}}
                 @foreach($locList as $loc)
-                    <option value="{{$loc->name}}">{{$loc->name}}</option>
+                    <option value="{{$loc->id}}">{{$loc->name}}</option>
                 @endforeach
             </select>
         </div>

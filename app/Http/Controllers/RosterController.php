@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Location;
 use Input;
-use Carbon\Carbon;
+//use Carbon\Carbon;
 use DateTime;
 use DateInterval;
 use GuzzleHttp;
@@ -35,7 +35,7 @@ class RosterController extends Controller
 
             $response = $client->get('http://odinlite.com/public/api/assignedshifts/list', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                    'Authorization' => 'Bearer ' . $token,
                 ]
             ]);
 
@@ -118,9 +118,38 @@ class RosterController extends Controller
 
     public function create()
     {
-        $empList = $this->employeeList();
-        $locList = $this->locationList();
-        return view('home/rosters/create')->with(array('empList' => $empList, 'locList' => $locList));
+        try {
+            $this->oauth();
+
+            //retrieve token needed for authorized http requests
+            $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get('http://odinlite.com/public/api/users/list', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $employees = GuzzleHttp\json_decode((string)$response->getBody());
+
+            $response2 = $client->get('http://odinlite.com/public/api/locations/list', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $locations = GuzzleHttp\json_decode((string)$response2->getBody());
+
+            return view('home/rosters/create')->with(array('empList' => $employees, 'locList' => $locations));
+
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
+            return view('admin_template');
+        }
     }
 
     /**
@@ -132,10 +161,6 @@ class RosterController extends Controller
 
     public function store(Request $request)
     {
-           //variables for passing to view
-           $empList = $this->employeeList();
-           $locList = $this->locationList();
-
         //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
         $this->validate($request, [
         'employees' => 'required',
@@ -148,7 +173,7 @@ class RosterController extends Controller
 
            //get the data from the form and perform necessary calculations prior to inserting into db
            $dateStart = $this->formData($request);
-           $theData = "the $dateStart";
+           //$theData = 'the'.$dateStart;
            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
 
     }
@@ -275,23 +300,23 @@ class RosterController extends Controller
 //function defined for global use
     public function compareValues($jobs, $date, $uniqueDate, $uniqueLocations, $checks, $startTime, $endTime)
     {
-            for ($i = 0; $i < 10; $i++) {
-                for ($j = 0; $j < 10; $j++) {
+            for ($i = 0; $i < count($jobs); $i++) {
+                for ($j = 0; $j < count($jobs); $j++) {
 
                     //if startDate the same, preserve the startDate values for future comparisons and use:
                     //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
                     if ($jobs[$i]->$date == $jobs[$j]->$date) {
-//                        dd($jobs[$i]->$date);
+
                         if ($i > $j) {
                             $jobs[$i]->$uniqueDate = null;
                         }
                         //if locations and checks and startTime and endTime the same,
                         //change values of these fields to null for the duplicates:
                         if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
+                            &&($jobs[$i]->$uniqueLocations != "Location not in database")
                             && ($jobs[$i]->$checks == $jobs[$j]->$checks)
                             && ($jobs[$i]->$startTime == $jobs[$j]->$startTime)
-                            && ($jobs[$i]->$endTime == $jobs[$j]->$endTime)
-                        ) {
+                            && ($jobs[$i]->$endTime == $jobs[$j]->$endTime)) {
                             if ($i > $j) {
                                 $jobs[$i]->$startTime = null;
                                 $jobs[$i]->$endTime = null;
@@ -300,6 +325,7 @@ class RosterController extends Controller
                             }
                             //if only locations and checks the same, then:
                         } else if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
+                            &&($jobs[$i]->$uniqueLocations != "Location not in database")
                             && ($jobs[$i]->$checks == $jobs[$j]->$checks)
                         ) {
                             if ($i > $j) {
@@ -312,13 +338,18 @@ class RosterController extends Controller
             }
         return $jobs;
     }
-
     public function formData($request){
         //data for validation
         $locationArray = Input::get('locations');
         $employeeArray = Input::get('employees');
         $checks = Input::get('checks');
-        $companyId = 1;
+        //  $companyId = 1;
+
+        //hardcoded values TODO: user input
+        $title = 'Security at Several Locations';
+        $desc = 'Provide security services at several locations throughout Austin';
+        $roster_id = 1;
+        $added_id = 1;
 
         //get data from form for non laravel validated inputs
         $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
@@ -327,31 +358,106 @@ class RosterController extends Controller
         $timeEnd = Input::get('endTime');//hh:mm
 
         //process start date and time before adding to db
-        $carbonStart = $this->jobDateTime($dateStart, $timeStart);
-        $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
-//        TODO: duration needs to be a double (db expecting an integer)
-        $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
+        $strStart = $this->jobDateTime($dateStart, $timeStart);
+        $strEnd = $this->jobDateTime($dateEnd, $timeEnd);
 
-        //for each employee...
-        for($emp=0; $emp<sizeof($employeeArray); $emp++) {
-//            insert a job record for each location
-            for ($loc = 0; $loc < sizeof($locationArray); $loc++) {
-                $job = new Job;
-                //insert laravel validated data into job table
-                $job->assigned_user_id = $employeeArray[$emp];
-                $job->company_id = $companyId;
-                $job->locations = $locationArray[$loc];
-                $job->checks = $checks;
 
-                //insert non-laravel validated data to table
-                $job->job_scheduled_for = $carbonStart;
-                $job->estimated_job_duration = $lengthH;
+        $this->oauth();
 
-                $job->save();
-            }
-        }
+        //retrieve token needed for authorized http requests
+        $token = $this->accessToken();
+
+        $client = new GuzzleHttp\Client;
+//        'location_ids' => $locationArray, 'employee_ids' => $employeeArray,
+        $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'checks' => $checks, 'start' => $strStart,
+                    'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
+                    'added_id' => $added_id, 'employees' => $employeeArray, 'locations' => $locationArray
+                )
+            )
+        );
+
+        $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+
+        //dd($assigned);
+
         return $dateStart;
     }
+
+    //before api
+//    public function formData($request){
+//        //data for validation
+//        $locationArray = Input::get('locations');
+//        $employeeArray = Input::get('employees');
+//        $checks = Input::get('checks');
+//      //  $companyId = 1;
+//
+//        //get data from form for non laravel validated inputs
+//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
+//        $timeStart = Input::get('startTime');//hh:mm
+//        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
+//        $timeEnd = Input::get('endTime');//hh:mm
+//
+//        //process start date and time before adding to db
+//        $carbonStart = $this->jobDateTime($dateStart, $timeStart);
+//        $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
+//       // $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
+//
+//
+//        $this->oauth();
+//
+//        //retrieve token needed for authorized http requests
+//        $token = $this->accessToken();
+//
+//        $client = new GuzzleHttp\Client;
+//
+//        $response = $client->post('http://odinlite.com/public/api/locations', array(
+//                'headers' => array(
+//                    'Authorization' => 'Bearer ' . $token,
+//                    'Content-Type' => 'application/json'
+//                ),
+//                'json' => array('name' => $name, 'address' => $address,
+//                    'latitude' => $latitude, 'longitude' => $longitude,
+//                    'notes' => $notes
+//                )
+//            )
+//        );
+//
+//
+//
+//        //for each employee...
+//        for($emp=0; $emp<sizeof($employeeArray); $emp++) {
+////            insert a job record for each location
+//            for ($loc = 0; $loc < sizeof($locationArray); $loc++) {
+//
+//
+//
+//
+//                $employees = GuzzleHttp\json_decode((string)$response->getBody());
+//
+//
+//
+//                $job = new Job;
+//                //insert laravel validated data into job table
+//                $job->assigned_user_id = $employeeArray[$emp];
+//               // $job->company_id = $companyId;
+//                $job->locations = $locationArray[$loc];
+//                $job->checks = $checks;
+//
+//                //insert non-laravel validated data to table
+//                $job->job_scheduled_for = $carbonStart;
+//               // $job->estimated_job_duration = $lengthH;
+//
+//                $job->save();
+//            }
+//        }
+//        return $dateStart;
+//    }
 
     public function employeeList()
     {
@@ -397,9 +503,20 @@ class RosterController extends Controller
 
     public function jobDateTime($date, $time)
     {
-        $dtStr = $date . " " . $time;
-        $carbonDT = Carbon::parse($dtStr);
-        return $carbonDT;
+        $y = substr($date, 6, 4);
+        $m = substr($date, 3, 2);
+        $d = substr($date, 0, 2);
+
+       // $t = substr($time, 0, 8);
+//        dd($y);
+        $dtStr = $y."-".$m."-".$d . " " . $time.':00';
+
+//        $assigned = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 20:00:00', 'America/Chicago');
+//        dd($assigned);
+//        $carbonDT = Carbon::createFromFormat('Y-m-d H:i:s', $dtStr, 'America/Chicago');
+        //$carbonDT = Carbon::parse($dtStr);
+//        dd($carbonDT);
+        return $dtStr;
     }
 
     public function jobDuration($carbonStart, $carbonEnd)

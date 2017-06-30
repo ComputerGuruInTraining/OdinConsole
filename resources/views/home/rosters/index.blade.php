@@ -68,53 +68,28 @@
                     <tbody class="group-list">
                     @foreach ($assigned->get($index) as $shift)
                         @if($index == $shift->start_date)
-                            <tr class="group-table">
-                                <td>{{$shift->unique_date}}</td>
-                                @if($shift->unique_locations != null)<!--locations is null if duplicate location-->
-                                    <td class="group-data">{{$shift->unique_locations}} ({{$shift->checks}})</td>
-                                @else
-                                <td></td>
-                                @endif
-                                @if($shift->end_time != null)<!--endTime is null if duplicate startTime and endTime-->
-                                    <td>{{$shift->start_time}}-{{$shift->end_time}}</td>
-                                @else
+                           <!--ensure the location associated with the shift is still in the db to catch for errors-->
+                                <tr class="group-table">
+                                    <td>{{$shift->unique_date}}</td>
+                                    @if($shift->unique_locations != null)<!--locations is null if duplicate location-->
+                                        <td class="group-data">{{$shift->unique_locations}} ({{$shift->checks}})</td>
+                                    @else
                                     <td></td>
-                                @endif
-                                <td>{{$shift->mobile_user_id}}</td>
-                                <td>
-                                    <a href="/rosters/{{$shift->id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->id}}/" style="color: #cc0000;">Delete</a>
-                                </td>
-                            </tr>
+                                    @endif
+                                    @if($shift->end_time != null)<!--endTime is null if duplicate startTime and endTime-->
+                                        <td>{{$shift->start_time}}-{{$shift->end_time}}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                    <td>{{$shift->mobile_user_id}}</td>
+                                    <td>
+                                        <a href="/rosters/{{$shift->id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->id}}/" style="color: #cc0000;">Delete</a>
+                                    </td>
+                                </tr>
                         @endif
                     @endforeach
                     </tbody>
                 @endforeach
-{{--before api--}}
-                {{--@foreach($assigned as $index => $formattedShift)--}}
-                    {{--<tbody class="group-list">--}}
-                    {{--@foreach ($assigned->get($index) as $shift)--}}
-                        {{--@if($index == $shift->start_date)--}}
-                            {{--<tr class="group-table">--}}
-                                {{--<td>{{$shift->uniqueDate}}</td>--}}
-                            {{--@if($shift->uniqueLocations != null)<!--locations is null if duplicate location-->--}}
-                                {{--<td class="group-data">{{$shift->uniqueLocations}} ({{$shift->checks}})</td>--}}
-                                {{--@else--}}
-                                    {{--<td></td>--}}
-                                {{--@endif--}}
-                                {{--@if($shift->endTime != null)<!--endTime is null if duplicate startTime and endTime-->--}}
-                                {{--<td>{{$shift->startTime}}-{{$shift->endTime}}</td>--}}
-                                {{--@else--}}
-                                    {{--<td></td>--}}
-                                {{--@endif--}}
-                                {{--<td>{{$shift->employeeName}}</td>--}}
-                                {{--<td>--}}
-                                    {{--<a href="/rosters/{{$shift->id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->id}}/" style="color: #cc0000;">Delete</a>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                        {{--@endif--}}
-                    {{--@endforeach--}}
-                    {{--</tbody>--}}
-                {{--@endforeach--}}
             </table>
         </div>
     </div>
