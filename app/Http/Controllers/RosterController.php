@@ -173,7 +173,7 @@ class RosterController extends Controller
 
            //get the data from the form and perform necessary calculations prior to inserting into db
            $dateStart = $this->formData($request);
-           $theData = "the $dateStart";
+           //$theData = 'the'.$dateStart;
            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
 
     }
@@ -384,7 +384,7 @@ class RosterController extends Controller
 
         $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-        dd($assigned);
+        //dd($assigned);
 
         return $dateStart;
     }
