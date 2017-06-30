@@ -8,6 +8,7 @@ use Form;
 use Model;
 use App\Models\Location;
 use GuzzleHttp;
+use Redirect;
 
 class LocationController extends Controller
 {
@@ -21,7 +22,7 @@ class LocationController extends Controller
 
     public function index()
     {
-
+        try {
         $this->oauth();
 
         //retrieve token needed for authorized http requests
@@ -38,6 +39,10 @@ class LocationController extends Controller
         $locations = json_decode((string)$response->getBody());
 
         return view('location/locations')->with(array('locations' => $locations));
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return view('admin_template');
+        }
     }
 
     public function oauth(){
@@ -63,6 +68,7 @@ class LocationController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
+            return view('admin_template');
         }
     }
 
@@ -137,6 +143,7 @@ class LocationController extends Controller
             return view('location/create-locations')->with('errors', $errors);
         }
         catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
                 $e = 'Please fill in all required fields';
                 $errors = collect($e);
                 return view('location/create-locations')->with('errors', $errors);
@@ -189,6 +196,7 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //TODO: improve layout
     public function show($id)
     {
         $this->oauth();
@@ -231,6 +239,7 @@ class LocationController extends Controller
         ]);
 
         $location = json_decode((string)$response->getBody());
+
         return view('location/edit-locations')->with('location', $location);
     }
 
@@ -241,60 +250,143 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, $id)
     {
-        $location = Location::find($id);
         try {
-            //get the data from the form for validation against other location items, not this location being edited
-            $locationName = ucfirst(Input::get('name'));
             $address = Input::get('address');
-            $additional = ucfirst(Input::get('info'));
 
-            //validate the data and store the data in the db if it is has been modified
-            if(($locationName != $location->name)||($address != $location->address)||($additional != $location->additional_info)) {
-                if ($locationName != $location->name) {
-                    $this->validate($request, [
-                        'name' => 'required|unique:locations|max:255',
-                    ]);
-                    $location->name = $locationName;
-                }
-
-                if ($address != $location->address) {
-                    $this->validate($request, [
-                        'address' => 'required|unique:locations|max:255'
-                    ]);
-
-                    $geoCoords = $this->geoCode($address);
-                    $location->latitude = $geoCoords->results[0]->geometry->location->lat;
-                    $location->longitude = $geoCoords->results[0]->geometry->location->lng;
-                    $location->address = $address;
-                }
-
-                if ($additional != $location->additional_info) {
-                    $location->additional_info = $additional;
-                }
-                $location->save();
-
-                //display confirmation page
-                $theAction = 'You have successfully edited the address. The address stored in the system is: ' . $address;
-                return view('confirm')->with(array('theAction' => $theAction));
+            //api put route will make no changes when these values are found in put request
+            if ($address == "") {
+                $address = '';
+                $latitude = 0.0;
+                $longitude = 0.0;
             }
-            //no data changed, but save btn pressed
             else{
-                $theAction = 'No changes were made to the location.';
-                return view('confirm')->with(array('theAction' => $theAction));
-
+                //get the geoCoords for the address
+                $geoCoords = $this->geoCode($address);
+                $latitude = $geoCoords->results[0]->geometry->location->lat;
+                $longitude = $geoCoords->results[0]->geometry->location->lng;
             }
-        } catch (\ErrorException $error) {
+
+            //validate data
+            $this->validate($request, [
+                'name' => 'required|max:255',
+                'address' => 'max:255',//not required for edit page, will presume same if not input
+            ]);
+
+            //get the data from the form
+            $name = ucfirst(Input::get('name'));
+            $notes = ucfirst(Input::get('notes'));
+
+            //request to api
+            $this->oauth();
+
+            //retrieve token needed for authorized http requests
+            $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->put('http://odinlite.com/public/api/locations/'.$id.'/edit', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array('name' => $name, 'address' => $address,
+                        'latitude' => $latitude, 'longitude' => $longitude,
+                        'notes' => $notes
+                    )
+                )
+            );
+
+            $location = json_decode((string)$response->getBody());
+
+            //direct user based on whether record updated successfully or not
+            if($location->success == true)
+            {
+                $theAction = 'You have successfully edited the location';
+
+                return view('confirm')->with(array('theAction' => $theAction));
+            }
+            else{
+                return redirect()->route("location.edit_locations");
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Please provide valid changes';
+            $errors = collect($err);
+            echo($err);
+            return Redirect::to('/locations');
+        }
+        catch (\ErrorException $error) {
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
                 $errors = collect($e);
-                return view("location/edit-locations")->with(array('errors' => $errors, 'location' => $location));
+                echo($error);
+                return Redirect::to('/locations');
+//fixme: proper validation: ->with('errors', $errors)
             } else {
-                return view("location/edit-locations")->with(array('errors' => 'Validation error found', 'location' => $location));
+                echo($error);
+                return Redirect::to('/locations');
             }
         }
     }
+
+    //before api changes
+//    public function update(Request $request, $id)
+//    {
+//        $location = Location::find($id);
+//        try {
+//            //get the data from the form for validation against other location items, not this location being edited
+//            $locationName = ucfirst(Input::get('name'));
+//            $address = Input::get('address');
+//            $additional = ucfirst(Input::get('info'));
+//
+//            //validate the data and store the data in the db if it is has been modified
+//            if(($locationName != $location->name)||($address != $location->address)||($additional != $location->additional_info)) {
+//                if ($locationName != $location->name) {
+//                    $this->validate($request, [
+//                        'name' => 'required|unique:locations|max:255',
+//                    ]);
+//                    $location->name = $locationName;
+//                }
+//
+//                if ($address != $location->address) {
+//                    $this->validate($request, [
+//                        'address' => 'required|unique:locations|max:255'
+//                    ]);
+//
+//                    $geoCoords = $this->geoCode($address);
+//                    $location->latitude = $geoCoords->results[0]->geometry->location->lat;
+//                    $location->longitude = $geoCoords->results[0]->geometry->location->lng;
+//                    $location->address = $address;
+//                }
+//
+//                if ($additional != $location->additional_info) {
+//                    $location->additional_info = $additional;
+//                }
+//                $location->save();
+//
+//                //display confirmation page
+//                $theAction = 'You have successfully edited the address. The address stored in the system is: ' . $address;
+//                return view('confirm')->with(array('theAction' => $theAction));
+//            }
+//            //no data changed, but save btn pressed
+//            else{
+//                $theAction = 'No changes were made to the location.';
+//                return view('confirm')->with(array('theAction' => $theAction));
+//
+//            }
+//        } catch (\ErrorException $error) {
+//            if ($error->getMessage() == 'Undefined offset: 0') {
+//                $e = 'Please provide a valid address';
+//                $errors = collect($e);
+//                return view("location/edit-locations")->with(array('errors' => $errors, 'location' => $location));
+//            } else {
+//                return view("location/edit-locations")->with(array('errors' => 'Validation error found', 'location' => $location));
+//            }
+//        }
+//    }
 
     /**
      * Remove the specified resource from storage.
