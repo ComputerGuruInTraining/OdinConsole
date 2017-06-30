@@ -75,7 +75,9 @@ class RosterController extends Controller
             return view('home/rosters/index')->with(array('assigned' => $assigned));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+            //echo $e;
+            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
+            return view('admin_template');
         }
     }
 
