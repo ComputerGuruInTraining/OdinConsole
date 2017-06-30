@@ -12,7 +12,7 @@ use Redirect;
 
 class LocationController extends Controller
 {
-
+//TODO: add to location_companies at the same time as adding location
     protected $accessToken;
     /**
      * Display a listing of the resource.
@@ -319,6 +319,7 @@ class LocationController extends Controller
             return Redirect::to('/locations');
         }
         catch (\ErrorException $error) {
+            //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
                 $errors = collect($e);
