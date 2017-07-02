@@ -83,7 +83,7 @@
                                     @endif
                                     <td>{{$shift->mobile_user_id}}</td>
                                     <td>
-                                        <a href="/rosters/{{$shift->id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->id}}/" style="color: #cc0000;">Delete</a>
+                                        <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->assigned_shift_id}}/" style="color: #cc0000;">Delete</a>
                                     </td>
                                 </tr>
                         @endif
