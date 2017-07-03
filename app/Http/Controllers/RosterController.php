@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Job;
 use Illuminate\Http\Request;
-use App\Models\Employee;
-use App\Models\Location;
 use Input;
 use Carbon\Carbon;
 use DateTime;
-use DateInterval;
 use GuzzleHttp;
-use Psy\Exception\ErrorException;
 use Redirect;
 
 class RosterController extends Controller
@@ -74,10 +69,10 @@ class RosterController extends Controller
             //group by date for better view
             $assigned = $this->groupByDate($assigned);
 
-            return view('home/rosters/index')->with(array('assigned' => $assigned));
+            return view('home/rosters/index')->with(array('assigned' => $assigned, 'rosters' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //echo $e;
+            echo $e;
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return view('admin_template');
         }
@@ -105,6 +100,7 @@ class RosterController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
+            return view('admin_template');
         }
     }
 
@@ -175,7 +171,7 @@ class RosterController extends Controller
 
            //get the data from the form and perform necessary calculations prior to inserting into db
            $dateStart = $this->formData($request);
-           //$theData = 'the'.$dateStart;
+
            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
 
     }
@@ -265,7 +261,6 @@ class RosterController extends Controller
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
                 echo $e;
-                //rather than displaying an error page, redirect users to dashboard/login page (preferable)
                 return Redirect::to('/rosters');
         }
 
@@ -282,29 +277,21 @@ class RosterController extends Controller
     public function update(Request $request, $id)
     {
         try {
-           // dd($request);
             $this->validate($request, [
                 //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
-//            'assigned_user_id' => 'required',
-//            'locations' => 'required',
+                'employees' => 'required',
+                'locations' => 'required',
                 'startDateTxt' => 'required',
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required'
             ]);
 
-            // $job = Job::find($id);
-
-            //get data from form and insert laravel validated data into job table
-//            $job->company_id = 1;
-//            $job->assigned_user_id = Input::get('assigned_user_id');
-//
             $locations = Input::get('locations');
             $employees = Input::get('employees');
 
-//            $job->locations = $location;
             $checks = Input::get('checks');
-//
+
 //            //get data from form for non laravel validated inputs
             $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
             $timeStart = Input::get('startTime');//hh:mm
@@ -319,17 +306,6 @@ class RosterController extends Controller
             $desc = 'Provide security services at several locations throughout Austin';
             $roster_id = 1;
             $added_id = 1;
-//
-//            //process start date and time before adding to db
-//            $carbonStart = $this->jobDateTime($dateStart, $timeStart);
-//            $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
-//            $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
-//
-//            //add data to table
-//            $job->job_scheduled_for = $carbonStart;
-//            $job->estimated_job_duration = $lengthH;
-//
-//            $job->save();
 
             //request to api
             $this->oauth();
@@ -354,8 +330,6 @@ class RosterController extends Controller
 
             $updated = json_decode((string)$response->getBody());
 
-           // dd($updated);
-//            $this->notifyViaForm(true);
             $theAction = 'You have successfully edited the shift';
             return view('confirm')->with(array('theAction' => $theAction));
         }
@@ -371,16 +345,36 @@ class RosterController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Called from the confirm-delete page
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-//        $job = Job::find($id);
-        Job::destroy($id);
-        $theAction = 'You have successfully deleted the shift';
-        return view('confirm')->with('theAction', $theAction);
+        try {
+            $this->oauth();
+
+            //retrieve token needed for authorized http requests
+            $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->delete('http://odinlite.com/public/api/assignedshift/'.$id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                ]
+            ]);
+
+            $theAction = 'You have successfully deleted the shift';
+            return view('confirm')->with('theAction', $theAction);
+
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/rosters');
+        }
+
     }
 
 
@@ -463,7 +457,7 @@ class RosterController extends Controller
         $token = $this->accessToken();
 
         $client = new GuzzleHttp\Client;
-//        'location_ids' => $locationArray, 'employee_ids' => $employeeArray,
+
         $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
                 'headers' => array(
                     'Authorization' => 'Bearer ' . $token,
@@ -480,108 +474,6 @@ class RosterController extends Controller
         $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
         return $dateStart;
-    }
-
-    //before api
-//    public function formData($request){
-//        //data for validation
-//        $locationArray = Input::get('locations');
-//        $employeeArray = Input::get('employees');
-//        $checks = Input::get('checks');
-//      //  $companyId = 1;
-//
-//        //get data from form for non laravel validated inputs
-//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
-//        $timeStart = Input::get('startTime');//hh:mm
-//        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
-//        $timeEnd = Input::get('endTime');//hh:mm
-//
-//        //process start date and time before adding to db
-//        $carbonStart = $this->jobDateTime($dateStart, $timeStart);
-//        $carbonEnd = $this->jobDateTime($dateEnd, $timeEnd);
-//       // $lengthH = $this->jobDuration($carbonStart, $carbonEnd);
-//
-//
-//        $this->oauth();
-//
-//        //retrieve token needed for authorized http requests
-//        $token = $this->accessToken();
-//
-//        $client = new GuzzleHttp\Client;
-//
-//        $response = $client->post('http://odinlite.com/public/api/locations', array(
-//                'headers' => array(
-//                    'Authorization' => 'Bearer ' . $token,
-//                    'Content-Type' => 'application/json'
-//                ),
-//                'json' => array('name' => $name, 'address' => $address,
-//                    'latitude' => $latitude, 'longitude' => $longitude,
-//                    'notes' => $notes
-//                )
-//            )
-//        );
-//
-//
-//
-//        //for each employee...
-//        for($emp=0; $emp<sizeof($employeeArray); $emp++) {
-////            insert a job record for each location
-//            for ($loc = 0; $loc < sizeof($locationArray); $loc++) {
-//
-//
-//
-//
-//                $employees = GuzzleHttp\json_decode((string)$response->getBody());
-//
-//
-//
-//                $job = new Job;
-//                //insert laravel validated data into job table
-//                $job->assigned_user_id = $employeeArray[$emp];
-//               // $job->company_id = $companyId;
-//                $job->locations = $locationArray[$loc];
-//                $job->checks = $checks;
-//
-//                //insert non-laravel validated data to table
-//                $job->job_scheduled_for = $carbonStart;
-//               // $job->estimated_job_duration = $lengthH;
-//
-//                $job->save();
-//            }
-//        }
-//        return $dateStart;
-//    }
-
-    public function employeeList()
-    {
-        $empList = Employee::all('id', 'first_name', 'last_name');
-        return $empList;
-    }
-
-    public function locationList()
-    {
-        $locList = Location::all('id', 'name');
-        return $locList;
-    }
-
-    public function endDT($startTime, $duration)
-    {
-        $dt = new DateTime($startTime);//DateTime object
-        $interval = 'PT' . $duration . 'H';
-        $edt = $dt->add(new DateInterval($interval));
-        return $edt;
-    }
-
-    public function stringDate($dt)
-    {
-        $date = $dt->format('m/d/Y');
-        return $date;
-    }
-
-    public function stringTime($tm)
-    {
-        $time = $tm->format("g"). '.' .$tm->format("i"). ' ' .$tm->format("a");
-        return $time;
     }
 
     public function timeMidnight($time){
@@ -614,11 +506,4 @@ class RosterController extends Controller
         return $lengthH;
     }
 
-    public static function confirmDelete($id)
-    {
-        $job = Job::find($id);
-        $desc = 'the shift at ' . $job->locations . ' on ' . $job->job_scheduled_for;
-        $id = $job->id;
-        return view('confirm-delete')->with(array('fieldDesc' => $desc, 'id' => $id, 'url' => 'rosters'));
-    }
 }

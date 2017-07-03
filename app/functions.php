@@ -5,9 +5,32 @@
  * Date: 23/04/2017
  * Time: 1:32 PM
  */
-if(! function_exists('selectedLocation')){
-    function selectedLocation($locations, $dbLocation) {
-//      locations = Location::all();
-    return view('home/location/locations')->with(array('locations' => $locations, 'displayItem' => $dbLocation));
+
+//global confirm delete fn
+if(! function_exists('confirmDlt')){
+    function confirmDlt($id, $entity) {
+        try{
+
+            if($entity == 'rosters'){
+                $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
+                    this will delete all the shift details for that date.';
+
+            }
+            if($entity == 'employees'){
+                $msg = 'Consider this carefully because, for eg, if an employee is being deleted,
+                     all shifts assigned to the employee will also be deleted etc.';
+            }
+
+
+            return view('confirm-delete')->with(array('id' => $id, 'url' => $entity, 'msg' => $msg));
+
+        } catch(\ErrorException $error){
+            echo $error;
+            Redirect::to('/rosters');
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            Redirect::to('/rosters');
+        }
     }
 }

@@ -419,7 +419,8 @@ class LocationController extends Controller
 
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
+            echo $e;
+            return Redirect::to('/confirm-delete/'.$id);
         }
     }
 
@@ -461,6 +462,7 @@ class LocationController extends Controller
             return view('confirm-delete')->with(array('fieldDesc' => $name, 'id' => $id, 'url' => $url));
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
+            Redirect::to('/locations');
         }
     }
 
