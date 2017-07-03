@@ -9,6 +9,7 @@ use DateTime;
 use GuzzleHttp;
 use Redirect;
 
+//FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
     //global class variables
@@ -42,11 +43,11 @@ class RosterController extends Controller
                 //add the extracted date to each of the objects and format date
                 $s = $item->start;
                 $sdt = new DateTime($s);
-                $sdate = $sdt->format('m/d/Y');
+                $sdate = $sdt->format('d/m/Y');
                 $stime = $sdt->format('g.i a');
                 $e = $item->end;
                 $edt = new DateTime($e);
-                $edate = $edt->format('m/d/Y');
+                $edate = $edt->format('d/m/Y');
                 $etime = $edt->format('g.i a');
 
                 $assigned[$i]->start_date = $sdate;
@@ -251,8 +252,10 @@ class RosterController extends Controller
             $locationsUnique = $assigned->unique('location_id');
             $employeesUnique = $assigned->unique('mobile_user_id');
 
-            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start, 'America/Chicago');
-            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end, 'America/Chicago');
+//            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start, 'America/Chicago');
+//            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end, 'America/Chicago');
+            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
+            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
             $startDate = $carbonStart->format('m/d/Y');
             $startTime = ((string)$carbonStart->format('H:i'));
             $endDate = $carbonEnd->format('m/d/Y');
