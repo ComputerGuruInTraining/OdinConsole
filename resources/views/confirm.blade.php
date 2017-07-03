@@ -6,5 +6,5 @@
 @stop
 
 @section('page-content')
-    <div class="form-pages">{{ $theAction }}.</div>
+    <div class="confirm">{{ $theAction }}.</div>
 @stop

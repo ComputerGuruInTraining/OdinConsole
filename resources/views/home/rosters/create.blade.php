@@ -20,13 +20,42 @@
         </div>
     @endif
 
-    <div class='form-pages'>
-        <div style="color: #dd4b39; padding-bottom: 8px;">
-            {{--TODO: consider having a tip with info icon and then press for this tip:--}}
-            Press ctrl to add more than one employee or location.
-            Don't press ctrl to scroll the list.
+    {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
+    <div class='form-pages col-md-8' >
+        <div class='form-group'>
+            {!! Form::Label('title', 'Shift Title:') !!}
+            {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
         </div>
-        {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
+
+        <div class='form-group'>
+            {!! Form::Label('desc', 'Shift Description:') !!}
+            {{ Form::text('desc', null, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
+        </div>
+
+        <div class='form-group'>
+            {{ Form::label('startDate', 'Start Date') }}
+            {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
+            &nbsp;&nbsp;&nbsp;
+            {{ Form::label('startTime', 'Start Time') }}
+            <input class="input-a" value="" name="startTime" data-default="9:00" >
+            @include('clock-picker')
+        </div>
+
+        <div class='form-group'>
+            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
+            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
+            &nbsp;&nbsp;&nbsp;
+            {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
+            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()">
+            @include('clock-picker')
+        </div>
+
+        <div style="color: #dd4b39; padding-bottom: 8px;">
+            {{--TODO: v2 tip with info icon and then press for this tip:--}}
+            Tip: Hold down ctrl/cmd to add more than one employee or location.
+            Release ctrl/cmd to scroll the list.
+        </div>
+
         <div class='form-group'>
             {!! Form::Label('employees', 'Select Employee:') !!}
             <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
@@ -49,31 +78,12 @@
 
         <div class='form-group'>
             {!! Form::Label('checks', 'Number of Visits Required:') !!}
-            {{ Form::text('checks', null, array('class' => 'form-control')) }}
+            {{ Form::text('checks', 1, array('class' => 'form-control')) }}
         </div>
-        <div>
-            Important: A new shift can be used to add several employees and locations for the 1 shift,
-            but the amount of visits required will be the same for all locations.
-        </div>
-
-        <div class='form-group'>
-                {{ Form::label('startDate', 'Start Date') }}
-                {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
-                &nbsp;&nbsp;&nbsp;
-                {{ Form::label('startTime', 'Start Time') }}
-                <input class="input-a" value="" name="startTime" data-default="9:00" >
-            @include('clock-picker')
-        </div>
-
-        <div class='form-group'>
-            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
-            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
-            &nbsp;&nbsp;&nbsp;
-            {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
-            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()">
-            @include('clock-picker')
-        </div>
-
+        {{--<div>--}}
+            {{--Important: A new shift can be used to add several employees and locations for the 1 shift,--}}
+            {{--but the amount of visits required will be the same for all locations.--}}
+        {{--</div>--}}
 
         <div class='form-group'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}

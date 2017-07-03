@@ -38,7 +38,8 @@ class LocationController extends Controller
 
         $locations = json_decode((string)$response->getBody());
 
-        return view('location/locations')->with(array('locations' => $locations));
+        return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
+
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return view('admin_template');
@@ -112,6 +113,9 @@ class LocationController extends Controller
             $longitude = $geoCoords->results[0]->geometry->location->lng;
             $notes = ucfirst(Input::get('info'));
 
+            //todo: get the consoleUserId by the current user
+            $consoleUserId = 2;
+
             //post request to api
             $this->oauth();
 
@@ -127,7 +131,7 @@ class LocationController extends Controller
                     ),
                     'json' => array('name' => $name, 'address' => $address,
                     'latitude' => $latitude, 'longitude' => $longitude,
-                        'notes' => $notes
+                        'notes' => $notes, 'consoleUserId' => $consoleUserId
                     )
                 )
             );
@@ -138,6 +142,7 @@ class LocationController extends Controller
             return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
             $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
             $errors = collect($err);
             return view('location/create-locations')->with('errors', $errors);
@@ -196,26 +201,25 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    //TODO: improve layout
-    public function show($id)
-    {
-        $this->oauth();
-
-        //retrieve token needed for authorized http requests
-        $token = $this->accessToken();
-
-        $client = new GuzzleHttp\Client;
-
-        $response = $client->get('http://odinlite.com/public/api/location/'.$id, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $token,
-            ]
-        ]);
-
-        $location = json_decode((string)$response->getBody());
-
-        return view('location/show')->with('location', $location);
-    }
+//    public function show($id)
+//    {
+//        $this->oauth();
+//
+//        //retrieve token needed for authorized http requests
+//        $token = $this->accessToken();
+//
+//        $client = new GuzzleHttp\Client;
+//
+//        $response = $client->get('http://odinlite.com/public/api/location/'.$id, [
+//            'headers' => [
+//                'Authorization' => 'Bearer ' . $token,
+//            ]
+//        ]);
+//
+//        $location = json_decode((string)$response->getBody());
+//
+//        return view('location/show')->with('location', $location);
+//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -333,62 +337,6 @@ class LocationController extends Controller
         }
     }
 
-    //before api changes
-//    public function update(Request $request, $id)
-//    {
-//        $location = Location::find($id);
-//        try {
-//            //get the data from the form for validation against other location items, not this location being edited
-//            $locationName = ucfirst(Input::get('name'));
-//            $address = Input::get('address');
-//            $additional = ucfirst(Input::get('info'));
-//
-//            //validate the data and store the data in the db if it is has been modified
-//            if(($locationName != $location->name)||($address != $location->address)||($additional != $location->additional_info)) {
-//                if ($locationName != $location->name) {
-//                    $this->validate($request, [
-//                        'name' => 'required|unique:locations|max:255',
-//                    ]);
-//                    $location->name = $locationName;
-//                }
-//
-//                if ($address != $location->address) {
-//                    $this->validate($request, [
-//                        'address' => 'required|unique:locations|max:255'
-//                    ]);
-//
-//                    $geoCoords = $this->geoCode($address);
-//                    $location->latitude = $geoCoords->results[0]->geometry->location->lat;
-//                    $location->longitude = $geoCoords->results[0]->geometry->location->lng;
-//                    $location->address = $address;
-//                }
-//
-//                if ($additional != $location->additional_info) {
-//                    $location->additional_info = $additional;
-//                }
-//                $location->save();
-//
-//                //display confirmation page
-//                $theAction = 'You have successfully edited the address. The address stored in the system is: ' . $address;
-//                return view('confirm')->with(array('theAction' => $theAction));
-//            }
-//            //no data changed, but save btn pressed
-//            else{
-//                $theAction = 'No changes were made to the location.';
-//                return view('confirm')->with(array('theAction' => $theAction));
-//
-//            }
-//        } catch (\ErrorException $error) {
-//            if ($error->getMessage() == 'Undefined offset: 0') {
-//                $e = 'Please provide a valid address';
-//                $errors = collect($e);
-//                return view("location/edit-locations")->with(array('errors' => $errors, 'location' => $location));
-//            } else {
-//                return view("location/edit-locations")->with(array('errors' => 'Validation error found', 'location' => $location));
-//            }
-//        }
-//    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -420,7 +368,7 @@ class LocationController extends Controller
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
-            return Redirect::to('/confirm-delete/'.$id);
+            return Redirect::to('/locations');
         }
     }
 

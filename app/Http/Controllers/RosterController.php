@@ -39,16 +39,15 @@ class RosterController extends Controller
             $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
             foreach($assigned as $i => $item){
-                //add the extracted date to each of the objects
+                //add the extracted date to each of the objects and format date
                 $s = $item->start;
                 $sdt = new DateTime($s);
                 $sdate = $sdt->format('m/d/Y');
-                $stime = $sdt->format('H:i:s');
-
+                $stime = $sdt->format('g.i a');
                 $e = $item->end;
                 $edt = new DateTime($e);
                 $edate = $edt->format('m/d/Y');
-                $etime = $edt->format('H:i:s');
+                $etime = $edt->format('g.i a');
 
                 $assigned[$i]->start_date = $sdate;
                 $assigned[$i]->start_time = $stime;
@@ -57,11 +56,21 @@ class RosterController extends Controller
                 //save date and location into a new object property for later use (ie to reject duplicate values for the view)
                 $assigned[$i]->unique_date = $assigned[$i]->start_date;
                 $assigned[$i]->unique_locations = $assigned[$i]->location;
+
+                //format time
+//                $assigned[$i]->start_time = stringTime($assigned[$i]->start_time);
+//                $assigned[$i]->end_time = stringTime($assigned[$i]->end_time);
             }
 
             //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
             $assigned = $this->compareValues($assigned, 'start_date', 'unique_date',
                 'unique_locations', 'checks', 'start_time', 'end_time');
+
+            //display as midnight if time == 12am
+            foreach($assigned as $i => $item) {
+                $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
+                $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
+            }
 
             //change to collection datatype from array for using groupBy fn
             $assigned = collect($assigned);
@@ -69,7 +78,7 @@ class RosterController extends Controller
             //group by date for better view
             $assigned = $this->groupByDate($assigned);
 
-            return view('home/rosters/index')->with(array('assigned' => $assigned, 'rosters' => 'rosters'));
+            return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
@@ -161,6 +170,8 @@ class RosterController extends Controller
     {
         //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
         $this->validate($request, [
+        'title' => 'required|max:255',
+        'desc' => 'required|max:255',
         'employees' => 'required',
         'locations' => 'required',
         'startDateTxt' => 'required',
@@ -279,6 +290,8 @@ class RosterController extends Controller
         try {
             $this->validate($request, [
                 //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
+                'title' => 'required|max:255',
+                'desc' => 'required|max:255',
                 'employees' => 'required',
                 'locations' => 'required',
                 'startDateTxt' => 'required',
@@ -287,23 +300,23 @@ class RosterController extends Controller
                 'endTime' => 'required'
             ]);
 
+            //get user input
             $locations = Input::get('locations');
             $employees = Input::get('employees');
-
             $checks = Input::get('checks');
-
-//            //get data from form for non laravel validated inputs
             $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
             $timeStart = Input::get('startTime');//hh:mm
             $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
             $timeEnd = Input::get('endTime');//hh:mm
+            $title = Input::get('title');
+            $desc = Input::get('desc');
 
             //process start date and time before adding to db
-            $strStart = $this->jobDateTime($dateStart, $timeStart);
-            $strEnd = $this->jobDateTime($dateEnd, $timeEnd);
+            $strStart = jobDateTime($dateStart, $timeStart);
+            $strEnd = jobDateTime($dateEnd, $timeEnd);
 
-            $title = 'Security at Several Locations';
-            $desc = 'Provide security services at several locations throughout Austin';
+//            $title = 'Security at Several Locations';
+//            $desc = 'Provide security services at several locations throughout Austin';
             $roster_id = 1;
             $added_id = 1;
 
@@ -431,12 +444,13 @@ class RosterController extends Controller
         $locationArray = $request->input('locations');
         $employeeArray = $request->input('employees');
         $checks = Input::get('checks');
-        //  $companyId = 1;
+        $title = $request->input('title');
+        $desc = $request->input('desc');
 
-        //hardcoded values TODO: user input
-        $title = 'Security at Several Locations';
-        $desc = 'Provide security services at several locations throughout Austin';
+        //TODO: rosters for a date-range
         $roster_id = 1;
+
+        //TODO: retrieve from user
         $added_id = 1;
 
         //get data from form for non laravel validated inputs
@@ -447,9 +461,8 @@ class RosterController extends Controller
         $timeEnd = Input::get('endTime');//hh:mm
 
         //process start date and time before adding to db
-        $strStart = $this->jobDateTime($dateStart, $timeStart);
-        $strEnd = $this->jobDateTime($dateEnd, $timeEnd);
-
+        $strStart = jobDateTime($dateStart, $timeStart);
+        $strEnd = jobDateTime($dateEnd, $timeEnd);
 
         $this->oauth();
 
@@ -474,36 +487,6 @@ class RosterController extends Controller
         $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
         return $dateStart;
-    }
-
-    public function timeMidnight($time){
-        if($time != null) {
-            if($time == '12.00 am')
-            {
-                $time = 'Midnight';
-            }
-        }
-        return $time;
-    }
-
-    //pm format $date = dd/mm/yyyy, $time = HH:MM
-    public function jobDateTime($date, $time)
-    {
-        $y = substr($date, 6, 4);
-        $m = substr($date, 3, 2);
-        $d = substr($date, 0, 2);
-
-        $dtStr = $y."-".$m."-".$d . " " . $time.':00';
-
-        return $dtStr;
-    }
-
-    public function jobDuration($carbonStart, $carbonEnd)
-    {
-        //calculate duration based on start date and time and end date and time
-        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
-        $lengthH = ($lengthM / 60);//convert to hours
-        return $lengthH;
     }
 
 }

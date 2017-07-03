@@ -39,18 +39,14 @@ Route::resource('/employees', 'EmployeeController');
 
 Route::resource('/reports', 'ReportController');
 
-//Route::get('/clock', function(){
-//    return view('clock-picker');
-//
-//});
 
 Route::resource('/rosters', 'RosterController');
 
 Route::resource('/locations', 'LocationController');
 
 //global confirm-delete view
-Route::get('confirm-delete/{id}/{entity}', function($id, $entity){
-    $confirmView = confirmDlt($id, $entity);
+Route::get('confirm-delete/{id}/{url}', function($id, $url){
+    $confirmView = confirmDlt($id, $url);
     return $confirmView;
 });
 
@@ -60,10 +56,17 @@ Route::get('/confirm-delete-location/{theId}/',  function($theId){
 
 });
 
-Route::get('/confirm-delete-shift/{theId}/',  function($theId){
-    $deleteView = RosterController::confirmDelete($theId);
-    return $deleteView;
-});
+
+
+//Route::get('/clock', function(){
+//    return view('clock-picker');
+//
+//});
+//
+//Route::get('/confirm-delete-shift/{theId}/',  function($theId){
+//    $deleteView = RosterController::confirmDelete($theId);
+//    return $deleteView;
+//});
 
 
 
