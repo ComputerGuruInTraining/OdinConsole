@@ -54,7 +54,7 @@ class LocationController extends Controller
                 'form_params' => [
                     'client_id' => 2,
                     // The secret generated when you ran: php artisan passport:install
-                    'client_secret' => 'q41fEWYFbMS6cU6Dh63jMByLRPYI4gHDj13AsjoM',
+                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
                     'grant_type' => 'password',
                     'username' => 'bernadettecar77@hotmail.com',
                     'password' => 'password',

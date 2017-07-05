@@ -61,7 +61,7 @@
                         @endforeach
                         {{--List all the employees:--}}
                         @foreach($empList as $emp)
-                                    <option value="{{$emp->id}}">{{$emp->name}}</option>
+                                    <option value="{{$emp->id}}">{{$emp->first_name}}</option>
                         @endforeach
                     </select>
                 </div>
