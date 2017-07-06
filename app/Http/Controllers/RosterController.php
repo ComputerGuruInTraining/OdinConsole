@@ -98,15 +98,17 @@ class RosterController extends Controller
                     // The secret generated when you ran: php artisan passport:install
                     'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
                     'grant_type' => 'password',
-                    'username' => 'bernadettecar77@hotmail.com',
-                    'password' => 'password',
+                    'username' => 'johnd@exampleemail.com',
+                    'password' => 'secret',
                     'scope' => '*',
                 ]
             ]);
 
             $auth = json_decode((string)$response->getBody());
+           // ($auth->access_token);
 
             $this->accessToken = $auth->access_token;
+            //dd($this->accessToken);
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
@@ -127,10 +129,10 @@ class RosterController extends Controller
     public function create()
     {
         try {
-            $this->oauth();
-
+           // $this->oauth();
+            $token = oauth();
             //retrieve token needed for authorized http requests
-            $token = $this->accessToken();
+            //$token = $this->accessToken();//null if don't call oauth fn each request
 
             $client = new GuzzleHttp\Client;
 
@@ -217,10 +219,11 @@ class RosterController extends Controller
     public function edit($id)
     {
         try {
+            $token = oauth();
 
-            $this->oauth();
-
-            $token = $this->accessToken();
+//            $this->oauth();
+//
+//            $token = $this->accessToken();
 
             $client = new GuzzleHttp\Client;
 

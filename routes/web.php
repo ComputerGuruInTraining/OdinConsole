@@ -50,6 +50,8 @@ Route::get('confirm-delete/{id}/{url}', function($id, $url){
     return $confirmView;
 });
 
+
+//USED??? almost definitely not anymore, but test delete w/o before removing
 Route::get('/confirm-delete-location/{theId}/',  function($theId){
     $deleteView = LocationController::confirmDelete($theId);
     return $deleteView;

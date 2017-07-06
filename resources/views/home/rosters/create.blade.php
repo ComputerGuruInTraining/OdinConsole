@@ -60,8 +60,7 @@
             {!! Form::Label('employees', 'Select Employee:') !!}
             <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
                 @foreach($empList as $emp)
-                    {{--<option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>--}}
-                    <option value="{{$emp->id}}">{{$emp->name}}</option>
+                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
 
                 @endforeach
             </select>
@@ -69,7 +68,6 @@
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
             <select class="form-control" multiple="multiple" name="locations[]" size="10" onkeypress="return noenter()">
-                {{--<option value="" selected disabled>Select Location:</option>--}}
                 @foreach($locList as $loc)
                     <option value="{{$loc->id}}">{{$loc->name}}</option>
                 @endforeach
@@ -80,10 +78,6 @@
             {!! Form::Label('checks', 'Number of Visits Required:') !!}
             {{ Form::text('checks', 1, array('class' => 'form-control')) }}
         </div>
-        {{--<div>--}}
-            {{--Important: A new shift can be used to add several employees and locations for the 1 shift,--}}
-            {{--but the amount of visits required will be the same for all locations.--}}
-        {{--</div>--}}
 
         <div class='form-group'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}

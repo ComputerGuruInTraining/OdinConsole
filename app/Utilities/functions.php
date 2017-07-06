@@ -85,6 +85,41 @@ if(! function_exists('jobDuration')) {
     }
 }
 
+//preparing for authentication
+//global oauth fn
+//FIXME: having to call oauth each time. Authentication should fix.
+function oauth(){
+    $client = new GuzzleHttp\Client;
+
+    try {
+        $response = $client->post('http://odinlite.com/public/oauth/token', [
+            'form_params' => [
+                'client_id' => 2,
+                // The secret generated when you ran: php artisan passport:install
+                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                'grant_type' => 'password',
+                'username' => 'johnd@exampleemail.com',
+                'password' => 'secret',
+                'scope' => '*',
+            ]
+        ]);
+
+        $auth = json_decode((string)$response->getBody());
+
+       // $this->accessToken = $auth->access_token;
+        return $auth->access_token;
+
+    } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        echo $e;
+        return view('admin_template');
+    }
+}
+//
+//function accessToken(){
+//    return $this->accessToken;
+//}
+
+
 //    public function endDT($startTime, $duration)
 //    {
 //        $dt = new DateTime($startTime);//DateTime object
