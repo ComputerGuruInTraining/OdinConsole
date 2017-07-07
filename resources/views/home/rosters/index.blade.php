@@ -66,6 +66,7 @@
                 </tr>
                 @foreach($assigned as $index => $formattedShift)
                     <tbody class="group-list">
+                    <tr class="row-heading"><td>{{$formattedShift[0]->shift_title}}</td><td></td><td></td><td></td><td></td></tr>
                     @foreach ($assigned->get($index) as $shift)
                         @if($index == $shift->start_date)
                            <!--ensure the location associated with the shift is still in the db to catch for errors-->
@@ -83,7 +84,7 @@
                                     @endif
                                     <td>{{$shift->mobile_user_id}}</td>
                                     <td>
-                                        <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete-shift/{{$shift->assigned_shift_id}}/" style="color: #cc0000;">Delete</a>
+                                        <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$shift->assigned_shift_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
                                     </td>
                                 </tr>
                         @endif

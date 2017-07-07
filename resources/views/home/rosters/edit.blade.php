@@ -7,7 +7,7 @@
 @stop
 
 @section('page-content')
-    <div class='col-lg-4 col-lg-offset-4 form-pages'>
+    <div class=' col-md-8 form-pages'>
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -18,11 +18,39 @@
                 </ul>
             </div>
         @endif
-        <div class='form-pages'>
+        <div>
             {{--$assigned is an array with some values the same for all items, but location and employee details differ. --}}
             {{--Assigned_shift_id and date and time values are the same for all items therefore, just access the first items details for these fields--}}
             {{--{{ Form::model($assigned, array('route' => array('rosters.update', $assigned[0]->assigned_shift_id), 'method' => 'PUT')) }}--}}
             {{ Form::open(['route' => ['rosters.update', $assigned[0]->assigned_shift_id], 'method'=>'put']) }}
+
+            <div class='form-group'>
+                {!! Form::Label('title', 'Shift Title:') !!}
+                {{ Form::text('title', $assigned[0]->shift_title, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
+            </div>
+
+            <div class='form-group'>
+                {!! Form::Label('desc', 'Shift Description:') !!}
+                {{ Form::text('desc', $assigned[0]->shift_description, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
+            </div>
+
+            <div class='form-group'>
+                {{ Form::label('startDate', 'Start Date') }}
+                {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
+                &nbsp;&nbsp;&nbsp;
+                {{ Form::label('startTime', 'Start Time') }}
+                <input class="input-a" value="" name="startTime" placeholder={{$startTime}} data-default={{$startTime}}>
+                @include('clock-picker')
+            </div>
+
+            <div class='form-group'>
+                {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
+                {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
+                &nbsp;&nbsp;&nbsp;
+                {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
+                <input class="input-b" value="" name="endTime" placeholder={{$endTime}} data-default={{$endTime}}>
+                @include('clock-picker')
+            </div>
 
             <div class='form-group'>
                     {!! Form::Label('employees', 'Select Employee:') !!}
@@ -33,7 +61,7 @@
                         @endforeach
                         {{--List all the employees:--}}
                         @foreach($empList as $emp)
-                                    <option value="{{$emp->id}}">{{$emp->name}}</option>
+                                    <option value="{{$emp->id}}">{{$emp->first_name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -55,24 +83,6 @@
             <div class='form-group'>
                 {!! Form::Label('checks', 'Number of Visits Required:') !!}
                 {{ Form::text('checks', $assigned[0]->checks, array('class' => 'form-control')) }}
-            </div>
-
-            <div class='form-group'>
-                {{ Form::label('startDate', 'Start Date') }}
-                {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
-                &nbsp;&nbsp;&nbsp;
-                {{ Form::label('startTime', 'Start Time') }}
-                <input class="input-a" value="" name="startTime" data-default={{$startTime}}>
-                @include('clock-picker')
-            </div>
-
-            <div class='form-group'>
-                {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
-                {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
-                &nbsp;&nbsp;&nbsp;
-                {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
-                <input class="input-b" value="" name="endTime" data-default={{$endTime}}>
-                @include('clock-picker')
             </div>
 
             <div class='form-group'>

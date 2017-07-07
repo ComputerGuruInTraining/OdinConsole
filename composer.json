@@ -23,7 +23,7 @@
             "database"
         ],
         "files":[
-            "app/functions.php"
+            "app/utilities/functions.php"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -56,5 +56,4 @@
         "sort-packages": true
     }
 
-    
 }

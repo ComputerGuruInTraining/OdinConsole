@@ -94,7 +94,13 @@ Odin theming
 }
 
 .group-list:nth-child(even){
-    background-color: #ebf9f9;
+    background-color: #ebf2f9;
+}
+
+.row-heading{
+    font-weight: bold;
+    color: #663974;
+    font-size: large;
 }
 
 /*.group-table>td{*/
