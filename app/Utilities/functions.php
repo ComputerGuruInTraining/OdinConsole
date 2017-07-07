@@ -42,12 +42,21 @@ if(! function_exists('confirmDlt')){
 
 //pm format $date = dd/mm/yyyy, $time = HH:MM
 
+/*
+ * this returns a string value
+ * with the format
+ * required for the mysql database
+ *  datetime format of yyyy-mm-dd
+ *
+ * */
+
+//usage: when storing shift in db
 if(! function_exists('jobDateTime')) {
     function jobDateTime($date, $time)
     {
         $y = substr($date, 6, 4);
-        $m = substr($date, 3, 2);
-        $d = substr($date, 0, 2);
+        $d = substr($date, 3, 2);
+        $m = substr($date, 0, 2);
 
         $dtStr = $y . "-" . $m . "-" . $d . " " . $time . ':00';
 

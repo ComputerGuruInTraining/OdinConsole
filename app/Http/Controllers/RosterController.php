@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp;
 use Redirect;
+use DateTimeZone;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
@@ -23,6 +24,7 @@ class RosterController extends Controller
 
     public function index()
     {
+        //TODO: HIGH v1 complete: only retrieve assigned shifts for the users associated with the company id
         try {
             $this->oauth();
 
@@ -43,17 +45,17 @@ class RosterController extends Controller
                 //add the extracted date to each of the objects and format date
                 $s = $item->start;
                 $sdt = new DateTime($s);
-                $sdate = $sdt->format('d/m/Y');
+                $sdate = $sdt->format('m/d/Y');
                 $stime = $sdt->format('g.i a');
                 $e = $item->end;
                 $edt = new DateTime($e);
-                $edate = $edt->format('d/m/Y');
+                $edate = $edt->format('m/d/Y');
                 $etime = $edt->format('g.i a');
 
                 $assigned[$i]->start_date = $sdate;
                 $assigned[$i]->start_time = $stime;
                 $assigned[$i]->end_time = $etime;
-
+                dd($assigned[$i]);
                 //save date and location into a new object property for later use (ie to reject duplicate values for the view)
                 $assigned[$i]->unique_date = $assigned[$i]->start_date;
                 $assigned[$i]->unique_locations = $assigned[$i]->location;
@@ -69,8 +71,11 @@ class RosterController extends Controller
 
             //display as midnight if time == 12am
             foreach($assigned as $i => $item) {
+
                 $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
                 $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
+
+                dd($assigned[$i]->start_time);
             }
 
             //change to collection datatype from array for using groupBy fn
@@ -78,7 +83,25 @@ class RosterController extends Controller
 
             //group by date for better view
             $assigned = $this->groupByDate($assigned);
+            $tztime = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
+            $tztime2 = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
+            $tztime->tz = 'Australia/Sydney';
+            //$tztime2->tz =
+            $diff = $tztime->diffInHours($tztime2);
+            //dd($diff);
 
+            $now = Carbon::now();
+
+            $nowInLondonTz = Carbon::now(new DateTimeZone('Europe/London'));
+
+            $diff = $now->diffInHours($nowInLondonTz);
+
+//            dd($now->diffInHours($nowInLondonTz));
+$dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
+            $dtVancouver = Carbon::createFromDate(2000, 1, 1, 'Australia/Sydney');
+            dd($dtOttawa->diffInHours($dtVancouver));
+
+//dd($diff);
             return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
@@ -188,6 +211,57 @@ class RosterController extends Controller
 
            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
 
+    }
+
+    function formData($request){
+        //data for validation
+        $locationArray = $request->input('locations');
+        $employeeArray = $request->input('employees');
+        $checks = Input::get('checks');
+        $title = $request->input('title');
+        $desc = $request->input('desc');
+
+        //TODO: rosters for a date-range
+        $roster_id = 1;
+
+        //TODO: retrieve from user
+        $added_id = 1;
+
+        //get data from form for non laravel validated inputs
+        $dateStart = $request->input('startDateTxt');
+//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
+        $timeStart = Input::get('startTime');//hh:mm
+        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
+        $timeEnd = Input::get('endTime');//hh:mm
+
+        //process start date and time before adding to db
+        //function in functions.php
+        $strStart = jobDateTime($dateStart, $timeStart);
+        $strEnd = jobDateTime($dateEnd, $timeEnd);
+
+        $this->oauth();
+
+        //retrieve token needed for authorized http requests
+        $token = $this->accessToken();
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'checks' => $checks, 'start' => $strStart,
+                    'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
+                    'added_id' => $added_id, 'employees' => $employeeArray, 'locations' => $locationArray
+                )
+            )
+        );
+
+        $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+
+        return $dateStart;
     }
 
     /**
@@ -445,54 +519,6 @@ class RosterController extends Controller
             }
         return $jobs;
     }
-    public function formData($request){
-        //data for validation
-        $locationArray = $request->input('locations');
-        $employeeArray = $request->input('employees');
-        $checks = Input::get('checks');
-        $title = $request->input('title');
-        $desc = $request->input('desc');
 
-        //TODO: rosters for a date-range
-        $roster_id = 1;
-
-        //TODO: retrieve from user
-        $added_id = 1;
-
-        //get data from form for non laravel validated inputs
-        $dateStart = $request->input('startDateTxt');
-//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
-        $timeStart = Input::get('startTime');//hh:mm
-        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
-        $timeEnd = Input::get('endTime');//hh:mm
-
-        //process start date and time before adding to db
-        $strStart = jobDateTime($dateStart, $timeStart);
-        $strEnd = jobDateTime($dateEnd, $timeEnd);
-
-        $this->oauth();
-
-        //retrieve token needed for authorized http requests
-        $token = $this->accessToken();
-
-        $client = new GuzzleHttp\Client;
-
-        $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
-                'headers' => array(
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type' => 'application/json'
-                ),
-                'json' => array(
-                    'checks' => $checks, 'start' => $strStart,
-                    'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
-                    'added_id' => $added_id, 'employees' => $employeeArray, 'locations' => $locationArray
-                )
-            )
-        );
-
-        $assigned = GuzzleHttp\json_decode((string)$response->getBody());
-
-        return $dateStart;
-    }
 
 }
