@@ -22,7 +22,7 @@
    <th>Gender</th>
    <th>Mobile</th>
    <th>Email</th>
-   <th>Address</th>
+   {{--<th>Address</th>--}}
    <th>Actions</th>
  </tr>
   @foreach($employees as $employee)
@@ -32,7 +32,7 @@
         <td>{{$employee->gender}}</td>
         <td>{{$employee->mobile}}</td>
         <td>{{$employee->email}}</td>
-        <td>{{$employee->address}}</td>
+        {{--<td>{{$employee->address}}</td>--}}
 
         <td>
             <a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>

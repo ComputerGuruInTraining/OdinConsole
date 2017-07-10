@@ -10,6 +10,7 @@ use Hash;
 use Carbon\Carbon;
 use Session;
 use Redirect;
+use GuzzleHttp;
 
 class EmployeeController extends Controller
 {
@@ -20,12 +21,67 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-      $employees = Employee::all();
-      return view('employee.employees', compact('employees'));
+
+        try {
+            $token = oauth();
+
+            //retrieve token needed for authorized http requests
+            //  $token = $this->accessToken();
+
+            $client = new GuzzleHttp\Client;
+
+            //TODO: v1 working HIGH: list needs to get only those locations associated with company
+            $response = $client->get('http://odinlite.com/public/api/employees/list', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                ]
+            ]);
+
+            $employees = json_decode((string)$response->getBody());
+
+            return view ('employee.employees', compact('employees'));
+//            return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
+
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return view('admin_template');
+        }
+//      $employees = Employee::all();
+//      return view('employee.employees', compact('employees'));
 
     }
 
+    public function oauth(){
+        $client = new GuzzleHttp\Client;
 
+        try {
+            $response = $client->post('http://odinlite.com/public/oauth/token', [
+                'form_params' => [
+                    'client_id' => 2,
+                    // The secret generated when you ran: php artisan passport:install
+                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                    'grant_type' => 'password',
+                    'username' => 'johnd@exampleemail.com',
+                    'password' => 'secret',
+                    'scope' => '*',
+                ]
+            ]);
+
+            $auth = json_decode((string)$response->getBody());
+
+            //TODO: You'd typically save this payload in the session
+            $this->accessToken = $auth->access_token;
+
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return view('admin_template');
+        }
+    }
+
+    //TODO: move fn to a utility file or authservice file
+    public function accessToken(){
+        return $this->accessToken;
+    }
 
     /**
      * Show the form for creating a new resource.
