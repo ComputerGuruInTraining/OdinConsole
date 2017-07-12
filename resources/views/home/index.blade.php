@@ -12,7 +12,7 @@
         @endforeach
     @endif
 
-    <h1><i class='fa fa-lock'></i> Odin Case Management Console</h1>
+    <h2><i class='fa fa-lock'></i> Odin Management Console</h2>
 
 {{ Form::open(['role' => 'form','method' => 'POST']) }}
 

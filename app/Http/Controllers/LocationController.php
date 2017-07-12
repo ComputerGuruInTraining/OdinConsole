@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utlities\ApiAuth;
 use Illuminate\Http\Request;
 use Input;
 use Form;
@@ -12,7 +13,6 @@ use Redirect;
 
 class LocationController extends Controller
 {
-//TODO: add to location_companies at the same time as adding location
     protected $accessToken;
     /**
      * Display a listing of the resource.
@@ -23,23 +23,35 @@ class LocationController extends Controller
     public function index()
     {
         try {
-        $token = oauth();
+
+            $this->accessToken = oauth();
+
+//        // $this->accessToken = $auth->access_token;
+//            $apiAuth = apiAuth::getToken();
+
+          //  $token = $apiAuth->getToken();
+            //$token =
+//            dd($apiAuth);
+
+        //$token = oauth();
 
         //retrieve token needed for authorized http requests
-      //  $token = $this->accessToken();
+        $token = $this->accessToken();
 
         $client = new GuzzleHttp\Client;
 
-        //TODO: v1 working HIGH: list needs to get only those locations associated with company
-        $response = $client->get('http://odinlite.com/public/api/locations/list', [
+        $compId = 1;
+
+        $response = $client->get('http://odinlite.com/public/api/locations/list/'.$compId, [
             'headers' => [
-                'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                'Authorization' => 'Bearer ' . $token,
             ]
         ]);
 
         $locations = json_decode((string)$response->getBody());
 
-        return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
+//dd($locations);
+            return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;

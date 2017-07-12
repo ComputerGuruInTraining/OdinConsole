@@ -40,12 +40,12 @@
             </select>
         </div>
         <div class='form-group'>
-            {{--{!! Form::Label('employees', 'Select Employee:') !!}--}}
-            {{--<select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">--}}
-                {{--@foreach($empList as $emp)--}}
-                    {{--<option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>--}}
-                {{--@endforeach--}}
-            {{--</select>--}}
+            {!! Form::Label('employees', 'Select Employee:') !!}
+            <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
+                @foreach($empList as $emp)
+                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                @endforeach
+            </select>
         </div>
 
 
