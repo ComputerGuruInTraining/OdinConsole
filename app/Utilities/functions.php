@@ -127,7 +127,7 @@ function oauth(){
 }
 
 
-function oauth2(){
+function oauth2($email, $password){
     try {
         $client = new GuzzleHttp\Client;
 
@@ -137,27 +137,33 @@ function oauth2(){
                 'client_id' => 2,
                 // The secret generated when you ran: php artisan passport:install
                 'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                'username' => 'johnd@exampleemail.com',
-                'password' => 'secret',
+                'username' => $email,
+                'password' => $password,
                 'scope' => '*',
             ],
         ]);
 
         $auth = json_decode((string)$response->getBody());
-       // $token = new \App\Utlities\ApiAuth($auth->access_token);
-            //\App\Utlities\ApiAuth::setToken($auth->access_token);
+        // $token = new \App\Utlities\ApiAuth($auth->access_token);
+        //\App\Utlities\ApiAuth::setToken($auth->access_token);
 //        $apiAuth = new \App\Utlities\apiAuth();
-         $token = $auth->access_token;
+        $token = $auth->access_token;
 //        $apiAuth->setToken($auth->access_token);
 
 //        \App\Utlities\ApiAuth::class api;
 //        dd($apiAuth->getToken());
-        return $token;
+
+//        \App\Http\Controllers\HomeController::setToken($token);
+        session(['token' => $token]);
+
+        return true;
+
     } catch (GuzzleHttp\Exception\BadResponseException $e) {
         echo $e;
-        return view('admin_template');
+        return false;
     }
 }
+
 //
 //function setToken($accessToken){
 //    $this->token = $accessToken;

@@ -9,11 +9,17 @@ use Form;
 use Model;
 use App\Models\Location;
 use GuzzleHttp;
+use Psy\Exception\ErrorException;
 use Redirect;
 
 class LocationController extends Controller
 {
-    protected $accessToken;
+    public $accessToken;
+
+    public function _construct(){
+
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,38 +30,38 @@ class LocationController extends Controller
     {
         try {
 
-            $this->accessToken = oauth();
-
-//        // $this->accessToken = $auth->access_token;
-//            $apiAuth = apiAuth::getToken();
-
-          //  $token = $apiAuth->getToken();
-            //$token =
-//            dd($apiAuth);
-
-        //$token = oauth();
-
         //retrieve token needed for authorized http requests
-        $token = $this->accessToken();
 
-        $client = new GuzzleHttp\Client;
+        if (session()->has('token')) {
+            $token = session('token');
 
-        $compId = 1;
+            $client = new GuzzleHttp\Client;
 
-        $response = $client->get('http://odinlite.com/public/api/locations/list/'.$compId, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $token,
-            ]
-        ]);
+            $compId = 1;
 
-        $locations = json_decode((string)$response->getBody());
+            $response = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $locations = json_decode((string)$response->getBody());
 
 //dd($locations);
             return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
 
+        }
+        //else authenticate user and store token in session as per functions.php oauth2()
+        else{
+            return Redirect::to('/login');
+        }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return view('admin_template');
+        }
+        catch (\ErrorException $error) {
+            echo $error;
+            return Redirect::to('/login');
         }
     }
 
@@ -97,6 +103,7 @@ class LocationController extends Controller
      */
     public function create()
     {
+        dd($this->accessToken);
         return view('location/create-locations');
     }
 
