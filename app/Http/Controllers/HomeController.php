@@ -34,13 +34,15 @@ class HomeController extends BaseController
 		$username = Input::get('username');
 		$password = Input::get('password');
 
+        //oauth2 fn will validate only for those users in the user_roles table
+        //outh2 is defined in App/Utilities/functions.php
         if(oauth2($username, $password)){
             return Redirect::intended('/admin');
         }
         //else, not api authenticated so user credentials not valid
 		return Redirect::back()
 			->withInput()
-			->withErrors('That username/password combo does not exist.');
+			->withErrors('Either email/password combo does not exist or you do not have access.');
 	}
 
 	public function getLogin()

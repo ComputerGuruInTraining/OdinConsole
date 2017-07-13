@@ -14,7 +14,7 @@ use Redirect;
 
 class LocationController extends Controller
 {
-    public $accessToken;
+//    public $accessToken;
 
     public function _construct(){
 
@@ -29,33 +29,30 @@ class LocationController extends Controller
     public function index()
     {
         try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-        //retrieve token needed for authorized http requests
+                $client = new GuzzleHttp\Client;
 
-        if (session()->has('token')) {
-            $token = session('token');
+                $compId = session('compId');
 
-            $client = new GuzzleHttp\Client;
+                $response = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $compId = 1;
+                $locations = json_decode((string)$response->getBody());
 
-            $response = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
 
-            $locations = json_decode((string)$response->getBody());
-
-//dd($locations);
-            return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
-
+            }
+            else {
+                return Redirect::to('/login');
+            }
         }
-        //else authenticate user and store token in session as per functions.php oauth2()
-        else{
-            return Redirect::to('/login');
-        }
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return view('admin_template');
         }
@@ -65,37 +62,6 @@ class LocationController extends Controller
         }
     }
 
-    public function oauth(){
-        $client = new GuzzleHttp\Client;
-
-        try {
-            $response = $client->post('http://odinlite.com/public/oauth/token', [
-                'form_params' => [
-                    'client_id' => 2,
-                    // The secret generated when you ran: php artisan passport:install
-                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                    'grant_type' => 'password',
-                    'username' => 'johnd@exampleemail.com',
-                    'password' => 'secret',
-                    'scope' => '*',
-                ]
-            ]);
-
-            $auth = json_decode((string)$response->getBody());
-
-            //TODO: You'd typically save this payload in the session
-            $this->accessToken = $auth->access_token;
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return view('admin_template');
-        }
-    }
-
-    //TODO: move fn to a utility file or authservice file
-    public function accessToken(){
-        return $this->accessToken;
-    }
     /**
      * Show the form for creating a new resource.
      *
@@ -103,8 +69,12 @@ class LocationController extends Controller
      */
     public function create()
     {
-        dd($this->accessToken);
-        return view('location/create-locations');
+        if (session()->has('token')) {
+            return view('location/create-locations');
+        }
+        else {
+            return Redirect::to('/login');
+        }
     }
 
     /**
@@ -113,55 +83,50 @@ class LocationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    //FIXME: TS POST
     //TODO: improve validation for adding location (see update-location)
     //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field
     public function store(Request $request)
     {
         try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $compId = session('compId');
+
 //            validate data
-            $this->validate($request, [
-                'name' => 'required|max:255',
-                'address' => 'required|max:255',
-            ]);
+                $this->validate($request, [
+                    'name' => 'required|max:255',
+                    'address' => 'required|max:255',
+                ]);
 
 //            //gather data from input fields
-            $name = ucfirst(Input::get('name'));
-            $address = Input::get('address');
-            $geoCoords = $this->geoCode($address);
-            $latitude = $geoCoords->results[0]->geometry->location->lat;
-            $longitude = $geoCoords->results[0]->geometry->location->lng;
-            $notes = ucfirst(Input::get('info'));
+                $name = ucfirst(Input::get('name'));
+                $address = Input::get('address');
+                $geoCoords = $this->geoCode($address);
+                $latitude = $geoCoords->results[0]->geometry->location->lat;
+                $longitude = $geoCoords->results[0]->geometry->location->lng;
+                $notes = ucfirst(Input::get('info'));
 
-            //todo: get the consoleUserId by the current user
-            $consoleUserId = 2;
-
-            //post request to api
-            //call oauth fn in functions.php
-            $token = oauth();
-
-            //retrieve token needed for authorized http requests
-            //$token = $this->accessToken();
-
-            $client = new GuzzleHttp\Client;
-
-            $response = $client->post('http://odinlite.com/public/api/locations', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
-                    ),
-                    'json' => array('name' => $name, 'address' => $address,
-                    'latitude' => $latitude, 'longitude' => $longitude,
-                        'notes' => $notes, 'consoleUserId' => $consoleUserId
+                $response = $client->post('http://odinlite.com/public/api/locations', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('name' => $name, 'address' => $address,
+                            'latitude' => $latitude, 'longitude' => $longitude,
+                            'notes' => $notes, 'compId' => $compId
+                        )
                     )
-                )
-            );
+                );
 
-            //$apiResponse = json_decode((string)$response->getBody());
-
-            //display confirmation page
-            return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
-
+                //display confirmation page
+                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
+            } else {
+                return Redirect::to('/login');
+            }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
@@ -250,25 +215,52 @@ class LocationController extends Controller
      */
     public function edit($id)
     {
-        //call oauth fn in functions.php
-        $token = oauth();
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+//                $compId = session('compId');
+
+
+                //call oauth fn in functions.php
+//                $token = oauth();
 
 //        $this->oauth();
 //
 //        //retrieve token needed for authorized http requests
 //        $token = $this->accessToken();
 
-        $client = new GuzzleHttp\Client;
+//                $client = new GuzzleHttp\Client;
 
-        $response = $client->get('http://odinlite.com/public/api/locations/'.$id.'/edit', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $token,
-            ]
-        ]);
+                $response = $client->get('http://odinlite.com/public/api/locations/' . $id . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-        $location = json_decode((string)$response->getBody());
+                $location = json_decode((string)$response->getBody());
 
-        return view('location/edit-locations')->with('location', $location);
+                return view('location/edit-locations')->with('location', $location);
+
+            } else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $errors = collect($err);
+            return view('location/create-locations')->with('errors', $errors);
+        }
+        catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('location/create-locations')->with('errors', $errors);
+        }
     }
 
     /**
@@ -282,67 +274,73 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $address = Input::get('address');
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-            //api put route will make no changes when these values are found in put request
-            if ($address == "") {
-                $address = '';
-                $latitude = 0.0;
-                $longitude = 0.0;
-            }
-            else{
-                //get the geoCoords for the address
-                $geoCoords = $this->geoCode($address);
-                $latitude = $geoCoords->results[0]->geometry->location->lat;
-                $longitude = $geoCoords->results[0]->geometry->location->lng;
-            }
+                $address = Input::get('address');
 
-            //validate data
-            $this->validate($request, [
-                'name' => 'required|max:255',
-                'address' => 'max:255',//not required for edit page, will presume same if not input
-            ]);
+                //api put route will make no changes when these values are found in put request
+                if ($address == "") {
+                    $address = '';
+                    $latitude = 0.0;
+                    $longitude = 0.0;
+                }
+                else{
+                    //get the geoCoords for the address
+                    $geoCoords = $this->geoCode($address);
+                    $latitude = $geoCoords->results[0]->geometry->location->lat;
+                    $longitude = $geoCoords->results[0]->geometry->location->lng;
+                }
 
-            //get the data from the form
-            $name = ucfirst(Input::get('name'));
-            $notes = ucfirst(Input::get('notes'));
+                //validate data
+                $this->validate($request, [
+                    'name' => 'required|max:255',
+                    'address' => 'max:255',//not required for edit page, will presume same if not input
+                ]);
 
-            //call oauth fn in functions.php
-            $token = oauth();
+                //get the data from the form
+                $name = ucfirst(Input::get('name'));
+                $notes = ucfirst(Input::get('notes'));
 
-//            //request to api
-//            $this->oauth();
-//
-//            //retrieve token needed for authorized http requests
-//            $token = $this->accessToken();
+                //call oauth fn in functions.php
+    //            $token = oauth();
 
-            $client = new GuzzleHttp\Client;
+    //            //request to api
+    //            $this->oauth();
+    //
+    //            //retrieve token needed for authorized http requests
+    //            $token = $this->accessToken();
 
-            $response = $client->put('http://odinlite.com/public/api/locations/'.$id.'/edit', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
-                    ),
-                    'json' => array('name' => $name, 'address' => $address,
-                        'latitude' => $latitude, 'longitude' => $longitude,
-                        'notes' => $notes
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->put('http://odinlite.com/public/api/locations/'.$id.'/edit', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('name' => $name, 'address' => $address,
+                            'latitude' => $latitude, 'longitude' => $longitude,
+                            'notes' => $notes
+                        )
                     )
-                )
-            );
+                );
 
-            $location = json_decode((string)$response->getBody());
+                $location = json_decode((string)$response->getBody());
 
-            //direct user based on whether record updated successfully or not
-            if($location->success == true)
-            {
-                $theAction = 'You have successfully edited the location';
+                //direct user based on whether record updated successfully or not
+                if($location->success == true)
+                {
+                    $theAction = 'You have successfully edited the location';
 
-                return view('confirm')->with(array('theAction' => $theAction));
+                    return view('confirm')->with(array('theAction' => $theAction));
+                }
+                else{
+                    return redirect()->route("location.edit_locations");
+                }
+            } else {
+                return Redirect::to('/login');
             }
-            else{
-                return redirect()->route("location.edit_locations");
-            }
-
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Please provide valid changes';
             $errors = collect($err);
@@ -364,7 +362,7 @@ class LocationController extends Controller
         }
     }
 
-    /**
+    /**Fn implemented on confirm-delete.blade.php page
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -373,34 +371,55 @@ class LocationController extends Controller
     public function destroy($id)
     {
         try {
-            //call oauth fn in functions.php
-            $token = oauth();
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-//            $this->oauth();
-//
-//            //retrieve token needed for authorized http requests
-//            $token = $this->accessToken();
+//                $client = new GuzzleHttp\Client;
 
-            $client = new GuzzleHttp\Client;
+//                $compId = session('compId');
+                //call oauth fn in functions.php
+//                $token = oauth();
 
-            $response = $client->delete('http://odinlite.com/public/api/locations/'.$id, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
-                ]
-            ]);
+    //            $this->oauth();
+    //
+    //            //retrieve token needed for authorized http requests
+    //            $token = $this->accessToken();
 
-            $responseMsg = json_decode((string)$response->getBody());
+                $client = new GuzzleHttp\Client;
 
-            $theAction = 'You have successfully deleted the location';
+                $response = $client->delete('http://odinlite.com/public/api/locations/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            return view('confirm')->with('theAction', $theAction);
+//                $responseMsg = json_decode((string)$response->getBody());
 
+                $theAction = 'You have successfully deleted the location';
+
+                return view('confirm')->with('theAction', $theAction);
+            } else {
+                return Redirect::to('/login');
+            }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/locations');
         }
     }
+
+    public function geoCode($address)
+    {
+        $prepAddr = str_replace(' ', '+', $address);
+        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
+        $output = json_decode($geocode);
+        return $output;
+    }
+}
+
+
+//archived
 
 //    public static function confirmDelete($id)
 //    {
@@ -443,12 +462,3 @@ class LocationController extends Controller
 //            Redirect::to('/locations');
 //        }
 //    }
-
-    public function geoCode($address)
-    {
-        $prepAddr = str_replace(' ', '+', $address);
-        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
-        $output = json_decode($geocode);
-        return $output;
-    }
-}
