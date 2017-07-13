@@ -144,19 +144,38 @@ function oauth2($email, $password){
         ]);
 
         $auth = json_decode((string)$response->getBody());
-        // $token = new \App\Utlities\ApiAuth($auth->access_token);
-        //\App\Utlities\ApiAuth::setToken($auth->access_token);
-//        $apiAuth = new \App\Utlities\apiAuth();
-        $token = $auth->access_token;
-//        $apiAuth->setToken($auth->access_token);
 
-//        \App\Utlities\ApiAuth::class api;
-//        dd($apiAuth->getToken());
+//        dd($auth);
 
-//        \App\Http\Controllers\HomeController::setToken($token);
-        session(['token' => $token]);
+        $responseUser = $client->get('http://odinlite.com/public/api/user', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $auth->access_token,
+            ]
+        ]);
+//
+        $user = json_decode((string)$responseUser->getBody());
+       // dd($user);
 
-        return true;
+        $responseRole = $client->get('http://odinlite.com/public/api/user/role/'.$user->id, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $auth->access_token,
+            ]
+        ]);
+//
+        $role = json_decode((string)$responseRole->getBody());
+        //dd($role);
+        if($role != null){
+
+            $token = $auth->access_token;
+            session(['token' => $token]);
+
+            return true;
+        }
+
+        //else the user is not allowed access to the console as per user_roles table
+        else{
+            return false;
+        }
 
     } catch (GuzzleHttp\Exception\BadResponseException $e) {
         echo $e;

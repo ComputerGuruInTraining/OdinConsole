@@ -17,8 +17,8 @@
 {{ Form::open(['role' => 'form','method' => 'POST']) }}
 
     <div class='form-group'>
-        {{ Form::label('username', 'Username') }}
-        {{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}
+        {{ Form::label('username', 'Email') }}
+        {{ Form::text('username', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
     </div>
 
     <div class='form-group'>
