@@ -6,6 +6,8 @@
  * Time: 1:32 PM
  */
 
+//$token = '';
+
 //global confirm delete fn
 if(! function_exists('confirmDlt')){
     function confirmDlt($id, $url) {
@@ -98,19 +100,19 @@ if(! function_exists('jobDuration')) {
 //global oauth fn
 //FIXME: having to call oauth each time. Authentication should fix.
 function oauth(){
-    $client = new GuzzleHttp\Client;
-
     try {
+        $client = new GuzzleHttp\Client;
+
         $response = $client->post('http://odinlite.com/public/oauth/token', [
             'form_params' => [
+                'grant_type' => 'password',
                 'client_id' => 2,
                 // The secret generated when you ran: php artisan passport:install
                 'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                'grant_type' => 'password',
                 'username' => 'johnd@exampleemail.com',
                 'password' => 'secret',
                 'scope' => '*',
-            ]
+            ],
         ]);
 
         $auth = json_decode((string)$response->getBody());
@@ -123,6 +125,56 @@ function oauth(){
         return view('admin_template');
     }
 }
+
+
+function oauth2($email, $password){
+    try {
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post('http://odinlite.com/public/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id' => 2,
+                // The secret generated when you ran: php artisan passport:install
+                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                'username' => $email,
+                'password' => $password,
+                'scope' => '*',
+            ],
+        ]);
+
+        $auth = json_decode((string)$response->getBody());
+        // $token = new \App\Utlities\ApiAuth($auth->access_token);
+        //\App\Utlities\ApiAuth::setToken($auth->access_token);
+//        $apiAuth = new \App\Utlities\apiAuth();
+        $token = $auth->access_token;
+//        $apiAuth->setToken($auth->access_token);
+
+//        \App\Utlities\ApiAuth::class api;
+//        dd($apiAuth->getToken());
+
+//        \App\Http\Controllers\HomeController::setToken($token);
+        session(['token' => $token]);
+
+        return true;
+
+    } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        echo $e;
+        return false;
+    }
+}
+
+//
+//function setToken($accessToken){
+//    $this->token = $accessToken;
+//
+//
+//}
+//
+//function getToken(){
+//    return $this->token;
+//
+//}
 //
 //function accessToken(){
 //    return $this->accessToken;

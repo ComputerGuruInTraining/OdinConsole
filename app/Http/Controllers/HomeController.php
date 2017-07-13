@@ -16,10 +16,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends BaseController
 {
+//    public $token;
+//
+//    public function _construct($token){
+//        $this->token = $token;
+//
+//    }
 
 	public function getIndex()
 	{ 
-		//return View::make('home.index');
 		return View::make('home.index');
 	}
 
@@ -29,11 +34,10 @@ class HomeController extends BaseController
 		$username = Input::get('username');
 		$password = Input::get('password');
 
-		if (Auth::attempt(['username' => $username, 'password' => $password]))
-		{
-			return Redirect::intended('/user');
-		}
-
+        if(oauth2($username, $password)){
+            return Redirect::intended('/admin');
+        }
+        //else, not api authenticated so user credentials not valid
 		return Redirect::back()
 			->withInput()
 			->withErrors('That username/password combo does not exist.');
@@ -48,7 +52,20 @@ class HomeController extends BaseController
 	{
 		Auth::logout();
 
+		session()->flush();
+
 		return Redirect::to('/');
 	}
+
+
+//	public static function  setToken($token2){
+//	    $token = $token2;
+//
+//    }
+//
+//    public function getToken(){
+//
+//	    return $this->token;
+//    }
 
 }

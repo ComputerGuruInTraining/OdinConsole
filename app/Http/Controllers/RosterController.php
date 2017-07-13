@@ -33,7 +33,10 @@ class RosterController extends Controller
 
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get('http://odinlite.com/public/api/assignedshifts/list', [
+            //TODO: once login and auth correct, store companyId as a constant/function/variable in config or Utilities
+            $companyId = 1;
+
+            $response = $client->get('http://odinlite.com/public/api/assignedshifts/list/'.$companyId, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -55,14 +58,10 @@ class RosterController extends Controller
                 $assigned[$i]->start_date = $sdate;
                 $assigned[$i]->start_time = $stime;
                 $assigned[$i]->end_time = $etime;
-                dd($assigned[$i]);
                 //save date and location into a new object property for later use (ie to reject duplicate values for the view)
                 $assigned[$i]->unique_date = $assigned[$i]->start_date;
                 $assigned[$i]->unique_locations = $assigned[$i]->location;
 
-                //format time
-//                $assigned[$i]->start_time = stringTime($assigned[$i]->start_time);
-//                $assigned[$i]->end_time = stringTime($assigned[$i]->end_time);
             }
 
             //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
@@ -75,7 +74,6 @@ class RosterController extends Controller
                 $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
                 $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
 
-                dd($assigned[$i]->start_time);
             }
 
             //change to collection datatype from array for using groupBy fn
@@ -83,23 +81,23 @@ class RosterController extends Controller
 
             //group by date for better view
             $assigned = $this->groupByDate($assigned);
-            $tztime = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
-            $tztime2 = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
-            $tztime->tz = 'Australia/Sydney';
-            //$tztime2->tz =
-            $diff = $tztime->diffInHours($tztime2);
-            //dd($diff);
 
-            $now = Carbon::now();
-
-            $nowInLondonTz = Carbon::now(new DateTimeZone('Europe/London'));
-
-            $diff = $now->diffInHours($nowInLondonTz);
-
-//            dd($now->diffInHours($nowInLondonTz));
-$dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
-            $dtVancouver = Carbon::createFromDate(2000, 1, 1, 'Australia/Sydney');
-            dd($dtOttawa->diffInHours($dtVancouver));
+//            $tztime = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
+//            $tztime2 = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
+//            $tztime->tz = 'Australia/Sydney';
+//            //$tztime2->tz =
+//            $diff = $tztime->diffInHours($tztime2);
+//            //dd($diff);
+//
+//            $now = Carbon::now();
+//
+//            $nowInLondonTz = Carbon::now(new DateTimeZone('Europe/London'));
+//
+//            $diff = $now->diffInHours($nowInLondonTz);
+//
+////            dd($now->diffInHours($nowInLondonTz));
+//$dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
+//            $dtVancouver = Carbon::createFromDate(2000, 1, 1, 'Australia/Sydney');
 
 //dd($diff);
             return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
@@ -159,7 +157,7 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
 
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get('http://odinlite.com/public/api/users/list', [
+            $response = $client->get('http://odinlite.com/public/api/employees/list', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -309,7 +307,7 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
 
             $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-            $responseUsers = $client->get('http://odinlite.com/public/api/users/list', [
+            $responseUsers = $client->get('http://odinlite.com/public/api/employees/list', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -326,6 +324,8 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
             $locations = GuzzleHttp\json_decode((string)$responseLocs->getBody());
 
             $assigned = collect($assigned);
+
+            //to populate the select lists with the locations and employees currently assigned to the shift
             $locationsUnique = $assigned->unique('location_id');
             $employeesUnique = $assigned->unique('mobile_user_id');
 
