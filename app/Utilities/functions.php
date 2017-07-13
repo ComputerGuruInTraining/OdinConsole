@@ -6,8 +6,6 @@
  * Time: 1:32 PM
  */
 
-//$token = '';
-
 //global confirm delete fn
 if(! function_exists('confirmDlt')){
     function confirmDlt($id, $url) {
@@ -21,12 +19,11 @@ if(! function_exists('confirmDlt')){
             }
 
             if($url == 'employees'){
-                $msg = 'Consider this carefully because, for eg, if an employee is being deleted,
-                     all shifts assigned to the employee will also be deleted etc.';
+                $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
             }
 
             if($url == 'locations'){
-                $msg = 'Consider this carefully because all shifts assigned to the location will also be deleted.';
+                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
             }
 
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
@@ -41,16 +38,6 @@ if(! function_exists('confirmDlt')){
         }
     }
 }
-
-//pm format $date = dd/mm/yyyy, $time = HH:MM
-
-/*
- * this returns a string value
- * with the format
- * required for the mysql database
- *  datetime format of yyyy-mm-dd
- *
- * */
 
 //usage: when storing shift in db
 if(! function_exists('jobDateTime')) {
@@ -96,8 +83,64 @@ if(! function_exists('jobDuration')) {
     }
 }
 
-//preparing for authentication
 //global oauth fn
+function oauth2($email, $password){
+    try {
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post('http://odinlite.com/public/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id' => 2,
+                // The secret generated when you ran: php artisan passport:install
+                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                'username' => $email,
+                'password' => $password,
+                'scope' => '*',
+            ],
+        ]);
+
+        $auth = json_decode((string)$response->getBody());
+
+
+        $responseUser = $client->get('http://odinlite.com/public/api/user', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $auth->access_token,
+            ]
+        ]);
+
+        $user = json_decode((string)$responseUser->getBody());
+
+        $responseRole = $client->get('http://odinlite.com/public/api/user/role/'.$user->id, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $auth->access_token,
+            ]
+        ]);
+
+        $role = json_decode((string)$responseRole->getBody());
+
+        //ensure the user is in the user_role table and therefore allowed access to the console
+        if($role != null){
+            $token = $auth->access_token;
+            $name = $user->first_name.' '.$user->last_name;
+            //save the token in a session helper method along with the user id and name
+            //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
+            session(['token' => $token, 'id' => $user->id, 'name' => $name, 'compId' => $user->company_id]);
+
+            return true;
+        }
+        //else the user is not allowed access to the console
+        else{
+            return false;
+        }
+
+    } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        echo $e;
+        return false;
+    }
+}
+
+//old, transitioning over from this fn to new oauth2 fn
 //FIXME: having to call oauth each time. Authentication should fix.
 function oauth(){
     try {
@@ -117,7 +160,7 @@ function oauth(){
 
         $auth = json_decode((string)$response->getBody());
 
-       // $this->accessToken = $auth->access_token;
+        // $this->accessToken = $auth->access_token;
         return $auth->access_token;
 
     } catch (GuzzleHttp\Exception\BadResponseException $e) {
@@ -127,78 +170,15 @@ function oauth(){
 }
 
 
-function oauth2($email, $password){
-    try {
-        $client = new GuzzleHttp\Client;
+//pm format $date = dd/mm/yyyy, $time = HH:MM
 
-        $response = $client->post('http://odinlite.com/public/oauth/token', [
-            'form_params' => [
-                'grant_type' => 'password',
-                'client_id' => 2,
-                // The secret generated when you ran: php artisan passport:install
-                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                'username' => $email,
-                'password' => $password,
-                'scope' => '*',
-            ],
-        ]);
-
-        $auth = json_decode((string)$response->getBody());
-
-//        dd($auth);
-
-        $responseUser = $client->get('http://odinlite.com/public/api/user', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $auth->access_token,
-            ]
-        ]);
-//
-        $user = json_decode((string)$responseUser->getBody());
-       // dd($user);
-
-        $responseRole = $client->get('http://odinlite.com/public/api/user/role/'.$user->id, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $auth->access_token,
-            ]
-        ]);
-//
-        $role = json_decode((string)$responseRole->getBody());
-        //dd($role);
-        if($role != null){
-
-            $token = $auth->access_token;
-            session(['token' => $token]);
-
-            return true;
-        }
-
-        //else the user is not allowed access to the console as per user_roles table
-        else{
-            return false;
-        }
-
-    } catch (GuzzleHttp\Exception\BadResponseException $e) {
-        echo $e;
-        return false;
-    }
-}
-
-//
-//function setToken($accessToken){
-//    $this->token = $accessToken;
-//
-//
-//}
-//
-//function getToken(){
-//    return $this->token;
-//
-//}
-//
-//function accessToken(){
-//    return $this->accessToken;
-//}
-
+/*
+ * this returns a string value
+ * with the format
+ * required for the mysql database
+ *  datetime format of yyyy-mm-dd
+ *
+ * */
 
 //    public function endDT($startTime, $duration)
 //    {

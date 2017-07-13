@@ -35,6 +35,7 @@ class HomeController extends BaseController
 		$password = Input::get('password');
 
         //oauth2 fn will validate only for those users in the user_roles table
+        //outh2 is defined in App/Utilities/functions.php
         if(oauth2($username, $password)){
             return Redirect::intended('/admin');
         }

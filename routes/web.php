@@ -23,11 +23,10 @@ Route::get('/admin', function () {
 });
 
 Route::resource('/user', 'UserController');
+
 Route::resource('employees', 'EmployeeController');
 
 Route::get('/dashboard', 'DashboardController@index');
-
-//Route::get('/dashboard', 'DashboardController@testFunction');
 
 Route::resource('/add_user', 'UserController@store');
 
@@ -46,17 +45,31 @@ Route::resource('/locations', 'LocationController');
 
 //global confirm-delete view
 Route::get('confirm-delete/{id}/{url}', function($id, $url){
-    $confirmView = confirmDlt($id, $url);
-    return $confirmView;
+    if (session()->has('token')) {
+        //confirmDlt defined in functions.php
+        $confirmView = confirmDlt($id, $url);
+        return $confirmView;
+    }
 });
+
+
+
+
+
+
+///archived
+///
+/// //Route::get('/dashboard', 'DashboardController@testFunction');
 
 
 //USED??? almost definitely not anymore, but test delete w/o before removing
-Route::get('/confirm-delete-location/{theId}/',  function($theId){
-    $deleteView = LocationController::confirmDelete($theId);
-    return $deleteView;
-
-});
+//Route::get('/confirm-delete-location/{theId}/',  function($theId){
+//    if (session()->has('token')) {
+//        //confirmDlt defined in functions.php
+//        $deleteView = LocationController::confirmDelete($theId);
+//        return $deleteView;
+//    }
+//});
 
 
 
