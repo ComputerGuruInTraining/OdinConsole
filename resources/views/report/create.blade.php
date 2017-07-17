@@ -6,7 +6,7 @@
 {{--@stop--}}
 
 @section('title-item')
-    Add Shift to Roster
+    Generate Report
 @stop
 
 @section('page-content')

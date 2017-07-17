@@ -19,6 +19,7 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     //TODO: v1 complete: format date in list and remove time
+    //TODO: v2: in order of start date
     public function index()
     {
         try {
@@ -221,6 +222,8 @@ class ReportController extends Controller
      */
     //TODO: HIGH v1 working/complete catch for null values on show blade
     //TODO: HIGH v1 working/complete format view properly. Messy atm
+    //TODO: now gather report info too for the entire report
+    //TODO: now select other details such as total_hours etc from report_cases
     public function show($id)
     {
         try {
@@ -236,21 +239,31 @@ class ReportController extends Controller
                     ]
                 ]);
 
-                $reportCaseNotes = json_decode((string)$response->getBody());
+                $report = json_decode((string)$response->getBody());
 
-//            foreach($cases as $case){
-//                dd($case->id);
+                //ie no value returned from the api
+                if(gettype($report) == 'object'){
+                    $err = 'There were no case notes created during the period that the selected report covers.';
+                    $errors = collect($err);
+                    return Redirect::to('/reports')->with('errors', $errors);
+                }
+                //ie an array returned from the api
+//                else if(count($report) == 0){
+////                    dd($report);
+//                    return Redirect::to('/reports')->with('errors', $errors);
 //
-//            }
+//                }
 
-                //need to retrieve the case notes for the
-
-                return view('report/case_notes/show')->with('cases', $reportCaseNotes);
+                else{
+                    return view('report/case_notes/show')->with('cases', $report);
+                }
             }
+            //ie no session token exists and therefore the user is not authenticated
             else {
                 return Redirect::to('/login');
             }
         }
+        //get request resulted in an error
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
