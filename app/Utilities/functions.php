@@ -39,7 +39,7 @@ if(! function_exists('confirmDlt')){
     }
 }
 
-//usage: when storing shift in db
+//usage: when storing shift in db & when storing a new report
 if(! function_exists('jobDateTime')) {
     function jobDateTime($date, $time)
     {
@@ -102,7 +102,7 @@ function oauth2($email, $password){
 
         $auth = json_decode((string)$response->getBody());
 
-
+        //get user
         $responseUser = $client->get('http://odinlite.com/public/api/user', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $auth->access_token,
@@ -140,34 +140,38 @@ function oauth2($email, $password){
     }
 }
 
+
+
+
+
+
 //old, transitioning over from this fn to new oauth2 fn
-//FIXME: having to call oauth each time. Authentication should fix.
-function oauth(){
-    try {
-        $client = new GuzzleHttp\Client;
-
-        $response = $client->post('http://odinlite.com/public/oauth/token', [
-            'form_params' => [
-                'grant_type' => 'password',
-                'client_id' => 2,
-                // The secret generated when you ran: php artisan passport:install
-                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                'username' => 'johnd@exampleemail.com',
-                'password' => 'secret',
-                'scope' => '*',
-            ],
-        ]);
-
-        $auth = json_decode((string)$response->getBody());
-
-        // $this->accessToken = $auth->access_token;
-        return $auth->access_token;
-
-    } catch (GuzzleHttp\Exception\BadResponseException $e) {
-        echo $e;
-        return view('admin_template');
-    }
-}
+//function oauth(){
+//    try {
+//        $client = new GuzzleHttp\Client;
+//
+//        $response = $client->post('http://odinlite.com/public/oauth/token', [
+//            'form_params' => [
+//                'grant_type' => 'password',
+//                'client_id' => 2,
+//                // The secret generated when you ran: php artisan passport:install
+//                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+//                'username' => 'johnd@exampleemail.com',
+//                'password' => 'secret',
+//                'scope' => '*',
+//            ],
+//        ]);
+//
+//        $auth = json_decode((string)$response->getBody());
+//
+//        // $this->accessToken = $auth->access_token;
+//        return $auth->access_token;
+//
+//    } catch (GuzzleHttp\Exception\BadResponseException $e) {
+//        echo $e;
+//        return view('admin_template');
+//    }
+//}
 
 
 //pm format $date = dd/mm/yyyy, $time = HH:MM

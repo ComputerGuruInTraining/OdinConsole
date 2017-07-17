@@ -27,9 +27,9 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-		$users = User::all();
-
-		return View::make('user.index', ['users' => $users]);
+//		$users = User::all();
+return view('admin_template');
+//		return View::make('user.index', ['users' => $users]);
 	}
 
 	/**

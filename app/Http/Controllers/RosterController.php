@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp;
 use Redirect;
-use DateTimeZone;
+//use DateTimeZone;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
@@ -155,7 +155,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/employees/list/'.$compId, [
+                $response = $client->get('http://odinlite.com/public/api/users/list/'.$compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -239,9 +239,7 @@ class RosterController extends Controller
         $token = session('token');
         $compId = session('compId');
 
-        //get data from form for non laravel validated inputs
         $dateStart = $request->input('startDateTxt');
-//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
         $timeStart = Input::get('startTime');//hh:mm
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
@@ -326,7 +324,7 @@ class RosterController extends Controller
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $responseUsers = $client->get('http://odinlite.com/public/api/employees/list/' . $compId, [
+                $responseUsers = $client->get('http://odinlite.com/public/api/users/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]

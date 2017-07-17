@@ -20,31 +20,36 @@
         </div>
     @endif
 
-    <div class='col-lg-4 col-lg-offset-4 form-pages col-md-8'>
-        {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
+    <div class='form-pages col-md-8'>
+
+        {{ Form::open(['role' => 'form', 'url' => '/reports']) }}
+
         <div class='form-group'>
-            {{ Form::label('startDate', 'Start Date') }}
-            {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
+            {{ Form::label('dateFrom', 'From:') }}
+            {{ Form::text('dateFrom', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
         </div>
+
         <div class='form-group'>
-            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
-            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
+            {{ Form::label('dateTo', 'To: &nbsp;&nbsp;&nbsp;') }}
+            {{ Form::text('dateTo', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
         </div>
+
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
-            <select class="form-control" multiple="multiple" name="locations[]" size="10" onkeypress="return noenter()">
-            <option value="" selected disabled>Select Location:</option>
-            @foreach($locList as $loc)
-            <option value="{{$loc->name}}">{{$loc->name}}</option>
-            @endforeach
+            <select class="form-control" name="location" size="10" onkeypress="return noenter()">
+                @foreach($locations as $loc)
+                    <option value="{{$loc->id}}">{{$loc->name}}</option>
+                @endforeach
             </select>
         </div>
         <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee:') !!}
-            <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
-                @foreach($empList as $emp)
-                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                @endforeach
+            {!! Form::Label('type', 'Select Activity:') !!}
+            <select class="form-control" name="type" onkeypress="return noenter()">
+                {{--report types provided by our app--}}
+                {{--Case Notes for a Location over a period--}}
+                <option value="Case Notes">Case Notes</option>
+                {{--Exact Times the premise was visited by a guard over a period--}}
+                {{--<option value="caseNotes">Guard Patrols</option>--}}
             </select>
         </div>
 

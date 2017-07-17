@@ -29,12 +29,12 @@
                     <tr>
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->date_start}} - {{$report->date_end}}</td>
-                        <td></td>
+                        {{--<td></td>--}}
                         {{--<td>{{$report->total_hours}}</td>--}}
                         {{--<td>{{$report->total_guards}}</td>--}}
-                        <td></td>
+                        {{--<td></td>--}}
 
-                        <td class="column-width">
+                        <td>
                             <a href="/reports/{{$report->id}}">View</a> | <a href="#" style="color: #cc0000;">Delete</a>
                         </td>
                     </tr>
