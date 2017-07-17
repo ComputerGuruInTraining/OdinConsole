@@ -16,10 +16,6 @@ class LocationController extends Controller
 {
 //    public $accessToken;
 
-    public function _construct(){
-
-        $this->middleware('auth:api');
-    }
     /**
      * Display a listing of the resource.
      *

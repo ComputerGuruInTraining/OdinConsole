@@ -7,6 +7,15 @@
 
 @section('page-content')
     <div class="col-md-12">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div style="padding:15px 0px 10px 0px;">
             <button type="button" class="btn btn-success" onclick="window.location.href='reports/create'">
@@ -29,12 +38,12 @@
                     <tr>
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->date_start}} - {{$report->date_end}}</td>
-                        <td></td>
+                        {{--<td></td>--}}
                         {{--<td>{{$report->total_hours}}</td>--}}
                         {{--<td>{{$report->total_guards}}</td>--}}
-                        <td></td>
+                        {{--<td></td>--}}
 
-                        <td class="column-width">
+                        <td>
                             <a href="/reports/{{$report->id}}">View</a> | <a href="#" style="color: #cc0000;">Delete</a>
                         </td>
                     </tr>

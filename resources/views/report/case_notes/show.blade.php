@@ -7,45 +7,84 @@
 
 @section('page-content')
     <div class="col-md-12">
-        <div class="col-md-6">
+        <div>
 
+            <div class='table-responsive'>
+                <h3>Report Type
+                    Date Range</h3>
+                <table class="table table-hover">
+                        @if($cases != null)
+                            <tr>
+                                <th>Location</th>
+                                <th>Total Hours Monitoring Location</th>
+                                <th>Guard Presence at Location (?? or list the names of the guards??)</th>
+                                <th>Case Notes:</th>
+                                <th></th>
+                                <th>Actions</th>
+                            </tr>
+                    @foreach($cases as $case)
+                    <tr>
+                                <td>todo</td>
+                                <td>todo</td>
+                                <td>todo</td>
+                                <td>{{$case->description}}</td>
+                                <td>{{$case->title}}</td>
+                                <td>
+                                    <a href="#">Edit</a> | <a href="#" style="color: #cc0000;">Delete</a>
+                                </td>
+                            </tr>
+                    @endforeach
 
-            <table class="table">
-                @foreach($cases as $case)
-                <tr>
-                    <th>
-                        Case Title:
-                    </th>
+                @else
+                            <tr>
+                                <th>Location</th>
+                                <th>Total Hours Monitoring Location</th>
+                                <th>Guard Presence at Location (?? or list the names of the guards??)</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>todo</td>
+                                <td>todo</td>
+                                <td>todo</td>
+                                <td>
+                                    <a href="#">Edit</a> | <a href="#" style="color: #cc0000;">Delete</a>
+                                </td>
+                            </tr>
+                        @endif
+                </table>
+            </div>
 
-                    <td>
-                        {{$case->id}}
-                    </td>
-
-                </tr>
-                <tr>
-                    <th>
-                        Last Name:
-                    </th>
-                    <td>
-                        {{$case->title}}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Date of Birth:
-                    </th>
-                    <td>
-                        {{$case->report_case_id}}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Gender:
-                    </th>
-                    <td>
-                        {{$case->description}}
-                    </td>
-                </tr>
+            {{--<table class="table">--}}
+                {{----}}
+                {{----}}
+                {{----}}
+                {{----}}
+                {{--@foreach($cases as $case)--}}
+                {{--<tr>--}}
+                    {{--@if($cases->)--}}
+                    {{--<th>--}}
+                        {{--Case Title:--}}
+                    {{--</th>--}}
+                    {{--<td>--}}
+                        {{--{{$case->title}}--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+                {{--<tr>--}}
+                    {{--<th>--}}
+                        {{--Date of Birth:--}}
+                    {{--</th>--}}
+                    {{--<td>--}}
+                        {{--{{$case->report_case_id}}--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+                {{--<tr>--}}
+                    {{--<th>--}}
+                        {{--Case Description:--}}
+                    {{--</th>--}}
+                    {{--<td>--}}
+                        {{--{{$case->description}}--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
 
                 {{--<tr>--}}
                     {{--<th>--}}
@@ -71,8 +110,8 @@
                         {{--{{$employee->address}}--}}
                     {{--</td>--}}
                 {{--</tr>--}}
-                @endforeach
-            </table>
+                {{--@endforeach--}}
+            {{--</table>--}}
 
 
             {{--<div class="form-group form-buttons">--}}
