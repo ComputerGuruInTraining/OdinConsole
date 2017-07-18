@@ -37,14 +37,14 @@
                 @foreach($reports as $report)
                     <tr>
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
-                        <td>{{$report->date_start}} - {{$report->date_end}}</td>
+                        <td>{{$report->form_start}} - {{$report->form_end}}</td>
                         {{--<td></td>--}}
                         {{--<td>{{$report->total_hours}}</td>--}}
                         {{--<td>{{$report->total_guards}}</td>--}}
                         {{--<td></td>--}}
 
                         <td>
-                            <a href="/reports/{{$report->id}}">View</a> | <a href="#" style="color: #cc0000;">Delete</a>
+                            <a href="/reports/{{$report->id}}">View</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #cc0000;">Delete</a>
                         </td>
                     </tr>
                 @endforeach

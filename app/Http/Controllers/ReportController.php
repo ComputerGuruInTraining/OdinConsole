@@ -7,6 +7,7 @@ use GuzzleHttp;
 use Redirect;
 use Carbon\Carbon;
 use Input;
+use DateTime;
 
 
 class ReportController extends Controller
@@ -39,7 +40,26 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-                return view('report/reports')->with('reports', $reports);
+                foreach($reports as $i => $item){
+                    //add the extracted date to each of the objects and format date
+                    $s = $item->date_start;
+
+                    $sdt = new DateTime($s);
+                    $sdate = $sdt->format('m/d/Y');
+
+                    $e = $item->date_end;
+
+                    $edt = new DateTime($e);
+                    $edate = $edt->format('m/d/Y');
+
+                    $reports[$i]->form_start = $sdate;
+                    $reports[$i]->form_end = $edate;
+                }
+
+                return view('report/reports')->with(array(
+                    'reports' => $reports,
+                    'url' => 'reports'
+                ));
 
             }
             else {
@@ -56,36 +76,6 @@ class ReportController extends Controller
         }
     }
 
-
-//    public function oauth(){
-//        $client = new GuzzleHttp\Client;
-//
-//        try {
-//            $response = $client->post('http://odinlite.com/public/oauth/token', [
-//                'form_params' => [
-//                    'client_id' => 2,
-//                    // The secret generated when you ran: php artisan passport:install
-//                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-//                    'grant_type' => 'password',
-//                    'username' => 'bernadettecar77@hotmail.com',
-//                    'password' => 'password',
-//                    'scope' => '*',
-//                ]
-//            ]);
-//
-//            $auth = json_decode((string)$response->getBody());
-//
-//            //TODO: You'd typically save this payload in the session
-//            $this->accessToken = $auth->access_token;
-//
-//        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo 'oauth fn error';
-//        }
-//    }
-//
-//    public function accessToken(){
-//       return $this->accessToken;
-//    }
     /**
      * Show the form for creating a new resource.
      *
@@ -162,18 +152,6 @@ class ReportController extends Controller
                 $dateFrom = jobDateTime($dateFromStr, "00:00");
                 $dateTo = jobDateTime($dateToStr, "00:00");
 
-//                dd($location, $type, $dateFrom, $dateTo);
-
-                //process start date and time before adding to db
-                //function in functions.php
-//                $strStart = jobDateTime($dateStart, $timeStart);
-//                $strEnd = jobDateTime($dateEnd, $timeEnd);
-
-//        $this->oauth();
-
-                //retrieve token needed for authorized http requests
-//        $token = $this->accessToken();
-
                 $token = session('token');
                 $compId = session('compId');
                 $client = new GuzzleHttp\Client;
@@ -194,7 +172,6 @@ class ReportController extends Controller
 
                 $success = GuzzleHttp\json_decode((string)$response->getBody());
 
-               // dd($success);
                 return view('confirm-create-general')
                     ->with(array(
                     'theMsg' => 'The report has been successfully generated',
@@ -233,7 +210,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/reports/'.$id, [
+                $response = $client->get('http://odinlite.com/public/api/report/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -241,36 +218,78 @@ class ReportController extends Controller
 
                 $report = json_decode((string)$response->getBody());
 
-                //ie no value returned from the api
-                if(gettype($report) == 'object'){
-                    $err = 'There were no case notes created during the period that the selected report covers.';
-                    $errors = collect($err);
-                    return Redirect::to('/reports')->with('errors', $errors);
-                }
-                //ie an array returned from the api
-//                else if(count($report) == 0){
-////                    dd($report);
-//                    return Redirect::to('/reports')->with('errors', $errors);
-//
-//                }
+                if ($report->type == 'Case Notes') {
 
-                else{
-                    return view('report/case_notes/show')->with('cases', $report);
+                    $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
+                        'headers' => [
+                            'Authorization' => 'Bearer ' . $token,
+                        ]
+                    ]);
+
+                    $cases = json_decode((string)$response->getBody());
+
+                    if($cases->success == false) {
+                        $err = 'There were no case notes created during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+                    else {
+
+                        //format dates to be 3rd January 2107 for report date range
+                        //  foreach($report as $i => $item){
+                        //add the extracted date to each of the objects and format date
+                        $s = $report->date_start;
+
+                        $sdt = new DateTime($s);
+                        $sdate = $sdt->format('m/d/Y');
+
+                        $e = $report->date_end;
+
+                        $edt = new DateTime($e);
+                        $edate = $edt->format('m/d/Y');
+
+                       // $report->put('start', $sdate);
+                      //  $report->put('end', $edate);
+                        //  }
+
+                        //format dates to be mm/dd/yyyy for case notes
+                        foreach($cases->reportCaseNotes as $i => $item){
+                            //add the extracted date to each of the objects and format date
+                            $s = $cases->reportCaseNotes[$i]->created_at;
+
+                            $sdt = new DateTime($s);
+                            $date = $sdt->format('m/d/Y');
+
+                            $cases->reportCaseNotes[$i]->case_date = $date;
+                        }
+
+
+                        return view('report/case_notes/show')->with(array('cases' => $cases,
+                            'report' => $report,
+                            'start' => $sdate,
+                            'end' => $edate
+                        ));
+
+
+                    }
                 }
-            }
-            //ie no session token exists and therefore the user is not authenticated
+
+                /*********else if the report->type == ??***********/
+
+
+            } //ie no session token exists and therefore the user is not authenticated
             else {
                 return Redirect::to('/login');
             }
         }
-        //get request resulted in an error
+        //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
         }
         catch (\ErrorException $error) {
-            echo $error;
-            return Redirect::to('/login');
+            $errors = collect($error);
+            return Redirect::to('/reports')->with('errors', $errors);
         }
     }
 
@@ -280,10 +299,10 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+//    public function edit($id)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -292,10 +311,10 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+//    public function update(Request $request, $id)
+//    {
+//        //
+//    }
 
     /**
      * Remove the specified resource from storage.
@@ -305,6 +324,34 @@ class ReportController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            if (session()->has('token')) {
+
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $client->delete('http://odinlite.com/public/api/reports/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+//                $responseMsg = json_decode((string)$response->getBody());
+
+                $theAction = 'You have successfully deleted the report';
+
+                return view('confirm')->with('theAction', $theAction);
+            }
+            //user not authenticated
+            else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/reports');
+        }
     }
 }
