@@ -42,10 +42,9 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 //                dd($users);
-//                return view('user.index', compact('users'));
+                return view('user.index', compact('users'));
 
-//                return view(user.index);
-                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
+//                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
 
             }
             else {
@@ -163,9 +162,43 @@ class UserController extends Controller
 	 */
 	public function edit($id)
 	{
-		$user = User::find($id);
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-		return View::make('user.edit', [ 'user' => $user ]);
+                $client = new GuzzleHttp\Client;
+
+
+                $response = $client->get('http://odinlite.com/public/api/user/' . $id . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $user = json_decode((string)$response->getBody());
+
+                return view('user/edit')->with('user', $user);
+
+            } else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $errors = collect($err);
+            return view('user/create')->with('errors', $errors);
+        }
+        catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('user/create')->with('errors', $errors);
+        }
+//		$user = User::find($id);
+//
+//		return View::make('user.edit', [ 'user' => $user ]);
 	}
 
 	/**
@@ -176,17 +209,81 @@ class UserController extends Controller
 	 */
 	public function update($id)
 	{
-		$user = User::find($id);
 
-		$user->first_name = Input::get('first_name');
-		$user->last_name  = Input::get('last_name');
-		$user->username   = Input::get('username');
-		$user->email      = Input::get('email');
-		$user->password   = Hash::make(Input::get('password'));
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-		$user->save();
 
-		return Redirect::to('/user');
+
+
+                //get the data from the form
+                $first_name = Input::get('first_name');
+                $last_name = Input::get('last_name');
+                $email = Input::get('email');
+
+                $token = $this->accessToken();
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->put('http://odinlite.com/public/api/user/'.$id.'/edit', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('first_name' => $first_name, 'last_name' => $last_name,
+                            'email' => $email
+                        )
+                    )
+                );
+
+                $user = json_decode((string)$response->getBody());
+
+                //direct user based on whether record updated successfully or not
+                if($user->success == true)
+                {
+                    $theAction = 'You have successfully edited the location';
+
+                    return view('confirm')->with(array('theAction' => $theAction));
+                }
+                else{
+                    return redirect()->route("user.edit");
+                }
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Please provide valid changes';
+            $errors = collect($err);
+            echo($err);
+            return Redirect::to('/locations');
+        }
+        catch (\ErrorException $error) {
+            //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
+            if ($error->getMessage() == 'Undefined offset: 0') {
+                $e = 'Please provide a valid address';
+                $errors = collect($e);
+                echo($error);
+                return Redirect::to('/locations');
+//fixme: proper validation: ->with('errors', $errors)
+            } else {
+                echo($error);
+                return Redirect::to('/locations');
+            }
+        }
+//
+//        $user = User::find($id);
+//
+//		$user->first_name = Input::get('first_name');
+//		$user->last_name  = Input::get('last_name');
+//		$user->username   = Input::get('username');
+//		$user->email      = Input::get('email');
+//		$user->password   = Hash::make(Input::get('password'));
+//
+//		$user->save();
+//
+//		return Redirect::to('/user');
 	}
 
 	/**
