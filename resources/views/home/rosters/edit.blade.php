@@ -57,11 +57,11 @@
                     <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
                         {{--Highlight assigned_shift_employees--}}
                         @foreach($myEmployees as $myEmployee)
-                                 <option value="{{$myEmployee->mobile_user_id}}" selected multiple>{{$myEmployee->mobile_user_id}}</option>
+                                 <option value="{{$myEmployee->mobile_user_id}}" selected multiple>{{$myEmployee->employee}}</option>
                         @endforeach
                         {{--List all the employees:--}}
                         @foreach($empList as $emp)
-                                    <option value="{{$emp->id}}">{{$emp->first_name}}</option>
+                                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                         @endforeach
                     </select>
                 </div>

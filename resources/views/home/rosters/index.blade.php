@@ -82,7 +82,7 @@
                                     @else
                                         <td></td>
                                     @endif
-                                    <td>{{$shift->mobile_user_id}}</td>
+                                    <td>{{$shift->employee}}</td>
                                     <td>
                                         <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$shift->assigned_shift_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
                                     </td>

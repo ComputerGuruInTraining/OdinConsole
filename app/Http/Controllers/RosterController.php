@@ -8,13 +8,13 @@ use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp;
 use Redirect;
-use DateTimeZone;
+//use DateTimeZone;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
     //global class variables
-    protected $accessToken;
+    //protected $accessToken;
 
     /**
      * Display a listing of the resource.
@@ -26,83 +26,74 @@ class RosterController extends Controller
     {
         //TODO: HIGH v1 complete: only retrieve assigned shifts for the users associated with the company id
         try {
-            $this->oauth();
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-            //retrieve token needed for authorized http requests
-            $token = $this->accessToken();
+                $client = new GuzzleHttp\Client;
 
-            $client = new GuzzleHttp\Client;
+//                $compId = session('compId');
 
-            $response = $client->get('http://odinlite.com/public/api/assignedshifts/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+//                $this->oauth();
 
-            $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+                //retrieve token needed for authorized http requests
+//            $token = $this->accessToken();
 
-            foreach($assigned as $i => $item){
-                //add the extracted date to each of the objects and format date
-                $s = $item->start;
-                $sdt = new DateTime($s);
-                $sdate = $sdt->format('m/d/Y');
-                $stime = $sdt->format('g.i a');
-                $e = $item->end;
-                $edt = new DateTime($e);
-                $edate = $edt->format('m/d/Y');
-                $etime = $edt->format('g.i a');
+//            $client = new GuzzleHttp\Client;
 
-                $assigned[$i]->start_date = $sdate;
-                $assigned[$i]->start_time = $stime;
-                $assigned[$i]->end_time = $etime;
-                dd($assigned[$i]);
-                //save date and location into a new object property for later use (ie to reject duplicate values for the view)
-                $assigned[$i]->unique_date = $assigned[$i]->start_date;
-                $assigned[$i]->unique_locations = $assigned[$i]->location;
+                $companyId = session('compId');
 
-                //format time
-//                $assigned[$i]->start_time = stringTime($assigned[$i]->start_time);
-//                $assigned[$i]->end_time = stringTime($assigned[$i]->end_time);
+                $response = $client->get('http://odinlite.com/public/api/assignedshifts/list/' . $companyId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+
+                foreach ($assigned as $i => $item) {
+                    //add the extracted date to each of the objects and format date
+                    $s = $item->start;
+                    $sdt = new DateTime($s);
+                    $sdate = $sdt->format('m/d/Y');
+                    $stime = $sdt->format('g.i a');
+                    $e = $item->end;
+                    $edt = new DateTime($e);
+                    $edate = $edt->format('m/d/Y');
+                    $etime = $edt->format('g.i a');
+
+                    $assigned[$i]->start_date = $sdate;
+                    $assigned[$i]->start_time = $stime;
+                    $assigned[$i]->end_time = $etime;
+                    //save date and location into a new object property for later use (ie to reject duplicate values for the view)
+                    $assigned[$i]->unique_date = $assigned[$i]->start_date;
+                    $assigned[$i]->unique_locations = $assigned[$i]->location;
+
+                }
+
+                //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
+                $assigned = $this->compareValues($assigned, 'start_date', 'unique_date',
+                    'unique_locations', 'checks', 'start_time', 'end_time');
+
+                //display as midnight if time == 12am
+                foreach ($assigned as $i => $item) {
+
+                    $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
+                    $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
+
+                }
+
+                //change to collection datatype from array for using groupBy fn
+                $assigned = collect($assigned);
+
+                //group by date for better view
+                $assigned = $this->groupByDate($assigned);
+
+                return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             }
-
-            //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
-            $assigned = $this->compareValues($assigned, 'start_date', 'unique_date',
-                'unique_locations', 'checks', 'start_time', 'end_time');
-
-            //display as midnight if time == 12am
-            foreach($assigned as $i => $item) {
-
-                $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
-                $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
-
-                dd($assigned[$i]->start_time);
+            else{
+                return Redirect::to('/login');
             }
-
-            //change to collection datatype from array for using groupBy fn
-            $assigned = collect($assigned);
-
-            //group by date for better view
-            $assigned = $this->groupByDate($assigned);
-            $tztime = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
-            $tztime2 = Carbon::createFromFormat('Y-m-d H:i:s', '2017-03-04 10:00:00', 'America/Chicago');
-            $tztime->tz = 'Australia/Sydney';
-            //$tztime2->tz =
-            $diff = $tztime->diffInHours($tztime2);
-            //dd($diff);
-
-            $now = Carbon::now();
-
-            $nowInLondonTz = Carbon::now(new DateTimeZone('Europe/London'));
-
-            $diff = $now->diffInHours($nowInLondonTz);
-
-//            dd($now->diffInHours($nowInLondonTz));
-$dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
-            $dtVancouver = Carbon::createFromDate(2000, 1, 1, 'Australia/Sydney');
-            dd($dtOttawa->diffInHours($dtVancouver));
-
-//dd($diff);
-            return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
@@ -111,37 +102,37 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
         }
     }
 
-    public function oauth(){
-        $client = new GuzzleHttp\Client;
-
-        try {
-            $response = $client->post('http://odinlite.com/public/oauth/token', [
-                'form_params' => [
-                    'client_id' => 2,
-                    // The secret generated when you ran: php artisan passport:install
-                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                    'grant_type' => 'password',
-                    'username' => 'johnd@exampleemail.com',
-                    'password' => 'secret',
-                    'scope' => '*',
-                ]
-            ]);
-
-            $auth = json_decode((string)$response->getBody());
-           // ($auth->access_token);
-
-            $this->accessToken = $auth->access_token;
-            //dd($this->accessToken);
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return view('admin_template');
-        }
-    }
-
-    public function accessToken(){
-        return $this->accessToken;
-    }
+//    public function oauth(){
+//        $client = new GuzzleHttp\Client;
+//
+//        try {
+//            $response = $client->post('http://odinlite.com/public/oauth/token', [
+//                'form_params' => [
+//                    'client_id' => 2,
+//                    // The secret generated when you ran: php artisan passport:install
+//                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+//                    'grant_type' => 'password',
+//                    'username' => 'johnd@exampleemail.com',
+//                    'password' => 'secret',
+//                    'scope' => '*',
+//                ]
+//            ]);
+//
+//            $auth = json_decode((string)$response->getBody());
+//           // ($auth->access_token);
+//
+//            $this->accessToken = $auth->access_token;
+//            //dd($this->accessToken);
+//
+//        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            echo $e;
+//            return view('admin_template');
+//        }
+//    }
+//
+//    public function accessToken(){
+//        return $this->accessToken;
+//    }
 
     /**
      * Show the form for creating a new resource.
@@ -153,30 +144,38 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
     {
         try {
            // $this->oauth();
-            $token = oauth();
+//            $token = oauth();
             //retrieve token needed for authorized http requests
             //$token = $this->accessToken();//null if don't call oauth fn each request
 
-            $client = new GuzzleHttp\Client;
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+                $compId = session('compId');
 
-            $response = $client->get('http://odinlite.com/public/api/users/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $client = new GuzzleHttp\Client;
 
-            $employees = GuzzleHttp\json_decode((string)$response->getBody());
+                $response = $client->get('http://odinlite.com/public/api/users/list/'.$compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $response2 = $client->get('http://odinlite.com/public/api/locations/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $employees = GuzzleHttp\json_decode((string)$response->getBody());
 
-            $locations = GuzzleHttp\json_decode((string)$response2->getBody());
+                $response2 = $client->get('http://odinlite.com/public/api/locations/list/'.$compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            return view('home/rosters/create')->with(array('empList' => $employees, 'locList' => $locations));
+                $locations = GuzzleHttp\json_decode((string)$response2->getBody());
 
+                return view('home/rosters/create')->with(array('empList' => $employees, 'locList' => $locations));
+            }
+            else{
+                return Redirect::to('/login');
+            }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
@@ -195,21 +194,34 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
     public function store(Request $request)
     {
         //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
-        $this->validate($request, [
-        'title' => 'required|max:255',
-        'desc' => 'required|max:255',
-        'employees' => 'required',
-        'locations' => 'required',
-        'startDateTxt' => 'required',
-        'startTime' => 'required',
-        'endDateTxt' => 'required',
-        'endTime' => 'required'
-        ]);
+        try {
+            $this->validate($request, [
+                'title' => 'required|max:255',
+                'desc' => 'required|max:255',
+                'employees' => 'required',
+                'locations' => 'required',
+                'startDateTxt' => 'required',
+                'startTime' => 'required',
+                'endDateTxt' => 'required',
+                'endTime' => 'required'
+            ]);
 
-           //get the data from the form and perform necessary calculations prior to inserting into db
-           $dateStart = $this->formData($request);
+            //get the data from the form and perform necessary calculations prior to inserting into db
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
 
-           return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                $dateStart = $this->formData($request);
+            } else {
+                return Redirect::to('/login');
+            }
+
+            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
+            return Redirect::to('/rosters');
+        }
 
     }
 
@@ -224,12 +236,10 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
         //TODO: rosters for a date-range
         $roster_id = 1;
 
-        //TODO: retrieve from user
-        $added_id = 1;
+        $token = session('token');
+        $compId = session('compId');
 
-        //get data from form for non laravel validated inputs
         $dateStart = $request->input('startDateTxt');
-//        $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
         $timeStart = Input::get('startTime');//hh:mm
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
         $timeEnd = Input::get('endTime');//hh:mm
@@ -239,10 +249,10 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
         $strStart = jobDateTime($dateStart, $timeStart);
         $strEnd = jobDateTime($dateEnd, $timeEnd);
 
-        $this->oauth();
+//        $this->oauth();
 
         //retrieve token needed for authorized http requests
-        $token = $this->accessToken();
+//        $token = $this->accessToken();
 
         $client = new GuzzleHttp\Client;
 
@@ -254,7 +264,7 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
                 'json' => array(
                     'checks' => $checks, 'start' => $strStart,
                     'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
-                    'added_id' => $added_id, 'employees' => $employeeArray, 'locations' => $locationArray
+                    'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
                 )
             )
         );
@@ -293,68 +303,78 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
     public function edit($id)
     {
         try {
-            $token = oauth();
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+                $compId = session('compId');
+
+//            $token = oauth();
 
 //            $this->oauth();
 //
 //            $token = $this->accessToken();
 
-            $client = new GuzzleHttp\Client;
+                $client = new GuzzleHttp\Client;
 
-            $response = $client->get('http://odinlite.com/public/api/assignedshifts/'.$id.'/edit', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $response = $client->get('http://odinlite.com/public/api/assignedshifts/' . $id . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+                $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-            $responseUsers = $client->get('http://odinlite.com/public/api/users/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $responseUsers = $client->get('http://odinlite.com/public/api/users/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $employees = GuzzleHttp\json_decode((string)$responseUsers->getBody());
+                $employees = GuzzleHttp\json_decode((string)$responseUsers->getBody());
 
-            $responseLocs = $client->get('http://odinlite.com/public/api/locations/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $responseLocs = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $locations = GuzzleHttp\json_decode((string)$responseLocs->getBody());
+                $locations = GuzzleHttp\json_decode((string)$responseLocs->getBody());
 
-            $assigned = collect($assigned);
-            $locationsUnique = $assigned->unique('location_id');
-            $employeesUnique = $assigned->unique('mobile_user_id');
+                $assigned = collect($assigned);
+
+                //to populate the select lists with the locations and employees currently assigned to the shift
+                $locationsUnique = $assigned->unique('location_id');
+                $employeesUnique = $assigned->unique('mobile_user_id');
 
 //            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start, 'America/Chicago');
 //            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end, 'America/Chicago');
-            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
-            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
-            $startDate = $carbonStart->format('m/d/Y');
-            $startTime = ((string)$carbonStart->format('H:i'));
-            $endDate = $carbonEnd->format('m/d/Y');
-            $endTime = ((string)$carbonEnd->format('H:i'));
+                $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
+                $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
+                $startDate = $carbonStart->format('m/d/Y');
+                $startTime = ((string)$carbonStart->format('H:i'));
+                $endDate = $carbonEnd->format('m/d/Y');
+                $endTime = ((string)$carbonEnd->format('H:i'));
 
-            return view('home/rosters/edit')->with(array('empList' => $employees,
-                'locList' => $locations,
-                'assigned' => $assigned,
-                'myLocations' => $locationsUnique,
-                'myEmployees' => $employeesUnique,
-                'startDate' => $startDate,
-                'startTime' => $startTime,
-                'endDate' => $endDate,
-                'endTime' => $endTime
-            ));
+                return view('home/rosters/edit')->with(array('empList' => $employees,
+                    'locList' => $locations,
+                    'assigned' => $assigned,
+                    'myLocations' => $locationsUnique,
+                    'myEmployees' => $employeesUnique,
+                    'startDate' => $startDate,
+                    'startTime' => $startTime,
+                    'endDate' => $endDate,
+                    'endTime' => $endTime
+                ));
+            }
+            else{
+                return Redirect::to('/login');
+            }
 
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
                 echo $e;
                 return Redirect::to('/rosters');
         }
-
     }
 
     /**
@@ -368,63 +388,72 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
     public function update(Request $request, $id)
     {
         try {
-            $this->validate($request, [
-                //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
-                'title' => 'required|max:255',
-                'desc' => 'required|max:255',
-                'employees' => 'required',
-                'locations' => 'required',
-                'startDateTxt' => 'required',
-                'startTime' => 'required',
-                'endDateTxt' => 'required',
-                'endTime' => 'required'
-            ]);
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+                $compId = session('compId');
 
-            //get user input
-            $locations = Input::get('locations');
-            $employees = Input::get('employees');
-            $checks = Input::get('checks');
-            $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
-            $timeStart = Input::get('startTime');//hh:mm
-            $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
-            $timeEnd = Input::get('endTime');//hh:mm
-            $title = Input::get('title');
-            $desc = Input::get('desc');
+                $this->validate($request, [
+                    //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
+                    'title' => 'required|max:255',
+                    'desc' => 'required|max:255',
+                    'employees' => 'required',
+                    'locations' => 'required',
+                    'startDateTxt' => 'required',
+                    'startTime' => 'required',
+                    'endDateTxt' => 'required',
+                    'endTime' => 'required'
+                ]);
 
-            //process start date and time before adding to db
-            $strStart = jobDateTime($dateStart, $timeStart);
-            $strEnd = jobDateTime($dateEnd, $timeEnd);
+                //get user input
+                $locations = Input::get('locations');
+                $employees = Input::get('employees');
+                $checks = Input::get('checks');
+                $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
+                $timeStart = Input::get('startTime');//hh:mm
+                $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
+                $timeEnd = Input::get('endTime');//hh:mm
+                $title = Input::get('title');
+                $desc = Input::get('desc');
+
+                //process start date and time before adding to db
+                $strStart = jobDateTime($dateStart, $timeStart);
+                $strEnd = jobDateTime($dateEnd, $timeEnd);
 
 //            $title = 'Security at Several Locations';
 //            $desc = 'Provide security services at several locations throughout Austin';
-            $roster_id = 1;
-            $added_id = 1;
+                $roster_id = 1;
+                $added_id = 1;
 
-            //request to api
-            $this->oauth();
+                //request to api
+//                $this->oauth();
 
-            //retrieve token needed for authorized http requests
-            $token = $this->accessToken();
+                //retrieve token needed for authorized http requests
+//                $token = $this->accessToken();
 
-            $client = new GuzzleHttp\Client;
+                $client = new GuzzleHttp\Client;
 
-            $response = $client->put('http://odinlite.com/public/api/assignedshifts/'.$id.'/edit', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
-                    ),
-                    'json' => array('checks' => $checks, 'start' => $strStart,
-                        'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
-                        'added_id' => $added_id, 'employees' => $employees, 'locations' => $locations
+                $response = $client->put('http://odinlite.com/public/api/assignedshifts/' . $id . '/edit', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('checks' => $checks, 'start' => $strStart,
+                            'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
+                            'compId' => $compId, 'employees' => $employees, 'locations' => $locations
 
+                        )
                     )
-                )
-            );
+                );
 
-            $updated = json_decode((string)$response->getBody());
+                $updated = json_decode((string)$response->getBody());
 
-            $theAction = 'You have successfully edited the shift';
-            return view('confirm')->with(array('theAction' => $theAction));
+                $theAction = 'You have successfully edited the shift';
+                return view('confirm')->with(array('theAction' => $theAction));
+            }
+            else{
+                return Redirect::to('/login');
+            }
         }
         catch(GuzzleHttp\Exception\BadResponseException $e){
             echo $e;
@@ -446,22 +475,24 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
     public function destroy($id)
     {
         try {
-            $this->oauth();
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-            //retrieve token needed for authorized http requests
-            $token = $this->accessToken();
+                $client = new GuzzleHttp\Client;
 
-            $client = new GuzzleHttp\Client;
+                $response = $client->delete('http://odinlite.com/public/api/assignedshift/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                    ]
+                ]);
 
-            $response = $client->delete('http://odinlite.com/public/api/assignedshift/'.$id, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
-                ]
-            ]);
-
-            $theAction = 'You have successfully deleted the shift';
-            return view('confirm')->with('theAction', $theAction);
-
+                $theAction = 'You have successfully deleted the shift';
+                return view('confirm')->with('theAction', $theAction);
+            }
+            else{
+                return Redirect::to('/login');
+            }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
@@ -519,6 +550,4 @@ $dtOttawa = Carbon::createFromDate(2000, 1, 1, 'America/Chicago');
             }
         return $jobs;
     }
-
-
 }
