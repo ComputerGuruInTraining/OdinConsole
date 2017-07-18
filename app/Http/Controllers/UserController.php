@@ -9,16 +9,13 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use GuzzleHttp;
+
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class UserController extends Controller
 {
-    public function __construct()
-	{
-		//$this->beforeFilter('auth');
-		$this->middleware('auth');
-	}
 
 	/**
 	 * Display a listing of the user.
@@ -27,9 +24,45 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-		$users = User::all();
 
-		return View::make('user.index', ['users' => $users]);
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $compId = session('compId');
+
+                $response = $client->get('http://odinlite.com/public/api/users/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $users = json_decode((string)$response->getBody());
+//                dd($users);
+//                return view('user.index', compact('users'));
+
+//                return view(user.index);
+                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
+
+            }
+            else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return view('admin_template');
+        }
+        catch (\ErrorException $error) {
+            echo $error;
+            return Redirect::to('/login');
+        }
+//		$users = User::all();
+
+//		return View::make('user.index', ['users' => $users]);
 	}
 
 	/**
@@ -39,7 +72,14 @@ class UserController extends Controller
 	 */
 	public function create()
 	{
-		return View::make('user.create');
+//		return View::make('user.create');
+
+        if (session()->has('token')) {
+            return view('user/create');
+        }
+        else {
+            return Redirect::to('/login');
+        }
 	}
 
 	/**
@@ -49,17 +89,70 @@ class UserController extends Controller
 	 */
 	public function store()
 	{
-		$user = new User;
+//		$user = new User;
+//
+//		$user->first_name = Input::get('first_name');
+//		$user->last_name  = Input::get('last_name');
+//		$user->username   = Input::get('username');
+//		$user->email      = Input::get('email');
+//		$user->password   = Hash::make(Input::get('password'));
+//
+//		$user->save();
+//
+//		return Redirect::to('/user');
 
-		$user->first_name = Input::get('first_name');
-		$user->last_name  = Input::get('last_name');
-		$user->username   = Input::get('username');
-		$user->email      = Input::get('email');
-		$user->password   = Hash::make(Input::get('password'));
 
-		$user->save();
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-		return Redirect::to('/user');
+                $client = new GuzzleHttp\Client;
+
+                $compId = session('compId');
+
+////            validate data
+//                $this->validate($request, [
+//                    'name' => 'required|max:255',
+//                    'address' => 'required|max:255',
+//                ]);
+
+//            //gather data from input fields
+                $first_name = Input::get('first_name');
+                $last_name = Input::get('last_name');
+               $email = Input::get('email');
+               $password = Hash::make(Input::get('password'));
+
+                $response = $client->post('http://odinlite.com/public/api/user', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('first_name' => $first_name, 'last_name' => $last_name,
+                            'email' => $email, 'password' => $password, 'company_id' => $compId
+                        )
+                    )
+                );
+                $users = json_decode((string)$response->getBody());
+
+                //display added users
+                return view('user.index',compact('users'));
+//                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $errors = collect($err);
+            return view('user/create')->with('errors', $errors);
+        }
+        catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('user/create')->with('errors', $errors);
+        }
 	}
 
 	/**

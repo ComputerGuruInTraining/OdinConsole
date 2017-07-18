@@ -27,10 +27,6 @@ Route::resource('employees', 'EmployeeController');
 
 Route::get('/dashboard', 'DashboardController@index');
 
-//Route::get('/dashboard', 'DashboardController@testFunction');
-
-Route::resource('/add_user', 'UserController@store');
-
 Route::get('/login', 'HomeController@getLogin');
 
 Route::get('logout', 'HomeController@getLogout');
