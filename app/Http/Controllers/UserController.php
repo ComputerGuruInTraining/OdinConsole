@@ -34,7 +34,7 @@ class UserController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/users/list/' . $compId, [
+                $response = $client->get('http://odinlite.com/public/api/user/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -59,9 +59,7 @@ class UserController extends Controller
             echo $error;
             return Redirect::to('/login');
         }
-//		$users = User::all();
 
-//		return View::make('user.index', ['users' => $users]);
 	}
 
 	/**

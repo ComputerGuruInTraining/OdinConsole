@@ -12,6 +12,9 @@ use Session;
 use Redirect;
 use GuzzleHttp;
 
+use App\Utlities\ApiAuth;
+
+
 class EmployeeController extends Controller
 {
     /**
@@ -21,67 +24,47 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-
         try {
-            $token = oauth();
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-            //retrieve token needed for authorized http requests
-            //  $token = $this->accessToken();
+                $client = new GuzzleHttp\Client;
 
-            $client = new GuzzleHttp\Client;
+                $compId = session('compId');
 
-            //TODO: v1 working HIGH: list needs to get only those locations associated with company
-            $response = $client->get('http://odinlite.com/public/api/employees/list', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
-                ]
-            ]);
+                $response = $client->get('http://odinlite.com/public/api/employees/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $employees = json_decode((string)$response->getBody());
+                $employees = json_decode((string)$response->getBody());
+                return view('employee.employees', compact('employees'));
+//                return view ('employee.employees', compact('employees'));
 
-            return view ('employee.employees', compact('employees'));
-//            return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
+//                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
 
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            }
+            else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return view('admin_template');
         }
+        catch (\ErrorException $error) {
+            echo $error;
+            return Redirect::to('/login');
+        }
+
 //      $employees = Employee::all();
 //      return view('employee.employees', compact('employees'));
 
     }
 
-    public function oauth(){
-        $client = new GuzzleHttp\Client;
 
-        try {
-            $response = $client->post('http://odinlite.com/public/oauth/token', [
-                'form_params' => [
-                    'client_id' => 2,
-                    // The secret generated when you ran: php artisan passport:install
-                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                    'grant_type' => 'password',
-                    'username' => 'johnd@exampleemail.com',
-                    'password' => 'secret',
-                    'scope' => '*',
-                ]
-            ]);
-
-            $auth = json_decode((string)$response->getBody());
-
-            //TODO: You'd typically save this payload in the session
-            $this->accessToken = $auth->access_token;
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return view('admin_template');
-        }
-    }
-
-    //TODO: move fn to a utility file or authservice file
-    public function accessToken(){
-        return $this->accessToken;
-    }
 
     /**
      * Show the form for creating a new resource.
