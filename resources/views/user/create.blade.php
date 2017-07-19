@@ -47,7 +47,7 @@
     </div>
 
     <div class='form-group'>
-        {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
+        {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
     </div>
 
     {{ Form::close() }}

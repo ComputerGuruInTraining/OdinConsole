@@ -28,11 +28,6 @@
     </div>
 
     <div class='form-group'>
-        {{ Form::label('username', 'Username') }}
-        {{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}
-    </div>
-
-    <div class='form-group'>
         {{ Form::label('email', 'Email') }}
         {{ Form::email('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
     </div>
@@ -48,7 +43,7 @@
     </div>
 
     <div class='form-group'>
-        {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
+        {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
     </div>
 
     {{ Form::close() }}

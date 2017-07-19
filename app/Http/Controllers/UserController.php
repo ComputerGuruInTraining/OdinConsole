@@ -88,19 +88,6 @@ class UserController extends Controller
 	 */
 	public function store()
 	{
-//		$user = new User;
-//
-//		$user->first_name = Input::get('first_name');
-//		$user->last_name  = Input::get('last_name');
-//		$user->username   = Input::get('username');
-//		$user->email      = Input::get('email');
-//		$user->password   = Hash::make(Input::get('password'));
-//
-//		$user->save();
-//
-//		return Redirect::to('/user');
-
-
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -135,7 +122,8 @@ class UserController extends Controller
                 $users = json_decode((string)$response->getBody());
 
                 //display added users
-                return view('user.index',compact('users'));
+                return Redirect::to('/user');
+
 //                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
             } else {
                 return Redirect::to('/login');
@@ -207,7 +195,7 @@ class UserController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update( $id)
 	{
 
         try {
@@ -215,15 +203,12 @@ class UserController extends Controller
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
-
-
-
                 //get the data from the form
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
                 $email = Input::get('email');
 
-                $token = $this->accessToken();
+//                $token = $this->accessToken();
 
                 $client = new GuzzleHttp\Client;
 
@@ -243,9 +228,10 @@ class UserController extends Controller
                 //direct user based on whether record updated successfully or not
                 if($user->success == true)
                 {
-                    $theAction = 'You have successfully edited the location';
+//                    $theAction = 'You have successfully edited the User detail';
 
-                    return view('confirm')->with(array('theAction' => $theAction));
+//                    return view('confirm')->with(array('theAction' => $theAction));
+                    return redirect()->route('user.index');
                 }
                 else{
                     return redirect()->route("user.edit");
@@ -259,31 +245,7 @@ class UserController extends Controller
             echo($err);
             return Redirect::to('/locations');
         }
-        catch (\ErrorException $error) {
-            //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
-            if ($error->getMessage() == 'Undefined offset: 0') {
-                $e = 'Please provide a valid address';
-                $errors = collect($e);
-                echo($error);
-                return Redirect::to('/locations');
-//fixme: proper validation: ->with('errors', $errors)
-            } else {
-                echo($error);
-                return Redirect::to('/locations');
-            }
-        }
-//
-//        $user = User::find($id);
-//
-//		$user->first_name = Input::get('first_name');
-//		$user->last_name  = Input::get('last_name');
-//		$user->username   = Input::get('username');
-//		$user->email      = Input::get('email');
-//		$user->password   = Hash::make(Input::get('password'));
-//
-//		$user->save();
-//
-//		return Redirect::to('/user');
+
 	}
 
 	/**
@@ -294,9 +256,37 @@ class UserController extends Controller
 	 */
 	public function destroy($id)
 	{
-		User::destroy($id);
+//		User::destroy($id);
+//
+//		return Redirect::to('/user');
 
-		return Redirect::to('/user');
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->delete('http://odinlite.com/public/api/user/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+//                $responseMsg = json_decode((string)$response->getBody());
+
+//                $theAction = 'You have successfully deleted the USER';
+                return Redirect::to('/user');
+//                return view('confirm')->with('theAction', $theAction);
+            } else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/user');
+        }
 	}
 
 }
