@@ -248,23 +248,28 @@ class ReportController extends Controller
                         $edt = new DateTime($e);
                         $edate = $edt->format('m/d/Y');
 
-                       // $report->put('start', $sdate);
-                      //  $report->put('end', $edate);
-                        //  }
-
                         //format dates to be mm/dd/yyyy for case notes
                         foreach($cases->reportCaseNotes as $i => $item){
                             //add the extracted date to each of the objects and format date
-                            $s = $cases->reportCaseNotes[$i]->created_at;
+                            $t = $cases->reportCaseNotes[$i]->created_at;
 
-                            $sdt = new DateTime($s);
-                            $date = $sdt->format('m/d/Y');
+                            $dt = new DateTime($t);
+                            $date = $dt->format('m/d/Y');
+                            $time = $dt->format('g.i a');
 
                             $cases->reportCaseNotes[$i]->case_date = $date;
+                            $cases->reportCaseNotes[$i]->case_time = $time;
+
+                            //change to collection datatype from array for using groupBy fn
+                            $caseNotes = collect($cases->reportCaseNotes);
+                            $groupCases = $caseNotes->groupBy('case_date');
+
                         }
 
 
+
                         return view('report/case_notes/show')->with(array('cases' => $cases,
+                            'groupCases' => $groupCases,
                             'report' => $report,
                             'start' => $sdate,
                             'end' => $edate
