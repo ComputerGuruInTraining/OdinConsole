@@ -43,8 +43,18 @@
                 </div>
 
                 <div class='form-group'>
-                    {{ Form::button('Create Account', ['class' => 'btn login-btns', 'style' => 'color: white; background-color: #663974; margin-right: 160px;']) }}
-                    {{ Form::submit('Login', ['class' => 'btn login-btns', 'style' => 'color: white; background-color: #663974; text-align: right;']) }}
+                    {{ Form::button('Create Account', ['class' => 'btn login-btns', 'style' => 'color: white; background-color: #663974;']) }}
+                    {{ Form::submit('Login', [
+                        'class' => 'btn login-btns',
+                         'style' => 'color: white;
+                         background-color: #663974;
+                         position: absolute;
+                         right: 70px;'
+                     ])
+                     }}
+                </div>
+                <div style="text-align: center;">
+                    <a href="/resetpw" style="color: #663974; text-align: center;">Forgot Password?</a>
                 </div>
             </div>
             {{ Form::close() }}
