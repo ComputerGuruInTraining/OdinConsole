@@ -118,6 +118,31 @@ Odin theming
     width: 15%;
 }
 
+/*Report Show Page Styling*/
+.report-title {
+    color: #663974;
+}
+
+#report-heading{
+    font-family: papyrus, courier, georgia;
+    font-size: xx-large;
+}
+
+.report-header{
+    padding-left: 15px;
+    color: #000;
+    font-size: larger;
+}
+
+#report-date{
+    color: #777;
+}
+
+.report-header-row{
+
+    line-height: 1.5;
+    vertical-align: top;
+}
 /*.group-location:nth-child(even){*/
     /*background-color: red;*/
 /*}*/

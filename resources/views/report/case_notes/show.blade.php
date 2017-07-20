@@ -9,14 +9,17 @@
     <div class="col-md-12">
         <div>
             <div class='table-responsive'>
-                <h3 class="report-title">{{$report->type}} Report</h3>
-                <div class="report-header">
-                    <h4>{{$start}} - {{$end}}</h4>
-                    <h4>Premise: {{$cases->location}}</h4>
-                    <h4>Hours Monitoring Premise:  {{$cases->reportCases->total_hours}}</h4>
-                    <h4>Guard Presence at Location: {{$cases->reportCases->total_guards}}</h4>
-                </div>
-                <table class="table table-hover">
+                <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
+                {{--<div class="report-header">--}}
+                <table class="col-md-12 margin-bottom">
+                    <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
+                    <tr class="report-header-row"><td>Premise:</td></td><td class="report-header">{{$cases->location}}</td></tr>
+                    <tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>
+                    <tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>
+                {{--</div>--}}
+                 </table>
+
+            <table class="table table-hover">
                     {{--if there are case notes to report--}}
                     <tr>
                         {{--<th>Premise</th>--}}
@@ -40,7 +43,7 @@
                             <tbody class="group-list">
 
                             <tr>
-                            <td>{{$index}}</td>
+                            <td class="report-title">{{$index}}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

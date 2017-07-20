@@ -241,12 +241,12 @@ class ReportController extends Controller
                         $s = $report->date_start;
 
                         $sdt = new DateTime($s);
-                        $sdate = $sdt->format('m/d/Y');
+                        $sdate = $sdt->format('jS F Y');
 
                         $e = $report->date_end;
 
                         $edt = new DateTime($e);
-                        $edate = $edt->format('m/d/Y');
+                        $edate = $edt->format('jS F Y');
 
                         //format dates to be mm/dd/yyyy for case notes
                         foreach($cases->reportCaseNotes as $i => $item){
