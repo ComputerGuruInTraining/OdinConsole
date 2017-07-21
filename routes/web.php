@@ -24,7 +24,7 @@ Route::get('/admin', function () {
 
 Route::resource('/user', 'UserController');
 
-Route::resource('employees', 'EmployeeController');
+Route::resource('/employees', 'EmployeeController');
 
 Route::get('/dashboard', 'DashboardController@index');
 
@@ -32,10 +32,7 @@ Route::get('/login', 'HomeController@getLogin');
 
 Route::get('logout', 'HomeController@getLogout');
 
-Route::resource('/employees', 'EmployeeController');
-
 Route::resource('/reports', 'ReportController');
-
 
 Route::resource('/rosters', 'RosterController');
 

@@ -40,10 +40,11 @@ class EmployeeController extends Controller
                 ]);
 
                 $employees = json_decode((string)$response->getBody());
-                return view('employee.employees', compact('employees'));
+//                dd($employees);
+//                return view('employee.employees', compact('employees'));
 //                return view ('employee.employees', compact('employees'));
 
-//                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
+                return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employee'));
 
             }
             else {
@@ -74,7 +75,12 @@ class EmployeeController extends Controller
     public function create()
     {
         //
-         return view('employee.add-employee');
+        if (session()->has('token')) {
+            return view('employee/add-employee');
+        }
+        else {
+            return Redirect::to('/login');
+        }
         // return view('home/employee/add-employee');
 
     }
@@ -87,21 +93,55 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employee = new Employee;
-        $employee->first_name = Input::get('first_name');
-        $employee->last_name = Input::get('last_name');
-        // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
-        $employee->dob = Input::get('dateOfBirth');
-//        $employee->dob= Carbon::parse($request->datepicker);
-        $employee->gender = Input::get('sex');
-        $employee->mobile = Input::get('mobile');
-        $employee->email = Input::get('email');
-        $employee->password=  Hash::make(Input::get('password'));
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-        $employee->save();
-        // redirect('employees');
-        $employees = Employee::latest()->get();
-        return view('employee.employees',compact('employees'));
+                $client = new GuzzleHttp\Client;
+
+                $compId = session('compId');
+
+//            //gather data from input fields
+                $this->validate($request, [
+                    'dateOfBirth' => 'required',
+                ]);
+
+                $first_name = Input::get('first_name');
+                $last_name = Input::get('last_name');
+                // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
+                $dob = Input::get('dateOfBirth');
+//        $employee->dob= Carbon::parse($request->datepicker);
+                $gender = Input::get('sex');
+                $mobile = Input::get('mobile');
+                $email = Input::get('email');
+                $password=  Hash::make(Input::get('password'));
+                $dob = jobDateTime($dob, "00:00");
+
+//                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client,$compId);
+                $response = $client->post('http://odinlite.com/public/api/employees', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('first_name' => $first_name, 'last_name' => $last_name,
+                            'dateOfBirth' => $dob, 'sex' => $gender,
+                            'mobile' => $mobile,'email'=>$email,'password'=>$password, 'company_id' => $compId
+                        )
+                    )
+                );
+                $employee = json_decode((string)$response->getBody());
+//                dd($employee);
+                //display confirmation page
+//                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
+                return Redirect::to('/employees');
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/employees');
+        }
     }
 
     /**

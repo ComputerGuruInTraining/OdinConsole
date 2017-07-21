@@ -95,13 +95,6 @@ class UserController extends Controller
 
                 $compId = session('compId');
 
-////            validate data
-//                $this->validate($request, [
-//                    'name' => 'required|max:255',
-//                    'address' => 'required|max:255',
-//                ]);
-
-//            //gather data from input fields
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
                $email = Input::get('email');

@@ -17,20 +17,22 @@
 <div class='table-responsive'>
   <table class="table  table-hover">
     <tr>
-   <th>First Name</th>
-   <th>Last Name</th>
-   {{--<th>Gender</th>--}}
-   {{--<th>Mobile</th>--}}
-   <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th>Mobile</th>
+        <th>Email</th>
    {{--<th>Address</th>--}}
-   <th>Actions</th>
- </tr>
+        <th>Actions</th>
+    </tr>
   @foreach($employees as $employee)
     <tr>
         <td>{{$employee->first_name}}</td>
         <td>{{$employee->last_name}}</td>
-        {{--<td>{{$employee->gender}}</td>--}}
-        {{--<td>{{$employee->mobile}}</td>--}}
+        <td>{{$employee->dob}}</td>
+        <td>{{$employee->gender}}</td>
+        <td>{{$employee->mobile}}</td>
         <td>{{$employee->email}}</td>
         {{--<td>{{$employee->address}}</td>--}}
 
