@@ -299,15 +299,6 @@ class LocationController extends Controller
                 $name = ucfirst(Input::get('name'));
                 $notes = ucfirst(Input::get('notes'));
 
-                //call oauth fn in functions.php
-    //            $token = oauth();
-
-    //            //request to api
-    //            $this->oauth();
-    //
-    //            //retrieve token needed for authorized http requests
-    //            $token = $this->accessToken();
-
                 $client = new GuzzleHttp\Client;
 
                 $response = $client->put('http://odinlite.com/public/api/locations/'.$id.'/edit', array(
@@ -371,17 +362,6 @@ class LocationController extends Controller
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
-//                $client = new GuzzleHttp\Client;
-
-//                $compId = session('compId');
-                //call oauth fn in functions.php
-//                $token = oauth();
-
-    //            $this->oauth();
-    //
-    //            //retrieve token needed for authorized http requests
-    //            $token = $this->accessToken();
-
                 $client = new GuzzleHttp\Client;
 
                 $response = $client->delete('http://odinlite.com/public/api/locations/'.$id, [
@@ -389,8 +369,6 @@ class LocationController extends Controller
                         'Authorization' => 'Bearer ' . $token,
                     ]
                 ]);
-
-//                $responseMsg = json_decode((string)$response->getBody());
 
                 $theAction = 'You have successfully deleted the location';
 
@@ -413,48 +391,3 @@ class LocationController extends Controller
         return $output;
     }
 }
-
-
-//archived
-
-//    public static function confirmDelete($id)
-//    {
-//        try{
-//
-//            $client = new GuzzleHttp\Client;
-//
-//            $response = $client->post('http://odinlite.com/public/oauth/token', [
-//                'form_params' => [
-//                    'client_id' => 2,
-//                    // The secret generated when you ran: php artisan passport:install
-//                    'client_secret' => 'q41fEWYFbMS6cU6Dh63jMByLRPYI4gHDj13AsjoM',
-//                    'grant_type' => 'password',
-//                    'username' => 'bernadettecar77@hotmail.com',
-//                    'password' => 'password',
-//                    'scope' => '*',
-//                ]
-//            ]);
-
-//            $auth = json_decode((string)$response->getBody());
-//
-//            //TODO: You'd typically save this payload in the session
-//            $tokenStatic = $auth->access_token;
-//
-//
-//            $response = $client->get('http://odinlite.com/public/api/location/'.$id, [
-//                'headers' => [
-//                    'Authorization' => 'Bearer ' . $tokenStatic,//TODO: Access_token saved for global use
-//                ]
-//            ]);
-//
-//            $location = json_decode((string)$response->getBody());
-//
-//            $name = $location->name;
-//            $id = $location->id;
-//            $url = 'locations';
-//            return view('confirm-delete')->with(array('fieldDesc' => $name, 'id' => $id, 'url' => $url));
-//        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
-//            Redirect::to('/locations');
-//        }
-//    }

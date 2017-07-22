@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\LocationController;
-use App\Http\Controllers\RosterController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -52,36 +49,14 @@ Route::get('confirm-delete/{id}/{url}', function($id, $url){
     }
 });
 
+//route for when the Forgot Password? Link pressed on Login page
+Route::get('/reset/link', function(){
+    return view('home/reset/forgot_pw');
+});
 
+//route for when the Send Reset Password Link pressed on forgot_pw page
+Route::get('/reset/pw', 'ForgotPWController@resetPW');
 
-
-
-
-///archived
-///
-/// //Route::get('/dashboard', 'DashboardController@testFunction');
-
-
-//USED??? almost definitely not anymore, but test delete w/o before removing
-//Route::get('/confirm-delete-location/{theId}/',  function($theId){
-//    if (session()->has('token')) {
-//        //confirmDlt defined in functions.php
-//        $deleteView = LocationController::confirmDelete($theId);
-//        return $deleteView;
-//    }
-//});
-
-
-
-//Route::get('/clock', function(){
-//    return view('clock-picker');
-//
-//});
-//
-//Route::get('/confirm-delete-shift/{theId}/',  function($theId){
-//    $deleteView = RosterController::confirmDelete($theId);
-//    return $deleteView;
-//});
 
 
 

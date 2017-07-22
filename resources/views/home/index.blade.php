@@ -13,8 +13,6 @@
                 @endforeach
             @endif
 
-            {{--<h2><i class='fa fa-lock'></i> Odin Management Console</h2>--}}
-
             {{ Form::open(['role' => 'form','method' => 'POST']) }}
             <div style="height: 300px; background-color: #eae6ee; padding-top: 150px; padding: 100px 50px 70px 50px; border-radius: 15px;">
                 <div class='form-group'>
@@ -54,7 +52,7 @@
                      }}
                 </div>
                 <div style="text-align: center;">
-                    <a href="/resetpw" style="color: #663974; text-align: center;">Forgot Password?</a>
+                    <a href='/reset/link' style="color: #663974; text-align: center;">Forgot Password?</a>
                 </div>
             </div>
             {{ Form::close() }}
