@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fd3d3311-ed96-40cc-9f22-c35ae4565603" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/home/index.blade.php" afterPath="$PROJECT_DIR$/resources/views/home/index.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/web.php" afterPath="$PROJECT_DIR$/routes/web.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,28 +29,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.blade.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/views/home/index.blade.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
-              <caret line="8" column="46" lean-forward="false" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="73" />
+              <caret line="8" column="55" lean-forward="false" selection-start-line="8" selection-start-column="55" selection-end-line="8" selection-end-column="55" />
               <folding>
-                <element signature="e#218#266#0#HTML" expanded="true" />
-                <element signature="e#315#342#0#HTML" expanded="true" />
-                <element signature="e#636#757#0#HTML" expanded="true" />
-                <element signature="e#2499#2526#0#HTML" expanded="true" />
-                <element signature="e#2570#2613#0#HTML" expanded="true" />
-                <marker date="1500715973000" expanded="true" signature="889:1302" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="901:1300" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="920:1299" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="1462:1909" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="1478:1508" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="1478:1887" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="1491:1508" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="2142:2452" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="2156:2429" ph="..." />
-                <marker date="1500715973000" expanded="true" signature="2166:2428" ph="..." />
+                <element signature="e#213#261#0#HTML" expanded="true" />
+                <element signature="e#291#318#0#HTML" expanded="true" />
+                <element signature="e#673#707#0#HTML" expanded="true" />
+                <element signature="e#757#805#0#HTML" expanded="true" />
+                <element signature="e#972#1006#0#HTML" expanded="true" />
+                <element signature="e#3203#3230#0#HTML" expanded="true" />
+                <element signature="e#3286#3329#0#HTML" expanded="true" />
+                <marker date="1500717123000" expanded="true" signature="1192:1689" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1204:1687" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1223:1686" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1914:2457" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1930:1960" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1930:1964" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1930:2423" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="1943:1960" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="2738:3132" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="2752:2787" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="2752:3097" ph="..." />
+                <marker date="1500717123000" expanded="true" signature="2762:2787" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AdminLTE.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/bower_components/AdminLTE/dist/css/AdminLTE.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="2533" column="25" lean-forward="false" selection-start-line="2533" selection-start-column="19" selection-end-line="2533" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="confirm-delete.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/confirm-delete.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -69,17 +91,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forgot_pw.blade.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="forgot_pw.blade.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/home/reset/forgot_pw.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="12" selection-end-column="44" />
+            <state relative-caret-position="330">
+              <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
               <folding>
                 <element signature="e#212#260#0#HTML" expanded="true" />
                 <element signature="e#291#318#0#HTML" expanded="true" />
                 <element signature="e#447#481#0#HTML" expanded="true" />
                 <element signature="e#531#579#0#HTML" expanded="true" />
-                <element signature="e#2024#2072#0#HTML" expanded="true" />
+                <element signature="e#2016#2064#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -133,8 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>$this-&gt;client</find>
-      <find>find</find>
       <find>jobs</find>
       <find>job</find>
       <find>groupBydate</find>
@@ -163,6 +183,8 @@
       <find>btn-primary</find>
       <find>sidebar</find>
       <find>background-color</find>
+      <find>bg-danger</find>
+      <find>alert</find>
     </findStrings>
     <replaceStrings>
       <replace>'</replace>
@@ -252,8 +274,8 @@
         <option value="$PROJECT_DIR$/resources/views/home/forgot_password/forgot_pw.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/LocationController.php" />
         <option value="$PROJECT_DIR$/routes/web.php" />
-        <option value="$PROJECT_DIR$/resources/views/home/index.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/home/reset/forgot_pw.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/home/index.blade.php" />
       </list>
     </option>
   </component>
@@ -799,6 +821,132 @@
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bower_components" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdminLTE" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bower_components" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdminLTE" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dist" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bower_components" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdminLTE" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dist" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdminLTE.css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bower_components" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdminLTE" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dist" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OdinLiteConsole" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="config" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
@@ -1161,12 +1309,12 @@
       <workItem from="1499908786624" duration="34940000" />
       <workItem from="1500422625713" duration="857000" />
       <workItem from="1500475241880" duration="364000" />
-      <workItem from="1500506672067" duration="17215000" />
+      <workItem from="1500506672067" duration="18074000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="646716000" />
+    <option name="totallyTimeSpent" value="647575000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1367,13 +1515,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/confirm-delete.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="27" lean-forward="false" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/employee/add-employee.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1462,14 +1603,6 @@
           <folding>
             <marker date="1500519291000" expanded="false" signature="5953:5963" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bower_components/AdminLTE/dist/css/AdminLTE.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="17" lean-forward="false" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1579,30 +1712,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="46" lean-forward="false" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="73" />
-          <folding>
-            <element signature="e#218#266#0#HTML" expanded="true" />
-            <element signature="e#315#342#0#HTML" expanded="true" />
-            <element signature="e#636#757#0#HTML" expanded="true" />
-            <element signature="e#2499#2526#0#HTML" expanded="true" />
-            <element signature="e#2570#2613#0#HTML" expanded="true" />
-            <marker date="1500715973000" expanded="true" signature="889:1302" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="901:1300" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="920:1299" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="1462:1909" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="1478:1508" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="1478:1887" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="1491:1508" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="2142:2452" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="2156:2429" ph="..." />
-            <marker date="1500715973000" expanded="true" signature="2166:2428" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="354">
@@ -1615,14 +1724,58 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/home/reset/forgot_pw.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="12" selection-end-column="44" />
+        <state relative-caret-position="330">
+          <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
           <folding>
             <element signature="e#212#260#0#HTML" expanded="true" />
             <element signature="e#291#318#0#HTML" expanded="true" />
             <element signature="e#447#481#0#HTML" expanded="true" />
             <element signature="e#531#579#0#HTML" expanded="true" />
-            <element signature="e#2024#2072#0#HTML" expanded="true" />
+            <element signature="e#2016#2064#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/confirm-delete.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bower_components/AdminLTE/dist/css/AdminLTE.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="2533" column="25" lean-forward="false" selection-start-line="2533" selection-start-column="19" selection-end-line="2533" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home/index.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="55" lean-forward="false" selection-start-line="8" selection-start-column="55" selection-end-line="8" selection-end-column="55" />
+          <folding>
+            <element signature="e#213#261#0#HTML" expanded="true" />
+            <element signature="e#291#318#0#HTML" expanded="true" />
+            <element signature="e#673#707#0#HTML" expanded="true" />
+            <element signature="e#757#805#0#HTML" expanded="true" />
+            <element signature="e#972#1006#0#HTML" expanded="true" />
+            <element signature="e#3203#3230#0#HTML" expanded="true" />
+            <element signature="e#3286#3329#0#HTML" expanded="true" />
+            <marker date="1500717123000" expanded="true" signature="1192:1689" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1204:1687" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1223:1686" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1914:2457" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1930:1960" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1930:1964" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1930:2423" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="1943:1960" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="2738:3132" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="2752:2787" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="2752:3097" ph="..." />
+            <marker date="1500717123000" expanded="true" signature="2762:2787" ph="..." />
           </folding>
         </state>
       </provider>
