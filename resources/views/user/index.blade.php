@@ -13,24 +13,23 @@
 
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Email</th>
-                    <th>Date/Time Added</th>
-                    <th></th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
                 @foreach ($users as $user)
                 <tr>
-                    <td>{{ $user->getFullName() }}</td>
-                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->first_name }}</td>
+                    <td>{{ $user->last_name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
+                    {{--<td>{{ $user->created_at->format('F d, Y h:ia') }}</td>--}}
                     <td>
-                        <a href="/user/{{ $user->id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-                        {{ Form::open(['url' => '/user/' . $user->id, 'method' => 'DELETE']) }}
+                        <a href="/user/{{ $user->user_id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
+                        {{ Form::open(['url' => '/user/' . $user->user_id, 'method' => 'DELETE']) }}
                         {{ Form::submit('Delete', ['class' => 'btn btn-danger'])}}
                         {{ Form::close() }}
                     </td>

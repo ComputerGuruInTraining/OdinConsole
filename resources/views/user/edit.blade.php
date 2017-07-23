@@ -14,7 +14,8 @@
 
     <h1><i class='fa fa-user'></i> Edit User</h1>
 
-    {{ Form::model($user, ['role' => 'form', 'url' => '/user/' . $user->id, 'method' => 'PUT']) }}
+    {{--{{ Form::model($user, ['role' => 'form', 'url' => '/user/' . $user->id, 'method' => 'PUT']) }}--}}
+        {{ Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'put']) }}
 
     <div class='form-group'>
         {{ Form::label('first_name', 'First Name') }}
@@ -24,11 +25,6 @@
     <div class='form-group'>
         {{ Form::label('last_name', 'Last Name') }}
         {{ Form::text('last_name', null, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
-    </div>
-
-    <div class='form-group'>
-        {{ Form::label('username', 'Username') }}
-        {{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}
     </div>
 
     <div class='form-group'>
@@ -47,7 +43,7 @@
     </div>
 
     <div class='form-group'>
-        {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
+        {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
     </div>
 
     {{ Form::close() }}

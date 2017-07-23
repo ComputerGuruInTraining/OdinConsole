@@ -26,10 +26,10 @@
         {{ Form::text('last_name', null, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
     </div>
 
-    <div class='form-group'>
-        {{ Form::label('username', 'Username') }}
-        {{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}
-    </div>
+    {{--<div class='form-group'>--}}
+        {{--{{ Form::label('username', 'Username') }}--}}
+        {{--{{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}--}}
+    {{--</div>--}}
 
     <div class='form-group'>
         {{ Form::label('email', 'Email') }}
@@ -47,7 +47,7 @@
     </div>
 
     <div class='form-group'>
-        {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
+        {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
     </div>
 
     {{ Form::close() }}
