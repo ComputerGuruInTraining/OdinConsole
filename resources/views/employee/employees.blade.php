@@ -37,7 +37,9 @@
         {{--<td>{{$employee->address}}</td>--}}
 
         <td>
-            <a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>
+            {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}
+            <a href="/employees/{{$employee->user_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
+
         </td>
     </tr>
 @endforeach

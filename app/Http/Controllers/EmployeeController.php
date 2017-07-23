@@ -41,7 +41,6 @@ class EmployeeController extends Controller
 
                 $employees = json_decode((string)$response->getBody());
 //                dd($employees);
-//                return view('employee.employees', compact('employees'));
 //                return view ('employee.employees', compact('employees'));
 
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employee'));
@@ -104,7 +103,7 @@ class EmployeeController extends Controller
 
 //            //gather data from input fields
                 $this->validate($request, [
-                    'dateOfBirth' => 'required',
+                    'dateOfBirth' => 'required'
                 ]);
 
                 $first_name = Input::get('first_name');
@@ -116,9 +115,10 @@ class EmployeeController extends Controller
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
                 $password=  Hash::make(Input::get('password'));
-                $dob = jobDateTime($dob, "00:00");
+                $dob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
 
 //                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client,$compId);
+
                 $response = $client->post('http://odinlite.com/public/api/employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
@@ -131,7 +131,7 @@ class EmployeeController extends Controller
                     )
                 );
                 $employee = json_decode((string)$response->getBody());
-//                dd($employee);
+//              dd($employee);
                 //display confirmation page
 //                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
                 return Redirect::to('/employees');
@@ -164,11 +164,42 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employee $employee)
+    public function edit($id)
     {
-        return view('employee.edit-employee', compact('employee'));
-        // $employee = Employee::find($id);
-        // return View::make('employees.form', compact('employee'));
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+
+                $response = $client->get('http://odinlite.com/public/api/employees/' . $id . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $employees = json_decode((string)$response->getBody());
+//                dd($employees);
+                return view('employee/edit-employee')->with('employees', $employees);
+
+            } else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $errors = collect($err);
+            return view('user/create')->with('errors', $errors);
+        }
+        catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('user/create')->with('errors', $errors);
+        }
     }
 
     /**
@@ -178,28 +209,65 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update($id)
     {
-        //
-        // $employee = Employee::find($id);
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-        //store the data in the db
-        $employee->first_name = Input::get('first_name');
-        $employee->last_name = Input::get('last_name');
-        $employee->dob = Input::get('dateOfBirth');
-//         Carbon::parse($request->datepicker);
-
+                //get the data from the form
+                $first_name = Input::get('first_name');
+                $last_name = Input::get('last_name');
+                $dob = Input::get('dateOfBirth');
+                $dob = $this->formatDob($dob);
 //        $employee->dob= Carbon::parse($request->datepicker);
 //        $employee->dob=Carbon::createFromFormat('d/m/yyyy', $request->input('dob'))->format('Y-m-d');
 
-        $employee->gender = Input::get('sex');
-        $employee->mobile = Input::get('mobile');
-        $employee->email = Input::get('email');
-        $employee->password=  Hash::make(Input::get('password'));
-        $employee->save();
+                $gender = Input::get('sex');
+                $mobile = Input::get('mobile');
+                $email = Input::get('email');
+                $password=  Hash::make(Input::get('password'));
 
-        //redirect to employees listing page after updating an employee detail
-        return Redirect::to('/employees');
+
+                $client = new GuzzleHttp\Client;
+
+//                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client);
+
+                $response = $client->put('http://odinlite.com/public/api/employees/'.$id.'/edit', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('first_name' => $first_name, 'last_name' => $last_name,
+                            'email' => $email, 'dateOfBirth'=> $dob, 'sex'=>$gender, 'mobile'=> $mobile,
+                            'password' => $password
+                        )
+                    )
+                );
+
+                $employee = json_decode((string)$response->getBody());
+//dd($employee);
+                //direct user based on whether record updated successfully or not
+                if($employee->success == true)
+                {
+//                    $theAction = 'You have successfully edited the User detail';
+
+//                    return view('confirm')->with(array('theAction' => $theAction));
+                    return redirect()->route('employees.index');
+                }
+                else{
+                    return redirect()->route("employees.edit");
+                }
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Please provide valid changes';
+            $errors = collect($err);
+            echo($err);
+            return Redirect::to('/locations');
+        }
 
     }
 
@@ -215,5 +283,12 @@ class EmployeeController extends Controller
         $employee->delete();
 //        Session::flash('flash_message','successfully deleted.');
         return redirect()->route("employees.index");
+    }
+
+    public function formatDob($dob){
+
+        $newDob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
+        return $newDob;
+
     }
 }

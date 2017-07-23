@@ -10,15 +10,18 @@
 
 
 {{-- TODO Form Validation --}}
-{{ Form::model($employee, ['route' => ['employees.update', $employee->id], 'method'=>'put']) }}
+
+  {{--Dont know if its a good way to show it as in a forloop--}}
+    @foreach($employees as $employee)
+{{ Form::model($employee, ['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}
 <div class='form-group'>
     {{ Form::label('first_name', 'First Name') }}
-    {{ Form::text('first_name', null, ['placeholder' => 'First Name', 'class' => 'form-control']) }}
+    {{ Form::text('first_name', $employee->first_name, ['placeholder' => 'First Name', 'class' => 'form-control']) }}
 </div>
 
 <div class='form-group'>
     {{ Form::label('last_name', 'Last Name') }}
-    {{ Form::text('last_name', null, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
+    {{ Form::text('last_name', $employee->last_name, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
 </div>
 
 <div class='form-group'>
@@ -28,7 +31,7 @@
 
 
     {{--{{ Form::text('date', $employee->dob, array('id' => 'datepicker')) }}--}}
-    {{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->dob, 'class' =>'datepicker']) }}
+    {{--{{ Form::text('date',null, ['class'=>'form-control', 'placeholder'=>$employee->dob, 'class' =>'datepicker']) }}--}}
     
 </div>
 
@@ -42,19 +45,25 @@
 
 <div class='form-group'>
   {{ Form::label('mobile','Mobile')}}
-  {{ Form::number('mobile', null, ['placeholder' => 'Mobile', 'class' => 'form-control']) }}
+  {{ Form::number('mobile', $employee->mobile, ['placeholder' => 'Mobile', 'class' => 'form-control']) }}
 
 </div>
 
 <div class='form-group'>
     {{ Form::label('email', 'Email') }}
-    {{ Form::email('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
+    {{ Form::email('email', $employee->email, ['placeholder' => 'Email', 'class' => 'form-control']) }}
 
 </div>
 
+    {{--TODO: validate old password--}}
+    <div class='form-group'>
+            {{ Form::label('old_password', 'Old Password') }}
+            {{ Form::password('old_password',['placeholder' => 'Password', 'class' => 'form-control']) }}
+    </div>
+
 <div class='form-group'>
-    {{ Form::label('password', 'Password') }}
-    {{ Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) }}
+    {{ Form::label('new_password', 'Password') }}
+    {{ Form::password('password',['placeholder' => 'Password', 'class' => 'form-control']) }}
 </div>
 
 <div class='form-group'>
@@ -65,6 +74,7 @@
     {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
     <a href ='/employees' class = "btn btn-info">Back</a>
 </div>
+    @endforeach
 
 
 {{ Form::close() }}
