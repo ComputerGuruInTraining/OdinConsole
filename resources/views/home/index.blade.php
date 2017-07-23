@@ -14,11 +14,11 @@
                         <div class='bg-danger alert'>{{ $error }}</div>
                     @endforeach
                 @endif
-                <div class="panel panel-default" style="background-color: #eae6ee;">
+                <div class="panel panel-default" style="border-color: #663974;">
                     <div class="panel-heading"  style="color: white; background-color: #663974;">Login</div>
                     <div class="panel-body">
                         {{ Form::open(['role' => 'form','method' => 'POST']) }}
-                        <div style="background-color: #eae6ee;">
+                        <div>
                             <div class='form-group'>
                                 <label for="email" class="col-md-4 control-label">E-Mail</label>
                                 {{ Form::text('username', null, [

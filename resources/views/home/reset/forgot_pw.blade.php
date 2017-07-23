@@ -8,7 +8,12 @@
     <div class="container" style="padding-top: 150px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" >
-                <div class="panel panel-default" style="background-color: #eae6ee;">
+                @if (count( $errors ) > 0)
+                    @foreach ($errors->all() as $error)
+                        <div class='bg-danger alert'>{{ $error }}</div>
+                    @endforeach
+                @endif
+                <div class="panel panel-default" style="border-color: #663974;">
                     <div class="panel-heading"  style="color: white; background-color: #663974;">Reset Password</div>
                     <div class="panel-body">
                         @if (session('status'))
