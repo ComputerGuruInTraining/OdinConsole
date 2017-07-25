@@ -56,20 +56,20 @@
 </div>
 
     {{--TODO: validate old password--}}
-    <div class='form-group'>
-            {{ Form::label('old_password', 'Old Password') }}
-            {{ Form::password('old_password',['placeholder' => 'Password', 'class' => 'form-control']) }}
-    </div>
+    {{--<div class='form-group'>--}}
+            {{--{{ Form::label('old_password', 'Old Password') }}--}}
+            {{--{{ Form::password('old_password',['placeholder' => 'Password', 'class' => 'form-control']) }}--}}
+    {{--</div>--}}
 
-<div class='form-group'>
-    {{ Form::label('new_password', 'Password') }}
-    {{ Form::password('password',['placeholder' => 'Password', 'class' => 'form-control']) }}
-</div>
+{{--<div class='form-group'>--}}
+    {{--{{ Form::label('new_password', 'Password') }}--}}
+    {{--{{ Form::password('password',['placeholder' => 'Password', 'class' => 'form-control']) }}--}}
+{{--</div>--}}
 
-<div class='form-group'>
-    {{ Form::label('password_confirmation', 'Confirm Password') }}
-    {{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}
-</div>
+{{--<div class='form-group'>--}}
+    {{--{{ Form::label('password_confirmation', 'Confirm Password') }}--}}
+    {{--{{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}--}}
+{{--</div>--}}
 <div class='form-group'>
     {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
     <a href ='/employees' class = "btn btn-info">Back</a>

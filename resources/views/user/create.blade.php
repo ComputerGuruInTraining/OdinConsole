@@ -36,15 +36,15 @@
         {{ Form::email('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
     </div>
 
-    <div class='form-group'>
-        {{ Form::label('password', 'Password') }}
-        {{ Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) }}
-    </div>
+    {{--<div class='form-group'>--}}
+        {{--{{ Form::label('password', 'Password') }}--}}
+        {{--{{ Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) }}--}}
+    {{--</div>--}}
 
-    <div class='form-group'>
-        {{ Form::label('password_confirmation', 'Confirm Password') }}
-        {{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}
-    </div>
+    {{--<div class='form-group'>--}}
+        {{--{{ Form::label('password_confirmation', 'Confirm Password') }}--}}
+        {{--{{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}--}}
+    {{--</div>--}}
 
     <div class='form-group'>
         {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}

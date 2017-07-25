@@ -114,7 +114,7 @@ class EmployeeController extends Controller
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
-                $password=  Hash::make(Input::get('password'));
+                $password=  Hash::make(str_random(8));
                 $dob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
 
 //                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client,$compId);
@@ -134,7 +134,9 @@ class EmployeeController extends Controller
 //              dd($employee);
                 //display confirmation page
 //                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
-                return Redirect::to('/employees');
+                $theAction = 'You have successfully created a new employee. Please advise the employee to check their junk email folder for the email';
+
+                return view('confirm')->with(array('theAction' => $theAction));
             } else {
                 return Redirect::to('/login');
             }
@@ -227,7 +229,7 @@ class EmployeeController extends Controller
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
-                $password=  Hash::make(Input::get('password'));
+              //  $password=  Hash::make(Input::get('password'));
 
 
                 $client = new GuzzleHttp\Client;
@@ -240,8 +242,7 @@ class EmployeeController extends Controller
                             'Content-Type' => 'application/json'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email, 'dateOfBirth'=> $dob, 'sex'=>$gender, 'mobile'=> $mobile,
-                            'password' => $password
+                            'email' => $email, 'dateOfBirth'=> $dob, 'sex'=>$gender, 'mobile'=> $mobile
                         )
                     )
                 );
@@ -251,9 +252,6 @@ class EmployeeController extends Controller
                 //direct user based on whether record updated successfully or not
                 if($employee->success == true)
                 {
-//                    $theAction = 'You have successfully edited the User detail';
-
-//                    return view('confirm')->with(array('theAction' => $theAction));
                     return redirect()->route('employees.index');
                 }
                 else{
