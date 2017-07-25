@@ -11,7 +11,7 @@ if(! function_exists('confirmDlt')){
     function confirmDlt($id, $url) {
         try{
 
-            $msg = 'Consider this carefully because other records associated with this item may be affected.';
+            $msg = '';
 
             if($url == 'rosters'){
                 $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,

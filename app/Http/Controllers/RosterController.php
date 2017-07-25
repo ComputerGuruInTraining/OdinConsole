@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp;
 use Redirect;
-//use DateTimeZone;
+use DateTimeZone;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
@@ -239,6 +239,7 @@ class RosterController extends Controller
         $token = session('token');
         $compId = session('compId');
 
+        //get data from form for non laravel validated inputs
         $dateStart = $request->input('startDateTxt');
         $timeStart = Input::get('startTime');//hh:mm
         $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
@@ -501,7 +502,7 @@ class RosterController extends Controller
 
     }
 
-
+    //TODO: remove function groupByDate and just have groupBy, previously a longer function was used
     public function groupByDate($assigned)
     {
         //group the collection by startDate for grouping as tbody in the view

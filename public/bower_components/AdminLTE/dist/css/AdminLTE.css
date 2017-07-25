@@ -10,6 +10,14 @@
 Odin theming
 */
 
+/*Login*/
+
+.master-footer{
+    position: absolute;
+    bottom: 30px;
+
+}
+
 .odin-logo{
     width: 60%;
     padding-left: 10px;
@@ -52,14 +60,10 @@ Odin theming
 }
 
 .manage-btns{
-     /*position: absolute;*/
-     /*right: 50px;*/
     padding-top: 150px;
  }
 
 .delete-btns{
-    /*position: absolute;*/
-    /*left: 50px;*/
     padding-top: 20px;
     padding-left: 15px;
 }
@@ -103,11 +107,6 @@ Odin theming
     font-size: large;
 }
 
-/*.group-table>td{*/
-    /*border-bottom-color: transparent !important;*/
-    /*border-top-color: #transparent !important;*/
-/*}*/
-
 .group-data{
     font-weight: 800;
 
@@ -118,9 +117,31 @@ Odin theming
     width: 15%;
 }
 
-/*.group-location:nth-child(even){*/
-    /*background-color: red;*/
-/*}*/
+/*Report Show Page Styling*/
+.report-title {
+    color: #663974;
+}
+
+#report-heading{
+    font-family: papyrus, courier, georgia;
+    font-size: xx-large;
+}
+
+.report-header{
+    padding-left: 15px;
+    color: #000;
+    font-size: larger;
+}
+
+#report-date{
+    color: #777;
+}
+
+.report-header-row{
+
+    line-height: 1.5;
+    vertical-align: top;
+}
 
 
 /*

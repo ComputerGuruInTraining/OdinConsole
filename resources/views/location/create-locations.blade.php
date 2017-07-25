@@ -7,7 +7,7 @@
 
 
 @section('title-item')
-    Create Location
+    Add Location
 @stop
 
 @section('page-content')
@@ -38,7 +38,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
+            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
             <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}

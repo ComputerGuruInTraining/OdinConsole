@@ -79,7 +79,7 @@
             {{ Form::text('checks', 1, array('class' => 'form-control')) }}
         </div>
 
-        <div class='form-group'>
+        <div class='form-group form-buttons'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
             <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>

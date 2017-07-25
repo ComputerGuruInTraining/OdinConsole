@@ -22,5 +22,8 @@
                 @yield('content')
             </div>
         </div>
+        <div style="position: absolute; bottom:30px; right:15px;">
+            @include('footer')
+        </div>
     </body>
 </html>

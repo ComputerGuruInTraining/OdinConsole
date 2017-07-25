@@ -25,18 +25,18 @@
         {{ Form::open(['role' => 'form', 'url' => '/reports']) }}
 
         <div class='form-group'>
-            {{ Form::label('dateFrom', 'From:') }}
+            {{ Form::label('dateFrom', 'Start Date of Report:') }}
             {{ Form::text('dateFrom', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
-            {{ Form::label('dateTo', 'To: &nbsp;&nbsp;&nbsp;') }}
+            {{ Form::label('dateTo', 'End Date of Report: &nbsp;&nbsp;') }}
             {{ Form::text('dateTo', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
-            <select class="form-control" name="location" size="10" onkeypress="return noenter()">
+            <select class="form-control" name="location" onkeypress="return noenter()">
                 @foreach($locations as $loc)
                     <option value="{{$loc->id}}">{{$loc->name}}</option>
                 @endforeach
@@ -53,16 +53,7 @@
             </select>
         </div>
 
-
-        {{--<div class='form-group'>--}}
-            {{--{!! Form::Label('checks', 'Number of Visits Required:') !!}--}}
-            {{--{{ Form::text('checks', null, array('class' => 'form-control')) }}--}}
-        {{--</div>--}}
-
-
-
-
-        <div class='form-group'>
+        <div class='form-group form-buttons'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
             <a href="/reports" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
