@@ -39,7 +39,7 @@
                 {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
                 {{ Form::label('startTime', 'Start Time') }}
-                <input class="input-a" value="" name="startTime" placeholder={{$startTime}} data-default={{$startTime}}>
+                <input class="input-a" value="" name="startTime" data-default={{$startTime}}>
                 @include('clock-picker')
             </div>
 
@@ -48,7 +48,7 @@
                 {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
                 {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
-                <input class="input-b" value="" name="endTime" placeholder={{$endTime}} data-default={{$endTime}}>
+                <input class="input-b" value="" name="endTime" data-default={{$endTime}}>
                 @include('clock-picker')
             </div>
 
@@ -61,7 +61,7 @@
                         @endforeach
                         {{--List all the employees:--}}
                         @foreach($empList as $emp)
-                                    <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                                    <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                         @endforeach
                     </select>
                 </div>

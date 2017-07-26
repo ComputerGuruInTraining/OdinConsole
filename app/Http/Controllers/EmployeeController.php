@@ -134,7 +134,10 @@ class EmployeeController extends Controller
 //              dd($employee);
                 //display confirmation page
 //                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
-                $theAction = 'You have successfully created a new employee. Please advise the employee to check their junk email folder for the email';
+                $theAction = 'The new employee has been added to the system and an email has been sent to 
+                the supplied email address advising them to download the OdinLite mobile app and create a password for their
+                account. Please advise the employee to check their junk email folder for the email 
+                in case it has not landed in their inbox';
 
                 return view('confirm')->with(array('theAction' => $theAction));
             } else {

@@ -6,7 +6,7 @@
 @stop
 
 @section('page-content')
-<div class='col-md-8'>
+<div class='form-pages col-md-8'>
 
 
 {{-- {{ Form::open(['role' => 'form', 'url' => '/employees']) }} --}}
