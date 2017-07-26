@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -52,6 +54,8 @@ Route::get('/reset/link', function(){
 //route for when the Send Reset Password Link pressed on forgot_pw page
 Route::get('/reset/pw', 'ForgotPWController@resetPW');
 
+//route to show Settings page when the Settings btn is pressed eg via Header Avatar Dropdown
+Route::get('company/settings', 'UserController@index');
 
 
 

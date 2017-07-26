@@ -44,6 +44,10 @@
         }
     </script>
 
+        @yield('custom-scripts')
+
+        @yield('custom-styles')
+
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">

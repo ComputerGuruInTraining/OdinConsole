@@ -7,6 +7,8 @@ use Input;
 use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp;
+use GuzzleHttp\Exception;
+use GuzzleHttp\Client;
 use Redirect;
 use DateTimeZone;
 
@@ -102,38 +104,6 @@ class RosterController extends Controller
         }
     }
 
-//    public function oauth(){
-//        $client = new GuzzleHttp\Client;
-//
-//        try {
-//            $response = $client->post('http://odinlite.com/public/oauth/token', [
-//                'form_params' => [
-//                    'client_id' => 2,
-//                    // The secret generated when you ran: php artisan passport:install
-//                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-//                    'grant_type' => 'password',
-//                    'username' => 'johnd@exampleemail.com',
-//                    'password' => 'secret',
-//                    'scope' => '*',
-//                ]
-//            ]);
-//
-//            $auth = json_decode((string)$response->getBody());
-//           // ($auth->access_token);
-//
-//            $this->accessToken = $auth->access_token;
-//            //dd($this->accessToken);
-//
-//        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
-//            return view('admin_template');
-//        }
-//    }
-//
-//    public function accessToken(){
-//        return $this->accessToken;
-//    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -143,10 +113,6 @@ class RosterController extends Controller
     public function create()
     {
         try {
-           // $this->oauth();
-//            $token = oauth();
-            //retrieve token needed for authorized http requests
-            //$token = $this->accessToken();//null if don't call oauth fn each request
 
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -155,7 +121,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/users/list/'.$compId, [
+                $response = $client->get('http://odinlite.com/public/api/employees/list/'.$compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -309,12 +275,6 @@ class RosterController extends Controller
                 $token = session('token');
                 $compId = session('compId');
 
-//            $token = oauth();
-
-//            $this->oauth();
-//
-//            $token = $this->accessToken();
-
                 $client = new GuzzleHttp\Client;
 
                 $response = $client->get('http://odinlite.com/public/api/assignedshifts/' . $id . '/edit', [
@@ -325,7 +285,7 @@ class RosterController extends Controller
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $responseUsers = $client->get('http://odinlite.com/public/api/users/list/' . $compId, [
+                $responseUsers = $client->get('http://odinlite.com/public/api/employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -421,16 +381,8 @@ class RosterController extends Controller
                 $strStart = jobDateTime($dateStart, $timeStart);
                 $strEnd = jobDateTime($dateEnd, $timeEnd);
 
-//            $title = 'Security at Several Locations';
-//            $desc = 'Provide security services at several locations throughout Austin';
+                //TODO: create roster and auto-populate id
                 $roster_id = 1;
-                $added_id = 1;
-
-                //request to api
-//                $this->oauth();
-
-                //retrieve token needed for authorized http requests
-//                $token = $this->accessToken();
 
                 $client = new GuzzleHttp\Client;
 

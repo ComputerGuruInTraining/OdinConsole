@@ -42,7 +42,7 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 //                dd($users);
-                return view('user.index', compact('users'));
+                return view('company-settings.index', compact('users'));
 
 //                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
 
@@ -199,7 +199,6 @@ class UserController extends Controller
                 $last_name = Input::get('last_name');
                 $email = Input::get('email');
 
-//                $token = $this->accessToken();
 
                 $client = new GuzzleHttp\Client;
 
@@ -219,9 +218,6 @@ class UserController extends Controller
                 //direct user based on whether record updated successfully or not
                 if($user->success == true)
                 {
-//                    $theAction = 'You have successfully edited the User detail';
-
-//                    return view('confirm')->with(array('theAction' => $theAction));
                     return redirect()->route('user.index');
                 }
                 else{

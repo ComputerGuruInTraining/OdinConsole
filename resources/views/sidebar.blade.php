@@ -44,18 +44,17 @@
             <div class="list-divider"></div>
 
             <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->
-            <li class="header"><h4>My Links</h4></li>
-            <li class="active"><a href="#"><span>Create User</span></a></li>
-            <li class="treeview">
-                <a href="#"><span>Map</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li><a href="#">Who's on Duty</a></li>
-                    <li><a href="#">View My Locations</a></li>
-                </ul>
-            </li>
-            <div class="list-divider"></div>
+            {{--<li class="header"><h4>My Links</h4></li>--}}
+            {{--<li class="active"><a href="#"><span>Create User</span></a></li>--}}
+            {{--<li class="treeview">--}}
+                {{--<a href="#"><span>Map</span> <i class="fa fa-angle-left pull-right"></i></a>--}}
+                {{--<ul class="treeview-menu">--}}
+                    {{--<li><a href="#">Who's on Duty</a></li>--}}
+                    {{--<li><a href="#">View My Locations</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
+            {{--<div class="list-divider"></div>--}}
 
-            @yield('custom-menu')
         </ul>
 
 

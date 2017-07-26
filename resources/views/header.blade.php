@@ -141,7 +141,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="/user" class="btn btn-default btn-flat">Settings</a>
+                                <a href="/company/settings" class="btn btn-default btn-flat">Settings</a>
                             </div>
                             <div class="pull-right">
                                 <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
