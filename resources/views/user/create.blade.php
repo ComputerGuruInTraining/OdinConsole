@@ -1,10 +1,11 @@
-@extends('layouts.master')
+@extends('layouts.master_layout')
+@extends('sidebar')
 
-@section('title') Create User @stop
+@section('title-item') Create User @stop
 
-@section('content')
+@section('page-content')
 
-<div class='col-lg-4 col-lg-offset-4'>
+    <div class='form-pages col-md-8'>
 
     @if (count( $errors ) > 0) 
         @foreach ($errors->all() as $error)
@@ -12,7 +13,7 @@
         @endforeach
     @endif
 
-    <h1><i class='fa fa-user'></i> Add User</h1>
+    {{--<h1><i class='fa fa-user'></i> Add User</h1>--}}
 
     {{ Form::open(['role' => 'form', 'url' => '/user', 'action' => 'POST']) }}
 

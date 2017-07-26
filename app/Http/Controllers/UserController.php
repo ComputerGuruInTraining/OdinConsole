@@ -42,7 +42,7 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 //                dd($users);
-                return view('user.index', compact('users'));
+                return view('company-settings.index', compact('users'));
 
 //                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
 

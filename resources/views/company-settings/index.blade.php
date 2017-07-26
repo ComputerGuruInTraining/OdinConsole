@@ -1,31 +1,32 @@
-@extends('layouts.master-layout')
+@extends('layouts.master_layout')
+@extends('sidebar')
 
-@section('title') Settings @stop
+@section('title-item') Settings @stop
 
 @section('custom-scripts')
     <script>
-    function openCity(evt, cityName) {
-        // Declare all variables
-        var i, tabcontent, tablinks;
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
 
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-
-        // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-</script>
-    @stop
+    </script>
+@stop
 @section('custom-styles')
     <style>
         /* Style the tab */
@@ -68,20 +69,23 @@
             border-top: none;
         }
     </style>
-    @stop
-@section('content')
+@stop
+@section('page-content')
     <div class="tab">
         <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
         <button class="tablinks" onclick="openCity(event, 'Paris')">Primary Company Contact</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>
 
-    <div id="Users" class="tabcontent">
+    <div id="Users" class="tabcontent col-md-12">
 
-        <div class="col-lg-10 col-lg-offset-1">
+        {{--<div class=>--}}
 
-            <h1><i class="fa fa-users"></i> User Administration <a href="/logout" class="btn btn-default pull-right">Logout</a></h1>
-
+            <div style="padding:15px 0px 10px 0px;">
+                <button type="button" class="btn btn-success" onclick="window.location.href='user/create'">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User
+                </button>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
 
@@ -112,9 +116,7 @@
                     </tbody>
 
                 </table>
-            </div>
-
-            <a href="/user/create" class="btn btn-success">Add User</a>
+            {{--</div>--}}
 
         </div>
     </div>

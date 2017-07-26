@@ -5,10 +5,6 @@
     Roster
 @stop
 
-@section('create-link')
-    "/rosters/create"
-@stop
-
 @section('title-item')
     Rosters
 @stop
