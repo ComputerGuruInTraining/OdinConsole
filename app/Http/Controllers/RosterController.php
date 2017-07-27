@@ -89,7 +89,7 @@ class RosterController extends Controller
                 $assigned = collect($assigned);
 
                 //group by date for better view
-                $assigned = $this->groupByDate($assigned);
+                $assigned = $this->groupByShift($assigned);
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             }
@@ -455,10 +455,10 @@ class RosterController extends Controller
     }
 
     //TODO: remove function groupByDate and just have groupBy, previously a longer function was used
-    public function groupByDate($assigned)
+    public function groupByShift($assigned)
     {
         //group the collection by startDate for grouping as tbody in the view
-        $groupedAssigned = $assigned->groupBy('start_date');
+        $groupedAssigned = $assigned->groupBy('assigned_shift_id');
         return $groupedAssigned;
     }
 
@@ -468,12 +468,16 @@ class RosterController extends Controller
             for ($i = 0; $i < count($jobs); $i++) {
                 for ($j = 0; $j < count($jobs); $j++) {
 
-                    //if startDate the same, preserve the startDate values for future comparisons and use:
+                    //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
                     //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
-                    if ($jobs[$i]->$date == $jobs[$j]->$date) {
+                    if (($jobs[$i]->$date == $jobs[$j]->$date)
+                        &&($jobs[$i]->$startTime == $jobs[$j]->$startTime)
+                        && ($jobs[$i]->$endTime == $jobs[$j]->$endTime)) {
 
                         if ($i > $j) {
                             $jobs[$i]->$uniqueDate = null;
+                            $jobs[$i]->$startTime = null;
+                            $jobs[$i]->$endTime = null;
                         }
                         //if locations and checks and startTime and endTime the same,
                         //change values of these fields to null for the duplicates:

@@ -1,5 +1,5 @@
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
+<aside class="main-sidebar header-custom">
 
     <!-- sidebar: style can be found in sidebar.less and AdminLTE.min.css
     included in project via /bower_components/adminlte/dist/css/AdminLTE.min.css-->
@@ -33,14 +33,13 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><h4>Quick Links</h4></li>
+            <li class="header"><p class="menu-heading">Quick Links</p></li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="/admin"><span>Dashboard</span></a></li>
-
-            <li class="active"><a href="/employees"><span>Employees</span></a></li>
-            <li class="active"><a href="/rosters"><span>Roster</span></a></li>
-            <li class="active"><a href="/locations"><span>Locations</span></a></li>
-            <li class="active"><a href="/reports"><span>Reports</span></a></li>
+            <li class="active"><a href="/admin" class="menu"><span>Dashboard</span></a></li>
+            <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
+            <li class="active"><a href="/rosters" class="menu"><span>Roster</span></a></li>
+            <li class="active"><a href="/locations" class="menu"><span>Locations</span></a></li>
+            <li class="active"><a href="/reports" class="menu"><span>Reports</span></a></li>
             <div class="list-divider"></div>
 
             <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->

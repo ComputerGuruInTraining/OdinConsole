@@ -28,11 +28,12 @@
                 </tr>
                 @foreach($assigned as $index => $formattedShift)
                     <tbody class="group-list">
-                    <tr class="row-heading"><td>{{$formattedShift[0]->shift_title}}</td><td></td><td></td><td></td><td></td></tr>
+                    {{--<tr class="row-heading"><td>{{$formattedShift->shift_title}}</td><td></td><td></td><td></td><td></td></tr>--}}
                     @foreach ($assigned->get($index) as $shift)
-                        @if($index == $shift->start_date)
+                        @if($index == $shift->assigned_shift_id)
                            <!--ensure the location associated with the shift is still in the db to catch for errors-->
                                 <tr class="group-table">
+                                    
                                     <td>{{$shift->unique_date}}</td>
                                     @if($shift->unique_locations != null)<!--locations is null if duplicate location-->
                                         <td class="group-data">{{$shift->unique_locations}} ({{$shift->checks}})</td>
