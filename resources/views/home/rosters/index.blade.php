@@ -21,36 +21,52 @@
             <table class="table table-hover">
                 <tr>
                     <th>Start Date</th>
-                    <th>Locations (Checks)</th>
                     <th>Time</th>
+                    <th>Locations</th>
                     <th>Assigned to</th>
                     <th>Actions</th>
                 </tr>
                 @foreach($assigned as $index => $formattedShift)
+                    <tr class="row-heading"><td>{{$formattedShift[0]->shift_title}}</td><td></td><td></td><td></td><td></td></tr>
                     <tbody class="group-list">
-                    {{--<tr class="row-heading"><td>{{$formattedShift->shift_title}}</td><td></td><td></td><td></td><td></td></tr>--}}
-                    @foreach ($assigned->get($index) as $shift)
-                        @if($index == $shift->assigned_shift_id)
-                           <!--ensure the location associated with the shift is still in the db to catch for errors-->
-                                <tr class="group-table">
-                                    
-                                    <td>{{$shift->unique_date}}</td>
-                                    @if($shift->unique_locations != null)<!--locations is null if duplicate location-->
-                                        <td class="group-data">{{$shift->unique_locations}} ({{$shift->checks}})</td>
-                                    @else
-                                    <td></td>
-                                    @endif
-                                    @if($shift->end_time != null)<!--endTime is null if duplicate startTime and endTime-->
-                                        <td>{{$shift->start_time}}-{{$shift->end_time}}</td>
-                                    @else
-                                        <td></td>
-                                    @endif
-                                    <td>{{$shift->employee}}</td>
-                                    <td>
-                                        <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$shift->assigned_shift_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
-                                    </td>
-                                </tr>
+                    <tr>
+                        <td>{{$formattedShift[0]->unique_date}}</td>
+                    @if($formattedShift[0]->end_time != null)<!--endTime is null if duplicate startTime and endTime-->
+                        <td>{{$formattedShift[0]->start_time}}-{{$formattedShift[0]->end_time}}</td>
+                    @endif
+                    @if($formattedShift[0]->unique_locations != null)<!--locations is null if duplicate location-->
+                        <td class="group-data">{{$formattedShift[0]->unique_locations}} {{$formattedShift[0]->checks}}</td>
                         @endif
+                        <td>{{$formattedShift[0]->unique_employees}}</td>
+                        <td>
+                            <a href="/rosters/{{$formattedShift[0]->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$formattedShift[0]->assigned_shift_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
+                        </td>
+                    </tr>
+                    @foreach ($assigned->get($index) as $shift)
+                        {{--@if(($shift->unique_locations != null)&&($shift->unique_employees != null))--}}
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                {{--@if($formattedShift[0]->unique_locations != $shift->unique_locations)--}}
+                                    <td>{{$shift->unique_locations}}</td>
+                                {{--@endif--}}
+                                {{--@if($formattedShift[0]->unique_employees != $shift->unique_employees)--}}
+                                    <td>{{$shift->unique_employees}}</td>
+                                {{--@endif--}}
+                                <td></td>
+                            </tr>
+                        {{--@elseif(($shift->unique_locations != null)&&($shift->unique_employees == null))--}}
+                            {{--@if($formattedShift[0]->unique_locations != $shift->unique_locations)--}}
+
+                                {{--<tr><td></td><td></td><td>{{$shift->unique_locations}}</td><td></td><td></td></tr>--}}
+                            {{--@endif--}}
+                        {{--@elseif(($shift->unique_locations == null)&&($shift->unique_employees != null))--}}
+                            {{--@if($formattedShift[0]->unique_employees != $shift->unique_employees)--}}
+
+                                {{--<tr><td></td><td></td><td></td><td>{{$shift->unique_employees}}</td><td></td></tr>--}}
+                            {{--@endif--}}
+                        {{--@endif--}}
                     @endforeach
                     </tbody>
                 @endforeach
