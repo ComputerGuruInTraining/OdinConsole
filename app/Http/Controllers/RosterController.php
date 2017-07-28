@@ -15,6 +15,11 @@ use DateTimeZone;
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
+
+//public $j = 0;
+//public $i = 0;
+//public $locations = [];
+//public $employees = [];
     //global class variables
     //protected $accessToken;
 
@@ -90,6 +95,25 @@ class RosterController extends Controller
 
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
+
+//                foreach($assigned as $index => $formattedShift){
+//                    $j = 0;
+//                    $i = 0;
+//                    $locations = [];
+//                    $employees = [];
+//                    foreach($assigned->get($index) as $shift){
+//                        if($shift->unique_locations != null){
+//                            $locations[$i] = $shift->unique_locations;
+//                            $i++;
+//                        }
+//                        if($shift->unique_employees != null){
+//
+//                            $employees[$j] = $shift->unique_employees;
+//                            $j++;
+//                        }
+//
+//                    }
+//                }
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             }
