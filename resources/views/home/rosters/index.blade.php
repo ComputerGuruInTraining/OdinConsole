@@ -19,7 +19,7 @@
         </div>
         <div class='table-responsive'>
             <table class="table table-hover">
-                <tr>
+                <tr class="heading-row">
                     <th>Start Date</th>
                     <th>Time</th>
                     <th>Locations</th>
@@ -27,18 +27,19 @@
                     <th>Actions</th>
                 </tr>
 
-                <tbody class="group-list">
+
 
                 @php
                     foreach($assigned as $index => $formattedShift){
                         //display the first row with values in all the columns
-                       echo "<tr><td>".$formattedShift[0]->shift_title."</td></tr>
+                       echo "<tr><td class='group-data'>".$formattedShift[0]->shift_title."</td></tr>
+                             <tbody class='group-list'>
                                 <tr><td>".$formattedShift[0]->unique_date."</td>
                                 <td>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
-                                <td class='group-data'>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
+                                <td>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
                                 <td>".$formattedShift[0]->unique_employees."</td>
                                 <td>
-                                <a href='/".$url."/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a> | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #cc0000;'>Delete</a>
+                                    <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a> | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #990000;'>Delete</a>
                                 </td>
                          </tr>";
 
@@ -112,9 +113,10 @@
                                    }
                            }
                        }
+                        echo "</tbody>";
                      }
                 @endphp
-                </tbody>
+
             </table>
         </div>
     </div>

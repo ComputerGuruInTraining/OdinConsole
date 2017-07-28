@@ -98,17 +98,18 @@ body{
 }
 
 aside.main-sidebar.header-custom{
-    border-right: 1px solid darkgrey !important;
-    border-bottom: 1px solid darkgrey !important;
+    border-right: 1px solid #663974 !important;
+    border-bottom: 1px solid #663974 !important;
 }
 
 header.main-header.header-custom{
-    border-bottom: 1px solid darkgrey;
+    border-bottom: 1px solid #663974;
 }
 section.content-header{
-    border-bottom: 1px solid darkgrey;
-    border-left: 1px solid darkgrey;
-    border-right: 1px solid darkgrey;
+    border-bottom: 1px solid #663974;
+    border-left: 1px solid #663974;
+    border-right: 1px solid #663974;
+    margin-top: -1px;
 }
 
 .content-wrapper{
@@ -204,7 +205,10 @@ section.content-header{
 }
 
 .group-list:nth-child(even){
-    background-color: #ebf2f9;
+    background-color: #f9f9f9;
+    border-top: 1px solid #444 !important;
+    border-bottom: 1px solid #444 !important;
+
 }
 
 .row-heading{
@@ -249,6 +253,10 @@ section.content-header{
     vertical-align: top;
 }
 
+/*Roster page styling*/
+.heading-row{
+    border-bottom: 1px solid #f4f4f4;
+}
 
 /*
  * Core: General Layout Style
@@ -561,13 +569,13 @@ a:focus {
     font-family: Monospace;
     position: relative;
     padding: 5px 15px 5px 15px;
-    background-color: #e1e1e1;
+    background-color: #663974;
     border: 1px solid rgb(210, 214, 222);
 }
 .content-header > h1 {
     margin: 0;
     font-size: 24px;
-    color: #444;
+    color: #FFFFFF;
 }
 .content-header > h1 > small {
     font-size: 15px;
@@ -671,7 +679,7 @@ a:focus {
     top: 0;
     left: 0;
     padding-top: 50px;
-    background-color:#eae6ee;
+    background-color:white;
     border: 0.1px solid rgb(210, 214, 222);
     color:#663974;
     min-height: 100%;
@@ -2518,7 +2526,7 @@ a:focus {
     background-color: #367fa9;
 }
 .btn-success {
-    background-color: #00a65a;
+    background-color: #1e7b1e;
     border-color: #008d4c;
 }
 .btn-success:hover,
@@ -2536,7 +2544,7 @@ a:focus {
     background-color: #00acd6;
 }
 .btn-danger {
-    background-color: #dd4b39;
+    background-color: #990000;
     border-color: #d73925;
 }
 .btn-danger:hover,

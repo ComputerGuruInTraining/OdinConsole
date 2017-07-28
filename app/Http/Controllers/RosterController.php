@@ -96,25 +96,6 @@ class RosterController extends Controller
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
 
-//                foreach($assigned as $index => $formattedShift){
-//                    $j = 0;
-//                    $i = 0;
-//                    $locations = [];
-//                    $employees = [];
-//                    foreach($assigned->get($index) as $shift){
-//                        if($shift->unique_locations != null){
-//                            $locations[$i] = $shift->unique_locations;
-//                            $i++;
-//                        }
-//                        if($shift->unique_employees != null){
-//
-//                            $employees[$j] = $shift->unique_employees;
-//                            $j++;
-//                        }
-//
-//                    }
-//                }
-
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             }
             else{
@@ -331,9 +312,8 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
-//            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start, 'America/Chicago');
-//            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end, 'America/Chicago');
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
+
                 $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
                 $startDate = $carbonStart->format('m/d/Y');
                 $startTime = ((string)$carbonStart->format('H:i'));

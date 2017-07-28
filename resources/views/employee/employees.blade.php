@@ -2,7 +2,7 @@
 @extends('sidebar')
 
 @section('title-item')
-    List of Employees
+    Employees
 @stop
 
 @section('page-content')
@@ -26,22 +26,26 @@
    {{--<th>Address</th>--}}
         <th>Actions</th>
     </tr>
+
   @foreach($employees as $employee)
-    <tr>
-        <td>{{$employee->first_name}}</td>
-        <td>{{$employee->last_name}}</td>
-        <td>{{$employee->dob}}</td>
-        <td>{{$employee->gender}}</td>
-        <td>{{$employee->mobile}}</td>
-        <td>{{$employee->email}}</td>
-        {{--<td>{{$employee->address}}</td>--}}
 
-        <td>
-            {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}
-            <a href="/employees/{{$employee->user_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
+      <tbody class='group-list'><tr>
 
-        </td>
-    </tr>
+            <td>{{$employee->first_name}}</td>
+            <td>{{$employee->last_name}}</td>
+            <td>{{$employee->dob}}</td>
+            <td>{{$employee->gender}}</td>
+            <td>{{$employee->mobile}}</td>
+            <td>{{$employee->email}}</td>
+            {{--<td>{{$employee->address}}</td>--}}
+
+            <td>
+                {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}
+                <a href="/employees/{{$employee->user_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
+
+            </td>
+
+        </tr></tbody>
 @endforeach
 
 </table>

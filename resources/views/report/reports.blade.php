@@ -23,44 +23,26 @@
             </button>
         </div>
 
-        <div class='table-responsive'>
+        <div class='table-responsive col-md-8 padding-top'>
             <table class="table table-hover">
                 <tr>
                     <th>Report Type</th>
                     <th>Date Range</th>
-
-                    {{--<th>Location</th>--}}
-                    {{--<th>Total Hours Monitoring Location</th>--}}
-                    {{--<th>Guard Presence at Location (?? or list the names of the guards??)</th>--}}
                     <th>Actions</th>
                 </tr>
                 @foreach($reports as $report)
+                    <tbody class='group-list'>
                     <tr>
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->form_start}} - {{$report->form_end}}</td>
-                        {{--<td></td>--}}
-                        {{--<td>{{$report->total_hours}}</td>--}}
-                        {{--<td>{{$report->total_guards}}</td>--}}
-                        {{--<td></td>--}}
-
                         <td>
-                            <a href="/reports/{{$report->id}}">View</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #cc0000;">Delete</a>
+                            <a href="/reports/{{$report->id}}">View</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete</a>
                         </td>
                     </tr>
+                    </tbody>
                 @endforeach
-
-                {{--@foreach($cases as $case)--}}
-                    {{--<td>{{$case->id}}</td>--}}
-                {{--@endforeach--}}
             </table>
         </div>
 
     </div>
-
-    {{--<div>--}}
-        {{--@foreach($reports as $report)--}}
-        {{--<li>{{$report->location_id}} {{$report->total_hours}}</li>--}}
-        {{--@endforeach--}}
-    {{--</div>--}}
-
 @stop
