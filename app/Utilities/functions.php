@@ -53,6 +53,19 @@ if(! function_exists('jobDateTime')) {
     }
 }
 
+if(! function_exists('dateFormat')) {
+    function dateFormat($date)
+    {
+        $y = substr($date, 6, 4);
+        $d = substr($date, 3, 2);
+        $m = substr($date, 0, 2);
+
+        $dtStr = $y . "-" . $m . "-" . $d;
+
+        return $dtStr;
+    }
+}
+
 if(! function_exists('stringTime')) {
     function stringTime($tm)
     {

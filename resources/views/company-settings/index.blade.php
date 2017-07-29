@@ -73,7 +73,7 @@
 @section('page-content')
     <div class="tab">
         <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
-        <button class="tablinks" onclick="openCity(event, 'Paris')">Primary Company Contact</button>
+        <button class="tablinks" onclick="openCity(event, 'Paris')">Company Info</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>
 
@@ -121,9 +121,9 @@
         </div>
     </div>
     <div id="Paris" class="tabcontent">
-        <h3>Primary Company Contact</h3>
+        <h3>Company Info</h3>
         <p>Name: </p>
-        <p>Email: </p>
+        <p>Owner: </p>
     </div>
 
     {{--<div id="Tokyo" class="tabcontent">--}}

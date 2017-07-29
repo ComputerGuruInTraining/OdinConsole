@@ -23,7 +23,6 @@
         <th>Gender</th>
         <th>Mobile</th>
         <th>Email</th>
-   {{--<th>Address</th>--}}
         <th>Actions</th>
     </tr>
 
@@ -33,11 +32,10 @@
 
             <td>{{$employee->first_name}}</td>
             <td>{{$employee->last_name}}</td>
-            <td>{{$employee->dob}}</td>
+            <td>{{$employee->dateBirth}}</td>
             <td>{{$employee->gender}}</td>
             <td>{{$employee->mobile}}</td>
             <td>{{$employee->email}}</td>
-            {{--<td>{{$employee->address}}</td>--}}
 
             <td>
                 {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}

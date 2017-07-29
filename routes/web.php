@@ -25,6 +25,8 @@ Route::resource('/user', 'UserController');
 
 Route::resource('/employees', 'EmployeeController');
 
+Route::resource('/case-notes', 'CaseNoteController');
+
 Route::get('/dashboard', 'DashboardController@index');
 
 Route::get('/login', 'HomeController@getLogin');

@@ -36,7 +36,7 @@
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->form_start}} - {{$report->form_end}}</td>
                         <td>
-                            <a href="/reports/{{$report->id}}">View</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete</a>
+                            <a href="/reports/{{$report->id}}">View</a> | <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete</a>
                         </td>
                     </tr>
                     </tbody>

@@ -11,8 +11,8 @@ use Carbon\Carbon;
 use Session;
 use Redirect;
 use GuzzleHttp;
+use DateTime;
 
-use App\Utlities\ApiAuth;
 
 
 class EmployeeController extends Controller
@@ -40,8 +40,17 @@ class EmployeeController extends Controller
                 ]);
 
                 $employees = json_decode((string)$response->getBody());
-//                dd($employees);
-//                return view ('employee.employees', compact('employees'));
+                //format dates to be mm/dd/yyyy for case notes
+                foreach($employees as $i => $item){
+                    //convert string date to DateTime and format date
+                    $t = $employees[$i]->dob;
+
+                    $dt = new DateTime($t);
+                    $date = $dt->format('m/d/Y');
+
+                    //add formattedDate to $employees object
+                    $employees[$i]->dateBirth = $date;
+                }
 
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employee'));
 
@@ -58,13 +67,7 @@ class EmployeeController extends Controller
             echo $error;
             return Redirect::to('/login');
         }
-
-//      $employees = Employee::all();
-//      return view('employee.employees', compact('employees'));
-
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -80,8 +83,6 @@ class EmployeeController extends Controller
         else {
             return Redirect::to('/login');
         }
-        // return view('home/employee/add-employee');
-
     }
 
     /**
@@ -101,21 +102,23 @@ class EmployeeController extends Controller
 
                 $compId = session('compId');
 
-//            //gather data from input fields
                 $this->validate($request, [
-                    'dateOfBirth' => 'required'
+                    'dateOfBirth' => 'required',
+                    'sex' => 'required|max:255',
+                    'mobile' => 'required',
+                    'email' => 'required|max:255',
+                    'first_name' => 'required|max:255',
+                    'last_name' => 'required|max:255'
                 ]);
 
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
-                // $employee->dob = Input::get('dob');Carbon::parse($request->datepicker);
                 $dob = Input::get('dateOfBirth');
-//        $employee->dob= Carbon::parse($request->datepicker);
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
                 $password=  Hash::make(str_random(8));
-                $dob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
+                $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
 //                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client,$compId);
 
@@ -131,9 +134,8 @@ class EmployeeController extends Controller
                     )
                 );
                 $employee = json_decode((string)$response->getBody());
-//              dd($employee);
+
                 //display confirmation page
-//                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
                 $theAction = 'The new employee has been added to the system and an email has been sent to 
                 the supplied email address advising them to download the OdinLite mobile app and create a password for their
                 account. Please advise the employee to check their junk email folder for the email 
@@ -144,8 +146,9 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return Redirect::to('/employees');
+            $error = 'Please check input. Hint: Ensure email address is valid and is not already stored in the system';
+            $errors = collect($error);
+            return view('/employee/add-employee')->with('errors', $errors);
         }
     }
 
@@ -186,8 +189,18 @@ class EmployeeController extends Controller
                 ]);
 
                 $employees = json_decode((string)$response->getBody());
-//                dd($employees);
-                return view('employee/edit-employee')->with('employees', $employees);
+
+                $employee = $employees[0];
+
+                $t = $employee->dob;
+
+                $dt = new DateTime($t);
+                $dateBirth = $dt->format('m/d/Y');
+
+                return view('employee/edit-employee')->with(array(
+                    'employee' => $employee,
+                    'dateBirth' => $dateBirth
+                ));
 
             } else {
                 return Redirect::to('/login');
@@ -195,13 +208,13 @@ class EmployeeController extends Controller
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $err = 'Error updating employee.';
             $errors = collect($err);
-            return view('user/create')->with('errors', $errors);
+            return view('employee/edit-employee')->with('errors', $errors);
         }
         catch (\ErrorException $error) {
             //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Please fill in all required fields';
+            $e = 'Please fill in all required fields or check input';
             $errors = collect($e);
             return view('user/create')->with('errors', $errors);
         }
@@ -214,20 +227,30 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
+                //validate input meet's db constraints
+                $this->validate($request, [
+                    'dateOfBirth' => 'required',
+                    'sex' => 'required|max:255',
+                    'mobile' => 'required',
+                    'email' => 'required|max:255',
+                    'first_name' => 'required|max:255',
+                    'last_name' => 'required|max:255'
+                ]);
+
                 //get the data from the form
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
                 $dob = Input::get('dateOfBirth');
-                $dob = $this->formatDob($dob);
-//        $employee->dob= Carbon::parse($request->datepicker);
-//        $employee->dob=Carbon::createFromFormat('d/m/yyyy', $request->input('dob'))->format('Y-m-d');
+
+                //process dob before adding to db
+                $dateOfBirth = dateFormat($dob);
 
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
@@ -245,17 +268,19 @@ class EmployeeController extends Controller
                             'Content-Type' => 'application/json'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email, 'dateOfBirth'=> $dob, 'sex'=>$gender, 'mobile'=> $mobile
+                            'email' => $email, 'dateOfBirth'=> $dateOfBirth, 'sex'=>$gender, 'mobile'=> $mobile
                         )
                     )
                 );
 
                 $employee = json_decode((string)$response->getBody());
-//dd($employee);
+
                 //direct user based on whether record updated successfully or not
                 if($employee->success == true)
                 {
-                    return redirect()->route('employees.index');
+                    $theAction = 'You have successfully edited the employee details';
+
+                    return view('confirm')->with(array('theAction' => $theAction));
                 }
                 else{
                     return redirect()->route("employees.edit");

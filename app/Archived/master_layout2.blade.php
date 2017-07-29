@@ -81,7 +81,7 @@
     </div>
     <!-- ./wrapper -->
         <!-- Footer -->
-        @include('footer')
+        @include('resources.views.footer')
 
 
 

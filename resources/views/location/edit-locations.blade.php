@@ -7,7 +7,6 @@
 @stop
 
 @section('page-content')
-    {{--<div class='col-lg-4 col-lg-offset-4 form-pages'>--}}
     <div class="form-pages">
         @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -39,7 +38,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Save', ['class' => 'btn btn-info']) }}
+            {{ Form::submit('Update', ['class' => 'btn btn-info']) }}
             <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 

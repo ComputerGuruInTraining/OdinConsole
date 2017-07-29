@@ -6,10 +6,17 @@
 @stop
 
 @section('page-content')
-<div class='form-pages col-md-8'>
+<div class='form-pages col-md-4'>
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-
-{{-- {{ Form::open(['role' => 'form', 'url' => '/employees']) }} --}}
 {{ Form:: open(['role' =>'form', 'url' =>'employees']) }}
 <div class='form-group'>
     {{ Form::label('first_name', 'First Name') }}
@@ -24,9 +31,6 @@
 <div class='form-group'>
   {{ Form::label('dob', 'Date of Birth') }}
   {{ Form::text('dateOfBirth', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
-
-    {{--{{ Form::label('startDate', 'Start Date') }}--}}
-    {{--{{ Form::text('startDateTxt', '', array('class' => 'datepicker')) }}--}}
 
 </div>
 
@@ -58,8 +62,9 @@
     {{--{{ Form::label('password_confirmation', 'Confirm Password') }}--}}
     {{--{{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}--}}
 {{--</div>--}}
-<div class='form-group'>
+<div class='form-group form-buttons'>
     {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+    <a href="/employees" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
 </div>
 
 {{ Form::close() }}

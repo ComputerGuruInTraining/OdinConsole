@@ -137,46 +137,6 @@ class LocationController extends Controller
         }
     }
 
-    //before api request, just retrieving from db
-//    public function store(Request $request)
-//    {
-//        try {
-//            //validate data
-//            $this->validate($request, [
-//                'name' => 'required|unique:locations|max:255',
-//                'address' => 'required|unique:locations|max:255',
-//            ]);
-//
-//
-//            //TODO: v3 Improvement: Grab the address from the Marker Info Window so that user can select address on map as an alternative to using input field
-//            // to type address and select from dropdown
-//            //store the data in the db
-//            $location = new Location;
-//            $location->name = ucfirst(Input::get('name'));
-//            $address = Input::get('address');
-//            $location->address = $address;
-//            $geoCoords = $this->geoCode($address);
-//            $location->latitude = $geoCoords->results[0]->geometry->location->lat;
-//            $location->longitude = $geoCoords->results[0]->geometry->location->lng;
-//
-//            $location->additional_info = ucfirst(Input::get('info'));
-//            $location->save();
-//
-//            //display confirmation page
-//            $theData = "You have successfully added the location $location->name";
-//            return view('confirm-create')->with(array('theData' => $theData, 'url' => 'locations'));
-//
-//        } catch (\ErrorException $error) {
-//            if ($error->getMessage() == 'Undefined offset: 0') {
-//                $e = 'Please provide a valid address';
-//                $errors = collect($e);
-//                return view('location/create-locations')->with('errors', $errors);
-//            } else {
-//                return view("location/create-locations");
-//            }
-//        }
-//    }
-
     /**
      * Display the specified resource.
      *
@@ -218,19 +178,6 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-//                $compId = session('compId');
-
-
-                //call oauth fn in functions.php
-//                $token = oauth();
-
-//        $this->oauth();
-//
-//        //retrieve token needed for authorized http requests
-//        $token = $this->accessToken();
-
-//                $client = new GuzzleHttp\Client;
-
                 $response = $client->get('http://odinlite.com/public/api/locations/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -247,13 +194,13 @@ class LocationController extends Controller
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $err = 'Error';
             $errors = collect($err);
             return view('location/create-locations')->with('errors', $errors);
         }
         catch (\ErrorException $error) {
             //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Please fill in all required fields';
+            $e = 'Error';
             $errors = collect($e);
             return view('location/create-locations')->with('errors', $errors);
         }
