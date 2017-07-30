@@ -53,6 +53,19 @@ if(! function_exists('jobDateTime')) {
     }
 }
 
+if(! function_exists('dateFormat')) {
+    function dateFormat($date)
+    {
+        $y = substr($date, 6, 4);
+        $d = substr($date, 3, 2);
+        $m = substr($date, 0, 2);
+
+        $dtStr = $y . "-" . $m . "-" . $d;
+
+        return $dtStr;
+    }
+}
+
 if(! function_exists('stringTime')) {
     function stringTime($tm)
     {
@@ -117,6 +130,7 @@ function oauth2($email, $password){
             ]
         ]);
 
+        //array datatype, even though only 1 item in the array
         $role = json_decode((string)$responseRole->getBody());
 
         //ensure the user is in the user_role table and therefore allowed access to the console
@@ -125,7 +139,12 @@ function oauth2($email, $password){
             $name = $user->first_name.' '.$user->last_name;
             //save the token in a session helper method along with the user id and name
             //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
-            session(['token' => $token, 'id' => $user->id, 'name' => $name, 'compId' => $user->company_id]);
+            session([
+                'token' => $token,
+                'id' => $user->id,
+                'name' => $name,
+                'role' => $role[0],
+                'compId' => $user->company_id]);
 
             return true;
         }
@@ -135,7 +154,6 @@ function oauth2($email, $password){
         }
 
     } catch (GuzzleHttp\Exception\BadResponseException $e) {
-        echo $e;
         return false;
     }
 }

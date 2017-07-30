@@ -15,6 +15,11 @@ use DateTimeZone;
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
+
+//public $j = 0;
+//public $i = 0;
+//public $locations = [];
+//public $employees = [];
     //global class variables
     //protected $accessToken;
 
@@ -70,12 +75,12 @@ class RosterController extends Controller
                     //save date and location into a new object property for later use (ie to reject duplicate values for the view)
                     $assigned[$i]->unique_date = $assigned[$i]->start_date;
                     $assigned[$i]->unique_locations = $assigned[$i]->location;
+                    $assigned[$i]->unique_employees = $assigned[$i]->employee;
 
                 }
 
                 //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
-                $assigned = $this->compareValues($assigned, 'start_date', 'unique_date',
-                    'unique_locations', 'checks', 'start_time', 'end_time');
+                $assigned = $this->compareValues($assigned);
 
                 //display as midnight if time == 12am
                 foreach ($assigned as $i => $item) {
@@ -89,7 +94,7 @@ class RosterController extends Controller
                 $assigned = collect($assigned);
 
                 //group by date for better view
-                $assigned = $this->groupByDate($assigned);
+                $assigned = $this->groupByShift($assigned);
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             }
@@ -307,9 +312,8 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
-//            $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start, 'America/Chicago');
-//            $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end, 'America/Chicago');
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
+
                 $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
                 $startDate = $carbonStart->format('m/d/Y');
                 $startTime = ((string)$carbonStart->format('H:i'));
@@ -455,49 +459,56 @@ class RosterController extends Controller
     }
 
     //TODO: remove function groupByDate and just have groupBy, previously a longer function was used
-    public function groupByDate($assigned)
+    public function groupByShift($assigned)
     {
         //group the collection by startDate for grouping as tbody in the view
-        $groupedAssigned = $assigned->groupBy('start_date');
+        $groupedAssigned = $assigned->groupBy('assigned_shift_id');
         return $groupedAssigned;
     }
 
 //function defined for global use
-    public function compareValues($jobs, $date, $uniqueDate, $uniqueLocations, $checks, $startTime, $endTime)
+    public function compareValues($jobs)
     {
             for ($i = 0; $i < count($jobs); $i++) {
                 for ($j = 0; $j < count($jobs); $j++) {
 
-                    //if startDate the same, preserve the startDate values for future comparisons and use:
+                    //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
                     //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
-                    if ($jobs[$i]->$date == $jobs[$j]->$date) {
+                    if (($jobs[$i]->start_date == $jobs[$j]->start_date)
+                        &&($jobs[$i]->start_time == $jobs[$j]->start_time)
+                        && ($jobs[$i]->end_time == $jobs[$j]->end_time)) {
 
                         if ($i > $j) {
-                            $jobs[$i]->$uniqueDate = null;
+                            $jobs[$i]->unique_date = null;
+                            $jobs[$i]->start_time = null;
+                            $jobs[$i]->end_time = null;
                         }
                         //if locations and checks and startTime and endTime the same,
                         //change values of these fields to null for the duplicates:
-                        if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
-                            &&($jobs[$i]->$uniqueLocations != "Location not in database")
-                            && ($jobs[$i]->$checks == $jobs[$j]->$checks)
-                            && ($jobs[$i]->$startTime == $jobs[$j]->$startTime)
-                            && ($jobs[$i]->$endTime == $jobs[$j]->$endTime)) {
+                        if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
+                            && ($jobs[$i]->checks == $jobs[$j]->checks)) {
                             if ($i > $j) {
-                                $jobs[$i]->$startTime = null;
-                                $jobs[$i]->$endTime = null;
-                                $jobs[$i]->$uniqueLocations = null;
-                                $jobs[$i]->$checks = null;
+                                $jobs[$i]->start_time = null;
+                                $jobs[$i]->end_time = null;
+                                $jobs[$i]->unique_locations = null;
+                                $jobs[$i]->checks = null;
                             }
                             //if only locations and checks the same, then:
-                        } else if (($jobs[$i]->$uniqueLocations == $jobs[$j]->$uniqueLocations)
-                            &&($jobs[$i]->$uniqueLocations != "Location not in database")
-                            && ($jobs[$i]->$checks == $jobs[$j]->$checks)
+                        } else if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
+                            && ($jobs[$i]->checks == $jobs[$j]->checks)
                         ) {
                             if ($i > $j) {
-                                $jobs[$i]->$uniqueLocations = null;
-                                $jobs[$i]->$checks = null;
+                                $jobs[$i]->unique_locations = null;
+                                $jobs[$i]->checks = null;
                             }
                         }
+                        else if($jobs[$i]->unique_employees == $jobs[$j]->unique_employees){
+                            if ($i > $j) {
+                                $jobs[$i]->unique_employees = null;
+                            }
+
+                        }
+
                     }
                 }
             }

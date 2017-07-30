@@ -19,40 +19,104 @@
         </div>
         <div class='table-responsive'>
             <table class="table table-hover">
-                <tr>
+                <tr class="heading-row">
                     <th>Start Date</th>
-                    <th>Locations (Checks)</th>
                     <th>Time</th>
+                    <th>Locations</th>
                     <th>Assigned to</th>
                     <th>Actions</th>
                 </tr>
-                @foreach($assigned as $index => $formattedShift)
-                    <tbody class="group-list">
-                    <tr class="row-heading"><td>{{$formattedShift[0]->shift_title}}</td><td></td><td></td><td></td><td></td></tr>
-                    @foreach ($assigned->get($index) as $shift)
-                        @if($index == $shift->start_date)
-                           <!--ensure the location associated with the shift is still in the db to catch for errors-->
-                                <tr class="group-table">
-                                    <td>{{$shift->unique_date}}</td>
-                                    @if($shift->unique_locations != null)<!--locations is null if duplicate location-->
-                                        <td class="group-data">{{$shift->unique_locations}} ({{$shift->checks}})</td>
-                                    @else
-                                    <td></td>
-                                    @endif
-                                    @if($shift->end_time != null)<!--endTime is null if duplicate startTime and endTime-->
-                                        <td>{{$shift->start_time}}-{{$shift->end_time}}</td>
-                                    @else
+
+
+
+                @php
+                    foreach($assigned as $index => $formattedShift){
+                        //display the first row with values in all the columns
+                       echo "<tr><td class='group-data'>".$formattedShift[0]->shift_title."</td></tr>
+                             <tbody class='group-list'>
+                                <tr><td>".$formattedShift[0]->unique_date."</td>
+                                <td>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
+                                <td>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
+                                <td>".$formattedShift[0]->unique_employees."</td>
+                                <td>
+                                    <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a> | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #990000;'>Delete</a>
+                                </td>
+                         </tr>";
+
+                        //variables needed for displaying multiple employees and locations
+                        $i = 0;
+                        $j = 0;
+                        $locations = [];
+                        $employees = [];
+
+                          foreach($assigned->get($index) as $shift){
+                            if($formattedShift[0]->unique_locations != $shift->unique_locations){
+                                if($shift->unique_locations != null){
+                                     $locations[$i] = $shift->unique_locations;
+                                     $i++;
+
+                                }
+                            }
+                            if($formattedShift[0]->unique_employees != $shift->unique_employees){
+                                if($shift->unique_employees != null){
+                                     $employees[$j] = $shift->unique_employees;
+                                     $j++;
+
+                                }
+                            }
+                          }
+
+                         //integer values
+                         $locLen = sizeof($locations);
+                         $empLen = sizeof($employees);
+
+                         $smallestArray = min($locLen, $empLen);
+                         $biggestArray = max($locLen, $empLen);
+                         $remainingItems = $biggestArray - $smallestArray;
+
+                        //loop through the smallest array and display values from both the arrays
+                        for($index = 0; $index<$smallestArray; $index++){
+                         echo"<tr>
+                            <td></td>
+                            <td></td>
+                            <td>".$locations[$index]."</td>
+                            <td>".$employees[$index]."</td>
+                            <td></td>
+                            </tr>";
+
+                        }
+                        //check to see if the arrays are different sizes,
+                        //and then check to see which array is the biggest array
+                        //and loop through the biggest array which still has values to display
+                        if(sizeof($locations) != sizeof($employees)){
+                           if($biggestArray == sizeof($employees)){
+                                for($r = 0; $r<$remainingItems; $r++){
+                                   echo"<tr>
                                         <td></td>
-                                    @endif
-                                    <td>{{$shift->employee}}</td>
-                                    <td>
-                                        <a href="/rosters/{{$shift->assigned_shift_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$shift->assigned_shift_id}}/{{$url}}" style="color: #cc0000;">Delete</a>
-                                    </td>
-                                </tr>
-                        @endif
-                    @endforeach
-                    </tbody>
-                @endforeach
+                                        <td></td>
+                                        <td></td>
+                                        <td>".$employees[$r]."</td>
+                                        <td></td>
+                                        </tr>";
+                               }
+                           }
+                           else if($biggestArray == sizeof($locations)){
+
+                               for($r = 0; $r<$remainingItems; $r++){
+                                       echo"<tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>".$locations[$r]."</td>
+                                            <td></td>
+                                            </tr>";
+                                   }
+                           }
+                       }
+                        echo "</tbody>";
+                     }
+                @endphp
+
             </table>
         </div>
     </div>

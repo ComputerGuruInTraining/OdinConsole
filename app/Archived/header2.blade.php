@@ -1,16 +1,22 @@
 <!-- Main Header -->
-<header class="main-header header-custom" style="background-color:#ffffff;">
+<header class="main-header" style="background-color:#ffffff;">
 
     <!-- Logo -->
     {{--<a href="index2.html" class="logo"><b>Odin Lite Console</a>--}}
-    <div class="pull-left image" style="max-width:200px;">
-        <a href='/admin' class="logo">
-            <img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo" alt="Odin Logo" />
-        </a>
-    </div>
+    {{--<div class="pull-left image" style="max-width:200px;">--}}
+        {{--<img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo" alt="Odin Logo" />--}}
+    {{--</div>--}}
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
+        <div>
+            <span class="active"><a href="/admin"><span>Dashboard</span></a></span>
+            <span class="active"><a href="/employees"><span>Employees</span></a></span>
+            <span class="active"><a href="/rosters"><span>Roster</span></a></span>
+            <span class="active"><a href="/reports"><span>Reports</span></a></span>
+
+
+        </div>
         <!-- Sidebar toggle button-->
         <!--FIXME: menu toggle button is not visible after first being pressed.
         Probably started occurring after odin logo added to header. -->
@@ -20,6 +26,27 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+                {{--<div class="sidebar-menu">--}}
+                    {{--<div class="header"><h4>Quick Links</h4></div>--}}
+                    <!-- Optionally, you can add icons to the links -->
+
+
+
+                    {{--<div class="list-divider"></div>--}}
+
+                    <!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->
+                    {{--<li class="header"><h4>My Links</h4></li>--}}
+                    {{--<li class="active"><a href="#"><span>Create User</span></a></li>--}}
+                    {{--<li class="treeview">--}}
+                    {{--<a href="#"><span>Map</span> <i class="fa fa-angle-left pull-right"></i></a>--}}
+                    {{--<ul class="treeview-menu">--}}
+                    {{--<li><a href="#">Who's on Duty</a></li>--}}
+                    {{--<li><a href="#">View My Locations</a></li>--}}
+                    {{--</ul>--}}
+                    {{--</li>--}}
+                    {{--<div class="list-divider"></div>--}}
+
+                {{--</div>--}}
                 <!-- Messages: style can be found in dropdown.less-->
                 {{--<li class="dropdown messages-menu">--}}
                     {{--<!-- Menu toggle button -->--}}
@@ -113,23 +140,18 @@
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle header-icon" data-toggle="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <!-- The user image in the navbar-->
-                        <img src="{{ asset("/bower_components/adminlte/dist/img/person.png") }}" class="user-image" alt="User Image"/>
+                        <img src="{{ asset("/bower_components/adminlte/dist/img/avatar3.png") }}" class="user-image" alt="User Image"/>
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        {{--<span class="hidden-xs">{{session('name')}}</span>--}}
+                        <span class="hidden-xs">{{session('name')}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
                         <li class="user-header">
-                            <img src="{{ asset("/bower_components/adminlte/dist/img/personLg.png") }}" class="img-circle" alt="User Image" />
-
-                            <div class="header-menu">
-                            <span>{{session('name')}}</span><br/>
-                            <span class="menu-role">User Role: {{session('role')}}</span>
-                            </div>
-
-                            {{--Admin Team--}}
+                            <img src="{{ asset("/bower_components/adminlte/dist/img/avatar3.png") }}" class="img-circle" alt="User Image" />
+                            {{--<p>--}}
+                                {{--Admin Team--}}
                                 {{--<small>Member since 2017</small>--}}
                             {{--</p>--}}
                         </li>

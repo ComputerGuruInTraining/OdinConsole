@@ -23,14 +23,16 @@
                     <th>Actions</th>
                 </tr>
                 @foreach($locations as $location)
+                    <tbody class='group-list'>
                     <tr>
                         <td>{{$location->name}}</td>
                         <td>{{$location->address}}</td>
                         <td>{{$location->notes}}</td>
                         <td class="column-width">
-                            <a href="/locations/{{$location->id}}/edit">Edit</a> | <a href="/confirm-delete/{{$location->id}}/{{$url}}" style="color: #cc0000;">Delete</a>
+                            <a href="/locations/{{$location->id}}/edit">Edit</a> | <a href="/confirm-delete/{{$location->id}}/{{$url}}" style="color: #990000;">Delete</a>
                         </td>
                     </tr>
+                    </tbody>
                 @endforeach
             </table>
         </div>

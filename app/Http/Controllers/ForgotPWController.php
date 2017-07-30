@@ -19,11 +19,12 @@ class ForgotPWController extends Controller
                 //request to api to send an email to the user with the reset password link
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post('http://odinlite.com/public/password/email', array(
+                $response = $client->post('http://odinlite.com/public/user/new/pw', array(
                         'headers' => array(
                             'Content-Type' => 'application/json'
                         ),
-                        'json' => array('email' => $email
+                        'json' => array(
+                            'email' => $email
                         )
                     )
                 );

@@ -197,12 +197,109 @@ class ReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    //TODO: HIGH v1 working/complete catch for null values on show blade
-    //TODO: HIGH v1 working/complete format view properly. Messy atm
-    //TODO: now gather report info too for the entire report
-    //TODO: now select other details such as total_hours etc from report_cases
     public function show($id)
     {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->get('http://odinlite.com/public/api/report/' . $id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $report = json_decode((string)$response->getBody());
+
+                if ($report->type == 'Case Notes') {
+
+                    $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
+                        'headers' => [
+                            'Authorization' => 'Bearer ' . $token,
+                        ]
+                    ]);
+
+                    $cases = json_decode((string)$response->getBody());
+
+                    if($cases->success == false) {
+                        $err = 'There were no case notes created during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+                    else {
+
+                        //format dates to be 3rd January 2107 for report date range
+                        //add the extracted date to each of the objects and format date
+                        $s = $report->date_start;
+
+                        $sdt = new DateTime($s);
+                        $sdate = $sdt->format('jS F Y');
+
+                        $e = $report->date_end;
+
+                        $edt = new DateTime($e);
+                        $edate = $edt->format('jS F Y');
+
+                        //format dates to be mm/dd/yyyy for case notes
+                        foreach($cases->reportCaseNotes as $i => $item){
+                            //add the extracted date to each of the objects and format date
+                            $t = $cases->reportCaseNotes[$i]->created_at;
+
+                            $dt = new DateTime($t);
+                            $date = $dt->format('m/d/Y');
+                            $time = $dt->format('g.i a');
+
+                            $cases->reportCaseNotes[$i]->case_date = $date;
+                            $cases->reportCaseNotes[$i]->case_time = $time;
+
+                            //change to collection datatype from array for using groupBy fn
+                            $caseNotes = collect($cases->reportCaseNotes);
+                            $groupCases = $caseNotes->groupBy('case_date');
+
+                        }
+
+                        return view('report/case_notes/show')->with(array('cases' => $cases,
+                            'groupCases' => $groupCases,
+                            'report' => $report,
+                            'start' => $sdate,
+                            'end' => $edate
+                        ));
+
+
+                    }
+                }
+
+                /*********else if the report->type == ??***********/
+
+
+            } //ie no session token exists and therefore the user is not authenticated
+            else {
+                return Redirect::to('/login');
+            }
+        }
+        //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/reports');
+        }
+        catch (\ErrorException $error) {
+            $errors = collect($error);
+            return Redirect::to('/reports')->with('errors', $errors);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //edit will return the show() but with edit btns next to each case note
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -266,13 +363,14 @@ class ReportController extends Controller
 
                         }
 
+//dd($cases);
 
-
-                        return view('report/case_notes/show')->with(array('cases' => $cases,
+                        return view('report/case_notes/edit')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,
                             'start' => $sdate,
-                            'end' => $edate
+                            'end' => $edate,
+                            'url' => 'case-notes'
                         ));
 
 
@@ -281,13 +379,12 @@ class ReportController extends Controller
 
                 /*********else if the report->type == ??***********/
 
-
             } //ie no session token exists and therefore the user is not authenticated
             else {
                 return Redirect::to('/login');
             }
         }
-        //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
@@ -296,18 +393,8 @@ class ReportController extends Controller
             $errors = collect($error);
             return Redirect::to('/reports')->with('errors', $errors);
         }
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-//    public function edit($id)
-//    {
-//        //
-//    }
+    }
 
     /**
      * Update the specified resource in storage.

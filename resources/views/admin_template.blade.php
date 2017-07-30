@@ -1,6 +1,7 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
-@extends('layouts.list')
+{{--@extends('navbar')--}}
+{{--@extends('layouts.list')--}}
 
 @section('my side-menu')
     Demo
@@ -10,14 +11,7 @@
     Demo
 @stop
 
-@section('content-item')
-    Demo
-@stop
-
 @section('title-list')
     Demo
 @stop
 
-@section('content-list')
-    Demo
-@stop

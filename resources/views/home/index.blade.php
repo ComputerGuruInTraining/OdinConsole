@@ -8,10 +8,10 @@
          style="position: absolute; left:30px; top:30px;"/>
     <div class="container" style="padding-top: 150px;">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2" >
+            <div class="col-md-8 col-md-offset-2" style="font-size: large;">
                 @if (count( $errors ) > 0)
                     @foreach ($errors->all() as $error)
-                        <div class='bg-danger alert'>{{ $error }}</div>
+                        <div class="alert" style="text-align: center; color: #B22222; font-size: large;">{{ $error }}</div>
                     @endforeach
                 @endif
                 <div class="panel panel-default" style="border-color: #663974;">
@@ -45,13 +45,19 @@
                             </div>
 
                             <div class='form-group'>
-                                {{ Form::button('Create Account', ['class' => 'btn login-btns', 'style' => 'color: white; background-color: #663974;']) }}
+                                {{ Form::button('Create Account', [
+                                'class' => 'btn login-btns',
+                                'style' => 'color: white;
+                                background-color: #663974;
+                                font-size: large;'
+                                ]) }}
                                 {{ Form::submit('Login', [
                                     'class' => 'btn login-btns',
                                      'style' => 'color: white;
                                      background-color: #663974;
                                      position: absolute;
-                                     right: 70px;'
+                                     right: 30px;
+                                     font-size: large;'
                                  ])
                                  }}
                             </div>
