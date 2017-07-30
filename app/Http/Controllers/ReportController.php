@@ -370,7 +370,7 @@ class ReportController extends Controller
                             'report' => $report,
                             'start' => $sdate,
                             'end' => $edate,
-                            'url' => 'casenotes'
+                            'url' => 'case-notes'
                         ));
 
 

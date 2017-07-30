@@ -30,16 +30,8 @@
                         <th>Reporting Guard</th>
                         <th>Actions</th>
                     </tr>
-                    {{--for the first record, display more data--}}
-                    {{--<tr>--}}
-                    {{--<td>{{$cases->reportCaseNotes[0]->case_date}}</td>--}}
-                    {{--<td>{{$cases->reportCaseNotes[0]->description}}</td>--}}
-                    {{--<td>{{$cases->reportCaseNotes[0]->title}}</td>--}}
-                    {{--</tr>--}}
-                    {{--for all the other case notes:--}}
                     @if(count($cases->reportCaseNotes) != 0)
 
-                        {{--@for($i=0; $i < count($cases->reportCaseNotes); $i++)--}}
                         @foreach($groupCases as $index => $note)
                             <tbody class="group-list">
 
@@ -55,8 +47,8 @@
                                 <tr>
                                     <td></td>
                                     <td>{{$item->case_time}}</td>
-                                    <td>{{$item->description}}</td>
                                     <td>{{$item->title}}</td>
+                                    <td>{{$item->description}}</td>
                                     <td>{{$item->employee}}</td>
                                     <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
                                         |

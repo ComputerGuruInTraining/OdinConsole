@@ -46,8 +46,8 @@
                                 <tr>
                                     <td></td>
                                     <td>{{$item->case_time}}</td>
-                                    <td>{{$item->description}}</td>
                                     <td>{{$item->title}}</td>
+                                    <td>{{$item->description}}</td>
                                     <td>{{$item->employee}}</td>
                                 </tr>
                             @endforeach

@@ -155,6 +155,15 @@ section.content-header{
     padding: 15px;
 }
 
+
+.padding-top{
+    padding-top: 15px;
+}
+
+/*.padding-left{*/
+    /*margin-left: 25px !important;*/
+/*}*/
+
 #map{
     /*position:absolute;*/
     /*z-index: */
@@ -171,9 +180,6 @@ section.content-header{
     display: none;
 }
 
-.padding-top{
-    padding-top: 15px;
-}
 
 .manage-btns{
     padding-top: 150px;

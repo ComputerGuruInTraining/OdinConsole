@@ -23,7 +23,7 @@
             </button>
         </div>
 
-        <div class='table-responsive col-md-8 padding-top'>
+        <div class='table-responsive col-md-10 padding-top'>
             <table class="table table-hover">
                 <tr>
                     <th>Report Type</th>
@@ -36,7 +36,7 @@
                         <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->form_start}} - {{$report->form_end}}</td>
                         <td>
-                            <a href="/reports/{{$report->id}}">View</a> | <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete</a>
+                            <a href="/reports/{{$report->id}}">View Report</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete Report</a> | <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>
                         </td>
                     </tr>
                     </tbody>

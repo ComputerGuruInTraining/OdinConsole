@@ -16,10 +16,10 @@ class CaseNoteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-//    public function index()
-//    {
-//        //
-//    }
+    public function index()
+    {
+        return Redirect::to('/reports');
+    }
 //
 //    /**
 //     * Show the form for creating a new resource.
@@ -181,6 +181,30 @@ class CaseNoteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->delete('http://odinlite.com/public/api/casenote/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $theAction = 'You have successfully deleted the case note';
+
+                return view('confirm')->with('theAction', $theAction);
+            } else {
+                return Redirect::to('/login');
+            }
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            return Redirect::to('/reports');
+        }
+
     }
 }
