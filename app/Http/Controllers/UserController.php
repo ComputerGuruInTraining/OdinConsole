@@ -53,7 +53,7 @@ class UserController extends Controller
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
-            return view('admin_template');
+            return view('company-settings/index');
         }
         catch (\ErrorException $error) {
             echo $error;
