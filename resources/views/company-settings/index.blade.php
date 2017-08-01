@@ -82,9 +82,10 @@
         {{--<div class=>--}}
 
             <div style="padding:15px 0px 10px 0px;">
-                <button type="button" class="btn btn-success" onclick="window.location.href='user/create'">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User
-                </button>
+                <a href="/user/create" class="btn btn-success" style="margin-right: 3px;">Add User</a>
+                {{--<button type="button" class="btn btn-success" onclick="user.create">--}}
+                    {{--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User--}}
+                {{--</button>--}}
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">

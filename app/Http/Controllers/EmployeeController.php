@@ -52,7 +52,7 @@ class EmployeeController extends Controller
                     $employees[$i]->dateBirth = $date;
                 }
 
-                return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employee'));
+                return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
 
             }
             else {
@@ -292,7 +292,7 @@ class EmployeeController extends Controller
             $err = 'Please provide valid changes';
             $errors = collect($err);
             echo($err);
-            return Redirect::to('/locations');
+            return Redirect::to('/employees');
         }
 
     }
@@ -303,18 +303,49 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
-        $employee = Employee::find($employee->id);
-        $employee->delete();
-//        Session::flash('flash_message','successfully deleted.');
-        return redirect()->route("employees.index");
+       try {
+           if (session()->has('token')) {
+               //retrieve token needed for authorized http requests
+               $token = session('token');
+
+               $client = new GuzzleHttp\Client;
+
+               $response = $client->delete('http://odinlite.com/public/api/employees/' . $id, [
+                   'headers' => [
+                       'Authorization' => 'Bearer ' . $token,
+                   ]
+               ]);
+
+               $employee = json_decode((string)$response->getBody());
+
+               if($employee->success == true)
+               {
+                   $theAction = 'You have successfully deleted the employee';
+
+                   return view('confirm')->with(array('theAction' => $theAction));
+               }
+               else{
+                   $theAction = 'Error deleting employee';
+
+                   return view('confirm')->with(array('theAction' => $theAction));
+               }
+
+           } else {
+               return Redirect::to('/login');
+           }
+       }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        echo $e;
+        return Redirect::to('/employees');
+        }
     }
 
-    public function formatDob($dob){
-
-        $newDob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
-        return $newDob;
-
-    }
+//    public function formatDob($dob){
+//
+//        $newDob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
+//        return $newDob;
+//
+//    }
 }
