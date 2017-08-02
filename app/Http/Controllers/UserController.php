@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp;
 
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+
+
+use Form;
+use Model;
+use Psy\Exception\ErrorException;
 
 class UserController extends Controller
 {
@@ -275,5 +279,70 @@ class UserController extends Controller
             return Redirect::to('/user');
         }
 	}
+
+    public function postRegister(Request $request)
+    {
+        try {
+
+            //validate input meet's db constraints
+            $this->validate($request, [
+                'company' => 'required|max:255',
+                'owner' => 'max:255',
+                'name' => 'required|max:255',
+                'emailUser' => 'required|email|max:255',
+                'password' => 'required|min:6|confirmed',
+                'first' => 'required|max:255',
+                'last' => 'required|max:255',
+            ]);
+
+            $company = $request->input('company');
+            $owner = $request->input('owner');
+            $first = $request->input('first');
+            $last = $request->input('last');
+            $emailUser = $request->input('emailUser');
+            $pw = $request->input('password');
+            $password = Hash::make($pw);
+
+            $client = new GuzzleHttp\Client;
+
+
+//            dd($company, $owner, $email, $first, $last, $emailUser);
+            $response = $client->post('http://odinlite.com/public/company', array(
+                    'headers' => array(
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array('company' => $company, 'owner' => $owner,
+                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser, 'pw' => $password
+                    )
+                )
+            );
+
+            $company = json_decode((string)$response->getBody());
+
+            //  dd($company);
+
+            if ($company->success == true) {
+
+                $theAction = 'The company account has been created and an email has been sent to ' . $emailUser . ' to complete the registration process.
+                The Odin Team welcomes you on board and we trust that you will enjoy the experience our app provides';
+
+                return view('/confirm')->with('theAction', $theAction);
+
+            } else {
+                return view('home.register');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //  echo $e;
+            $err = 'Please provide a valid email.';
+            $errors = collect($err);
+            return view('home.register')->with('errors', $errors);
+        } catch (\ErrorException $error) {
+            //this catches for the instances where an address that cannot be converted to a geocode is input
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('home.register')->with('errors', $errors);
+
+        }
+    }
 
 }

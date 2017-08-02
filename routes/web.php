@@ -61,7 +61,7 @@ Route::get('company/settings', 'UserController@index');
 
 Route::get('/register', 'HomeController@registerCompany');
 
-Route::post('/register/company', 'HomeController@postRegister');
+Route::post('/register/company', 'UserController@postRegister');
 
 
 

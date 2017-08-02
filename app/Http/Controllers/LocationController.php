@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Utlities\ApiAuth;
 use Illuminate\Http\Request;
 use Input;
 use Form;
 use Model;
-use App\Models\Location;
 use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
