@@ -59,5 +59,9 @@ Route::get('/reset/pw', 'ForgotPWController@resetPW');
 //route to show Settings page when the Settings btn is pressed eg via Header Avatar Dropdown
 Route::get('company/settings', 'UserController@index');
 
+Route::get('/register', 'HomeController@registerCompany');
+
+Route::post('/register/company', 'HomeController@postRegister');
+
 
 

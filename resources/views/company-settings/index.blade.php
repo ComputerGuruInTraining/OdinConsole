@@ -72,7 +72,7 @@
 @stop
 @section('page-content')
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
+        <button class="tablinks" onclick="openCity(event, 'Users')" selected>Users</button>
         <button class="tablinks" onclick="openCity(event, 'Paris')">Company Info</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>

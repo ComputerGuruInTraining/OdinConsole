@@ -6,7 +6,6 @@
 @stop
 
 @section('page-content')
-    {{--TODO: make a bit more robust and adaptable to different items.--}}
     <div class="padding">
         {{$theMsg}}.
     </div>

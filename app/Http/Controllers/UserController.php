@@ -52,7 +52,7 @@ class UserController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+          //  echo $e;
             return view('company-settings/index');
         }
         catch (\ErrorException $error) {
@@ -120,8 +120,8 @@ class UserController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            //echo $e;
+            $err = 'Error creating user.';
             $errors = collect($err);
             return view('user/create')->with('errors', $errors);
         }
