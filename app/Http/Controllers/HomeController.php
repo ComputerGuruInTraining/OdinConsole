@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-use App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\View;
@@ -12,7 +11,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp;
-use Illuminate\Support\Facades\Hash;
 use Form;
 
 
@@ -44,7 +42,7 @@ class HomeController extends BaseController
         //else, not api authenticated so user credentials not valid
         return Redirect::back()
             ->withInput()
-            ->withErrors('Error: Either email/password combo does not exist or you do not have access.');
+            ->withErrors('Error: Either email/password combo does not exist or you do not have access. Please ensure the account has been activated as this could be the problem.');
     }
 
     public function getLogin()
@@ -59,11 +57,6 @@ class HomeController extends BaseController
         session()->flush();
 
         return Redirect::to('/');
-    }
-
-    public function registerCompany()
-    {
-        return view('home.register');
     }
 
 }

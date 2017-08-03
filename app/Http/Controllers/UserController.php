@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use GuzzleHttp;
-
-use Illuminate\Support\Facades\Hash;
-
-
+use Input;
 use Form;
 use Model;
+use GuzzleHttp;
 use Psy\Exception\ErrorException;
+use Redirect;
+use Hash;
+
+////use Illuminate\Support\Facades\View;
+////use Illuminate\Routing\Controller;
+////use Illuminate\Support\MessageBag;
+////use Illuminate\Support\Facades\Auth;
+///
+//use Illuminate\Support\Facades\Redirect;
+
 
 class UserController extends Controller
 {
@@ -247,10 +248,6 @@ class UserController extends Controller
 	 */
 	public function destroy($id)
 	{
-//		User::destroy($id);
-//
-//		return Redirect::to('/user');
-
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -265,11 +262,7 @@ class UserController extends Controller
                     ]
                 ]);
 
-//                $responseMsg = json_decode((string)$response->getBody());
-
-//                $theAction = 'You have successfully deleted the USER';
                 return Redirect::to('/user');
-//                return view('confirm')->with('theAction', $theAction);
             } else {
                 return Redirect::to('/login');
             }
@@ -280,19 +273,28 @@ class UserController extends Controller
         }
 	}
 
+    /*
+     *
+     * Register Page
+     *
+    */
+
+    public function registerCompany()
+    {
+        return view('home.register');
+    }
+
     public function postRegister(Request $request)
     {
         try {
-
             //validate input meet's db constraints
             $this->validate($request, [
                 'company' => 'required|max:255',
-                'owner' => 'max:255',
-                'name' => 'required|max:255',
+                'owner' => 'nullable|max:255',
                 'emailUser' => 'required|email|max:255',
                 'password' => 'required|min:6|confirmed',
                 'first' => 'required|max:255',
-                'last' => 'required|max:255',
+                'last' => 'required|max:255'
             ]);
 
             $company = $request->input('company');
@@ -305,8 +307,6 @@ class UserController extends Controller
 
             $client = new GuzzleHttp\Client;
 
-
-//            dd($company, $owner, $email, $first, $last, $emailUser);
             $response = $client->post('http://odinlite.com/public/company', array(
                     'headers' => array(
                         'Content-Type' => 'application/json'
@@ -319,25 +319,24 @@ class UserController extends Controller
 
             $company = json_decode((string)$response->getBody());
 
-            //  dd($company);
-
             if ($company->success == true) {
 
-                $theAction = 'The company account has been created and an email has been sent to ' . $emailUser . ' to complete the registration process.
-                The Odin Team welcomes you on board and we trust that you will enjoy the experience our app provides';
+                $msgLine1 = 'The company account has been created and an email has been sent to ' . $emailUser . ' to 
+                complete the registration process.';
 
-                return view('/confirm')->with('theAction', $theAction);
+                $msgLine2 =  'The Odin Team welcomes you on board and we trust that you will enjoy the experience our app provides.';
+
+                return view('/confirm_alt')->with(array('title' => 'Confirmation of Success', 'line1' => $msgLine1, 'line2' => $msgLine2));
 
             } else {
                 return view('home.register');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //  echo $e;
-            $err = 'Please provide a valid email.';
+            $err = 'There is an error in the input. 
+            This could be caused by an invalid email or an email that already exists in the system. Please check your input.';
             $errors = collect($err);
             return view('home.register')->with('errors', $errors);
         } catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
             $e = 'Please fill in all required fields';
             $errors = collect($e);
             return view('home.register')->with('errors', $errors);

@@ -60,11 +60,9 @@ class EmployeeController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return view('admin_template');
         }
         catch (\ErrorException $error) {
-            echo $error;
             return Redirect::to('/login');
         }
     }
@@ -207,7 +205,6 @@ class EmployeeController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             $err = 'Error updating employee.';
             $errors = collect($err);
             return view('employee/edit-employee')->with('errors', $errors);
@@ -291,7 +288,6 @@ class EmployeeController extends Controller
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Please provide valid changes';
             $errors = collect($err);
-            echo($err);
             return Redirect::to('/employees');
         }
 
@@ -337,7 +333,6 @@ class EmployeeController extends Controller
            }
        }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-        echo $e;
         return Redirect::to('/employees');
         }
     }

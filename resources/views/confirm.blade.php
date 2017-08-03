@@ -1,3 +1,5 @@
+{{--Usage: generic confirmation page using layouts.master_layout without app sidebar and header. Useful when not logged into app--}}
+
 @extends('layouts.master_layout')
 @extends('sidebar')
 
@@ -6,5 +8,5 @@
 @stop
 
 @section('page-content')
-    <div class="confirm">{{ $theAction }}.</div>
+    <div class="confirm col-md-8 line-space">{{ $theAction }}.</div>
 @stop

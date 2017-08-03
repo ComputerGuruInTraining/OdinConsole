@@ -103,8 +103,7 @@ class RosterController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
+            //rather than displaying an error page, redirect users to dashboard/login page
             return view('admin_template');
         }
     }

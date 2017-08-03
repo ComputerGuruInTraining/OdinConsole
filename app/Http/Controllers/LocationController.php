@@ -9,10 +9,10 @@ use Model;
 use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
+use Hash;
 
 class LocationController extends Controller
 {
-//    public $accessToken;
 
     /**
      * Display a listing of the resource.
@@ -47,11 +47,9 @@ class LocationController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return view('admin_template');
         }
         catch (\ErrorException $error) {
-            echo $error;
             return Redirect::to('/login');
         }
     }
@@ -122,7 +120,6 @@ class LocationController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
             $errors = collect($err);
             return view('location/create-locations')->with('errors', $errors);
@@ -191,7 +188,6 @@ class LocationController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             $err = 'Error';
             $errors = collect($err);
             return view('location/create-locations')->with('errors', $errors);
@@ -276,7 +272,6 @@ class LocationController extends Controller
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Please provide valid changes';
             $errors = collect($err);
-            echo($err);
             return Redirect::to('/locations');
         }
         catch (\ErrorException $error) {
@@ -288,7 +283,6 @@ class LocationController extends Controller
                 return Redirect::to('/locations');
 //fixme: proper validation: ->with('errors', $errors)
             } else {
-                echo($error);
                 return Redirect::to('/locations');
             }
         }
@@ -323,7 +317,6 @@ class LocationController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return Redirect::to('/locations');
         }
     }
@@ -335,4 +328,5 @@ class LocationController extends Controller
         $output = json_decode($geocode);
         return $output;
     }
+
 }

@@ -5,30 +5,25 @@
 @section('content')
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
-    <div class="container" style="padding-top: 150px;">
+    <div class="container" style="padding-top: 70px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" >
                 @if (count( $errors ) > 0)
                     @foreach ($errors->all() as $error)
-                        <div class='bg-danger alert'>{{ $error }}</div>
+                        <div class='alert error'>{{ $error }}</div>
                     @endforeach
                 @endif
                 <div class="panel panel-default" style="border-color: #663974;">
                     <div class="panel-heading"  style="color: white; background-color: #663974;">Register Company</div>
                     <div class="panel-body">
-                        {{--@if (session('status'))--}}
-                            {{--<div class="alert alert-success">--}}
-                                {{--{{ session('status') }}--}}
-                            {{--</div>--}}
-                        {{--@endif--}}
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/register/company') }}">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <h5>Company Details</h5>
+                                <h4 class="register-headings">Company Details</h4>
                             </div>
                             <div class="form-group{{ $errors->has('company') ? ' has-error' : '' }}">
-                                <label for="company" class="col-md-4 control-label">Name</label>
+                                <label for="company" class="col-md-4 control-label">Company Name</label>
 
                                 <div class="col-md-6">
                                     <input id="company" type="text" class="form-control" name="company" value="{{ old('company') }}" required>
@@ -56,7 +51,7 @@
                                 </div>
 
                                     <div class="form-group">
-                                        <h5>Primary User Details</h5>
+                                        <h4 class="register-headings padding-top">Primary User Details</h4>
                                     </div>
 
                                     <div class="form-group{{ $errors->has('first') ? ' has-error' : '' }}">
@@ -128,6 +123,10 @@
                                             <button type="submit" class="btn btn-primary" style="color: white; background-color: #663974;">
                                                 Register
                                             </button>
+                                            <a href="/login" class="btn btn-primary" style="
+                                                color: white;
+                                                background-color: #663974;
+                                                font-size: large;">Cancel</a>
                                         </div>
                                     </div>
                         </form>
