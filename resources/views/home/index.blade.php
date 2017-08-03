@@ -11,11 +11,11 @@
             <div class="col-md-8 col-md-offset-2" style="font-size: large;">
                 @if (count( $errors ) > 0)
                     @foreach ($errors->all() as $error)
-                        <div class="alert" style="text-align: center; color: #B22222; font-size: large;">{{ $error }}</div>
+                        <div class="alert error">{{ $error }}</div>
                     @endforeach
                 @endif
                 <div class="panel panel-default" style="border-color: #663974;">
-                    <div class="panel-heading"  style="color: white; background-color: #663974;">Login</div>
+                    <div class="panel-heading panel-head">Login</div>
                     <div class="panel-body">
                         {{ Form::open(['role' => 'form','method' => 'POST']) }}
                         <div>
@@ -45,12 +45,11 @@
                             </div>
 
                             <div class='form-group'>
-                                {{ Form::button('Create Account', [
-                                'class' => 'btn login-btns',
-                                'style' => 'color: white;
+                                <a href="/register" class="btn" style="margin-right: 3px;
+                                        color: white;
                                 background-color: #663974;
-                                font-size: large;'
-                                ]) }}
+                                font-size: large;">Register</a>
+
                                 {{ Form::submit('Login', [
                                     'class' => 'btn login-btns',
                                      'style' => 'color: white;
@@ -61,6 +60,7 @@
                                  ])
                                  }}
                             </div>
+
                             <div style="text-align: center;">
                                 <a href='/reset/link' style="color: #663974; text-align: center;">Forgot Password?</a>
                             </div>

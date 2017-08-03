@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Input;
+use Form;
+use Model;
 use GuzzleHttp;
+use Psy\Exception\ErrorException;
+use Redirect;
+use Hash;
 
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+////use Illuminate\Support\Facades\View;
+////use Illuminate\Routing\Controller;
+////use Illuminate\Support\MessageBag;
+////use Illuminate\Support\Facades\Auth;
+///
+//use Illuminate\Support\Facades\Redirect;
+
 
 class UserController extends Controller
 {
@@ -52,8 +57,8 @@ class UserController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return view('admin_template');
+          //  echo $e;
+            return view('company-settings/index');
         }
         catch (\ErrorException $error) {
             echo $error;
@@ -120,8 +125,8 @@ class UserController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            //echo $e;
+            $err = 'Error creating user.';
             $errors = collect($err);
             return view('user/create')->with('errors', $errors);
         }
@@ -243,10 +248,6 @@ class UserController extends Controller
 	 */
 	public function destroy($id)
 	{
-//		User::destroy($id);
-//
-//		return Redirect::to('/user');
-
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -261,11 +262,7 @@ class UserController extends Controller
                     ]
                 ]);
 
-//                $responseMsg = json_decode((string)$response->getBody());
-
-//                $theAction = 'You have successfully deleted the USER';
                 return Redirect::to('/user');
-//                return view('confirm')->with('theAction', $theAction);
             } else {
                 return Redirect::to('/login');
             }
@@ -275,5 +272,76 @@ class UserController extends Controller
             return Redirect::to('/user');
         }
 	}
+
+    /*
+     *
+     * Register Page
+     *
+    */
+
+    public function registerCompany()
+    {
+        return view('home.register');
+    }
+
+    public function postRegister(Request $request)
+    {
+        try {
+            //validate input meet's db constraints
+            $this->validate($request, [
+                'company' => 'required|max:255',
+                'owner' => 'nullable|max:255',
+                'emailUser' => 'required|email|max:255',
+                'password' => 'required|min:6|confirmed',
+                'first' => 'required|max:255',
+                'last' => 'required|max:255'
+            ]);
+
+            $company = $request->input('company');
+            $owner = $request->input('owner');
+            $first = $request->input('first');
+            $last = $request->input('last');
+            $emailUser = $request->input('emailUser');
+            $pw = $request->input('password');
+            $password = Hash::make($pw);
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->post('http://odinlite.com/public/company', array(
+                    'headers' => array(
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array('company' => $company, 'owner' => $owner,
+                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser, 'pw' => $password
+                    )
+                )
+            );
+
+            $company = json_decode((string)$response->getBody());
+
+            if ($company->success == true) {
+
+                $msgLine1 = 'The company account has been created and an email has been sent to ' . $emailUser . ' to 
+                complete the registration process.';
+
+                $msgLine2 =  'The Odin Team welcomes you on board and we trust that you will enjoy the experience our app provides.';
+
+                return view('/confirm_alt')->with(array('title' => 'Confirmation of Success', 'line1' => $msgLine1, 'line2' => $msgLine2));
+
+            } else {
+                return view('home.register');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'There is an error in the input. 
+            This could be caused by an invalid email or an email that already exists in the system. Please check your input.';
+            $errors = collect($err);
+            return view('home.register')->with('errors', $errors);
+        } catch (\ErrorException $error) {
+            $e = 'Please fill in all required fields';
+            $errors = collect($e);
+            return view('home.register')->with('errors', $errors);
+
+        }
+    }
 
 }

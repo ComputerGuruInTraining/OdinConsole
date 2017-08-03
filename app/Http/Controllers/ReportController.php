@@ -10,6 +10,8 @@ use Input;
 use DateTime;
 
 
+//GeoCode TZ key =
+
 class ReportController extends Controller
 {
     protected $accessToken;
@@ -231,6 +233,10 @@ class ReportController extends Controller
                     }
                     else {
 
+                        //extract location latitude and longitude to be used to find timezone
+                        $lat = $cases->location->latitude;
+                        $long = $cases->location->longitude;
+
                         //format dates to be 3rd January 2107 for report date range
                         //add the extracted date to each of the objects and format date
                         $s = $report->date_start;
@@ -248,9 +254,23 @@ class ReportController extends Controller
                             //add the extracted date to each of the objects and format date
                             $t = $cases->reportCaseNotes[$i]->created_at;
 
-                            $dt = new DateTime($t);
-                            $date = $dt->format('m/d/Y');
-                            $time = $dt->format('g.i a');
+                            $dateForTS =date_create($t);
+                            $dateInTS = date_timestamp_get($dateForTS);
+
+                            //find the timezone for each case note using google timezone api
+                            $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location='.$lat.','.$long.
+                            '&timestamp='.$dateInTS.'&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+
+                            $data = json_decode($result);
+
+                            //google timezone api returns the time in seconds from utc time (rawOffset)
+                            //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                            $tsUsingResult = $dateInTS + $data->dstOffset + $data->rawOffset;
+
+                            //convert timestamp to a datetime string
+                            $date = date('m/d/Y', $tsUsingResult);
+
+                            $time = date('g.i a', $tsUsingResult);
 
                             $cases->reportCaseNotes[$i]->case_date = $date;
                             $cases->reportCaseNotes[$i]->case_time = $time;
@@ -267,8 +287,6 @@ class ReportController extends Controller
                             'start' => $sdate,
                             'end' => $edate
                         ));
-
-
                     }
                 }
 
@@ -362,8 +380,6 @@ class ReportController extends Controller
                             $groupCases = $caseNotes->groupBy('case_date');
 
                         }
-
-//dd($cases);
 
                         return view('report/case_notes/edit')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,

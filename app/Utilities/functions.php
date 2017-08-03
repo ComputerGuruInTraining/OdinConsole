@@ -124,35 +124,47 @@ function oauth2($email, $password){
 
         $user = json_decode((string)$responseUser->getBody());
 
-        $responseRole = $client->get('http://odinlite.com/public/api/user/role/'.$user->id, [
+        $responseStatus = $client->get('http://odinlite.com/public/api/status/'.$user->company_id, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $auth->access_token,
             ]
         ]);
 
         //array datatype, even though only 1 item in the array
-        $role = json_decode((string)$responseRole->getBody());
-
-        //ensure the user is in the user_role table and therefore allowed access to the console
-        if($role != null){
-            $token = $auth->access_token;
-            $name = $user->first_name.' '.$user->last_name;
-            //save the token in a session helper method along with the user id and name
-            //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
-            session([
-                'token' => $token,
-                'id' => $user->id,
-                'name' => $name,
-                'role' => $role[0],
-                'compId' => $user->company_id]);
-
-            return true;
-        }
-        //else the user is not allowed access to the console
-        else{
+        $status = json_decode((string)$responseStatus->getBody());
+        //company account has been created but has not been activated via email authentication
+        if($status != "active"){
             return false;
         }
+        else {
+            $responseRole = $client->get('http://odinlite.com/public/api/user/role/' . $user->id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $auth->access_token,
+                ]
+            ]);
 
+            //array datatype, even though only 1 item in the array
+            $role = json_decode((string)$responseRole->getBody());
+
+            //ensure the user is in the user_role table and therefore allowed access to the console
+            if ($role != null) {
+                $token = $auth->access_token;
+                $name = $user->first_name . ' ' . $user->last_name;
+                //save the token in a session helper method along with the user id and name
+                //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
+                session([
+                    'token' => $token,
+                    'id' => $user->id,
+                    'name' => $name,
+                    'role' => $role[0],
+                    'compId' => $user->company_id]);
+
+                return true;
+            } //else the user is not allowed access to the console
+            else {
+                return false;
+            }
+        }
     } catch (GuzzleHttp\Exception\BadResponseException $e) {
         return false;
     }
