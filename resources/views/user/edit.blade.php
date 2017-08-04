@@ -13,7 +13,6 @@
         @endforeach
     @endif
 
-    {{--<h1><i class='fa fa-user'></i> Edit User</h1>--}}
 
     {{--{{ Form::model($user, ['role' => 'form', 'url' => '/user/' . $user->id, 'method' => 'PUT']) }}--}}
         {{ Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'put']) }}

@@ -72,10 +72,20 @@
 @stop
 @section('page-content')
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Users')" selected>Users</button>
+        <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
         <button class="tablinks" onclick="openCity(event, 'Paris')">Company Info</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div id="Users" class="tabcontent col-md-12">
 

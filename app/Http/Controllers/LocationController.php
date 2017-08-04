@@ -114,6 +114,9 @@ class LocationController extends Controller
                     )
                 );
 
+                $reply = json_decode((string)$response->getBody());
+
+                //if($reply->)
                 //display confirmation page
                 return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
             } else {

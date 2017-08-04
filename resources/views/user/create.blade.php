@@ -13,8 +13,6 @@
         @endforeach
     @endif
 
-    {{--<h1><i class='fa fa-user'></i> Add User</h1>--}}
-
     {{ Form::open(['role' => 'form', 'url' => '/user', 'action' => 'POST']) }}
 
     <div class='form-group'>
@@ -26,11 +24,6 @@
         {{ Form::label('last_name', 'Last Name') }}
         {{ Form::text('last_name', null, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
     </div>
-
-    {{--<div class='form-group'>--}}
-        {{--{{ Form::label('username', 'Username') }}--}}
-        {{--{{ Form::text('username', null, ['placeholder' => 'Username', 'class' => 'form-control']) }}--}}
-    {{--</div>--}}
 
     <div class='form-group'>
         {{ Form::label('email', 'Email') }}

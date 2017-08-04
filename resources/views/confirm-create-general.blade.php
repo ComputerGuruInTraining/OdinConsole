@@ -6,11 +6,12 @@
 @stop
 
 @section('page-content')
-    <div class="padding">
-        {{$theMsg}}.
+    <div class="col-md-10">
+        <div class="padding">
+            {{$theMsg}}.
+        </div>
+        <div class="padding">
+            <a href="/{{$url}}/create" class="btn btn-success" style="margin-right: 3px;">{{$btnText}}</a>
+        </div>
     </div>
-    <div class="padding">
-        <a href="/{{$url}}/create" class="btn btn-success" style="margin-right: 3px;">{{$btnText}}</a>
-    </div>
-
 @stop
