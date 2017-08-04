@@ -1,4 +1,4 @@
-@extends('layouts.master_layout')
+@extends('resources.views.layouts.master_layout')
 <!-- .content -->
 <!-- Content Header 1 -->
 @section('page-content')

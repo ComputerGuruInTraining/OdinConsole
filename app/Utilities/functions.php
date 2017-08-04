@@ -39,6 +39,39 @@ if(! function_exists('confirmDlt')){
     }
 }
 
+//global delete confirm fn for manually defined routes which enable header toggle buttons eg menu
+if(! function_exists('confirmDel')){
+    function confirmDel($id, $url) {
+        try{
+
+            $msg = '';
+
+            if($url == 'rosters'){
+                $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
+                    this will delete all the shift details for that date.';
+            }
+
+            if($url == 'employees'){
+                $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
+            }
+
+            if($url == 'locations'){
+                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
+            }
+
+            return view('confirm-del')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
+
+        } catch(\ErrorException $error){
+            echo $error;
+            Redirect::to('/rosters');
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo $e;
+            Redirect::to('/rosters');
+        }
+    }
+}
+
 //usage: when storing shift in db & when storing a new report
 if(! function_exists('jobDateTime')) {
     function jobDateTime($date, $time)

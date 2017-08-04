@@ -39,7 +39,7 @@ class LocationController extends Controller
 
                 $locations = json_decode((string)$response->getBody());
 
-                return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
+                return view('location/locations')->with(array('locations' => $locations, 'url' => 'location'));
 
             }
             else {
@@ -52,6 +52,18 @@ class LocationController extends Controller
         catch (\ErrorException $error) {
             return Redirect::to('/login');
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+
     }
 
     /**

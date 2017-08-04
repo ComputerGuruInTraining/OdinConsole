@@ -44,6 +44,7 @@
         }
     </script>
 
+    {{--Company Settings Page--}}
         @yield('custom-scripts')
 
         @yield('custom-styles')
