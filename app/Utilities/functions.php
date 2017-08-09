@@ -29,11 +29,11 @@ if(! function_exists('confirmDlt')){
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
         } catch(\ErrorException $error){
-            echo $error;
+//            echo $error;
             Redirect::to('/rosters');
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             Redirect::to('/rosters');
         }
     }
@@ -62,11 +62,11 @@ if(! function_exists('confirmDel')){
             return view('confirm-del')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
         } catch(\ErrorException $error){
-            echo $error;
+//            echo $error;
             Redirect::to('/rosters');
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             Redirect::to('/rosters');
         }
     }
@@ -202,63 +202,3 @@ function oauth2($email, $password){
         return false;
     }
 }
-
-
-
-
-
-
-//old, transitioning over from this fn to new oauth2 fn
-//function oauth(){
-//    try {
-//        $client = new GuzzleHttp\Client;
-//
-//        $response = $client->post('http://odinlite.com/public/oauth/token', [
-//            'form_params' => [
-//                'grant_type' => 'password',
-//                'client_id' => 2,
-//                // The secret generated when you ran: php artisan passport:install
-//                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-//                'username' => 'johnd@exampleemail.com',
-//                'password' => 'secret',
-//                'scope' => '*',
-//            ],
-//        ]);
-//
-//        $auth = json_decode((string)$response->getBody());
-//
-//        // $this->accessToken = $auth->access_token;
-//        return $auth->access_token;
-//
-//    } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//        echo $e;
-//        return view('admin_template');
-//    }
-//}
-
-
-//pm format $date = dd/mm/yyyy, $time = HH:MM
-
-/*
- * this returns a string value
- * with the format
- * required for the mysql database
- *  datetime format of yyyy-mm-dd
- *
- * */
-
-//    public function endDT($startTime, $duration)
-//    {
-//        $dt = new DateTime($startTime);//DateTime object
-//        $interval = 'PT' . $duration . 'H';
-//        $edt = $dt->add(new DateInterval($interval));
-//        return $edt;
-//    }
-//
-//    public function stringDate($dt)
-//    {
-//        $date = $dt->format('m/d/Y');
-//        return $date;
-//    }
-//
-

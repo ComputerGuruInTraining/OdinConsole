@@ -148,7 +148,7 @@ class RosterController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return Redirect::to('/rosters');
         }
@@ -188,7 +188,7 @@ class RosterController extends Controller
             return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return Redirect::to('/rosters');
         }
@@ -219,11 +219,6 @@ class RosterController extends Controller
         //function in functions.php
         $strStart = jobDateTime($dateStart, $timeStart);
         $strEnd = jobDateTime($dateEnd, $timeEnd);
-
-//        $this->oauth();
-
-        //retrieve token needed for authorized http requests
-//        $token = $this->accessToken();
 
         $client = new GuzzleHttp\Client;
 
@@ -336,7 +331,7 @@ class RosterController extends Controller
 
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-                echo $e;
+//                echo $e;
                 return Redirect::to('/rosters');
         }
     }
@@ -412,11 +407,11 @@ class RosterController extends Controller
             }
         }
         catch(GuzzleHttp\Exception\BadResponseException $e){
-            echo $e;
+//            echo $e;
             return Redirect::to('/rosters/'.$id.'/edit');
         }
         catch(\ErrorException $error){
-            echo $error;
+//            echo $error;
             return Redirect::to('/rosters/'.$id.'/edit');
         }
     }
@@ -451,7 +446,7 @@ class RosterController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             return Redirect::to('/rosters');
         }
 
