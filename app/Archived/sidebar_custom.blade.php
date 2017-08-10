@@ -1,4 +1,4 @@
-@extends('sidebar')
+@extends('resources.views.sidebar')
 
 @section('custom-menu')
     <li class="header"><h4>Manage @yield('custom-menu-title') Links</h4></li>

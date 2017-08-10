@@ -72,7 +72,7 @@
 
                          $smallestArray = min($locLen, $empLen);
                          $biggestArray = max($locLen, $empLen);
-                         $remainingItems = $biggestArray - $smallestArray;
+{{--                         $remainingItems = $biggestArray - $smallestArray;--}}
 
                         //loop through the smallest array and display values from both the arrays
                         for($index = 0; $index<$smallestArray; $index++){
@@ -90,7 +90,7 @@
                         //and loop through the biggest array which still has values to display
                         if(sizeof($locations) != sizeof($employees)){
                            if($biggestArray == sizeof($employees)){
-                                for($r = 0; $r<$remainingItems; $r++){
+                                for($r = $smallestArray; $r<$biggestArray; $r++){
                                    echo"<tr>
                                         <td></td>
                                         <td></td>
@@ -101,13 +101,14 @@
                                }
                            }
                            else if($biggestArray == sizeof($locations)){
+                                for($r = $smallestArray; $r<$biggestArray; $r++){
 
-                               for($r = 0; $r<$remainingItems; $r++){
+{{--                               for($r = 0; $r<$remainingItems; $r++){--}}
                                        echo"<tr>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
                                             <td>".$locations[$r]."</td>
+                                            <td></td>
                                             <td></td>
                                             </tr>";
                                    }

@@ -1,7 +1,3 @@
-{{--TODO: change to extend a create_layout once layout exists--}}
-{{--TODO: fix sidemenu--}}
-{{--TODO: include an option to Create another location so don't have to go via main page if creating a few at a time v2--}}
-{{--TODO: optimize: put a suggested name in the alias field v2--}}
 @extends('layouts.master_layout')
 @extends('sidebar')
 
@@ -25,7 +21,7 @@
             </div>
         @endif
 
-        {{ Form::open(['role' => 'form', 'url' => '/locations']) }}
+        {{ Form::open(['role' => 'form', 'url' => '/location-created']) }}
         @include('map')
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias *') }}
@@ -39,7 +35,7 @@
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-            <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}
     </div>

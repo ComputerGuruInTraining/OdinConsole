@@ -11,13 +11,6 @@ use Psy\Exception\ErrorException;
 use Redirect;
 use Hash;
 
-////use Illuminate\Support\Facades\View;
-////use Illuminate\Routing\Controller;
-////use Illuminate\Support\MessageBag;
-////use Illuminate\Support\Facades\Auth;
-///
-//use Illuminate\Support\Facades\Redirect;
-
 
 class UserController extends Controller
 {
@@ -29,7 +22,6 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -46,25 +38,35 @@ class UserController extends Controller
                 ]);
 
                 $users = json_decode((string)$response->getBody());
-//                dd($users);
-                return view('company-settings.index', compact('users'));
 
-//                return view('user/index')->with(array('users' => $users, 'url' => 'user'));
+                $resp = $client->get('http://odinlite.com/public/api/company/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $compInfo = json_decode((string)$resp->getBody());
+
+//                dd($compInfo->company->id);
+
+                $users = array_sort($users, 'last_name', SORT_ASC);
+
+
+                return view('company-settings.index', compact('users', 'compInfo'));
 
             }
+            //user does not have a token
             else {
                 return Redirect::to('/login');
             }
         }
+        //api error
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-          //  echo $e;
             return view('company-settings/index');
         }
         catch (\ErrorException $error) {
-            echo $error;
             return Redirect::to('/login');
         }
-
 	}
 
 	/**
@@ -74,8 +76,6 @@ class UserController extends Controller
 	 */
 	public function create()
 	{
-//		return View::make('user.create');
-
         if (session()->has('token')) {
             return view('user/create');
         }
@@ -89,21 +89,31 @@ class UserController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
         try {
             if (session()->has('token')) {
+
+                //validate input meet's db constraints
+                $this->validate($request, [
+                    'first_name' => 'required|max:255',
+                    'last_name' => 'required|max:255',
+                    'email' => 'required|email|max:255'
+                ]);
+
+                //data to be inserted into db
+                $first_name = Input::get('first_name');
+                $last_name = Input::get('last_name');
+                $email = Input::get('email');
+                $password = Hash::make(Input::get('password'));
+
+                //api request variables
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
                 $client = new GuzzleHttp\Client;
 
                 $compId = session('compId');
-
-                $first_name = Input::get('first_name');
-                $last_name = Input::get('last_name');
-               $email = Input::get('email');
-               $password = Hash::make(Input::get('password'));
 
                 $response = $client->post('http://odinlite.com/public/api/user', array(
                         'headers' => array(
@@ -115,24 +125,33 @@ class UserController extends Controller
                         )
                     )
                 );
-                $users = json_decode((string)$response->getBody());
+                $reply = json_decode((string)$response->getBody());
+              //  dd($reply);
+                    //Redirect user based on success or failure of db insert
+                if($reply->success == true) {
+                    $msg = 'You have successfully added '.$first_name.' '.$last_name.' to the system. 
+                    Please advise the new user that an email has been sent to the email provided to complete the registration process. 
+                    They may action this at their convenience';
+                    //display confirmation page
+                    return view('confirm-create-general')->with(array('theMsg' => $msg, 'url' => 'user', 'btnText' => 'Add User'));
+                }
+                else{
+                    $err = 'Error creating user. Please ensure email is valid.';
+                    //view expects a collection, so convert datatype to a collection
+                    $errors = collect($err);
+                    return view('user/create')->with('errors', $errors);
+                }
 
-                //display added users
-                return Redirect::to('/user');
-
-//                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
             } else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //echo $e;
-            $err = 'Error creating user.';
+            $err = 'Error creating user. Please ensure email is valid.';
             $errors = collect($err);
             return view('user/create')->with('errors', $errors);
         }
         catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Please fill in all required fields';
+            $e = 'Please fill in all required fields with valid input';
             $errors = collect($e);
             return view('user/create')->with('errors', $errors);
         }
@@ -169,20 +188,15 @@ class UserController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+            $err = 'Error displaying page';
             $errors = collect($err);
-            return view('user/create')->with('errors', $errors);
+            return view('company-settings/index')->with('errors', $errors);
         }
         catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Please fill in all required fields';
+            $e = 'Error displaying page';
             $errors = collect($e);
-            return view('user/create')->with('errors', $errors);
+            return view('company-settings/index')->with('errors', $errors);
         }
-//		$user = User::find($id);
-//
-//		return View::make('user.edit', [ 'user' => $user ]);
 	}
 
 	/**
@@ -191,12 +205,19 @@ class UserController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update( $id)
+	public function update(Request $request, $id)
 	{
 
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
+                //validate input meet's db constraints
+                $this->validate($request, [
+                    'first_name' => 'required|max:255',
+                    'last_name' => 'required|max:255',
+                    'email' => 'required|email|max:255'
+                ]);
+
                 $token = session('token');
 
                 //get the data from the form
@@ -223,21 +244,24 @@ class UserController extends Controller
                 //direct user based on whether record updated successfully or not
                 if($user->success == true)
                 {
-                    return redirect()->route('user.index');
+                    $msg = 'You have successfully edited '.$first_name.' '.$last_name;
+                    //display confirmation page
+                    return view('confirm')->with('theAction', $msg);
                 }
-                else{
-                    return redirect()->route("user.edit");
+                else {
+                    return Redirect::to('company/settings')->withErrors('Error updating user. Please ensure email is valid.');
                 }
-            } else {
+            }
+            //user does not have a valid token
+            else {
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Please provide valid changes';
-            $errors = collect($err);
-            echo($err);
-            return Redirect::to('/locations');
+            return Redirect::to('company/settings')->withErrors('Please provide valid changes and ensure email is unique.');
         }
-
+        catch (\ErrorException $error) {
+            return Redirect::to('company/settings')->withErrors('Please provide valid changes and ensure the email is unique.');
+        }
 	}
 
 	/**
@@ -253,7 +277,6 @@ class UserController extends Controller
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
-
                 $client = new GuzzleHttp\Client;
 
                 $response = $client->delete('http://odinlite.com/public/api/user/'.$id, [
@@ -262,14 +285,28 @@ class UserController extends Controller
                     ]
                 ]);
 
-                return Redirect::to('/user');
-            } else {
+                $user = json_decode((string)$response->getBody());
+
+                if($user->success == true)
+                {
+                    $msg = 'You have successfully deleted the user';
+                    //display confirmation page
+                    return view('confirm')->with('theAction', $msg);
+                }
+                else {
+                    return Redirect::to('company/settings')->withErrors('Failed to delete user');
+                }
+            }
+            //user does not have a valid token
+            else {
                 return Redirect::to('/login');
             }
-        }
+        }//db error
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            return Redirect::to('/user');
+            return Redirect::to('/company/settings')->withErrors('Error deleting user');
+        }//error returned to laravel and caught
+        catch (\ErrorException $error) {
+            return Redirect::to('/company/settings')->withErrors('Error deleting the user');
         }
 	}
 

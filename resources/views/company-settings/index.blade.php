@@ -72,10 +72,20 @@
 @stop
 @section('page-content')
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Users')" selected>Users</button>
-        <button class="tablinks" onclick="openCity(event, 'Paris')">Company Info</button>
+        <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
+        <button class="tablinks" onclick="openCity(event, 'Company')">Company Info</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div id="Users" class="tabcontent col-md-12">
 
@@ -121,10 +131,43 @@
 
         </div>
     </div>
-    <div id="Paris" class="tabcontent">
-        <h3>Company Info</h3>
-        <p>Name: </p>
-        <p>Owner: </p>
+    <div id="Company" class="tabcontent padding-top">
+        <table class="table no-borders">
+            <div class="col-md-10">
+            <tr>
+                <th class="col-md-2">
+                    Company Name:
+                </th>
+                <td>
+                    {{$compInfo->company->name}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Owner:
+                </th>
+                <td>
+                    {{$compInfo->company->owner}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Primary Contact:
+                </th>
+                <td>
+                    {{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact Email:
+                </th>
+                <td>
+                    {{$compInfo->contact->email}}
+                </td>
+            </tr>
+            </div>
+        </table>
     </div>
 
     {{--<div id="Tokyo" class="tabcontent">--}}

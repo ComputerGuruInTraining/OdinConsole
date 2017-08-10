@@ -13,6 +13,34 @@ if(! function_exists('confirmDlt')){
 
             $msg = '';
 
+            if($url == 'employees'){
+                $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
+            }
+
+            if($url == 'locations'){
+                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
+            }
+
+            return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
+
+        } catch(\ErrorException $error){
+//            echo $error;
+            Redirect::to('/rosters');
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            echo $e;
+            Redirect::to('/rosters');
+        }
+    }
+}
+
+//global delete confirm fn for manually defined routes which enable header toggle buttons eg menu
+if(! function_exists('confirmDel')){
+    function confirmDel($id, $url) {
+        try{
+
+            $msg = '';
+
             if($url == 'rosters'){
                 $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
                     this will delete all the shift details for that date.';
@@ -26,14 +54,14 @@ if(! function_exists('confirmDlt')){
                 $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
             }
 
-            return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
+            return view('confirm-del')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
         } catch(\ErrorException $error){
-            echo $error;
+//            echo $error;
             Redirect::to('/rosters');
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+//            echo $e;
             Redirect::to('/rosters');
         }
     }
@@ -169,63 +197,3 @@ function oauth2($email, $password){
         return false;
     }
 }
-
-
-
-
-
-
-//old, transitioning over from this fn to new oauth2 fn
-//function oauth(){
-//    try {
-//        $client = new GuzzleHttp\Client;
-//
-//        $response = $client->post('http://odinlite.com/public/oauth/token', [
-//            'form_params' => [
-//                'grant_type' => 'password',
-//                'client_id' => 2,
-//                // The secret generated when you ran: php artisan passport:install
-//                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-//                'username' => 'johnd@exampleemail.com',
-//                'password' => 'secret',
-//                'scope' => '*',
-//            ],
-//        ]);
-//
-//        $auth = json_decode((string)$response->getBody());
-//
-//        // $this->accessToken = $auth->access_token;
-//        return $auth->access_token;
-//
-//    } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//        echo $e;
-//        return view('admin_template');
-//    }
-//}
-
-
-//pm format $date = dd/mm/yyyy, $time = HH:MM
-
-/*
- * this returns a string value
- * with the format
- * required for the mysql database
- *  datetime format of yyyy-mm-dd
- *
- * */
-
-//    public function endDT($startTime, $duration)
-//    {
-//        $dt = new DateTime($startTime);//DateTime object
-//        $interval = 'PT' . $duration . 'H';
-//        $edt = $dt->add(new DateInterval($interval));
-//        return $edt;
-//    }
-//
-//    public function stringDate($dt)
-//    {
-//        $date = $dt->format('m/d/Y');
-//        return $date;
-//    }
-//
-

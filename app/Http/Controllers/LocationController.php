@@ -39,7 +39,9 @@ class LocationController extends Controller
 
                 $locations = json_decode((string)$response->getBody());
 
-                return view('location/locations')->with(array('locations' => $locations, 'url' => 'locations'));
+                $locations = array_sort($locations, 'name', SORT_ASC);
+
+                return view('location/locations')->with(array('locations' => $locations, 'url' => 'location'));
 
             }
             else {
@@ -52,6 +54,18 @@ class LocationController extends Controller
         catch (\ErrorException $error) {
             return Redirect::to('/login');
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+
     }
 
     /**
@@ -114,8 +128,15 @@ class LocationController extends Controller
                     )
                 );
 
-                //display confirmation page
-                return view('confirm-create')->with(array('theData' => $name, 'url' => 'locations', 'entity' => 'Location'));
+                $reply = json_decode((string)$response->getBody());
+
+                if($reply->success == true) {
+                    //display confirmation page
+                    return view('confirm-create-manual')->with(array('theData' => $name, 'url' => 'location-create', 'entity' => 'Location'));
+                } else{
+                    return Redirect::to('/location-create');
+                }
+
             } else {
                 return Redirect::to('/login');
             }
@@ -272,7 +293,7 @@ class LocationController extends Controller
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Please provide valid changes';
             $errors = collect($err);
-            return Redirect::to('/locations');
+            return Redirect::to('/location');
         }
         catch (\ErrorException $error) {
             //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
@@ -280,10 +301,10 @@ class LocationController extends Controller
                 $e = 'Please provide a valid address';
                 $errors = collect($e);
                 echo($error);
-                return Redirect::to('/locations');
+                return Redirect::to('/location');
 //fixme: proper validation: ->with('errors', $errors)
             } else {
-                return Redirect::to('/locations');
+                return Redirect::to('/location');
             }
         }
     }
@@ -317,7 +338,7 @@ class LocationController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/locations');
+            return Redirect::to('/location');
         }
     }
 
