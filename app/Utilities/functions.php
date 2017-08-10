@@ -13,11 +13,6 @@ if(! function_exists('confirmDlt')){
 
             $msg = '';
 
-            if($url == 'rosters'){
-                $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
-                    this will delete all the shift details for that date.';
-            }
-
             if($url == 'employees'){
                 $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
             }

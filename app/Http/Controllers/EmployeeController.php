@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Input;
@@ -12,8 +11,7 @@ use Session;
 use Redirect;
 use GuzzleHttp;
 use DateTime;
-
-
+//use Psy\Exception;
 
 class EmployeeController extends Controller
 {
@@ -52,6 +50,8 @@ class EmployeeController extends Controller
                     $employees[$i]->dateBirth = $date;
                 }
 
+                $employees = array_sort($employees, 'last_name', SORT_ASC);
+
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
 
             }
@@ -60,10 +60,10 @@ class EmployeeController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return view('admin_template');
+            return Redirect::to('/admin');
         }
         catch (\ErrorException $error) {
-            return Redirect::to('/login');
+            return Redirect::to('/admin');
         }
     }
 
@@ -74,7 +74,6 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
         if (session()->has('token')) {
             return view('employee/add-employee');
         }
@@ -118,8 +117,6 @@ class EmployeeController extends Controller
                 $password=  Hash::make(str_random(8));
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
-//                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client,$compId);
-
                 $response = $client->post('http://odinlite.com/public/api/employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
@@ -131,22 +128,39 @@ class EmployeeController extends Controller
                         )
                     )
                 );
+
                 $employee = json_decode((string)$response->getBody());
 
-                //display confirmation page
-                $theAction = 'The new employee has been added to the system and an email has been sent to 
-                the supplied email address advising them to download the OdinLite mobile app and create a password for their
-                account. Please advise the employee to check their junk email folder for the email 
-                in case it has not landed in their inbox';
+                //direct user based on whether record updated successfully or not
+                if($employee->success == true)
+                {
+                    //display confirmation page
+                    $theAction = 'The new employee has been added to the system and an email has been sent to 
+                    the supplied email address advising them to download the OdinLite mobile app and create a password for their
+                    account. Please advise the employee to check their junk email folder for the email 
+                    in case it has not landed in their inbox';
 
-                return view('confirm')->with(array('theAction' => $theAction));
-            } else {
+                    return view('confirm')->with(array('theAction' => $theAction));
+
+                }
+                else{
+                    $error = 'Error storing employee';
+                    $errors = collect($error);
+                    return view('/employee/add-employee')->with('errors', $errors);
+                }
+            }
+            //not authenticated
+            else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $error = 'Please check input. Hint: Ensure email address is valid and is not already stored in the system';
+            $error = 'Error storing employee';
             $errors = collect($error);
             return view('/employee/add-employee')->with('errors', $errors);
+        } catch (\ErrorException $error) {
+            $e = 'Error storing employee details';
+            $errors = collect($e);
+            return view('employee/add-employee')->with('errors', $errors);
         }
     }
 
@@ -158,10 +172,18 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        //shows the detail of a particular employee when accessed from /employees page
-        return view('employee.show', compact('employee'));
-        // $employee = Employee::find($id);
-        // return view('home/employee/edit-employee/{employee}')->with('employee' -> $employee));
+        try {
+            if (session()->has('token')) {
+                //shows the detail of a particular employee when accessed from /employees page
+                return view('employee.show', compact('employee'));
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return view('/employees');
+        } catch (\ErrorException $error) {
+            return view('/employees');
+        }
     }
 
     /**
@@ -200,21 +222,32 @@ class EmployeeController extends Controller
                     'dateBirth' => $dateBirth
                 ));
 
-            } else {
+            }
+            //not authenticated
+            else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error updating employee.';
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying employee details.';
             $errors = collect($err);
-            return view('employee/edit-employee')->with('errors', $errors);
-        }
-        catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Please fill in all required fields or check input';
+            return view('employees')->with('errors', $errors);
+        } catch (\ErrorException $error) {
+            $es = $error;
+            $e = 'Error displaying employee details for editing.';
             $errors = collect($e);
-            return view('user/create')->with('errors', $errors);
+            return view('employees');
+        } catch (\Exception $error) {
+            $es = $error;
+            $e = 'Error displaying employee details for editing.';
+            $errors = collect($e);
+            return view('employees');
         }
+//        catch ( $error) {
+//            $es = $error;
+//            $e = 'Error displaying employee details for editing.';
+//            $errors = collect($e);
+//            return view('employees');
+//        }
     }
 
     /**
@@ -254,10 +287,7 @@ class EmployeeController extends Controller
                 $email = Input::get('email');
               //  $password=  Hash::make(Input::get('password'));
 
-
                 $client = new GuzzleHttp\Client;
-
-//                dd($first_name,$last_name,$dob,$gender,$mobile,$email,$password,$client);
 
                 $response = $client->put('http://odinlite.com/public/api/employees/'.$id.'/edit', array(
                         'headers' => array(
@@ -283,14 +313,19 @@ class EmployeeController extends Controller
                     return redirect()->route("employees.edit");
                 }
             } else {
+                //not authenticated
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Please provide valid changes';
             $errors = collect($err);
-            return Redirect::to('/employees');
+            return view('employee/edit-employee')->with('errors', $errors);
         }
-
+        catch (\ErrorException $error) {
+            $e = 'Error updating employee';
+            $errors = collect($e);
+            return view('employee/edit-employee')->with('errors', $errors);
+        }
     }
 
     /**
@@ -329,12 +364,16 @@ class EmployeeController extends Controller
                }
 
            } else {
+               //not authenticated
                return Redirect::to('/login');
            }
        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-        return Redirect::to('/employees');
+       catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/employees');
         }
+       catch (\ErrorException $error) {
+           return Redirect::to('/employees');
+       }
     }
 
 //    public function formatDob($dob){

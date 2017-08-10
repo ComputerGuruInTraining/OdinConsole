@@ -76,8 +76,6 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
-//                dd($data);
-
                 //format dates to be mm/dd/yyyy for case notes and extract time
                 $t = $data->caseNote->created_at;
 

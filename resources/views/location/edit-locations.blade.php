@@ -39,7 +39,7 @@
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Update', ['class' => 'btn btn-info']) }}
-            <a href="/locations" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
         {{ Form::close() }}

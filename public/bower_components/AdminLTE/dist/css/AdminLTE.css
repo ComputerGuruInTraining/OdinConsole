@@ -55,6 +55,11 @@ div.tab button.active {
     border-top: none;
 }
 
+table.table.no-borders > tbody > tr > th,
+table.table.no-borders > tbody > tr > td{
+    border: none;
+}
+
 /*Header*/
 .header-custom{
     margin-top: 10px;
@@ -194,7 +199,7 @@ section.content-header{
 
 
 .padding-top{
-    padding-top: 15px;
+    padding-top: 15px !important;
 }
 
 /*.padding-left{*/
@@ -312,6 +317,11 @@ section.content-header{
 /*Roster page styling*/
 .heading-row{
     border-bottom: 1px solid #f4f4f4;
+}
+
+textarea#desc.form-control.case-desc{
+    height: 80px;
+
 }
 
 /*

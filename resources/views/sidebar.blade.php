@@ -38,7 +38,7 @@
             <li class="active"><a href="/admin" class="menu"><span>Dashboard</span></a></li>
             <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
             <li class="active"><a href="/rosters" class="menu"><span>Roster</span></a></li>
-            <li class="active"><a href="/locations" class="menu"><span>Locations</span></a></li>
+            <li class="active"><a href="/location" class="menu"><span>Locations</span></a></li>
             <li class="active"><a href="/reports" class="menu"><span>Reports</span></a></li>
 
             <div class="list-divider"></div>

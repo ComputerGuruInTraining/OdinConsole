@@ -314,7 +314,8 @@ class RosterController extends Controller
                 $endDate = $carbonEnd->format('m/d/Y');
                 $endTime = ((string)$carbonEnd->format('H:i'));
 
-                return view('home/rosters/edit')->with(array('empList' => $employees,
+                return view('home/rosters/edit')->with(array(
+                    'empList' => $employees,
                     'locList' => $locations,
                     'assigned' => $assigned,
                     'myLocations' => $locationsUnique,

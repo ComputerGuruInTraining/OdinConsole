@@ -34,7 +34,7 @@
 
             <div class='form-group'>
                 {{ Form::label('desc', 'Description') }}
-                {{ Form::text('desc', $data->caseNote->description, ['placeholder' => 'Description', 'class' => 'form-control']) }}
+                {{ Form::textarea('desc', $data->caseNote->description, ['placeholder' => 'Description', 'class' => 'form-control case-desc']) }}
             </div>
 
             <div class='form-group form-buttons'>

@@ -11,13 +11,6 @@ use Psy\Exception\ErrorException;
 use Redirect;
 use Hash;
 
-////use Illuminate\Support\Facades\View;
-////use Illuminate\Routing\Controller;
-////use Illuminate\Support\MessageBag;
-////use Illuminate\Support\Facades\Auth;
-///
-//use Illuminate\Support\Facades\Redirect;
-
 
 class UserController extends Controller
 {
@@ -46,7 +39,20 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 
-                return view('company-settings.index', compact('users'));
+                $resp = $client->get('http://odinlite.com/public/api/company/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $compInfo = json_decode((string)$resp->getBody());
+
+//                dd($compInfo->company->id);
+
+                $users = array_sort($users, 'last_name', SORT_ASC);
+
+
+                return view('company-settings.index', compact('users', 'compInfo'));
 
             }
             //user does not have a token

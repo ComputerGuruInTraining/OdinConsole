@@ -72,7 +72,7 @@ Route::post('/register/company', 'UserController@postRegister');
 
 //Route::resource('/locations', 'LocationController');
 //Following all work and are implemented in app
-Route::get('locations', 'LocationController@index');
+Route::get('location', 'LocationController@index');
 
 Route::get('location-create', 'LocationController@create');
 
