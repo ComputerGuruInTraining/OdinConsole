@@ -3,21 +3,36 @@
     <div id="map-user">
     </div>
 
-
     <script>
         var map;
         var infoWindow;
         var markers = [];
-        var locations = [
-                @foreach ($locations as $location)
-            [ {{ $location->latitude }}, {{ $location->longitude }} ],
-            @endforeach
-        ];
+        var latLng = [];
+        {{--var locations = [--}}
+                {{--@foreach ($currentLocations as $location)--}}
+            {{--[ {{ $location->latitude }}, {{ $location->longitude }} ],--}}
+            {{--@endforeach--}}
+        {{--];--}}
+
+        {{--function getCurrentLocation(){--}}
+            {{--var lat = 0 ;--}}
+            {{--var lng= 0 ;--}}
+
+                {{--@foreach ($currentLocations as $location)--}}
+             {{--lat = {{ $location->latitude }};--}}
+             {{--lng =  {{ $location->longitude }} ;--}}
+{{--//            console.log(lat);--}}
+            {{--latLng = [new google.maps.LatLng(lat, lng)];--}}
+{{--//            console.log(latLng);--}}
+            {{--@endforeach--}}
+{{--//            console.log(latLng);--}}
+            {{--return latLng;--}}
+        {{--}--}}
 
         google.maps.event.addDomListener(window, "load", function () {
 
             initMap();
-            addMarker(locations);
+            addMarker();
 //            showMarkers();
 //            setMapOnAll(map);
 //            createMarker();
@@ -26,47 +41,71 @@
 
         function initMap() {
             map = new google.maps.Map(document.getElementById("map-user"), {
-                center: new google.maps.LatLng(33.808678, -117.918921),
-                zoom: 10,
+                center: new google.maps.LatLng(-35.3803372, 149.0590477),
+                zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
             infoWindow = new google.maps.InfoWindow();
+
+//            var myLatlng = new google.maps.LatLng(33.808678, -117.918921);
+//
+//            var marker = new google.maps.Marker({
+//            position: myLatlng ,
+//            map: map
+//            });
+//
+//            var myLatlng = new google.maps.LatLng( 149.05922, -35.38027);
+//
+//            var marker = new google.maps.Marker({
+//                position: myLatlng ,
+//                map: map
+//            });
+
         }
 
 
 
-        function addMarker(location) {
-            for(var i = 0; i<location.length; i++){
-                for(var j = 0; j <=i; j++){
-                    var
-                var marker = new google.maps.Marker({
-                    position: location[0][0], location[0][1],
-                    map: map
-                });
-                }
-                markers.push(marker);
-            }
+
+
+        function addMarker() {
+            {{--var iconDir = '{{ asset("/icons/marker.png") }}';--}}
+           @foreach ($currentLocations as $location)
+            var myLatlng = new google.maps.LatLng({{ $location->latitude }}, {{ $location->longitude }});
+
+            var marker = new google.maps.Marker({
+                position: myLatlng ,
+                map: map
+//                icon: iconDir
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+            infoWindow.setContent("<h3> {{$location -> user_first_name}} {{$location ->user_last_name}}" + "</h3><p>{{$location->address}} <br>Time Stamp: {{$location->updated_at}}</p>");
+            infoWindow.open(map, this);
+            });
+
+            marker.setMap(map);
+            @endforeach
 
         }
 
-        function setMapOnAll(map) {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setMap(map);
-            }
-        }
-
-        function clearMarkers() {
-            setMapOnAll(null);
-        }
-
-        function showMarkers() {
-            setMapOnAll(map);
-        }
-
-        function deleteMarkers() {
-            clearMarkers();
-            markers = [];
-        }
+//        function setMapOnAll(map) {
+//            for (var i = 0; i < markers.length; i++) {
+//                markers[i].setMap(map);
+//            }
+//        }
+//
+//        function clearMarkers() {
+//            setMapOnAll(null);
+//        }
+//
+//        function showMarkers() {
+//            setMapOnAll(map);
+//        }
+//
+//        function deleteMarkers() {
+//            clearMarkers();
+//            markers = [];
+//        }
 
         {{--function createMarker() {--}}
                     {{--@foreach ($locations as $location)--}}
@@ -90,7 +129,7 @@
         {{--}--}}
 
 
-        setInterval(function() {
+//        setInterval(function() {
 //            $.ajax({ url: '/my/site',
 //                data: {action: 'test'},
 //                type: 'post',
@@ -99,13 +138,13 @@
 //                }
 //            });
 
-        $.get('/dashboard', function(){
-            console.log('locations');
-            deleteMarkers();
-            addMarker(locations);
-//            createMarker();
-        });
-        }, 50000);
+//        $.get('/dashboard', function(){
+//            console.log('locations');
+//            deleteMarkers();
+//            addMarker(locations);
+////            createMarker();
+//        });
+//        }, 50000);
 
     </script>
 </section>
