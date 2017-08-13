@@ -156,6 +156,10 @@ class ReportController extends Controller
 
                 $token = session('token');
                 $compId = session('compId');
+
+                //post to api via function which calls a different route based on report type
+
+
                 $client = new GuzzleHttp\Client;
 
                 $response = $client->post('http://odinlite.com/public/api/reports', array(
@@ -173,7 +177,7 @@ class ReportController extends Controller
                 );
 
                 $success = GuzzleHttp\json_decode((string)$response->getBody());
-
+                dd($success);
                 return view('confirm-create-general')
                     ->with(array(
                     'theMsg' => 'The report has been successfully generated',
@@ -187,10 +191,25 @@ class ReportController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+            dd($e);
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-            return Redirect::to('/reports');
+
+//            $error = 'Error generating report';
+//            $errors = collect($e);
+//            return Redirect::to('/reports')->withErrors($errors);
         }
+        catch (\ErrorException $error) {
+            dd($error);
+//            $errors = collect($error);
+//            return Redirect::to('/reports')->withErrors($errors);
+        }
+    }
+
+    public function postCaseNote(Request $request)
+    {
+
+
+
     }
 
     /**
