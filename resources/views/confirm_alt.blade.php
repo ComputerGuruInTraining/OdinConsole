@@ -1,4 +1,4 @@
-{{--Usage: generic confirmation page using a layouts.master with app sidebar and header. Useful when logged into app--}}
+{{--Usage: generic confirmation page using layouts.master_layout without app sidebar and header. Useful when not logged into app--}}
 
 @extends('layouts.master')
 
