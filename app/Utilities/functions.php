@@ -209,7 +209,8 @@ if(! function_exists('formatDates')) {
         return $fdate;
     }
 }
-
+//calculate time and date based on geoCoords using Google API
+//return the values to be used to calculate the date and time
 if(! function_exists('timezone')) {
     function timezone($lat, $long, $t)
     {
@@ -222,8 +223,26 @@ if(! function_exists('timezone')) {
 
         $data = json_decode($result);
 
-        //google timezone api returns the time in seconds from utc time (rawOffset)
-        //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+        $collection = collect(['dstOffset' => $data->dstOffset, 'rawOffset' => $data->rawOffset]);
+
+        return $collection;
+
+    }
+}
+//calculate time and date based on geoCoords using Google API
+//return the $date and $time
+if(! function_exists('timezoneDT')) {
+    function timezoneDT($lat, $long, $t)
+    {
+        $dateForTS = date_create($t);
+        $dateInTS = date_timestamp_get($dateForTS);
+
+        //find the timezone for each case note using google timezone api
+        $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+
+        $data = json_decode($result);
+
         $tsUsingResult = $dateInTS + $data->dstOffset + $data->rawOffset;
 
         //convert timestamp to a datetime string
@@ -235,5 +254,6 @@ if(! function_exists('timezone')) {
 
     }
 }
+
 
 

@@ -352,20 +352,32 @@ class ReportController extends Controller
 
             } else {
                 //extract location latitude and longitude to be used to find timezone
+                //for this report atm, case note location is presumed to be location of premise
                 $lat = $cases->location->latitude;
                 $long = $cases->location->longitude;
+                //calculate the date and time based on the location and any of the case notes created_at timestamp
+                $collection = timezone($lat, $long, $cases->reportCaseNotes[0]->created_at);
 
                 //format dates to be mm/dd/yyyy for case notes
                 foreach ($cases->reportCaseNotes as $i => $item) {
                     //add the extracted date to each of the objects and format date to be mm/dd/yyyy
                     $t = $cases->reportCaseNotes[$i]->created_at;
 
-                    //calculate the date and time based on the location
-                    $dtArray = timezone($lat, $long, $t);
+                    //friendly dates
+                    $dateForTS = date_create($t);
+                    $dateInTS = date_timestamp_get($dateForTS);
 
-                    $cases->reportCaseNotes[$i]->case_date = $dtArray[0];
-                    $cases->reportCaseNotes[$i]->case_time = $dtArray[1];
+                    //google timezone api returns the time in seconds from utc time (rawOffset)
+                    //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                    $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
 
+                    //convert timestamp to a datetime string
+                    $date = date('m/d/Y', $tsUsingResult);
+
+                    $time = date('g.i a', $tsUsingResult);
+
+                    $cases->reportCaseNotes[$i]->case_date = $date;
+                    $cases->reportCaseNotes[$i]->case_time = $time;
                 }
                 return $cases;
             }
