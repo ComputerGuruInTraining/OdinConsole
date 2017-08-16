@@ -27,7 +27,9 @@
                         <th>Time</th>
                         <th>Case Title</th>
                         <th>Case Description</th>
+                        <th>Case Image</th>
                         <th>Reporting Guard</th>
+                        <th>Case Id</th>
                     </tr>
                 {{--Check to ensure there are case notes or else an error will be thrown--}}
                     @if(count($cases->reportCaseNotes) != 0)
@@ -41,6 +43,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             @foreach ($groupCases->get($index) as $item)
                                 <tr>
@@ -48,7 +52,9 @@
                                     <td>{{$item->case_time}}</td>
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
+                                    <td>{{$item->img}}</td>
                                     <td>{{$item->employee}}</td>
+                                    <td>{{$item->case_id}}</td>
                                 </tr>
                             @endforeach
                             </tbody>

@@ -69,11 +69,11 @@ class ReportController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+           // echo $e;
             return view('admin_template');
         }
         catch (\ErrorException $error) {
-            echo $error;
+           // echo $error;
             return Redirect::to('/login');
         }
     }
@@ -163,7 +163,6 @@ class ReportController extends Controller
                 }else if($type == 'Cases and Checks') {
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 }
-
 
                 if($result->success == true){
                     return view('confirm-create-general')

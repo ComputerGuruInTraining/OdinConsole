@@ -23,18 +23,20 @@
             </button>
         </div>
 
-        <div class='table-responsive col-md-10 padding-top'>
+        <div class='table-responsive padding-top'>
             <table class="table table-hover">
                 <tr>
-                    <th>Report Type</th>
                     <th>Date Range</th>
+                    <th>Location</th>
+                    <th>Report Type</th>
                     <th>Actions</th>
                 </tr>
                 @foreach($reports as $report)
                     <tbody class='group-list'>
                     <tr>
-                        <td>{{$report->type}}</td><!--TODO: make case notes a variable in code-->
                         <td>{{$report->form_start}} - {{$report->form_end}}</td>
+                        <td>{{$report->location}}</td>
+                        <td>{{$report->type}}</td>
                         <td>
                             <a href="/reports/{{$report->id}}">View Report</a> | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete Report</a> | <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>
                         </td>
