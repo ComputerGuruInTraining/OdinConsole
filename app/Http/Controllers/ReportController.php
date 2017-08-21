@@ -73,8 +73,7 @@ class ReportController extends Controller
             return view('admin_template');
         }
         catch (\ErrorException $error) {
-           // echo $error;
-            return Redirect::to('/login');
+            return Redirect::to('/admin');
         }
     }
 
@@ -121,7 +120,7 @@ class ReportController extends Controller
             return Redirect::to('/reports');
         }
 
-        return view('report/create')->with();
+//        return view('report/create')->with();
     }
 
     /**

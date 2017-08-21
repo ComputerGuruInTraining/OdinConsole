@@ -18,7 +18,7 @@
                     <div class="panel-body">
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/register/company') }}">
-                            {{ csrf_field() }}
+                            {{--{{ csrf_field() }}--}}
                             <div class="form-group">
                                 <h4 class="register-headings">Company Details</h4>
                             </div>
