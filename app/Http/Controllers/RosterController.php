@@ -39,15 +39,6 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-//                $compId = session('compId');
-
-//                $this->oauth();
-
-                //retrieve token needed for authorized http requests
-//            $token = $this->accessToken();
-
-//            $client = new GuzzleHttp\Client;
-
                 $companyId = session('compId');
 
                 $response = $client->get('http://odinlite.com/public/api/assignedshifts/list/' . $companyId, [
@@ -57,6 +48,8 @@ class RosterController extends Controller
                 ]);
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+
+//                dd($assigned);
 
                 foreach ($assigned as $i => $item) {
                     //add the extracted date to each of the objects and format date
@@ -101,10 +94,11 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
             //rather than displaying an error page, redirect users to dashboard/login page
             return view('admin_template');
+        }catch (\ErrorException $error) {
+            return Redirect::to('/admin');
         }
     }
 
@@ -192,52 +186,63 @@ class RosterController extends Controller
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return Redirect::to('/rosters');
         }
+        catch (\ErrorException $error) {
+            $msg = 'Error exception generating report';
+            return view('error')->with('error', $msg);
+        }
 
     }
 
     function formData($request){
-        //data for validation
-        $locationArray = $request->input('locations');
-        $employeeArray = $request->input('employees');
-        $checks = Input::get('checks');
-        $title = $request->input('title');
-        $desc = $request->input('desc');
+        try{
+            //data for validation
+            $locationArray = $request->input('locations');
+            $employeeArray = $request->input('employees');
+            $checks = Input::get('checks');
+            $title = $request->input('title');
+            $desc = $request->input('desc');
 
-        //TODO: rosters for a date-range
-        $roster_id = 1;
+            //TODO: rosters for a date-range
+            $roster_id = 1;
 
-        $token = session('token');
-        $compId = session('compId');
+            $token = session('token');
+            $compId = session('compId');
 
-        //get data from form for non laravel validated inputs
-        $dateStart = $request->input('startDateTxt');
-        $timeStart = Input::get('startTime');//hh:mm
-        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
-        $timeEnd = Input::get('endTime');//hh:mm
+            //get data from form for non laravel validated inputs
+            $dateStart = $request->input('startDateTxt');
+            $timeStart = Input::get('startTime');//hh:mm
+            $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
+            $timeEnd = Input::get('endTime');//hh:mm
 
-        //process start date and time before adding to db
-        //function in functions.php
-        $strStart = jobDateTime($dateStart, $timeStart);
-        $strEnd = jobDateTime($dateEnd, $timeEnd);
+            //process start date and time before adding to db
+            //function in functions.php
+            $strStart = jobDateTime($dateStart, $timeStart);
+            $strEnd = jobDateTime($dateEnd, $timeEnd);
 
-        $client = new GuzzleHttp\Client;
+            $client = new GuzzleHttp\Client;
 
-        $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
-                'headers' => array(
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type' => 'application/json'
-                ),
-                'json' => array(
-                    'checks' => $checks, 'start' => $strStart,
-                    'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
-                    'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
+            $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array(
+                        'checks' => $checks, 'start' => $strStart,
+                        'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
+                        'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
+                    )
                 )
-            )
-        );
+            );
 
-        $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+            $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-        return $dateStart;
+            return $dateStart;
+
+        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
+        return Redirect::to('/rosters');
+        }
     }
 
     /**
@@ -329,12 +334,12 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-//                echo $e;
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
                 return Redirect::to('/rosters');
+        }catch (\ErrorException $error) {
+            return Redirect::to('/admin');
         }
+
     }
 
     /**
@@ -406,13 +411,9 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }
-        catch(GuzzleHttp\Exception\BadResponseException $e){
-//            echo $e;
+        }catch(GuzzleHttp\Exception\BadResponseException $e){
             return Redirect::to('/rosters/'.$id.'/edit');
-        }
-        catch(\ErrorException $error){
-//            echo $error;
+        }catch(\ErrorException $error){
             return Redirect::to('/rosters/'.$id.'/edit');
         }
     }
@@ -449,6 +450,10 @@ class RosterController extends Controller
         catch (GuzzleHttp\Exception\BadResponseException $e) {
 //            echo $e;
             return Redirect::to('/rosters');
+        }
+        catch (\ErrorException $error) {
+            $msg = 'Error exception generating report';
+            return view('error')->with('error', $msg);
         }
 
     }

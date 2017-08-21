@@ -69,12 +69,11 @@ class ReportController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
+           // echo $e;
             return view('admin_template');
         }
         catch (\ErrorException $error) {
-            echo $error;
-            return Redirect::to('/login');
+            return Redirect::to('/admin');
         }
     }
 
@@ -121,7 +120,7 @@ class ReportController extends Controller
             return Redirect::to('/reports');
         }
 
-        return view('report/create')->with();
+//        return view('report/create')->with();
     }
 
     /**
@@ -156,42 +155,110 @@ class ReportController extends Controller
 
                 $token = session('token');
                 $compId = session('compId');
-                $client = new GuzzleHttp\Client;
 
-                $response = $client->post('http://odinlite.com/public/api/reports', array(
-                        'headers' => array(
-                            'Authorization' => 'Bearer ' . $token,
-                            'Content-Type' => 'application/json'
-                        ),
-                        'json' => array(
-                            'location' => $location, 'type' => $type,
-                            'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
-                            'compId' => $compId, 'dateFromOnly' => $dateFromStr,
-                            'dateToOnly' => $dateToStr
-                        )
-                    )
-                );
+                //post to api via function which calls a different route based on report type
+                if($type == 'Case Notes') {
+                    $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
+                }else if($type == 'Cases and Checks') {
+                    $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+                }
 
-                $success = GuzzleHttp\json_decode((string)$response->getBody());
+                if($result->success == true){
+                    return view('confirm-create-general')
+                        ->with(array(
+                            'theMsg' => 'The report has been successfully generated',
+                            'btnText' => 'Generate Report',
+                            'url' => 'reports'
+                        ));
+                }else if($result->success == false){
+                    //TODO: untested result-> ... == false
+                    $msg = 'Failed to generate report';
+                    return view('error')->with('error', $msg);
+                }
 
-                return view('confirm-create-general')
-                    ->with(array(
-                    'theMsg' => 'The report has been successfully generated',
-                    'btnText' => 'Generate Report',
-                    'url' => 'reports'
-                ));
-
-            }
-            else {
-                return Redirect::to('/reports');
+            }else {
+                return Redirect::to('/login');
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-            return Redirect::to('/reports');
+           // dd($e);
+            $msg = 'Http Error generating report';
+            return view('error')->with('error', $msg);
+        }
+        catch (\ErrorException $error) {
+            //dd($error);
+            $msg = 'Error exception generating report';
+            return view('error')->with('error', $msg);
         }
     }
+
+    /**
+     * Store a report of type/activity = Case Notes
+     *
+     * @param  request variables gathered from input
+     * @return \Illuminate\Http\Response
+     */
+    public function postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId)
+    {
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post('http://odinlite.com/public/api/reports/casenotes', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'location' => $location, 'type' => $type,
+                    'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
+                    'compId' => $compId
+                )
+            )
+        );
+
+        $result = GuzzleHttp\json_decode((string)$response->getBody());
+
+        return $result;
+    }
+
+    /**
+     * Store a report of type/activity = Case Notes and Location Checks
+     *
+     * @param  request variables gathered from input
+     * @return \Illuminate\Http\Response
+     */
+    public function postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId)
+    {
+        try {
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->post('http://odinlite.com/public/api/reports/casesandchecks', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array(
+                        'location' => $location, 'type' => $type,
+                        'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
+                        'compId' => $compId
+                    )
+                )
+            );
+
+            $result = GuzzleHttp\json_decode((string)$response->getBody());
+
+            return $result;
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+                // dd($e);
+                $msg = 'Http Error generating report';
+                return view('error')->with('error', $msg);
+            }
+        catch (\ErrorException $error) {
+                //dd($error);
+                $msg = 'Error exception generating report';
+                return view('error')->with('error', $msg);
+        }
+}
 
     /**
      * Display the specified resource.
@@ -216,69 +283,20 @@ class ReportController extends Controller
 
                 $report = json_decode((string)$response->getBody());
 
+                //format dates to be in the form 3rd January 2107 for report date range
+                $sdate = formatDates($report->date_start);
+
+                $edate = formatDates($report->date_end);
+
                 if ($report->type == 'Case Notes') {
 
-                    $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
-                        'headers' => [
-                            'Authorization' => 'Bearer ' . $token,
-                        ]
-                    ]);
+                    $cases = $this->getCaseNotes($id, $token, $report);
 
-                    $cases = json_decode((string)$response->getBody());
-
-                    if($cases->success == false) {
-                        $err = 'There were no case notes created during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                    else {
-
-                        //extract location latitude and longitude to be used to find timezone
-                        $lat = $cases->location->latitude;
-                        $long = $cases->location->longitude;
-
-                        //format dates to be 3rd January 2107 for report date range
-                        //add the extracted date to each of the objects and format date
-                        $s = $report->date_start;
-
-                        $sdt = new DateTime($s);
-                        $sdate = $sdt->format('jS F Y');
-
-                        $e = $report->date_end;
-
-                        $edt = new DateTime($e);
-                        $edate = $edt->format('jS F Y');
-
-                        //format dates to be mm/dd/yyyy for case notes
-                        foreach($cases->reportCaseNotes as $i => $item){
-                            //add the extracted date to each of the objects and format date
-                            $t = $cases->reportCaseNotes[$i]->created_at;
-
-                            $dateForTS =date_create($t);
-                            $dateInTS = date_timestamp_get($dateForTS);
-
-                            //find the timezone for each case note using google timezone api
-                            $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location='.$lat.','.$long.
-                            '&timestamp='.$dateInTS.'&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
-
-                            $data = json_decode($result);
-
-                            //google timezone api returns the time in seconds from utc time (rawOffset)
-                            //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
-                            $tsUsingResult = $dateInTS + $data->dstOffset + $data->rawOffset;
-
-                            //convert timestamp to a datetime string
-                            $date = date('m/d/Y', $tsUsingResult);
-
-                            $time = date('g.i a', $tsUsingResult);
-
-                            $cases->reportCaseNotes[$i]->case_date = $date;
-                            $cases->reportCaseNotes[$i]->case_time = $time;
-
+                    if($cases != 'error'){
+                        foreach ($cases->reportCaseNotes as $i => $item) {
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);
                             $groupCases = $caseNotes->groupBy('case_date');
-
                         }
 
                         return view('report/case_notes/show')->with(array('cases' => $cases,
@@ -287,27 +305,91 @@ class ReportController extends Controller
                             'start' => $sdate,
                             'end' => $edate
                         ));
+                    }else{
+                    $err = 'There were no case notes created during the period that the selected report covers.';
+                    $errors = collect($err);
+                    return Redirect::to('/reports')->with('errors', $errors);
                     }
+
+                }else if($report->type == 'Cases And Checks'){
+
+
+
                 }
 
-                /*********else if the report->type == ??***********/
+            }else {
+                //ie no session token exists and therefore the user is not authenticated
 
-
-            } //ie no session token exists and therefore the user is not authenticated
-            else {
                 return Redirect::to('/login');
             }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+            $msg = 'Error exception displaying report';
+            return view('error')->with('error', $msg);
+        }catch (\ErrorException $error) {
+            $msg = 'Error exception displaying report';
+            return view('error')->with('error', $msg);
         }
-        //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+    }
+
+    public function getCaseNotes($id, $token)
+    {
+        try {
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $cases = json_decode((string)$response->getBody());
+
+            if ($cases->success == false) {
+                return 'error';
+
+            } else {
+                //extract location latitude and longitude to be used to find timezone
+                //for this report atm, case note location is presumed to be location of premise
+                $lat = $cases->location->latitude;
+                $long = $cases->location->longitude;
+                //calculate the date and time based on the location and any of the case notes created_at timestamp
+                $collection = timezone($lat, $long, $cases->reportCaseNotes[0]->created_at);
+
+                //format dates to be mm/dd/yyyy for case notes
+                foreach ($cases->reportCaseNotes as $i => $item) {
+                    //add the extracted date to each of the objects and format date to be mm/dd/yyyy
+                    $t = $cases->reportCaseNotes[$i]->created_at;
+
+                    //friendly dates
+                    $dateForTS = date_create($t);
+                    $dateInTS = date_timestamp_get($dateForTS);
+
+                    //google timezone api returns the time in seconds from utc time (rawOffset)
+                    //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                    $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
+
+                    //convert timestamp to a datetime string
+                    $date = date('m/d/Y', $tsUsingResult);
+
+                    $time = date('g.i a', $tsUsingResult);
+
+                    $cases->reportCaseNotes[$i]->case_date = $date;
+                    $cases->reportCaseNotes[$i]->case_time = $time;
+                }
+                return $cases;
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             echo $e;
             return Redirect::to('/reports');
-        }
-        catch (\ErrorException $error) {
+        }catch (\ErrorException $error) {
             $errors = collect($error);
             return Redirect::to('/reports')->with('errors', $errors);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

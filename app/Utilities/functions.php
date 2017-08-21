@@ -103,7 +103,7 @@ if(! function_exists('stringTime')) {
 }
 
 if(! function_exists('timeMidnight')) {
-     function timeMidnight($time){
+    function timeMidnight($time){
         if($time != null) {
             if($time == '12.00 am')
             {
@@ -125,75 +125,135 @@ if(! function_exists('jobDuration')) {
 }
 
 //global oauth fn
-function oauth2($email, $password){
-    try {
-        $client = new GuzzleHttp\Client;
+if(! function_exists('oauth2')) {
 
-        $response = $client->post('http://odinlite.com/public/oauth/token', [
-            'form_params' => [
-                'grant_type' => 'password',
-                'client_id' => 2,
-                // The secret generated when you ran: php artisan passport:install
-                'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
-                'username' => $email,
-                'password' => $password,
-                'scope' => '*',
-            ],
-        ]);
+    function oauth2($email, $password)
+    {
+        try {
+            $client = new GuzzleHttp\Client;
 
-        $auth = json_decode((string)$response->getBody());
+            $response = $client->post('http://odinlite.com/public/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'client_id' => 2,
+                    // The secret generated when you ran: php artisan passport:install
+                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                    'username' => $email,
+                    'password' => $password,
+                    'scope' => '*',
+                ],
+            ]);
 
-        //get user
-        $responseUser = $client->get('http://odinlite.com/public/api/user', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $auth->access_token,
-            ]
-        ]);
+            $auth = json_decode((string)$response->getBody());
 
-        $user = json_decode((string)$responseUser->getBody());
+            //get user
+            $responseUser = $client->get('http://odinlite.com/public/api/user', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $auth->access_token,
+                ]
+            ]);
 
-        $responseStatus = $client->get('http://odinlite.com/public/api/status/'.$user->company_id, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $auth->access_token,
-            ]
-        ]);
+            $user = json_decode((string)$responseUser->getBody());
 
-        //array datatype, even though only 1 item in the array
-        $status = json_decode((string)$responseStatus->getBody());
-        //company account has been created but has not been activated via email authentication
-        if($status != "active"){
-            return false;
-        }
-        else {
-            $responseRole = $client->get('http://odinlite.com/public/api/user/role/' . $user->id, [
+            $responseStatus = $client->get('http://odinlite.com/public/api/status/' . $user->company_id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
             ]);
 
             //array datatype, even though only 1 item in the array
-            $role = json_decode((string)$responseRole->getBody());
-
-            //ensure the user is in the user_role table and therefore allowed access to the console
-            if ($role != null) {
-                $token = $auth->access_token;
-                $name = $user->first_name . ' ' . $user->last_name;
-                //save the token in a session helper method along with the user id and name
-                //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
-                session([
-                    'token' => $token,
-                    'id' => $user->id,
-                    'name' => $name,
-                    'role' => $role[0],
-                    'compId' => $user->company_id]);
-
-                return true;
-            } //else the user is not allowed access to the console
-            else {
+            $status = json_decode((string)$responseStatus->getBody());
+            //company account has been created but has not been activated via email authentication
+            if ($status != "active") {
                 return false;
+            } else {
+                $responseRole = $client->get('http://odinlite.com/public/api/user/role/' . $user->id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $auth->access_token,
+                    ]
+                ]);
+
+                //array datatype, even though only 1 item in the array
+                $role = json_decode((string)$responseRole->getBody());
+
+                //ensure the user is in the user_role table and therefore allowed access to the console
+                if ($role != null) {
+                    $token = $auth->access_token;
+                    $name = $user->first_name . ' ' . $user->last_name;
+                    //save the token in a session helper method along with the user id and name
+                    //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
+                    session([
+                        'token' => $token,
+                        'id' => $user->id,
+                        'name' => $name,
+                        'role' => $role[0],
+                        'compId' => $user->company_id]);
+
+                    return true;
+                } //else the user is not allowed access to the console
+                else {
+                    return false;
+                }
             }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return false;
         }
-    } catch (GuzzleHttp\Exception\BadResponseException $e) {
-        return false;
     }
 }
+
+if(! function_exists('formatDates')) {
+    function formatDates($date)
+    {
+        $dt = new DateTime($date);
+        $fdate = $dt->format('jS F Y');
+        return $fdate;
+    }
+}
+//calculate time and date based on geoCoords using Google API
+//return the values to be used to calculate the date and time
+if(! function_exists('timezone')) {
+    function timezone($lat, $long, $t)
+    {
+        $dateForTS = date_create($t);
+        $dateInTS = date_timestamp_get($dateForTS);
+
+        //find the timezone for each case note using google timezone api
+        $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+
+        $data = json_decode($result);
+
+        $collection = collect(['dstOffset' => $data->dstOffset, 'rawOffset' => $data->rawOffset]);
+
+        return $collection;
+
+    }
+}
+//calculate time and date based on geoCoords using Google API
+//return the $date and $time
+if(! function_exists('timezoneDT')) {
+    function timezoneDT($lat, $long, $t)
+    {
+        $dateForTS = date_create($t);
+        $dateInTS = date_timestamp_get($dateForTS);
+
+        //find the timezone for each case note using google timezone api
+        $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+
+        $data = json_decode($result);
+
+        $tsUsingResult = $dateInTS + $data->dstOffset + $data->rawOffset;
+
+        //convert timestamp to a datetime string
+        $date = date('m/d/Y', $tsUsingResult);
+
+        $time = date('g.i a', $tsUsingResult);
+
+        return array($date, $time);
+
+    }
+}
+
+
+
