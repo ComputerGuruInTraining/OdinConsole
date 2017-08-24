@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Input;
 use DateTime;
 
-
 //GeoCode TZ key =
 
 class ReportController extends Controller
@@ -299,6 +298,24 @@ class ReportController extends Controller
                             $groupCases = $caseNotes->groupBy('case_date');
                         }
 
+//                        $myProjectDirectory = '/Users/bernie/Sites/www/OdinLiteConsole';
+//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
+//                        header('Content-Type: application/pdf');
+//                        header('Content-Disposition: attachment; filename="file.pdf"');
+//                        echo $snappy->getOutput('http://www.github.com');
+////                        $snappy = new Pdf($myProjectDirectory . '/vendor/h4cc/wkhtmltopdf-i386/bin/wkhtmltopdf-amd64');
+//                        $snappy->generateFromHtml('<p>Some content</p>', 'test.pdf');
+//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
+//                        header('Content-Type: application/pdf');
+//                        header('Content-Disposition: attachment; filename="file.pdf"');
+//                        echo $snappy->getOutput('http://www.github.com');
+
+//                        $snappy->setOption('toc', true);
+////                        $snappy->setOption('xsl-style-sheet', 'http://path/to/stylesheet.xsl'); //or local file;
+//
+//
+pdfFile();
+
                         return view('report/case_notes/show')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,
@@ -311,11 +328,17 @@ class ReportController extends Controller
                     return Redirect::to('/reports')->with('errors', $errors);
                     }
 
-                }else if($report->type == 'Cases And Checks'){
-
-
-
                 }
+
+
+//                $myProjectDirectory = 'views/report/case_notes/show';
+
+//                $snappy = new Pdf($myProjectDirectory . '/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+//                else if($report->type == 'Cases And Checks'){
+//
+//
+//
+//                }
 
             }else {
                 //ie no session token exists and therefore the user is not authenticated

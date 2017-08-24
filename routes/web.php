@@ -83,7 +83,6 @@ Route::put('location-updated-{id}', 'LocationController@update');
 Route::get('location-edit-{id}', 'LocationController@edit');
 
 
-
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){
     if (session()->has('token')) {
@@ -94,3 +93,4 @@ Route::get('confirmdel-{id}-{url}', function($id, $url){
 });
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
+
