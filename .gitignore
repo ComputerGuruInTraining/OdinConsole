@@ -1,9 +1,6 @@
 vendor/
 node_modules/
 
-#config file
-config/app.php
-
 # Laravel 4 specific
 app/storage/
 
