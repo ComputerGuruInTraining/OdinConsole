@@ -23,7 +23,7 @@
             "database"
         ],
         "files":[
-            "app/utilities/functions.php"
+            "app/Utilities/functions.php"
         ],
         "psr-4": {
             "App\\": "app/"
