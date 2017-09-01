@@ -132,12 +132,15 @@ if(! function_exists('oauth2')) {
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->post('http://odinlite.com/public/oauth/token', [
+            $url = Config::get('constants.STANDARD_URL');
+            $urlApi = Config::get('constants.API_URL');
+
+            $response = $client->post($url.'oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
                     'client_id' => 2,
                     // The secret generated when you ran: php artisan passport:install
-                    'client_secret' => 'OLniZWzuDJ8GSEVacBlzQgS0SHvzAZf1pA1cfShZ',
+                    'client_secret' => '6L5c7iaGiuNbqJFsL7zrmYf0gJaqY1in9YBvEb49',
                     'username' => $email,
                     'password' => $password,
                     'scope' => '*',
@@ -147,7 +150,7 @@ if(! function_exists('oauth2')) {
             $auth = json_decode((string)$response->getBody());
 
             //get user
-            $responseUser = $client->get('http://odinlite.com/public/api/user', [
+            $responseUser = $client->get($urlApi.'user', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
@@ -155,7 +158,7 @@ if(! function_exists('oauth2')) {
 
             $user = json_decode((string)$responseUser->getBody());
 
-            $responseStatus = $client->get('http://odinlite.com/public/api/status/' . $user->company_id, [
+            $responseStatus = $client->get($urlApi.'status/' . $user->company_id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
@@ -167,7 +170,7 @@ if(! function_exists('oauth2')) {
             if ($status != "active") {
                 return false;
             } else {
-                $responseRole = $client->get('http://odinlite.com/public/api/user/role/' . $user->id, [
+                $responseRole = $client->get($urlApi.'user/role/' . $user->id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $auth->access_token,
                     ]
@@ -175,6 +178,7 @@ if(! function_exists('oauth2')) {
 
                 //array datatype, even though only 1 item in the array
                 $role = json_decode((string)$responseRole->getBody());
+                dd($role);
 
                 //ensure the user is in the user_role table and therefore allowed access to the console
                 if ($role != null) {
