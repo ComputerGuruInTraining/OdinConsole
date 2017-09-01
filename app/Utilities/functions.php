@@ -178,7 +178,6 @@ if(! function_exists('oauth2')) {
 
                 //array datatype, even though only 1 item in the array
                 $role = json_decode((string)$responseRole->getBody());
-                dd($role);
 
                 //ensure the user is in the user_role table and therefore allowed access to the console
                 if ($role != null) {

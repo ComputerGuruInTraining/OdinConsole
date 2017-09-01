@@ -10,6 +10,6 @@
 
 //api routes
 return [
-    'STANDARD_URL' => 'http://odinliteapi.azurewebsites.net/',
-    'API_URL' => 'http://odinliteapi.azurewebsites.net/api/'
+    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
+    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/'
 ];
