@@ -10,6 +10,7 @@ use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
 use Hash;
+use Config;
 
 
 class UserController extends Controller
@@ -344,7 +345,9 @@ class UserController extends Controller
 
             $client = new GuzzleHttp\Client;
 
-            $response = $client->post('http://odinlite.com/public/company', array(
+            $url = Config::get('constants.STANDARD_URL');
+
+            $response = $client->post($url.'company', array(
                     'headers' => array(
                         'Content-Type' => 'application/json'
                     ),
