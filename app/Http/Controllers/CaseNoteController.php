@@ -7,7 +7,7 @@ use GuzzleHttp;
 use Input;
 use DateTime;
 use Redirect;
-
+use Config;
 
 class CaseNoteController extends Controller
 {
@@ -68,7 +68,7 @@ class CaseNoteController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/casenote/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL').'casenote/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -139,7 +139,7 @@ class CaseNoteController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put('http://odinlite.com/public/api/casenote/'.$id.'/edit', array(
+                $response = $client->put(Config::get('constants.API_URL').'casenote/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -186,7 +186,7 @@ class CaseNoteController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete('http://odinlite.com/public/api/casenote/'.$id, [
+                $response = $client->delete(Config::get('constants.API_URL').'casenote/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]

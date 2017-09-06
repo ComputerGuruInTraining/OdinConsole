@@ -11,6 +11,7 @@ use GuzzleHttp\Exception;
 use GuzzleHttp\Client;
 use Redirect;
 use DateTimeZone;
+use Config;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
@@ -41,7 +42,7 @@ class RosterController extends Controller
 
                 $companyId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/assignedshifts/list/' . $companyId, [
+                $response = $client->get(Config::get('constants.API_URL').'assignedshifts/list/' . $companyId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -119,7 +120,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/employees/list/'.$compId, [
+                $response = $client->get(Config::get('constants.API_URL').'employees/list/'.$compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -127,7 +128,7 @@ class RosterController extends Controller
 
                 $employees = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $response2 = $client->get('http://odinlite.com/public/api/locations/list/'.$compId, [
+                $response2 = $client->get(Config::get('constants.API_URL').'locations/list/'.$compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -221,7 +222,7 @@ class RosterController extends Controller
 
             $client = new GuzzleHttp\Client;
 
-            $response = $client->post('http://odinlite.com/public/api/assignedshifts', array(
+            $response = $client->post(Config::get('constants.API_URL').'assignedshifts', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $token,
                         'Content-Type' => 'application/json'
@@ -281,7 +282,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/assignedshifts/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -289,7 +290,7 @@ class RosterController extends Controller
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $responseUsers = $client->get('http://odinlite.com/public/api/employees/list/' . $compId, [
+                $responseUsers = $client->get(Config::get('constants.API_URL').'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -297,7 +298,7 @@ class RosterController extends Controller
 
                 $employees = GuzzleHttp\json_decode((string)$responseUsers->getBody());
 
-                $responseLocs = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+                $responseLocs = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -390,7 +391,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put('http://odinlite.com/public/api/assignedshifts/' . $id . '/edit', array(
+                $response = $client->put(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -434,7 +435,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete('http://odinlite.com/public/api/assignedshift/'.$id, [
+                $response = $client->delete(Config::get('constants.API_URL').'assignedshift/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
                     ]

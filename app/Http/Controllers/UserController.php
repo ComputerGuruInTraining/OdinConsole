@@ -32,7 +32,7 @@ class UserController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/user/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -40,7 +40,7 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 
-                $resp = $client->get('http://odinlite.com/public/api/company/' . $compId, [
+                $resp = $client->get(Config::get('constants.API_URL').'company/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -116,7 +116,7 @@ class UserController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->post('http://odinlite.com/public/api/user', array(
+                $response = $client->post(Config::get('constants.API_URL').'user', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -174,7 +174,7 @@ class UserController extends Controller
                 $client = new GuzzleHttp\Client;
 
 
-                $response = $client->get('http://odinlite.com/public/api/user/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL').'user/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -229,7 +229,7 @@ class UserController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put('http://odinlite.com/public/api/user/'.$id.'/edit', array(
+                $response = $client->put(Config::get('constants.API_URL').'user/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -280,7 +280,7 @@ class UserController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete('http://odinlite.com/public/api/user/'.$id, [
+                $response = $client->delete(Config::get('constants.API_URL').'user/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]

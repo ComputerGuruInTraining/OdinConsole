@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Dashboard;
 use GuzzleHttp;
 use Redirect;
+use Config;
 
 
 
@@ -26,7 +27,7 @@ class DashboardController extends Controller{
 //
 //
 //
-            $response = $client->get('http://odinlite.com/public/api/user', array(
+            $response = $client->get(Config::get('constants.API_URL').'user', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $token,
                         'Content-Type' => 'application/json'
@@ -34,7 +35,7 @@ class DashboardController extends Controller{
                 )
             );
             $users = json_decode((string)$response->getBody());
-            $response2 = $client->get('http://odinlite.com/public/api/dashboard/' . $compId . '/current-location', [
+            $response2 = $client->get(Config::get('constants.API_URL').'dashboard/' . $compId . '/current-location', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -65,7 +66,7 @@ class DashboardController extends Controller{
             $client = new GuzzleHttp\Client;
 
             $compId = session('compId');
-            $response = $client->get('http://odinlite.com/public/api/dashboard/' . $compId . '/company-detail', [
+            $response = $client->get(Config::get('constants.API_URL').'dashboard/' . $compId . '/company-detail', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
