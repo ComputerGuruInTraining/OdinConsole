@@ -11,6 +11,7 @@ use Session;
 use Redirect;
 use GuzzleHttp;
 use DateTime;
+use Config;
 //use Psy\Exception;
 
 class EmployeeController extends Controller
@@ -31,7 +32,7 @@ class EmployeeController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/employees/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL').'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -116,7 +117,7 @@ class EmployeeController extends Controller
                 $password=  Hash::make(str_random(8));
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
-                $response = $client->post('http://odinlite.com/public/api/employees', array(
+                $response = $client->post(Config::get('constants.API_URL').'employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -201,7 +202,7 @@ class EmployeeController extends Controller
                 $client = new GuzzleHttp\Client;
 
 
-                $response = $client->get('http://odinlite.com/public/api/employees/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL').'employees/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -215,6 +216,8 @@ class EmployeeController extends Controller
 
                 $dt = new DateTime($t);
                 $dateBirth = $dt->format('m/d/Y');
+
+                dd($employee);
 
                 return view('employee/edit-employee')->with(array(
                     'employee' => $employee,
@@ -231,14 +234,14 @@ class EmployeeController extends Controller
             $errors = collect($err);
             return view('employees')->with('errors', $errors);
         } catch (\ErrorException $error) {
-            $es = $error;
+//            $es = $error;
             $e = 'Error displaying employee details for editing.';
-            $errors = collect($e);
+//            $errors = collect($e);
             return view('employees');
         } catch (\Exception $error) {
-            $es = $error;
+//            $es = $error;
             $e = 'Error displaying employee details for editing.';
-            $errors = collect($e);
+//            $errors = collect($e);
             return view('employees');
         }
 //        catch ( $error) {
@@ -288,7 +291,7 @@ class EmployeeController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put('http://odinlite.com/public/api/employees/'.$id.'/edit', array(
+                $response = $client->put(Config::get('constants.API_URL').'employees/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -342,7 +345,7 @@ class EmployeeController extends Controller
 
                $client = new GuzzleHttp\Client;
 
-               $response = $client->delete('http://odinlite.com/public/api/employees/' . $id, [
+               $response = $client->delete(Config::get('constants.API_URL').'employees/' . $id, [
                    'headers' => [
                        'Authorization' => 'Bearer ' . $token,
                    ]

@@ -10,6 +10,7 @@ use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
 use Hash;
+use Config;
 
 class LocationController extends Controller
 {
@@ -31,7 +32,11 @@ class LocationController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+//                $urlApi = Config::get('constants.API_URL');
+
+//                dd($urlApi, $token, $compId);//have data in all 3
+
+                $response = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -45,6 +50,7 @@ class LocationController extends Controller
 
             }
             else {
+                echo "<script>console.log( 'No session token' );</script>";
                 return Redirect::to('/login');
             }
         }
@@ -52,6 +58,7 @@ class LocationController extends Controller
             return view('admin_template');
         }
         catch (\ErrorException $error) {
+            echo "<script>console.log( 'Error Exception' );</script>";
             return Redirect::to('/login');
         }
     }
@@ -116,7 +123,7 @@ class LocationController extends Controller
                 $longitude = $geoCoords->results[0]->geometry->location->lng;
                 $notes = ucfirst(Input::get('info'));
 
-                $response = $client->post('http://odinlite.com/public/api/locations', array(
+                $response = $client->post(Config::get('constants.API_URL').'locations', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -168,7 +175,7 @@ class LocationController extends Controller
 //
 //        $client = new GuzzleHttp\Client;
 //
-//        $response = $client->get('http://odinlite.com/public/api/location/'.$id, [
+//        $response = $client->get(Config::get('constants.API_URL').'location/'.$id, [
 //            'headers' => [
 //                'Authorization' => 'Bearer ' . $token,
 //            ]
@@ -194,7 +201,7 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/locations/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL').'locations/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -231,6 +238,10 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        echo "<script>console.log( 'Location Update fn entered' );</script>";
+
+
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -263,7 +274,7 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put('http://odinlite.com/public/api/locations/'.$id.'/edit', array(
+                $response = $client->put(Config::get('constants.API_URL').'locations/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
@@ -291,11 +302,15 @@ class LocationController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Please provide valid changes';
-            $errors = collect($err);
+            echo "<script>console.log( 'Bad Response exception' );</script>";
+
+//            $err = 'Please provide valid changes';
+//            $errors = collect($err);
             return Redirect::to('/location');
         }
         catch (\ErrorException $error) {
+            echo "<script>console.log( 'Error exception' );</script>";
+
             //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
@@ -324,7 +339,7 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete('http://odinlite.com/public/api/locations/'.$id, [
+                $response = $client->delete(Config::get('constants.API_URL').'locations/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]

@@ -138,7 +138,7 @@ if(! function_exists('oauth2')) {
             $response = $client->post($url.'oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
-                    'client_id' => 2,
+                    'client_id' => 14,
                     // The secret generated when you ran: php artisan passport:install
                     'client_secret' => '6L5c7iaGiuNbqJFsL7zrmYf0gJaqY1in9YBvEb49',
                     'username' => $email,
@@ -199,6 +199,7 @@ if(! function_exists('oauth2')) {
                 }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            echo "<script>console.log( 'Error during login' );</script>";
             return false;
         }
     }

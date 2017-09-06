@@ -8,7 +8,7 @@ use Redirect;
 use Carbon\Carbon;
 use Input;
 use DateTime;
-
+use Config;
 
 //GeoCode TZ key =
 
@@ -34,7 +34,7 @@ class ReportController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/reports/list/'.$compId, [
+                $response = $client->get(Config::get('constants.API_URL').'reports/list/'.$compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
                     ]
@@ -96,7 +96,7 @@ class ReportController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get('http://odinlite.com/public/api/locations/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -202,7 +202,7 @@ class ReportController extends Controller
     {
         $client = new GuzzleHttp\Client;
 
-        $response = $client->post('http://odinlite.com/public/api/reports/casenotes', array(
+        $response = $client->post(Config::get('constants.API_URL').'reports/casenotes', array(
                 'headers' => array(
                     'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json'
@@ -231,7 +231,7 @@ class ReportController extends Controller
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->post('http://odinlite.com/public/api/reports/casesandchecks', array(
+            $response = $client->post(Config::get('constants.API_URL').'reports/casesandchecks', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $token,
                         'Content-Type' => 'application/json'
@@ -275,7 +275,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/report/' . $id, [
+                $response = $client->get(Config::get('constants.API_URL').'report/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -327,7 +327,7 @@ class ReportController extends Controller
             $msg = 'Error exception displaying report';
             return view('error')->with('error', $msg);
         }catch (\ErrorException $error) {
-            $msg = 'Error exception displaying report';
+            $msg = 'Error exception displaying report on webpage';
             return view('error')->with('error', $msg);
         }
     }
@@ -337,7 +337,7 @@ class ReportController extends Controller
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
+            $response = $client->get(Config::get('constants.API_URL').'reportcases/' . $id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -407,7 +407,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get('http://odinlite.com/public/api/report/' . $id, [
+                $response = $client->get(Config::get('constants.API_URL').'report/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -417,7 +417,7 @@ class ReportController extends Controller
 
                 if ($report->type == 'Case Notes') {
 
-                    $response = $client->get('http://odinlite.com/public/api/reportcases/' . $id, [
+                    $response = $client->get(Config::get('constants.API_URL').'reportcases/' . $id, [
                         'headers' => [
                             'Authorization' => 'Bearer ' . $token,
                         ]
@@ -522,7 +522,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $client->delete('http://odinlite.com/public/api/reports/'.$id, [
+                $client->delete(Config::get('constants.API_URL').'reports/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]

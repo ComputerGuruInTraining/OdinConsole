@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp;
 use Illuminate\Support\Facades\Redirect;
+use Config;
 
 class ForgotPWController extends Controller
 {
@@ -19,7 +20,7 @@ class ForgotPWController extends Controller
                 //request to api to send an email to the user with the reset password link
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post('http://odinlite.com/public/user/new/pw', array(
+                $response = $client->post(Config::get('constants.STANDARD_URL').'user/new/pw', array(
                         'headers' => array(
                             'Content-Type' => 'application/json'
                         ),
