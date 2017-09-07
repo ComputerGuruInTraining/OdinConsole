@@ -274,10 +274,11 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put(Config::get('constants.API_URL').'locations/'.$id.'/edit', array(
+                $response = $client->post(Config::get('constants.API_URL').'locations/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
-                            'Content-Type' => 'application/json'
+                            'Content-Type' => 'application/json',
+                            'X-HTTP-Method-Override' => 'PUT'
                         ),
                         'json' => array('name' => $name, 'address' => $address,
                             'latitude' => $latitude, 'longitude' => $longitude,
@@ -339,9 +340,10 @@ class LocationController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete(Config::get('constants.API_URL').'locations/'.$id, [
+                $response = $client->post(Config::get('constants.API_URL').'locations/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
 
