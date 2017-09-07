@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://odinlitemgmt.azurewebsites.net/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => 'jieu573lcMTuiqpslkeox93ue75vo5ey',
 
     'cipher' => 'AES-256-CBC',
 
