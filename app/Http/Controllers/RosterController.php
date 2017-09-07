@@ -391,10 +391,11 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', array(
+                $response = $client->post(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
-                            'Content-Type' => 'application/json'
+                            'Content-Type' => 'application/json',
+                            'X-HTTP-Method-Override' => 'PUT'
                         ),
                         'json' => array('checks' => $checks, 'start' => $strStart,
                             'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
@@ -435,9 +436,10 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->delete(Config::get('constants.API_URL').'assignedshift/'.$id, [
+                $response = $client->post(Config::get('constants.API_URL').'assignedshift/'.$id, [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                        'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
 

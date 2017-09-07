@@ -217,8 +217,6 @@ class EmployeeController extends Controller
                 $dt = new DateTime($t);
                 $dateBirth = $dt->format('m/d/Y');
 
-                dd($employee);
-
                 return view('employee/edit-employee')->with(array(
                     'employee' => $employee,
                     'dateBirth' => $dateBirth
@@ -291,10 +289,11 @@ class EmployeeController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->put(Config::get('constants.API_URL').'employees/'.$id.'/edit', array(
+                $response = $client->post(Config::get('constants.API_URL').'employees/'.$id.'/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
-                            'Content-Type' => 'application/json'
+                            'Content-Type' => 'application/json',
+                            'X-HTTP-Method-Override' => 'PUT'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
                             'email' => $email, 'dateOfBirth'=> $dateOfBirth, 'sex'=>$gender, 'mobile'=> $mobile
@@ -345,9 +344,10 @@ class EmployeeController extends Controller
 
                $client = new GuzzleHttp\Client;
 
-               $response = $client->delete(Config::get('constants.API_URL').'employees/' . $id, [
+               $response = $client->post(Config::get('constants.API_URL').'employees/' . $id, [
                    'headers' => [
                        'Authorization' => 'Bearer ' . $token,
+                       'X-HTTP-Method-Override' => 'DELETE'
                    ]
                ]);
 

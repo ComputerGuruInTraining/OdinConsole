@@ -496,6 +496,7 @@ class ReportController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * See CaseNoteController@update
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -522,9 +523,10 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $client->delete(Config::get('constants.API_URL').'reports/'.$id, [
+                $client->post(Config::get('constants.API_URL').'reports/'.$id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
 
