@@ -35,6 +35,8 @@ Route::get('logout', 'HomeController@getLogout');
 
 Route::resource('/reports', 'ReportController');
 
+Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
+
 Route::resource('/rosters', 'RosterController');
 
 //global confirm-delete view
@@ -93,4 +95,8 @@ Route::get('confirmdel-{id}-{url}', function($id, $url){
 });
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
+
+Route::get('/pdfSave-{id}', 'ReportController@pdfSave');
+
+Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
 

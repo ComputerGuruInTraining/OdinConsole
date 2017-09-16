@@ -9,13 +9,14 @@ use Carbon\Carbon;
 use Input;
 use DateTime;
 use Config;
+use PDF;
 
 //GeoCode TZ key =
 
 class ReportController extends Controller
 {
     protected $accessToken;
-//    protected $client;
+
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +35,7 @@ class ReportController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL').'reports/list/'.$compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'reports/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
                     ]
@@ -42,7 +43,7 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-                foreach($reports as $i => $item){
+                foreach ($reports as $i => $item) {
                     //add the extracted date to each of the objects and format date
                     $s = $item->date_start;
 
@@ -63,16 +64,13 @@ class ReportController extends Controller
                     'url' => 'reports'
                 ));
 
-            }
-            else {
+            } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-           // echo $e;
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            // echo $e;
             return view('admin_template');
-        }
-        catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             return Redirect::to('/admin');
         }
     }
@@ -96,7 +94,7 @@ class ReportController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -106,16 +104,13 @@ class ReportController extends Controller
 
                 return view('report/create')->with('locations', $locations);
 
-            }
-            else {
+            } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
-        }
-        catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             echo $error;
             return Redirect::to('/reports');
         }
@@ -126,7 +121,7 @@ class ReportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -157,35 +152,33 @@ class ReportController extends Controller
                 $compId = session('compId');
 
                 //post to api via function which calls a different route based on report type
-                if($type == 'Case Notes') {
+                if ($type == 'Case Notes') {
                     $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
-                }else if($type == 'Cases and Checks') {
+                } else if ($type == 'Cases and Checks') {
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 }
 
-                if($result->success == true){
+                if ($result->success == true) {
                     return view('confirm-create-general')
                         ->with(array(
                             'theMsg' => 'The report has been successfully generated',
                             'btnText' => 'Generate Report',
                             'url' => 'reports'
                         ));
-                }else if($result->success == false){
+                } else if ($result->success == false) {
                     //TODO: untested result-> ... == false
                     $msg = 'Failed to generate report';
                     return view('error')->with('error', $msg);
                 }
 
-            }else {
+            } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-           // dd($e);
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            // dd($e);
             $msg = 'Http Error generating report';
             return view('error')->with('error', $msg);
-        }
-        catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             //dd($error);
             $msg = 'Error exception generating report';
             return view('error')->with('error', $msg);
@@ -202,7 +195,7 @@ class ReportController extends Controller
     {
         $client = new GuzzleHttp\Client;
 
-        $response = $client->post(Config::get('constants.API_URL').'reports/casenotes', array(
+        $response = $client->post(Config::get('constants.API_URL') . 'reports/casenotes', array(
                 'headers' => array(
                     'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json'
@@ -231,7 +224,7 @@ class ReportController extends Controller
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->post(Config::get('constants.API_URL').'reports/casesandchecks', array(
+            $response = $client->post(Config::get('constants.API_URL') . 'reports/casesandchecks', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $token,
                         'Content-Type' => 'application/json'
@@ -248,25 +241,24 @@ class ReportController extends Controller
 
             return $result;
 
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
-                // dd($e);
-                $msg = 'Http Error generating report';
-                return view('error')->with('error', $msg);
-            }
-        catch (\ErrorException $error) {
-                //dd($error);
-                $msg = 'Error exception generating report';
-                return view('error')->with('error', $msg);
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            // dd($e);
+            $msg = 'Http Error generating report';
+            return view('error')->with('error', $msg);
+        } catch (\ErrorException $error) {
+            //dd($error);
+            $msg = 'Error exception generating report';
+            return view('error')->with('error', $msg);
         }
-}
+    }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function view(Request $request, $id)
     {
         try {
             if (session()->has('token')) {
@@ -274,8 +266,9 @@ class ReportController extends Controller
                 $token = session('token');
 
                 $client = new GuzzleHttp\Client;
+//                $id = 24;
 
-                $response = $client->get(Config::get('constants.API_URL').'report/' . $id, [
+                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -292,62 +285,103 @@ class ReportController extends Controller
 
                     $cases = $this->getCaseNotes($id, $token, $report);
 
-                    if($cases != 'error'){
+                    if ($cases != 'error') {
                         foreach ($cases->reportCaseNotes as $i => $item) {
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);
                             $groupCases = $caseNotes->groupBy('case_date');
                         }
 
-//                        $myProjectDirectory = '/Users/bernie/Sites/www/OdinLiteConsole';
-//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
-//                        header('Content-Type: application/pdf');
-//                        header('Content-Disposition: attachment; filename="file.pdf"');
-//                        echo $snappy->getOutput('http://www.github.com');
-////                        $snappy = new Pdf($myProjectDirectory . '/vendor/h4cc/wkhtmltopdf-i386/bin/wkhtmltopdf-amd64');
-//                        $snappy->generateFromHtml('<p>Some content</p>', 'test.pdf');
-//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
-//                        header('Content-Type: application/pdf');
-//                        header('Content-Disposition: attachment; filename="file.pdf"');
-//                        echo $snappy->getOutput('http://www.github.com');
+                        $this->setReportValues($cases, $groupCases, $report, $sdate, $edate);
 
-//                        $snappy->setOption('toc', true);
-////                        $snappy->setOption('xsl-style-sheet', 'http://path/to/stylesheet.xsl'); //or local file;
-//
-//
-pdfFile();
-
-                        return view('report/case_notes/show')->with(array('cases' => $cases,
+                        view()->share(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,
                             'start' => $sdate,
                             'end' => $edate
                         ));
-                    }else{
-                    $err = 'There were no case notes created during the period that the selected report covers.';
-                    $errors = collect($err);
-                    return Redirect::to('/reports')->with('errors', $errors);
+
+                        if ($request->has('download')) {
+                            // pass view file
+                            $pdf = PDF::loadView('report/pdf')->setOrientation('landscape');
+                            // download pdf
+                            return $pdf->download('fileView.pdf');
+                        }
+
+                        return view('report/pdf');
+                    } else {
+                        $err = 'There were no case notes created during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
                     }
-
-                }else if($report->type == 'Cases And Checks'){
-
-
-
                 }
+                //else if ($report->type == 'Cases And Checks') {
+                //
+                //
+                //            }
 
             }else {
                 //ie no session token exists and therefore the user is not authenticated
 
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             $msg = 'Error exception displaying report';
             return view('error')->with('error', $msg);
-        }catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             $msg = 'Error exception displaying report on webpage';
             return view('error')->with('error', $msg);
         }
+
+
+    }
+
+    public function pdfView(Request $request){
+
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->get(Config::get('constants.API_URL') . 'report/24', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ]
+        ]);
+
+        $report = json_decode((string)$response->getBody());
+
+        view()->share('report',$report);
+
+        if($request->has('download')) {
+            // pass view file
+            $pdf = PDF::loadView('report/pdfview');
+            // download pdf
+            return $pdf->download('fileView.pdf');
+        }
+        return view('report/pdfview');
+    }
+
+    public function setReportValues($cases, $groupCases, $report, $sdate, $edate){
+
+        $collectCases = collect($cases);
+//        dd($collectCases);
+        session()->put('cases', $collectCases);
+//        session()->put('groupCases', $edate);
+//        session()->put('report', $edate);
+//        session()->put('sdate', $edate);
+        session()->put('edate', $edate);
+    }
+
+    public function pdfSave($id){
+//        $end = $this->endDate;
+        $cases = session()->get('cases');
+//        $cases = session()->get('groupCases');
+//        $cases = session()->get('report');
+//        $cases = session()->get('sdate');
+        $edate = session()->get('edate');
+
+        pdfFile($id, $cases, $edate);
     }
 
     public function getCaseNotes($id, $token)
