@@ -239,7 +239,7 @@ class LocationController extends Controller
     public function update(Request $request, $id)
     {
 
-        echo "<script>console.log( 'Location Update fn entered' );</script>";
+//        echo "<script>console.log( 'Location Update fn entered' );</script>";
 
 
         try {
