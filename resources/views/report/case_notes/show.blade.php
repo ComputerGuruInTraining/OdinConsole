@@ -11,9 +11,9 @@
             <div class='table-responsive'>
                 <div id="inline">
                 <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-                {{--<button type="button" class="btn btn-success" onclick="{{pdfFile()}}">--}}
-                    {{--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Save as PDF--}}
-                {{--</button>--}}
+                <button type="button" class="btn btn-success" onclick="{{pdfFile()}}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Save as PDF
+                </button>
                 </div>
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
