@@ -259,5 +259,47 @@ if(! function_exists('timezoneDT')) {
     }
 }
 
+if(! function_exists('pdfFile')) {
+    function pdfFile()
+    {
+
+        $snappy = App::make('snappy.pdf');
+
+        //using html
+
+//        $html = '<h1>{{$entity}}</h1><p>You owe me money, {{$id}}.</p>';
+        //note: file name must be different eact time, or an error is thrown
+//        $filePath = '/Users/bernie/Sites/www/OdinLiteConsole/storage/app/html5.pdf';
+
+//        $snappy->generateFromHtml($html, $filePath);
+
+
+        //using url
+        //works if called from ReportController, but not from button function,
+        //note: both odinlite.com/public and odinlite.com/public/password/confirm work, although styling improperly positioned
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="file7.pdf"');
+//        $url = 'http://odinlite.com/public';
+        $url = 'http://odinlite.com/public/password/confirm';
+        echo $snappy->getOutput($url);//provides a download file
+
+
+        //note: errors when trying to pdf a localhost view
+        //works with odinlite.com/public
+//        $snappy = App::make('snappy.pdf');
+////        $html = '<h1>Bill</h1><p>You owe me money, dude.</p>';
+//        header('Content-Type: application/pdf');
+//        header('Content-Disposition: attachment; filename="file6.pdf"');
+//        echo $snappy->getOutput('http://odinlite.com/public');//provides a download fi
+
+//        //works with github
+//        $snappy = App::make('snappy.pdf');
+////        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
+//        header('Content-Type: application/pdf');
+//        header('Content-Disposition: attachment; filename="file.pdf"');
+//        echo $snappy->getOutput('http://www.github.com');//provides a download file
+    }
+}
+
 
 

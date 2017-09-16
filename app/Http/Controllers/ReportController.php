@@ -299,6 +299,24 @@ class ReportController extends Controller
                             $groupCases = $caseNotes->groupBy('case_date');
                         }
 
+//                        $myProjectDirectory = '/Users/bernie/Sites/www/OdinLiteConsole';
+//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
+//                        header('Content-Type: application/pdf');
+//                        header('Content-Disposition: attachment; filename="file.pdf"');
+//                        echo $snappy->getOutput('http://www.github.com');
+////                        $snappy = new Pdf($myProjectDirectory . '/vendor/h4cc/wkhtmltopdf-i386/bin/wkhtmltopdf-amd64');
+//                        $snappy->generateFromHtml('<p>Some content</p>', 'test.pdf');
+//                        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
+//                        header('Content-Type: application/pdf');
+//                        header('Content-Disposition: attachment; filename="file.pdf"');
+//                        echo $snappy->getOutput('http://www.github.com');
+
+//                        $snappy->setOption('toc', true);
+////                        $snappy->setOption('xsl-style-sheet', 'http://path/to/stylesheet.xsl'); //or local file;
+//
+//
+pdfFile();
+
                         return view('report/case_notes/show')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,

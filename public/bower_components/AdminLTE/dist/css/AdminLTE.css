@@ -18,6 +18,11 @@ Odin theming
 
 /*}*/
 
+#inline{
+
+    display: inline-block;
+}
+
 /*Company setting*/
 /* Style the tab */
 div.tab {

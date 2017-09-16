@@ -9,14 +9,17 @@
     <div class="col-md-12">
         <div>
             <div class='table-responsive'>
+                <div id="inline">
                 <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-                {{--<div class="report-header">--}}
+                {{--<button type="button" class="btn btn-success" onclick="{{pdfFile()}}">--}}
+                    {{--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Save as PDF--}}
+                {{--</button>--}}
+                </div>
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
                     <tr class="report-header-row"><td>Premise:</td></td><td class="report-header">{{$cases->location->address}}</td></tr>
                     <tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>
                     <tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>
-                {{--</div>--}}
                  </table>
 
             <table class="table table-hover">
