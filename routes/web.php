@@ -33,6 +33,11 @@ Route::get('/login', 'HomeController@getLogin');
 
 Route::get('logout', 'HomeController@getLogout');
 
+//manual route to fix nav via header problem caused by the url format
+Route::get('/report-{id}', 'ReportController@show');
+
+Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
+
 Route::resource('/reports', 'ReportController');
 
 Route::resource('/rosters', 'RosterController');
@@ -83,7 +88,6 @@ Route::put('location-updated-{id}', 'LocationController@update');
 Route::get('location-edit-{id}', 'LocationController@edit');
 
 
-
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){
     if (session()->has('token')) {
@@ -94,3 +98,8 @@ Route::get('confirmdel-{id}-{url}', function($id, $url){
 });
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
+
+Route::get('/pdfSave-{id}', 'ReportController@pdfSave');
+
+Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
+

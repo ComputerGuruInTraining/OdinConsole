@@ -10,6 +10,8 @@
 
 //api routes
 return [
-    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
-    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/'
+    'STANDARD_URL' => 'http://odinlite.net/',//invalid certificate chain when https, works when not
+    'API_URL' => 'http://odinlite.net/api/'
+//    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',//works
+//    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/'//works even with https
 ];

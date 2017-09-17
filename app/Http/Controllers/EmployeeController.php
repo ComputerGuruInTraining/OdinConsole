@@ -303,6 +303,8 @@ class EmployeeController extends Controller
 
                 $employee = json_decode((string)$response->getBody());
 
+//                dd($employee);
+
                 //direct user based on whether record updated successfully or not
                 if($employee->success == true)
                 {
@@ -311,7 +313,7 @@ class EmployeeController extends Controller
                     return view('confirm')->with(array('theAction' => $theAction));
                 }
                 else{
-                    return redirect()->route("employees.edit");
+                    return view('error')->with('error', 'Failed to update employee record successfully');
                 }
             } else {
                 //not authenticated
