@@ -259,27 +259,27 @@ if(! function_exists('timezoneDT')) {
     }
 }
 
-if(! function_exists('pdfFile')) {
-    function pdfFile($id, $cases, $end)
-    {
-        $snappy = App::make('snappy.pdf');
-
-        $array = [1,2,3];
-
-        $arr = array();
-
-        for($i = 0; $i < count($array); $i++) {
-
-            $arr[$i] = "<h1>Bill</h1><p>Testing pdf" . $array[$i] . "</p>";
-
-        }
-
-        $html = $arr[0] + $arr[1];
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="file.pdf"');
-        echo $snappy->getOutputFromHtml($html);
-    }
-}
+//if(! function_exists('pdfFile')) {
+//    function pdfFile($id, $cases, $end)
+//    {
+//        $snappy = App::make('snappy.pdf');
+//
+//        $array = [1,2,3];
+//
+//        $arr = array();
+//
+//        for($i = 0; $i < count($array); $i++) {
+//
+//            $arr[$i] = "<h1>Bill</h1><p>Testing pdf" . $array[$i] . "</p>";
+//
+//        }
+//
+//        $html = $arr[0] + $arr[1];
+//        header('Content-Type: application/pdf');
+//        header('Content-Disposition: attachment; filename="file.pdf"');
+//        echo $snappy->getOutputFromHtml($html);
+//    }
+//}
 
 //creates pdf with value 0 on page only, no other text (same as $html += "")
 //$array = [1,2,3];

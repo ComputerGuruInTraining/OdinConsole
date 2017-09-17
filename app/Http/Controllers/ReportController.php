@@ -258,6 +258,83 @@ class ReportController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+    public function show($id)
+    {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+//                $id = 24;
+
+                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $report = json_decode((string)$response->getBody());
+
+                //format dates to be in the form 3rd January 2107 for report date range
+                $sdate = formatDates($report->date_start);
+
+                $edate = formatDates($report->date_end);
+
+                if ($report->type == 'Case Notes') {
+
+                    $cases = $this->getCaseNotes($id, $token, $report);
+
+                    if ($cases != 'error') {
+                        foreach ($cases->reportCaseNotes as $i => $item) {
+                            //change to collection datatype from array for using groupBy fn
+                            $caseNotes = collect($cases->reportCaseNotes);
+                            $groupCases = $caseNotes->groupBy('case_date');
+                        }
+
+                        view()->share(array('cases' => $cases,
+                            'groupCases' => $groupCases,
+                            'report' => $report,
+                            'start' => $sdate,
+                            'end' => $edate
+                        ));
+
+                        return view('report/case_notes/show');
+
+                    } else {
+                        $err = 'There were no case notes created during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+                }
+                //else if ($report->type == 'Cases And Checks') {
+                //
+                //
+                //            }
+
+            }else {
+                //ie no session token exists and therefore the user is not authenticated
+
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+            $msg = 'Error exception displaying report';
+            return view('error')->with('error', $msg);
+        } catch (\ErrorException $error) {
+            $msg = 'Error exception displaying report on webpage';
+            return view('error')->with('error', $msg);
+        }
+
+
+    }
+
+    /**
+     * Display the specified resource in a basic layout for download
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
     public function view(Request $request, $id)
     {
         try {
@@ -292,7 +369,7 @@ class ReportController extends Controller
                             $groupCases = $caseNotes->groupBy('case_date');
                         }
 
-                        $this->setReportValues($cases, $groupCases, $report, $sdate, $edate);
+//                        $this->setReportValues($cases, $groupCases, $report, $sdate, $edate);
 
                         view()->share(array('cases' => $cases,
                             'groupCases' => $groupCases,
@@ -303,12 +380,14 @@ class ReportController extends Controller
 
                         if ($request->has('download')) {
                             // pass view file
-                            $pdf = PDF::loadView('report/pdf')->setOrientation('landscape');
-                            // download pdf
-                            return $pdf->download('fileView.pdf');
+                            $pdf = PDF::loadView('report/case_notes/pdf')->setOrientation('landscape');
+                            // download pdf w current date in the name
+                            $dateTime = Carbon::now();
+                            $date = substr($dateTime, 0, 10);
+                            return $pdf->download('Report '.$date.'.pdf');
                         }
 
-                        return view('report/pdf');
+                        return view('report/case_notes/pdf');
                     } else {
                         $err = 'There were no case notes created during the period that the selected report covers.';
                         $errors = collect($err);
@@ -337,52 +416,52 @@ class ReportController extends Controller
 
     }
 
-    public function pdfView(Request $request){
-
-        $token = session('token');
-
-        $client = new GuzzleHttp\Client;
-
-        $response = $client->get(Config::get('constants.API_URL') . 'report/24', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $token,
-            ]
-        ]);
-
-        $report = json_decode((string)$response->getBody());
-
-        view()->share('report',$report);
-
-        if($request->has('download')) {
-            // pass view file
-            $pdf = PDF::loadView('report/pdfview');
-            // download pdf
-            return $pdf->download('fileView.pdf');
-        }
-        return view('report/pdfview');
-    }
-
-    public function setReportValues($cases, $groupCases, $report, $sdate, $edate){
-
-        $collectCases = collect($cases);
-//        dd($collectCases);
-        session()->put('cases', $collectCases);
-//        session()->put('groupCases', $edate);
-//        session()->put('report', $edate);
-//        session()->put('sdate', $edate);
-        session()->put('edate', $edate);
-    }
-
-    public function pdfSave($id){
-//        $end = $this->endDate;
-        $cases = session()->get('cases');
-//        $cases = session()->get('groupCases');
-//        $cases = session()->get('report');
-//        $cases = session()->get('sdate');
-        $edate = session()->get('edate');
-
-        pdfFile($id, $cases, $edate);
-    }
+//    public function pdfView(Request $request){
+//
+//        $token = session('token');
+//
+//        $client = new GuzzleHttp\Client;
+//
+//        $response = $client->get(Config::get('constants.API_URL') . 'report/24', [
+//            'headers' => [
+//                'Authorization' => 'Bearer ' . $token,
+//            ]
+//        ]);
+//
+//        $report = json_decode((string)$response->getBody());
+//
+//        view()->share('report',$report);
+//
+//        if($request->has('download')) {
+//            // pass view file
+//            $pdf = PDF::loadView('report/pdfview');
+//            // download pdf
+//            return $pdf->download('fileView.pdf');
+//        }
+//        return view('report/pdfview');
+//    }
+//
+//    public function setReportValues($cases, $groupCases, $report, $sdate, $edate){
+//
+//        $collectCases = collect($cases);
+////        dd($collectCases);
+//        session()->put('cases', $collectCases);
+////        session()->put('groupCases', $edate);
+////        session()->put('report', $edate);
+////        session()->put('sdate', $edate);
+//        session()->put('edate', $edate);
+//    }
+//
+//    public function pdfSave($id){
+////        $end = $this->endDate;
+//        $cases = session()->get('cases');
+////        $cases = session()->get('groupCases');
+////        $cases = session()->get('report');
+////        $cases = session()->get('sdate');
+//        $edate = session()->get('edate');
+//
+//        pdfFile($id, $cases, $edate);
+//    }
 
     public function getCaseNotes($id, $token)
     {

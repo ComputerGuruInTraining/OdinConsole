@@ -11,16 +11,6 @@
             <div class='table-responsive'>
                 <div id="inline">
                 <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-                {{--<button type="button" class="btn btn-success" onclick="{{pdfFile()}}">--}}
-                    {{--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Save as PDF--}}
-                {{--</button>--}}
-{{--                    <a href="{{asset('ReportController@pdfSave')}}">Link name..Embedded Button</a>--}}
-
-                    <a href="/pdfSave-{{$report->id}}">Save as PDF</a>
-                    <a href="/pdfview">View PDF</a>
-                    <a href="{{ route('pdf',['download'=>'pdf']) }}">Download PDF</a>
-
-
                 </div>
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>

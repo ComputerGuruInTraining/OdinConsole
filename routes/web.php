@@ -33,9 +33,12 @@ Route::get('/login', 'HomeController@getLogin');
 
 Route::get('logout', 'HomeController@getLogout');
 
-Route::resource('/reports', 'ReportController');
+//manual route to fix nav via header problem caused by the url format
+Route::get('/report-{id}', 'ReportController@show');
 
 Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
+
+Route::resource('/reports', 'ReportController');
 
 Route::resource('/rosters', 'RosterController');
 
