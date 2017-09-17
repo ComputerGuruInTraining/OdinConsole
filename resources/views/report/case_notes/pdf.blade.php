@@ -27,10 +27,6 @@
             vertical-align: top;
         }
 
-        /*#inline{*/
-            /*display: inline-block;*/
-        /*}*/
-
         .margin-bottom {
             margin-bottom: 20px;
         }
@@ -68,7 +64,6 @@
         .table-responsive > .table tr td:first-child {
             border-left: 1px solid #f4f4f4;
         }
-
 
         /*   Following styles sourced from
             <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}" type="text/css">
