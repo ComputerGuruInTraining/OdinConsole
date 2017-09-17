@@ -52,7 +52,9 @@
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php artisan optimize",
+            "php -r \"exec('chmod -R +x vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');\""
+
         ]
     },
     "config": {
