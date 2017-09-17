@@ -16,7 +16,9 @@
             </ul>
         </div>
     @endif
-        {{ Form::open(['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}
+        {{ Form::model($employee, ['url' => '/employee-updated-' . $employee->user_id, 'method' => 'put']) }}
+
+        {{--{{ Form::open(['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}--}}
     {{--{{ Form::model($employee, ['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}--}}
     <div class='form-group'>
         {{ Form::label('first_name', 'First Name') }}

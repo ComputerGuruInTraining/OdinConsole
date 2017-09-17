@@ -43,6 +43,7 @@ class DashboardController extends Controller{
 
 
             $currentLocations = json_decode((string)$response2->getBody());
+//            dd($currentLocations);
             $company = $this->getCompanyDetail();
 
 //            $companyName = $company->name;
@@ -51,7 +52,11 @@ class DashboardController extends Controller{
 //            dd($companyOwner);
 
 
-            return view('dashboard.dashboard', compact('users','currentLocations', 'company'));
+            return view('dashboard.dashboard')->with(
+                array('users' => $users,
+                'currentLocations' => $currentLocations,
+                'company' => $company
+            ));
 
 //            return view('dashboard/dashboard')->with(array('currentLocations' => $currentLocations));
         }
