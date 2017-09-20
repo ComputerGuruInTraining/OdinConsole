@@ -229,18 +229,18 @@ class EmployeeController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employee details.';
-            $errors = collect($err);
-            return view('employees')->with('errors', $errors);
+//            $errors = collect($err);
+            return view('error')->with('error', $err);
         } catch (\ErrorException $error) {
 //            $es = $error;
             $e = 'Error displaying employee details for editing.';
 //            $errors = collect($e);
-            return view('employees');
+            return view('error')->with('error', $e);
         } catch (\Exception $error) {
 //            $es = $error;
-            $e = 'Error displaying employee details for editing.';
+            $e = 'Error displaying employee details for update.';
 //            $errors = collect($e);
-            return view('employees');
+            return view('error')->with('error', $e);
         }
 //        catch ( $error) {
 //            $es = $error;
@@ -320,14 +320,12 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Please provide valid changes';
-            $errors = collect($err);
-            return view('employee/edit-employee')->with('errors', $errors);
+            $err = 'Error updating employee details';
+            return view('error')->with('error', $err);
         }
         catch (\ErrorException $error) {
             $e = 'Error updating employee';
-            $errors = collect($e);
-            return view('employee/edit-employee')->with('errors', $errors);
+            return view('error')->with('error', $e);
         }
     }
 

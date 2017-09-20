@@ -11,3 +11,5 @@ app/storage/
 .rocketeer/
 
 .idea/workspace
+
+vendor/

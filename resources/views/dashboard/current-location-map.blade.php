@@ -1,13 +1,19 @@
 <section>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
-    <div id="map-user">
-    </div>
+    <button type="button" onclick="adjFreq()">Adjust frequency of location gathering from 1 min to 10 sec</button>
+
+    <div id="map-user"></div>
 
     <script>
         var map;
         var infoWindow;
         var markers = [];
-        var latLng = [];
+        var lat;
+        var long;
+        var positions = [];
+        var interval;
+        var frequency = 5000;//TODO: 60000 = 1 min for production
+        //        var latLng = [];
         {{--var locations = [--}}
                 {{--@foreach ($currentLocations as $location)--}}
             {{--[ {{ $location->latitude }}, {{ $location->longitude }} ],--}}
@@ -31,8 +37,28 @@
 
         google.maps.event.addDomListener(window, "load", function () {
 
+            currentPositions();
+            console.log('positions outside fn ' + positions[20].longitude);
             initMap();
-            addMarker();
+            setMarkers();
+            showMarkers();
+
+            //nb fns called within setTimeout not working
+//            setTimeout(function(){
+//console.log('positions outside fn '+ positions[20].longitude);
+//                initMap();
+
+
+//            }, 50000);
+
+
+            interval = setInterval(function(){
+                   updateMarkers();
+                   console.log(frequency);
+
+            }, frequency);
+
+
 //            showMarkers();
 //            setMapOnAll(map);
 //            createMarker();
@@ -40,8 +66,13 @@
         });
 
         function initMap() {
+
+            lat = positions[0].latitude;
+            long = positions[0].longitude;
+
             map = new google.maps.Map(document.getElementById("map-user"), {
-                center: new google.maps.LatLng(-35.3803372, 149.0590477),
+
+                center: new google.maps.LatLng(lat, long),
                 zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
@@ -63,88 +94,125 @@
 
         }
 
+        //remove current markers and set new markers with the values from the current locations array
+        function updateMarkers(){
+            console.log('Frequency' + frequency);
 
+            deleteMarkers();
+            currentPositions();
+            setMarkers();
+            showMarkers();
 
+        }
 
+        function currentPositions() {
+            @foreach ($currentLocations as $location)
 
-        function addMarker() {
-            {{--var iconDir = '{{ asset("/icons/marker.png") }}';--}}
-           @foreach ($currentLocations as $location)
-            var myLatlng = new google.maps.LatLng({{ $location->latitude }}, {{ $location->longitude }});
+                var position = {latitude:{{ $location->latitude }}, longitude:{{  $location->longitude }}};
+                console.log('position ' + position.latitude);
+                positions.push(position);
 
-            var marker = new google.maps.Marker({
-                position: myLatlng ,
-                map: map
-//                icon: iconDir
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-            infoWindow.setContent("<h3> {{$location -> user_first_name}} {{$location ->user_last_name}}" + "</h3><p>{{$location->address}} <br>Time Stamp: {{$location->updated_at}}</p>");
-            infoWindow.open(map, this);
-            });
-
-            marker.setMap(map);
             @endforeach
 
         }
 
-//        function setMapOnAll(map) {
-//            for (var i = 0; i < markers.length; i++) {
-//                markers[i].setMap(map);
-//            }
-//        }
-//
-//        function clearMarkers() {
-//            setMapOnAll(null);
-//        }
-//
-//        function showMarkers() {
-//            setMapOnAll(map);
-//        }
-//
-//        function deleteMarkers() {
-//            clearMarkers();
-//            markers = [];
-//        }
+        function setMarkers() {
+                    {{--var iconDir = '{{ asset("/icons/marker.png") }}';--}}
 
+            for (i = 0; i < positions.length; i++) {
+                console.log("Number of data rows returned " + positions.length);
+                var myLatlng = new google.maps.LatLng(positions[i].latitude, positions[i].longitude);
+
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map
+//                icon: iconDir
+                });
+
+                markers.push(marker);
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infoWindow.setContent("<h3> {{$location -> user_first_name}} {{$location ->user_last_name}}" + "</h3><p>{{$location->address}} <br>Time Stamp: {{$location->updated_at}}</p>");
+                    infoWindow.open(map, this);
+                });
+
+//            marker.setMap(map);
+            }
+            //            console.log(markers);
+
+        }
+
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+        ////
+        function clearMarkers() {
+            setMapOnAll(null);
+        }
+        //
+        function showMarkers() {
+            setMapOnAll(map);
+        }
+        //
+        function deleteMarkers() {
+            clearMarkers();
+            markers = [];
+        }
+
+        function adjFreq(){
+            frequency = 10000;
+
+            //clear interval or else effectively an interval at 5sec and 10sec, although one might think the value would be replaced
+            clearInterval(interval);
+
+            //set the interval to be the new frequency
+            interval = setInterval(function(){
+                updateMarkers();
+                console.log(frequency);
+
+            }, frequency);
+
+        }
         {{--function createMarker() {--}}
-                    {{--@foreach ($locations as $location)--}}
-                 {{--lnag = {{$location->longitude}};--}}
-                 {{--latt = {{$location->latitude}};--}}
-            {{--var posi = {lat: lnag, lng: 'latt'};--}}
-            {{--var marker = new google.maps.Marker({--}}
-                    {{--position: {--}}
-                        {{--lat: {{$location->latitude}},--}}
-                        {{--lng: {{$location->longitude}}--}}
-                    {{--},--}}
-                    {{--map: map,--}}
-                    {{--title: '{{$location -> name}}'--}}
-                {{--});--}}
+        {{--@foreach ($locations as $location)--}}
+        {{--lnag = {{$location->longitude}};--}}
+        {{--latt = {{$location->latitude}};--}}
+        {{--var posi = {lat: lnag, lng: 'latt'};--}}
+        {{--var marker = new google.maps.Marker({--}}
+        {{--position: {--}}
+        {{--lat: {{$location->latitude}},--}}
+        {{--lng: {{$location->longitude}}--}}
+        {{--},--}}
+        {{--map: map,--}}
+        {{--title: '{{$location -> name}}'--}}
+        {{--});--}}
 
-            {{--google.maps.event.addListener(marker, 'click', function () {--}}
-                {{--infoWindow.setContent("<h3> {{$location -> name}}" + "</h3><p>{{$location->address}}</p>");--}}
-                {{--infoWindow.open(map, this);--}}
-            {{--});--}}
-            {{--@endforeach--}}
+        {{--google.maps.event.addListener(marker, 'click', function () {--}}
+        {{--infoWindow.setContent("<h3> {{$location -> name}}" + "</h3><p>{{$location->address}}</p>");--}}
+        {{--infoWindow.open(map, this);--}}
+        {{--});--}}
+        {{--@endforeach--}}
         {{--}--}}
 
 
-//        setInterval(function() {
-//            $.ajax({ url: '/my/site',
-//                data: {action: 'test'},
-//                type: 'post',
-//                success: function(output) {
-//                    // change the DOM with your new output info
-//                }
-//            });
+        //        setInterval(function() {
+        //            $.ajax({ url: '/my/site',
+        //                data: {action: 'test'},
+        //                type: 'post',
+        //                success: function(output) {
+        //                    // change the DOM with your new output info
+        //                }
+        //            });
 
-//        $.get('/dashboard', function(){
-//            console.log('locations');
-//            deleteMarkers();
-//            addMarker(locations);
-////            createMarker();
-//        });
-//        }, 50000);
+        //        $.get('/dashboard', function(){
+        //            console.log('locations');
+        //            deleteMarkers();
+        //            addMarker(locations);
+        ////            createMarker();
+        //        });
+        //        }, 50000);
 
     </script>
 </section>

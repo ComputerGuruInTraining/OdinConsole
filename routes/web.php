@@ -23,7 +23,6 @@ Route::get('/admin', function () {
 
 Route::resource('/user', 'UserController');
 
-Route::resource('/employees', 'EmployeeController');
 
 Route::resource('/case-notes', 'CaseNoteController');
 
@@ -87,6 +86,17 @@ Route::put('location-updated-{id}', 'LocationController@update');
 
 Route::get('location-edit-{id}', 'LocationController@edit');
 
+Route::get('location-show', 'LocationController@show')->name('location-show');
+
+//in process of manually overriding auto routes created by using ResourceController
+//to combat the header navigation error which is caused by the route format
+
+Route::get('employee-edit-{id}', 'EmployeeController@edit');
+
+Route::put('employee-updated-{id}', 'EmployeeController@update');
+
+
+Route::resource('/employees', 'EmployeeController');
 
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){

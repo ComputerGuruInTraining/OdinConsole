@@ -13,20 +13,14 @@ use Config;
 class DashboardController extends Controller{
 
     public function index(){
-//        $locations = Location::all();
-//        return view('dashboard.dashboard');
-////        return view ('dashboard.dashboard', compact('locations'));
-
 
         if (session()->has('token')) {
             $token = session('token');
             $client = new GuzzleHttp\Client;
 
             $compId = session('compId');
-//            $compId = session('compId');
-//
-//
-//
+
+            //get current logged in console user to personalise dashboard
             $response = $client->get(Config::get('constants.API_URL').'user', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $token,
@@ -35,6 +29,7 @@ class DashboardController extends Controller{
                 )
             );
             $users = json_decode((string)$response->getBody());
+
             $response2 = $client->get(Config::get('constants.API_URL').'dashboard/' . $compId . '/current-location', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
@@ -43,17 +38,15 @@ class DashboardController extends Controller{
 
 
             $currentLocations = json_decode((string)$response2->getBody());
+            dd($currentLocations);
             $company = $this->getCompanyDetail();
 
-//            $companyName = $company->name;
-//            $companyOwner = $company->owner;
-////            dd($currentLocations);
-//            dd($companyOwner);
+            return view('dashboard.dashboard')->with(
+                array('users' => $users,
+                'currentLocations' => $currentLocations,
+                'company' => $company
+            ));
 
-
-            return view('dashboard.dashboard', compact('users','currentLocations', 'company'));
-
-//            return view('dashboard/dashboard')->with(array('currentLocations' => $currentLocations));
         }
         else {
             return Redirect::to('/login');
@@ -71,7 +64,6 @@ class DashboardController extends Controller{
                     'Authorization' => 'Bearer ' . $token,
                 ]
             ]);
-
 
             $company = json_decode((string)$response->getBody());
             return $company;
