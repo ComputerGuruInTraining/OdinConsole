@@ -1,6 +1,7 @@
 <section>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
-    <button type="button" onclick="updateMarkers()">Update Locations</button>
+    <button type="button" onclick="adjFreq()">Adjust frequency of location gathering from 1 min to 10 sec</button>
+
     <div id="map-user"></div>
 
     <script>
@@ -10,6 +11,8 @@
         var lat;
         var long;
         var positions = [];
+        var interval;
+        var frequency = 5000;//TODO: 60000 = 1 min for production
         //        var latLng = [];
         {{--var locations = [--}}
                 {{--@foreach ($currentLocations as $location)--}}
@@ -48,13 +51,12 @@
 
 //            }, 50000);
 
-//
-//            var intervalID = setInterval(function(){
-//                    deleteMarkers();
-//                    setMarkers();
-//                    showMarkers();
-//
-//            }, 10000);
+
+            interval = setInterval(function(){
+                   updateMarkers();
+                   console.log(frequency);
+
+            }, frequency);
 
 
 //            showMarkers();
@@ -94,6 +96,7 @@
 
         //remove current markers and set new markers with the values from the current locations array
         function updateMarkers(){
+            console.log('Frequency' + frequency);
 
             deleteMarkers();
             currentPositions();
@@ -117,6 +120,7 @@
                     {{--var iconDir = '{{ asset("/icons/marker.png") }}';--}}
 
             for (i = 0; i < positions.length; i++) {
+                console.log("Number of data rows returned " + positions.length);
                 var myLatlng = new google.maps.LatLng(positions[i].latitude, positions[i].longitude);
 
                 var marker = new google.maps.Marker({
@@ -138,7 +142,6 @@
 
         }
 
-
         function setMapOnAll(map) {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setMap(map);
@@ -158,6 +161,20 @@
             markers = [];
         }
 
+        function adjFreq(){
+            frequency = 10000;
+
+            //clear interval or else effectively an interval at 5sec and 10sec, although one might think the value would be replaced
+            clearInterval(interval);
+
+            //set the interval to be the new frequency
+            interval = setInterval(function(){
+                updateMarkers();
+                console.log(frequency);
+
+            }, frequency);
+
+        }
         {{--function createMarker() {--}}
         {{--@foreach ($locations as $location)--}}
         {{--lnag = {{$location->longitude}};--}}
