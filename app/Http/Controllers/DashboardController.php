@@ -73,15 +73,8 @@ class DashboardController extends Controller{
     }
 
     public function testFunction(Request $request){
-//        if ($request->isMethod('post')){
-//            return response()->json(['response' => 'This is post method']);
-//        }
-//
-//        return response()->json(['response' => 'This is get method']);
         $locations = Location::all('latitude', 'longitude', 'name');
         return $locations;
-
-//        return response()->json(['response'=>'latitude', 'longitude', 'name']);
     }
 
 }
