@@ -91,12 +91,23 @@ Route::get('location-show', 'LocationController@show')->name('location-show');
 //in process of manually overriding auto routes created by using ResourceController
 //to combat the header navigation error which is caused by the route format
 
+
+Route::get('employees', 'EmployeeController@index');
+//FIXME 1a: date picker does not work for urls in the format /employee-create
+//FIXME 1b: but header nav does not work for urls in the format employee/create
+//Route::get('employee-tocreate', 'EmployeeController@create');
+
+//Route::get('employee-create', 'EmployeeController@create');
+//
+//Route::post('employee-created', 'EmployeeController@store');
+
 Route::get('employee-edit-{id}', 'EmployeeController@edit');
 
 Route::put('employee-updated-{id}', 'EmployeeController@update');
 
-
-Route::resource('/employees', 'EmployeeController');
+Route::resource('/employees', 'EmployeeController', ['except' => [
+    'edit', 'update', 'index'
+]]);
 
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){
