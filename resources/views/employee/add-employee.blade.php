@@ -17,7 +17,7 @@
         </div>
     @endif
 
-{{ Form:: open(['role' =>'form', 'url' =>'employees']) }}
+{{ Form:: open(['role' =>'form', 'url' => '/employees']) }}
 <div class='form-group'>
     {{ Form::label('first_name', 'First Name') }}
     {{ Form::text('first_name', null, ['placeholder' => 'First Name', 'class' => 'form-control']) }}
