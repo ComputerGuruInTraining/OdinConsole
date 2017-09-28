@@ -19,6 +19,7 @@
         var positions = [];
         var interval;
         var frequency = 5000;//TODO: 60000 = 1 min for production
+//        var jsCurrLocs = [];
 
         google.maps.event.addDomListener(window, "load", function () {
 
@@ -65,13 +66,23 @@
         function currentPositions() {
 
             @foreach ($currentLocations as $location)
-{{--                console.log({{$location->address}});--}}
+//TODO: use for storing all the $location values to then be used for info window
+                //store the value in a js string which will then be parsed to an object
+                //js variable is easier to use thoughout the fns, and allows storing of all the values in the location object
+            var location = '{"address":"' + "<?php echo $location->address;?>" + '", "latitude":"' + "<?php echo $location->latitude;?>" + '"}';
+
+                console.log(location);
+
+                var posJs = JSON.parse(location);
+
+                console.log(posJs.address);
+
                 var position = {
                     latitude:{{ $location->latitude }}, longitude:{{  $location->longitude }}
                     {{--user_first_name:{{ $location->user_first_name }}, user_last_name:{{ $location->user_last_name }},--}}
                     {{--created_at:{{ $location->created_at }}, --}}
                 };
-//                console.log(position.address);
+//                console.log(position);
                 positions.push(position);
             @endforeach
         }
@@ -156,7 +167,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     //clear the array holding the data of positions before assigning the response values to the array
                     this.positions = [];
-
+console.log(this.responseText);
                     this.positions = JSON.parse(this.responseText);
                 }
             };
