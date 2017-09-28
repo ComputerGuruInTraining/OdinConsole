@@ -17,15 +17,6 @@
             </div>
         @endif
         {{ Form::open(['route' => ['case-notes.update', $data->caseNote->id], 'method'=>'put']) }}
-            {{--<div class='form-group'>--}}
-                {{--{{ Form::label('date', 'Date') }}--}}
-                {{--{{ Form::text('date', $noteDate, ['placeholder' => 'Date', 'class' => 'form-control']) }}--}}
-            {{--</div>--}}
-
-            {{--<div class='form-group'>--}}
-                {{--{{ Form::label('time', 'Time') }}--}}
-                {{--{{ Form::text('time', $time, ['placeholder' => 'Time', 'class' => 'form-control']) }}--}}
-            {{--</div>--}}
 
             <div class='form-group'>
                 {{ Form::label('title', 'Title') }}
@@ -38,7 +29,7 @@
             </div>
 
             <div class='form-group form-buttons'>
-                {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
+                {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
                 <a href ='/reports' class = "btn btn-info">Cancel</a>
             </div>
 

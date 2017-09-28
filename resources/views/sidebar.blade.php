@@ -35,7 +35,7 @@
         <ul class="sidebar-menu">
             <li class="header"><p class="menu-heading">Quick Links</p></li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="/dashboard" class="menu"><span>Dashboard</span></a></li>
+            <li class="active"><a href="/map-geolocation" class="menu"><span>Who's on Duty</span></a></li>
             <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
             <li class="active"><a href="/rosters" class="menu"><span>Roster</span></a></li>
             <li class="active"><a href="/location" class="menu"><span>Locations</span></a></li>

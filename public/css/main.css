@@ -1,9 +1,11 @@
 #map-user{
-
-    height: 500px;
+    height:580px;
     width: 100%;
     margin: 0 auto;
+}
 
+.padding-bottom{
+    padding-bottom: 10px;
 }
 
 .block{

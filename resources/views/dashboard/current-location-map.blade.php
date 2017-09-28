@@ -3,13 +3,12 @@
 
     <div id="map-user"></div>
 
-    <button type="button" onclick="adjFreq()">Adjust frequency of location gathering from 1 min to 10 sec</button>
-
-    <a href="/dashboard">Reload Page</a><!--Not ideal, improve by getting from db and updating variable value-->
-
-    <button type="button" onclick="update()">Get Updated Positions</button>
-
-    <p id="demo"></p>
+    <div style="padding:15px 0px 10px 0px;" class='form-group form-buttons'>
+        {{--todo: info tip with the time interval --}}
+        <button type="button" class="btn btn-primary padding-bottom" onclick="adjFreq()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Increase GeoLocation Data Rate
+        </button>
+    </div>
 
     <script>
         var map;
@@ -24,15 +23,13 @@
         google.maps.event.addDomListener(window, "load", function () {
 
             currentPositions();
-//            console.log('positions outside fn ' + positions[0].longitude);
             initMap();
             setMarkers();
             showMarkers();
 
             interval = setInterval(function(){
                    updateMarkers();
-//                   console.log(frequency);
-
+                   console.log("interval call to update markers");
             }, frequency);
 
         });
@@ -53,31 +50,37 @@
 
         //remove current markers and set new markers with the values from the current locations array
         function updateMarkers(){
-//            console.log('Frequency' + frequency);
 
+            //remove current markers
             deleteMarkers();
-            currentPositions();//atm, using the same data sent to the view each time
+
+            //update function will retrieve values from api then update values in positions array
+            update();
+
             setMarkers();
             showMarkers();
-
         }
 
+        //used for initial positions gathered upon page load
         function currentPositions() {
+
             @foreach ($currentLocations as $location)
-
-                var position = {latitude:{{ $location->latitude }}, longitude:{{  $location->longitude }}};
-//                console.log('position ' + position.latitude);
+{{--                console.log({{$location->address}});--}}
+                var position = {
+                    latitude:{{ $location->latitude }}, longitude:{{  $location->longitude }}
+                    {{--user_first_name:{{ $location->user_first_name }}, user_last_name:{{ $location->user_last_name }},--}}
+                    {{--created_at:{{ $location->created_at }}, --}}
+                };
+//                console.log(position.address);
                 positions.push(position);
-
             @endforeach
-
         }
 
+        //assigns values to markers and info windows using positions array
         function setMarkers() {
             var iconDir = '{{ asset("/icons/marker.png") }}';
 
             for (i = 0; i < positions.length; i++) {
-//                console.log("Number of data rows returned " + positions.length);
                 var myLatlng = new google.maps.LatLng(positions[i].latitude, positions[i].longitude);
 
                 var marker = new google.maps.Marker({
@@ -86,22 +89,37 @@
                     icon: iconDir
                 });
 
+                //assign values to markers array
                 markers.push(marker);
 
-                google.maps.event.addListener(marker, 'click', function () {
-                    infoWindow.setContent("<h5> {{$location -> user_first_name}} {{$location ->user_last_name}}" +
-                        "</h5><p>{{$location->address}} <br>Time Stamp: {{$location->created_at}}</p>");
-                    infoWindow.open(map, this);
-                });
+//                console.log(markers[i], positions[i]);
+//
+//                infoWindow(marker,  positions[i]);
+
             }
         }
 
+        function infoWindow(marker, position)
+        {
+//            for (i = 0; i < markers.length; i++) {
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infoWindow.setContent("<h5>" + position.user_first_name + position.user_last_name + "</h5><p>" +
+                    position.address + "<br>Time Stamp:" + position.created_at + "</p>");
+                    infoWindow.open(map, this);
+                });
+//            }
+
+        }
+
+        //sets the markers on the map
         function setMapOnAll(map) {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setMap(map);
             }
         }
 
+        //removes the markers from the map
         function clearMarkers() {
             setMapOnAll(null);
         }
@@ -110,11 +128,13 @@
             setMapOnAll(map);
         }
 
+        //removes the markers from the map and removes the values assigned to markers
         function deleteMarkers() {
             clearMarkers();
             markers = [];
         }
 
+        //allows the option to change the frequency of updating Markers as set in setInterval function
         function adjFreq(){
             frequency = 10000;
 
@@ -129,19 +149,19 @@
             }, frequency);
         }
 
-        //http request to api FIXME: wip
+        //retrieve values from api
         function update(){
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("demo").innerHTML =
-                        this.responseText;
-                    console.log(this.responseText);
+                    //clear the array holding the data of positions before assigning the response values to the array
+                    this.positions = [];
+
+                    this.positions = JSON.parse(this.responseText);
                 }
             };
             xhttp.open("GET", "http://odinlite.net/dashboard/64/current-positions", true);
             xhttp.send();
-
         }
 
     </script>
@@ -149,7 +169,29 @@
 
 {{--//archived--}}
 
+{{--<button type="button" onclick="adjFreq()"></button>--}}
 
+{{--<a href="/dashboard">Reload Page</a><!--Not ideal, improve by getting from db and updating variable value-->--}}
+
+{{--<button type="button" onclick="updateMarkers()">Get Updated Positions</button>--}}
+
+{{--<p id="demo"></p>--}}
+
+{{--//                    updatedPositions(updatedPos);--}}
+
+{{--//--}}
+{{--//        function updatedPositions(updatedPos){--}}
+{{--//            //clear the array holding the data of positions before the update--}}
+{{--//            positions = [];--}}
+{{--////            console.log("latitude" + updatedPos[0].latitude);//262 for some reason--}}
+{{--//            //add updated positions to the positions array--}}
+{{--//            for (i = 0; i < updatedPos.length; i++) {--}}
+{{--//                var position = {latitude: updatedPos[i].latitude, longitude: updatedPos[i].longitude};--}}
+{{--//                console.log('position ' +  updatedPos[i].latitude);--}}
+{{--//                positions.push(position);--}}
+{{--//            }--}}
+{{--//--}}
+{{--//        }--}}
 
 {{--//            var myLatlng = new google.maps.LatLng(33.808678, -117.918921);--}}
 {{--//--}}

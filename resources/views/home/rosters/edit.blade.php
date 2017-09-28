@@ -85,8 +85,8 @@
                 {{ Form::text('checks', $assigned[0]->checks, array('class' => 'form-control')) }}
             </div>
 
-            <div class='form-group'>
-                {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
+            <div class='form-group form-buttons'>
+                {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
                 <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
             </div>
             {{ Form::close() }}
