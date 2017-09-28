@@ -40,8 +40,10 @@
         {{--{{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}--}}
     {{--</div>--}}
 
-    <div class='form-group'>
+    <div class='form-group form-buttons'>
         {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+        <a href="/settings" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+
     </div>
 
     {{ Form::close() }}

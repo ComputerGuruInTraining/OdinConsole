@@ -17,16 +17,19 @@ Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
 
-Route::get('/admin', function () {
-    return view('admin_template');
-});
+//Route::get('/admin', function () {
+//    return view('admin_template');
+//});
+
+Route::get('/admin', 'DashboardController@index');
+
 
 Route::resource('/user', 'UserController');
 
 
 Route::resource('/case-notes', 'CaseNoteController');
 
-Route::get('/dashboard', 'DashboardController@index');
+Route::get('/map-geolocation', 'DashboardController@index');
 
 Route::get('/login', 'HomeController@getLogin');
 

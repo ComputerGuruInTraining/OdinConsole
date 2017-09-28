@@ -38,7 +38,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Update', ['class' => 'btn btn-info']) }}
+            {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
             <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
