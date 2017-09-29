@@ -11,8 +11,6 @@ use DateTime;
 use Config;
 use PDF;
 
-//GeoCode TZ key =
-
 class ReportController extends Controller
 {
     protected $accessToken;
@@ -481,7 +479,7 @@ class ReportController extends Controller
 
             } else {
                 //extract location latitude and longitude to be used to find timezone
-                //for this report atm, case note location is presumed to be location of premise
+                //for this report atm, case note geoLocation is presumed to be location of premise
                 $lat = $cases->location->latitude;
                 $long = $cases->location->longitude;
                 //calculate the date and time based on the location and any of the case notes created_at timestamp

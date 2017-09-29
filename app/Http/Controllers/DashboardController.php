@@ -38,8 +38,6 @@ class DashboardController extends Controller{
 
             $currentLocations = json_decode((string)$response2->getBody());
 
-//            dd($currentLocations);
-
             $company = $this->getCompanyDetail();
 
             return view('dashboard.dashboard')->with(

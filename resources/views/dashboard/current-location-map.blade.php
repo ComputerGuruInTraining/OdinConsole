@@ -18,8 +18,7 @@
         var long;
         var positions = [];
         var interval;
-        var frequency = 5000;//TODO: 60000 = 1 min for production
-//        var jsCurrLocs = [];
+        var frequency = 60000;//TODO: 60000 = 1 min for production
 
         google.maps.event.addDomListener(window, "load", function () {
 
@@ -30,7 +29,6 @@
 
             interval = setInterval(function(){
                    updateMarkers();
-                   console.log("interval call to update markers");
             }, frequency);
 
         });
@@ -46,7 +44,6 @@
                 zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
-            infoWindow = new google.maps.InfoWindow();
         }
 
         //remove current markers and set new markers with the values from the current locations array
@@ -69,21 +66,16 @@
 //TODO: use for storing all the $location values to then be used for info window
                 //store the value in a js string which will then be parsed to an object
                 //js variable is easier to use thoughout the fns, and allows storing of all the values in the location object
-            var location = '{"address":"' + "<?php echo $location->address;?>" + '", "latitude":"' + "<?php echo $location->latitude;?>" + '"}';
-
-                console.log(location);
+            var location = '{"address":"' + "<?php echo $location->address;?>" +
+                '", ' + '"latitude":"' + "<?php echo $location->latitude;?>" +
+                '", ' + '"longitude":"' + "<?php echo $location->longitude;?>" +
+                '", ' + '"user_first_name":"' + "<?php echo $location->user_first_name;?>" +
+                '", ' + '"user_last_name":"' + "<?php echo $location->user_last_name;?>" +
+                '", ' + '"created_at":"' + "<?php echo $location->created_at;?>" + '"}';
 
                 var posJs = JSON.parse(location);
 
-                console.log(posJs.address);
-
-                var position = {
-                    latitude:{{ $location->latitude }}, longitude:{{  $location->longitude }}
-                    {{--user_first_name:{{ $location->user_first_name }}, user_last_name:{{ $location->user_last_name }},--}}
-                    {{--created_at:{{ $location->created_at }}, --}}
-                };
-//                console.log(position);
-                positions.push(position);
+                positions.push(posJs);
             @endforeach
         }
 
@@ -103,24 +95,116 @@
                 //assign values to markers array
                 markers.push(marker);
 
-//                console.log(markers[i], positions[i]);
-//
-//                infoWindow(marker,  positions[i]);
-
+                setInfoWindow(marker,  positions[i], positions[i].latitude, positions[i].longitude);
             }
         }
 
-        function infoWindow(marker, position)
+        function setInfoWindow(marker, position, lat, long)
         {
-//            for (i = 0; i < markers.length; i++) {
+            //convert date to current timezone and user-friendly date and time
+            var timestamp = (ts(position.created_at))/1000;
+
+            //use google api to convert the timestamp to the user's timezone using the latitude and location of the geoLocation data
+            $.get( 'https://maps.googleapis.com/maps/api/timezone/json?location=' + lat + ',' + long +
+            '&timestamp=' + timestamp + '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', function(result){
+
+                var dateForTZ = timestamp + result.dstOffset + result.rawOffset;
+
+                //convert timestamp for timezone into a user-friendly date and time
+                var d = new Date(dateForTZ*1000);
+
+                //format to date
+                var date = dateStr(d);
+
+                //format to time
+                var time = timeStr(d);
+
+                //user-friendly string for displaying on view
+                var dtTzString = date + ' ' + time;
+
+                infoWindow = new google.maps.InfoWindow();
 
                 google.maps.event.addListener(marker, 'click', function () {
-                    infoWindow.setContent("<h5>" + position.user_first_name + position.user_last_name + "</h5><p>" +
-                    position.address + "<br>Time Stamp:" + position.created_at + "</p>");
+                    infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +
+                        position.address + "</p>");
                     infoWindow.open(map, this);
                 });
-//            }
 
+            });
+
+        }
+
+        //pass in a date time string and create a date object in UTC time, then convert to a timestamp
+        function ts(dtStr){
+            //extract values from string
+            var y = dtStr.substr(0, 4);
+
+            var m = dtStr.substr(5, 2);
+
+            var d = dtStr.substr(8, 2);
+
+            var h = dtStr.substr(11, 2);
+
+            var i = dtStr.substr(14, 2);
+
+            var s = dtStr.substr(17, 2);
+
+            //convert string to date object
+            var dtObj = new Date(Date.UTC(2017, 08, 08, 23, 09, 56));
+
+            var tStamp = dtObj.getTime();
+
+            return tStamp;
+        }
+
+        // returns a formatted time string
+        function timeStr(tm){
+            var ampm = "am";
+            var min;
+            var hours = tm.getUTCHours();
+            var h = hours;
+            var m = tm.getUTCMinutes();
+
+            if(m > 0){
+                min = ":" + ("0" + m).slice(-2);   // Add leading 0.
+            }
+            else if(m == 0){
+                min = '';
+            }
+
+            //format hours
+            if (hours > 12) {
+                h = hours - 12;
+                ampm = 'pm';
+            } else if (hours === 12) {
+                h = 12;
+                ampm = 'pm';
+            } else if (hours == 0) {
+                h = 12;
+            }
+
+            var fTime = h + min + ampm;
+
+            return fTime;
+        }
+
+        function monthName(tm){
+            var monthNames = ["Jan", "Feb", "March", "Apr", "May", "June",
+                "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+            var mn = monthNames[tm.getUTCMonth()];
+            return mn;
+
+        }
+
+        // returns a formatted date string dd mmm (eg 11 Oct)
+        function dateStr(tm){
+
+            var mn = this.monthName(tm);
+            // var yyyy = tm.getUTCFullYear();
+            var dd = ("0" + tm.getUTCDate()).slice(-2);// Add leading 0.
+
+            var fDate = dd + ' ' + mn;
+            return fDate;
         }
 
         //sets the markers on the map
@@ -155,7 +239,6 @@
             //set the interval to be the new frequency
             interval = setInterval(function(){
                 updateMarkers();
-                console.log(frequency);
 
             }, frequency);
         }
@@ -167,7 +250,6 @@
                 if (this.readyState == 4 && this.status == 200) {
                     //clear the array holding the data of positions before assigning the response values to the array
                     this.positions = [];
-console.log(this.responseText);
                     this.positions = JSON.parse(this.responseText);
                 }
             };
@@ -177,104 +259,3 @@ console.log(this.responseText);
 
     </script>
 </section>
-
-{{--//archived--}}
-
-{{--<button type="button" onclick="adjFreq()"></button>--}}
-
-{{--<a href="/dashboard">Reload Page</a><!--Not ideal, improve by getting from db and updating variable value-->--}}
-
-{{--<button type="button" onclick="updateMarkers()">Get Updated Positions</button>--}}
-
-{{--<p id="demo"></p>--}}
-
-{{--//                    updatedPositions(updatedPos);--}}
-
-{{--//--}}
-{{--//        function updatedPositions(updatedPos){--}}
-{{--//            //clear the array holding the data of positions before the update--}}
-{{--//            positions = [];--}}
-{{--////            console.log("latitude" + updatedPos[0].latitude);//262 for some reason--}}
-{{--//            //add updated positions to the positions array--}}
-{{--//            for (i = 0; i < updatedPos.length; i++) {--}}
-{{--//                var position = {latitude: updatedPos[i].latitude, longitude: updatedPos[i].longitude};--}}
-{{--//                console.log('position ' +  updatedPos[i].latitude);--}}
-{{--//                positions.push(position);--}}
-{{--//            }--}}
-{{--//--}}
-{{--//        }--}}
-
-{{--//            var myLatlng = new google.maps.LatLng(33.808678, -117.918921);--}}
-{{--//--}}
-{{--//            var marker = new google.maps.Marker({--}}
-{{--//            position: myLatlng ,--}}
-{{--//            map: map--}}
-{{--//            });--}}
-{{--//--}}
-{{--//            var myLatlng = new google.maps.LatLng( 149.05922, -35.38027);--}}
-{{--//--}}
-{{--//            var marker = new google.maps.Marker({--}}
-{{--//                position: myLatlng ,--}}
-{{--//                map: map--}}
-{{--//            });--}}
-
-{{--//        var latLng = [];--}}
-{{--var locations = [--}}
-{{--@foreach ($currentLocations as $location)--}}
-{{--[ {{ $location->latitude }}, {{ $location->longitude }} ],--}}
-{{--@endforeach--}}
-{{--];--}}
-
-{{--function getCurrentLocation(){--}}
-{{--var lat = 0 ;--}}
-{{--var lng= 0 ;--}}
-
-{{--@foreach ($currentLocations as $location)--}}
-{{--lat = {{ $location->latitude }};--}}
-{{--lng =  {{ $location->longitude }} ;--}}
-{{--//            console.log(lat);--}}
-{{--latLng = [new google.maps.LatLng(lat, lng)];--}}
-{{--//            console.log(latLng);--}}
-{{--@endforeach--}}
-{{--//            console.log(latLng);--}}
-{{--return latLng;--}}
-{{--}--}}
-
-{{--function createMarker() {--}}
-{{--@foreach ($locations as $location)--}}
-{{--lnag = {{$location->longitude}};--}}
-{{--latt = {{$location->latitude}};--}}
-{{--var posi = {lat: lnag, lng: 'latt'};--}}
-{{--var marker = new google.maps.Marker({--}}
-{{--position: {--}}
-{{--lat: {{$location->latitude}},--}}
-{{--lng: {{$location->longitude}}--}}
-{{--},--}}
-{{--map: map,--}}
-{{--title: '{{$location -> name}}'--}}
-{{--});--}}
-
-{{--google.maps.event.addListener(marker, 'click', function () {--}}
-{{--infoWindow.setContent("<h3> {{$location -> name}}" + "</h3><p>{{$location->address}}</p>");--}}
-{{--infoWindow.open(map, this);--}}
-{{--});--}}
-{{--@endforeach--}}
-{{--}--}}
-
-
-{{--//        setInterval(function() {--}}
-{{--//            $.ajax({ url: '/my/site',--}}
-{{--//                data: {action: 'test'},--}}
-{{--//                type: 'post',--}}
-{{--//                success: function(output) {--}}
-{{--//                    // change the DOM with your new output info--}}
-{{--//                }--}}
-{{--//            });--}}
-
-{{--//        $.get('/dashboard', function(){--}}
-{{--//            console.log('locations');--}}
-{{--//            deleteMarkers();--}}
-{{--//            addMarker(locations);--}}
-{{--////            createMarker();--}}
-{{--//        });--}}
-{{--//        }, 50000);--}}
