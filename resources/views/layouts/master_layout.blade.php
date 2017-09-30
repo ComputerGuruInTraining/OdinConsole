@@ -84,13 +84,11 @@
         <!-- Footer -->
         @include('footer')
 
-
-
-    <!-- REQUIRED JS SCRIPTS -->
     {{-- Date Picker --}}
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery-->
     <script src="bower_components/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
 
