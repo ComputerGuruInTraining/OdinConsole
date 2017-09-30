@@ -4,9 +4,14 @@
     <div id="map-user"></div>
 
     <div style="padding:15px 0px 10px 0px;" class='form-group form-buttons'>
-        {{--todo: info tip with the time interval --}}
-        <button type="button" class="btn btn-primary padding-bottom" onclick="adjFreq()">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Increase GeoLocation Data Rate
+        <button type="button" class="btn btn-primary padding-bottom" data-container="body" data-toggle="popover" data-placement="top"
+                data-content="Change GeoLocation Gather Rate from every 1 min to every 10 seconds" onclick="adjFreq()">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate
+        </button>
+        <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover" data-placement="top"
+                data-content="Change from every 1m to every 10s" onclick="info()"
+                style="color:#3c8dbc; border: none; background-color: transparent;">
+            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </button>
     </div>
 
@@ -18,11 +23,12 @@
         var long;
         var positions = [];
         var interval;
-        var frequency = 60000;//TODO: 60000 = 1 min for production
+        var frequency = 60000;
 
         google.maps.event.addDomListener(window, "load", function () {
 
             currentPositions();
+            mapCenter();
             initMap();
             setMarkers();
             showMarkers();
@@ -33,10 +39,25 @@
 
         });
 
-        function initMap() {
+        function mapCenter(){
 
-            lat = positions[0].latitude;
-            long = positions[0].longitude;
+            //store in a JS variable the location details in the $center variable passed from controller
+            var locationCo = '{"address":"' + "<?php echo $center->address;?>" +
+                '", ' + '"latitude":"' + "<?php echo $center->latitude;?>" +
+                '", ' + '"longitude":"' + "<?php echo $center->longitude;?>" + '"}';
+
+            var center = JSON.parse(locationCo);
+            //determine and assign center of map
+            if(positions.length > 0) {
+                lat = positions[0].latitude;
+                long = positions[0].longitude;
+            }else{
+                lat = center.latitude;
+                long = center.longitude;
+            }
+        }
+
+        function initMap() {
 
             map = new google.maps.Map(document.getElementById("map-user"), {
 
@@ -49,6 +70,7 @@
         //remove current markers and set new markers with the values from the current locations array
         function updateMarkers(){
 
+            console.log("updating markers...");
             //remove current markers
             deleteMarkers();
 
@@ -63,7 +85,6 @@
         function currentPositions() {
 
             @foreach ($currentLocations as $location)
-//TODO: use for storing all the $location values to then be used for info window
                 //store the value in a js string which will then be parsed to an object
                 //js variable is easier to use thoughout the fns, and allows storing of all the values in the location object
             var location = '{"address":"' + "<?php echo $location->address;?>" +
@@ -139,7 +160,7 @@
             //extract values from string
             var y = dtStr.substr(0, 4);
 
-            var m = dtStr.substr(5, 2);
+            var m = (dtStr.substr(5, 2)-1);
 
             var d = dtStr.substr(8, 2);
 
@@ -150,7 +171,7 @@
             var s = dtStr.substr(17, 2);
 
             //convert string to date object
-            var dtObj = new Date(Date.UTC(2017, 08, 08, 23, 09, 56));
+            var dtObj = new Date(Date.UTC(y, m, d, h, i, s));
 
             var tStamp = dtObj.getTime();
 
@@ -255,6 +276,11 @@
             };
             xhttp.open("GET", "http://odinlite.net/dashboard/64/current-positions", true);
             xhttp.send();
+        }
+
+        function info(){
+            $('#info').popover('toggle')
+
         }
 
     </script>

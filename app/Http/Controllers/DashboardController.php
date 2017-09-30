@@ -38,12 +38,23 @@ class DashboardController extends Controller{
 
             $currentLocations = json_decode((string)$response2->getBody());
 
+            $response3 = $client->get(Config::get('constants.API_URL').'location/' . $compId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $location = json_decode((string)$response3->getBody());
+
+//            dd($currentLocations);
+
             $company = $this->getCompanyDetail();
 
             return view('dashboard.dashboard')->with(
                 array('users' => $users,
                 'currentLocations' => $currentLocations,
-                'company' => $company
+                'company' => $company,
+                'center' => $location
             ));
 
         }

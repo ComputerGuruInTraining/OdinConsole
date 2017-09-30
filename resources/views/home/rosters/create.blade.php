@@ -1,9 +1,20 @@
 @extends('layouts.master_layout')
 @include('sidebar')
 
-{{--@section('title')--}}
-    {{--Create Roster--}}
+{{--@section('custom-scripts')--}}
+    {{--<script>--}}
+        {{--function infoTip(){--}}
+            {{--$('#info-tip').popover('show')--}}
+        {{--}--}}
+    {{--</script>--}}
+
+    {{--<script>--}}
+        {{--$(document).ready(function(){--}}
+            {{--$('[data-toggle="popover"]').popover();--}}
+        {{--});--}}
+    {{--</script>--}}
 {{--@stop--}}
+
 
 @section('title-item')
     Add Shift to Roster
@@ -50,14 +61,15 @@
             @include('clock-picker')
         </div>
 
-        <div style="color: #dd4b39; padding-bottom: 8px;">
-            {{--TODO: v2 tip with info icon and then press for this tip:--}}
-            Tip: Hold down ctrl/cmd to add more than one employee or location.
-            Release ctrl/cmd to scroll the list.
-        </div>
+        {{--TODO: v2 tip with info icon and then press for this tip
+        FIXME: jquery scripts interfering with the operation of popover tip --}}
+
+        {{--<div style="color: #dd4b39; padding-bottom: 8px;">--}}
+            {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
+        {{--</div>--}}
 
         <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee:') !!}
+            {!! Form::Label('employees', 'Select Employee (Tip: ctrl/cmd to select more than one):') !!}
             <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
                 @foreach($empList as $emp)
                     <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
@@ -88,5 +100,6 @@
 
     </div>
 @stop
+
 
 
