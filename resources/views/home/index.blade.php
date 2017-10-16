@@ -6,6 +6,8 @@
 
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px" width="200px"
          style="position: absolute; left:30px; top:30px;"/>
+
+    <div><a href="/support"><h4 class="top-text" id="grey-color">Support</h4></a></div>
     <div class="container" style="padding-top: 150px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" style="font-size: large;">
