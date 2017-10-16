@@ -267,6 +267,7 @@
         //retrieve values from api
         function update(){
             var xhttp = new XMLHttpRequest();
+            var companyId = "<?php echo $company->id;?>";
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     //clear the array holding the data of positions before assigning the response values to the array
@@ -274,7 +275,8 @@
                     this.positions = JSON.parse(this.responseText);
                 }
             };
-            xhttp.open("GET", "http://odinlite.net/dashboard/64/current-positions", true);
+            console.log(companyId);
+            xhttp.open("GET", "http://odinlite.net/dashboard/"+ companyId +"/current-positions", true);
             xhttp.send();
         }
 
