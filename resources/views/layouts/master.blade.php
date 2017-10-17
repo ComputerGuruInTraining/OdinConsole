@@ -16,6 +16,8 @@
                 margin-top: 5%;
             }
         </style>
+
+        @yield('my-styles')
     </head>
     <body>
 
