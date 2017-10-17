@@ -2,6 +2,23 @@
 
 @section('title') Login @stop
 
+@section('my-styles')
+
+    <style>
+        .top-text {
+            position: absolute;
+            right: 50px;
+            top: 50px;
+        }
+
+        #grey-color {
+            color: #555;
+        }
+
+    </style>
+
+@stop
+
 @section('content')
 
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px" width="200px"

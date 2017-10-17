@@ -10,57 +10,57 @@
 Odin theming
 */
 
-.top-text{
-    position: absolute;
-    right: 50px;
-    top: 50px;
-}
+/*.top-text{*/
+    /*position: absolute;*/
+    /*right: 50px;*/
+    /*top: 50px;*/
+/*}*/
 
-#grey-color{
-    color: #555;
-}
+/*#grey-color{*/
+    /*color: #555;*/
+/*}*/
 
-.row>.title-bg>.title-block{
-    background-color: #f5f5f5 !important;
-    height: 500px;
-    margin-top: 70px;
-    width: 100%;
-    /*margin-right: -40px;*/
-    /*margin-left: -40px;*/
-}
+/*.row>.title-bg>.title-block{*/
+    /*background-color: #f5f5f5 !important;*/
+    /*height: 500px;*/
+    /*margin-top: 70px;*/
+    /*width: 100%;*/
+    /*!*margin-right: -40px;*!*/
+    /*!*margin-left: -40px;*!*/
+/*}*/
 
-.title-block{
+/*.title-block{*/
 
-    padding-top: 200px;
-    text-align: center;
-}
+    /*padding-top: 200px;*/
+    /*text-align: center;*/
+/*}*/
 
-.subtitle{
-    font-size: x-large;
-    text-align: center;
+/*.subtitle{*/
+    /*font-size: x-large;*/
+    /*text-align: center;*/
 
-}
+/*}*/
 
-.title{
-    font-size: 5.4rem;
-}
+/*.title{*/
+    /*font-size: 5.4rem;*/
+/*}*/
 
-.title-heading{
-    text-align: center;
-    font-size: x-large;
-    padding-top: 50px;
+/*.title-heading{*/
+    /*text-align: center;*/
+    /*font-size: x-large;*/
+    /*padding-top: 50px;*/
 
-}
+/*}*/
 
-.title-text{
-    text-align: center;
-    font-size: 22px;
+/*.title-text{*/
+    /*text-align: center;*/
+    /*font-size: 22px;*/
 
-}
+/*}*/
 
-.title-content{
-    height: 400px;
-}
+/*.title-content{*/
+    /*height: 400px;*/
+/*}*/
 
 .edit-links{
     color: #1e7b1e;
