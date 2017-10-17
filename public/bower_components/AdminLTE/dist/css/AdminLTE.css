@@ -10,65 +10,6 @@
 Odin theming
 */
 
-/*start page styling for app eg privacy page*/
-
-/*.top-text-app{*/
-    /*position: absolute;*/
-    /*right: 50px;*/
-    /*top: 50px;*/
-/*}*/
-
-#grey-color-app{
-    color: #555;
-}
-
-.row>.title-bg-app>.title-block-app{
-    background-color: #f5f5f5 !important;
-    height: 150px;
-    margin-top: 50px;
-    width: 100%;
-}
-
-.title-block-app{
-    padding-top: 50px;
-    text-align: center;
-}
-
-.title-content-app > .title-heading-app{
-    font-size: 20px !important;
-}
-
-.subtitle-app{
-    font-size: x-large;
-    text-align: center;
-}
-
-.title-app{
-    font-size: 3.8rem;
-}
-
-.title-content-app{
-    margin: 20px 200px;
-    line-height: 3.0rem;
-    text-align: justify;
-}
-
-.title-content-alt-app {
-    height: 550px;
-    margin: 20px 500px !important;
-}
-
-.title-content-app > p, .title-content-app > ul{
-    font-size: 16px;
-}
-
-.text-bold{
-    font-weight: 600;
-
-}
-
-
-/*end page styling for app*/
 
 .edit-links{
     color: #1e7b1e;
