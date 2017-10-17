@@ -17,7 +17,7 @@
             }
         </style>
 
-        @yield('my-styles')
+        {{--@yield('my-styles')--}}
     </head>
     <body>
 

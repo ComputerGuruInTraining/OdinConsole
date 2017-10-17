@@ -10,57 +10,65 @@
 Odin theming
 */
 
-/*.top-text{*/
+/*start page styling for app eg privacy page*/
+
+/*.top-text-app{*/
     /*position: absolute;*/
     /*right: 50px;*/
     /*top: 50px;*/
 /*}*/
 
-/*#grey-color{*/
-    /*color: #555;*/
-/*}*/
+#grey-color-app{
+    color: #555;
+}
 
-/*.row>.title-bg>.title-block{*/
-    /*background-color: #f5f5f5 !important;*/
-    /*height: 500px;*/
-    /*margin-top: 70px;*/
-    /*width: 100%;*/
-    /*!*margin-right: -40px;*!*/
-    /*!*margin-left: -40px;*!*/
-/*}*/
+.row>.title-bg-app>.title-block-app{
+    background-color: #f5f5f5 !important;
+    height: 150px;
+    margin-top: 50px;
+    width: 100%;
+}
 
-/*.title-block{*/
+.title-block-app{
+    padding-top: 50px;
+    text-align: center;
+}
 
-    /*padding-top: 200px;*/
-    /*text-align: center;*/
-/*}*/
+.title-content-app > .title-heading-app{
+    font-size: 20px !important;
+}
 
-/*.subtitle{*/
-    /*font-size: x-large;*/
-    /*text-align: center;*/
+.subtitle-app{
+    font-size: x-large;
+    text-align: center;
+}
 
-/*}*/
+.title-app{
+    font-size: 3.8rem;
+}
 
-/*.title{*/
-    /*font-size: 5.4rem;*/
-/*}*/
+.title-content-app{
+    margin: 20px 200px;
+    line-height: 3.0rem;
+    text-align: justify;
+}
 
-/*.title-heading{*/
-    /*text-align: center;*/
-    /*font-size: x-large;*/
-    /*padding-top: 50px;*/
+.title-content-alt-app {
+    height: 550px;
+    margin: 20px 500px !important;
+}
 
-/*}*/
+.title-content-app > p, .title-content-app > ul{
+    font-size: 16px;
+}
 
-/*.title-text{*/
-    /*text-align: center;*/
-    /*font-size: 22px;*/
+.text-bold{
+    font-weight: 600;
 
-/*}*/
+}
 
-/*.title-content{*/
-    /*height: 400px;*/
-/*}*/
+
+/*end page styling for app*/
 
 .edit-links{
     color: #1e7b1e;

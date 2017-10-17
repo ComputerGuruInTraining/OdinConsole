@@ -127,4 +127,6 @@ Route::get('/pdfSave-{id}', 'ReportController@pdfSave');
 
 Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
 
-Route::get('/support', 'HomeController@support');
+Route::get('/support', 'DashboardController@support');
+
+Route::get('/privacy', 'DashboardController@privacy');
