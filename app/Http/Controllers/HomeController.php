@@ -60,9 +60,4 @@ class HomeController extends BaseController
         return Redirect::to('/');
     }
 
-    public function support()
-    {
-        return View::make('home.support');
-    }
-
 }
