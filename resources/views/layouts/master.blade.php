@@ -16,8 +16,14 @@
                 margin-top: 5%;
             }
 
-            #grey-color-app{
+            #grey-color{
                 color: #555;
+            }
+
+            .top-text {
+            position: absolute;
+            right: 50px;
+            top: 50px;
             }
 
             .row>.title-bg-app>.title-block-app{
