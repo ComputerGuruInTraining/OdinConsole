@@ -2,22 +2,22 @@
 
 @section('title') Login @stop
 
-@section('my-styles')
+{{--@section('my-styles')--}}
 
-    <style>
-        .top-text {
-            position: absolute;
-            right: 50px;
-            top: 50px;
-        }
+    {{--<style>--}}
+        {{--.top-text {--}}
+            {{--position: absolute;--}}
+            {{--right: 50px;--}}
+            {{--top: 50px;--}}
+        {{--}--}}
 
-        #grey-color {
-            color: #555;
-        }
+        {{--#grey-color {--}}
+            {{--color: #555;--}}
+        {{--}--}}
 
-    </style>
+    {{--</style>--}}
 
-@stop
+{{--@stop--}}
 
 @section('content')
 
