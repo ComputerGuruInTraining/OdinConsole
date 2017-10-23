@@ -106,7 +106,7 @@ class UserController extends Controller
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
                 $email = Input::get('email');
-                $password = Hash::make(Input::get('password'));
+                $password = Input::get('password');
 
                 //api request variables
                 //retrieve token needed for authorized http requests
@@ -343,7 +343,6 @@ class UserController extends Controller
             $last = $request->input('last');
             $emailUser = $request->input('emailUser');
             $pw = $request->input('password');
-            $password = Hash::make($pw);
 
             $client = new GuzzleHttp\Client;
 
@@ -354,7 +353,7 @@ class UserController extends Controller
                         'Content-Type' => 'application/json'
                     ),
                     'json' => array('company' => $company, 'owner' => $owner,
-                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser, 'pw' => $password
+                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser, 'pw' => $pw
                     )
                 )
             );
