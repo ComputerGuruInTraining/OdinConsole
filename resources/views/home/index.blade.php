@@ -67,7 +67,7 @@
                                 <a href="/register" class="btn" style="margin-right: 3px;
                                         color: white;
                                 background-color: #663974;
-                                font-size: large;">Register</a>
+                                font-size: large;">Register Company</a>
 
                                 {{ Form::submit('Login', [
                                     'class' => 'btn login-btns',
