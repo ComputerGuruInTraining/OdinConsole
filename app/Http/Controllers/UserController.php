@@ -106,7 +106,6 @@ class UserController extends Controller
                 $first_name = Input::get('first_name');
                 $last_name = Input::get('last_name');
                 $email = Input::get('email');
-                $password = Input::get('password');
 
                 //api request variables
                 //retrieve token needed for authorized http requests
@@ -122,7 +121,7 @@ class UserController extends Controller
                             'Content-Type' => 'application/json'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email, 'password' => $password, 'company_id' => $compId
+                            'email' => $email, 'company_id' => $compId
                         )
                     )
                 );
