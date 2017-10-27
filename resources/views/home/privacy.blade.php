@@ -100,9 +100,8 @@
             </p>
             <p class="text-bold"> Your Access to and Control Over Information</p>
             <p>
-                You may opt out of any future contacts from us at any time or any future information gathering.
-                You can do the following at any time by
-                contacting us via email:
+                You may opt out of any future contacts from us or any future information gathering by us at any time.
+                You can do the following at any time by contacting us via email:
             </p>
             <ul>
                 <li>See what data we have about you, if any.</li>
