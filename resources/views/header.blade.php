@@ -2,7 +2,6 @@
 <header class="main-header header-custom" style="background-color:#ffffff;">
 
     <!-- Logo -->
-    {{--<a href="index2.html" class="logo"><b>Odin Lite Console</a>--}}
     <div class="pull-left image" style="max-width:200px;">
         <a href='/admin' class="logo">
             <img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo" alt="Odin Logo" />
@@ -10,7 +9,7 @@
     </div>
 
     <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 10px;">
         <!-- Sidebar toggle button-->
         <!--FIXME: menu toggle button is not visible after first being pressed.
         Probably started occurring after odin logo added to header. -->
@@ -18,9 +17,11 @@
             <span class="sr-only">Toggle navigation</span>
         </a>
         <!-- Navbar Right Menu -->
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
-                <!-- Messages: style can be found in dropdown.less-->
+        {{--<div class="navbar-custom-menu">--}}
+            {{--<ul class="nav navbar-nav">--}}
+            <span class="user-name">{{session('name')}}</span>
+
+            <!-- Messages: style can be found in dropdown.less-->
                 {{--<li class="dropdown messages-menu">--}}
                     {{--<!-- Menu toggle button -->--}}
                     {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--}}
@@ -111,29 +112,29 @@
                     {{--</ul>--}}
                 {{--</li>--}}
                 <!-- User Account Menu -->
-                <li class="dropdown user user-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle header-icon" data-toggle="dropdown">
-                        <!-- The user image in the navbar-->
-                        <img src="{{ asset("/bower_components/adminlte/dist/img/person.png") }}" class="user-image" alt="User Image"/>
-                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                {{--<li class="dropdown user user-menu">--}}
+                    {{--<!-- Menu Toggle Button -->--}}
+                    {{--<a href="#" class="dropdown-toggle header-icon" data-toggle="dropdown">--}}
+                        {{--<!-- The user image in the navbar-->--}}
+                        {{--<img src="{{ asset("/bower_components/adminlte/dist/img/person.png") }}" class="user-image" alt="User Image"/>--}}
+                        {{--<!-- hidden-xs hides the username on small devices so only the image appears. -->--}}
                         {{--<span class="hidden-xs">{{session('name')}}</span>--}}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <!-- The user image in the menu -->
-                        <li class="user-header">
-                            <img src="{{ asset("/bower_components/adminlte/dist/img/personLg.png") }}" class="img-circle" alt="User Image" />
+                    {{--</a>--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<!-- The user image in the menu -->--}}
+                        {{--<li class="user-header">--}}
+                            {{--<img src="{{ asset("/bower_components/adminlte/dist/img/personLg.png") }}" class="img-circle" alt="User Image" />--}}
 
-                            <div class="header-menu">
-                            <span>{{session('name')}}</span><br/>
-                            <span class="menu-role">User Role: {{session('role')}}</span>
-                            </div>
+                            {{--<div class="header-menu">--}}
+                            {{--<span>{{session('name')}}</span><br/>--}}
+                            {{--<span class="menu-role">User Role: {{session('role')}}</span>--}}
+                            {{--</div>--}}
 
                             {{--Admin Team--}}
                                 {{--<small>Member since 2017</small>--}}
                             {{--</p>--}}
-                        </li>
-                        <!-- Menu Body -->
+                        {{--</li>--}}
+                        {{--<!-- Menu Body -->--}}
                         {{--<li class="user-body">--}}
                             {{--<div class="col-xs-4 text-center">--}}
                                 {{--<a href="#">Followers</a>--}}
@@ -145,18 +146,18 @@
                                 {{--<a href="#">Friends</a>--}}
                             {{--</div>--}}
                         {{--</li>--}}
-                        <!-- Menu Footer-->
-                        <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="/settings" class="btn btn-default btn-flat">Settings</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+                        {{--<!-- Menu Footer-->--}}
+                        {{--<li class="user-footer">--}}
+                            {{--<div class="pull-left">--}}
+                                {{--<a href="/settings" class="btn btn-default btn-flat">Settings</a>--}}
+                            {{--</div>--}}
+                            {{--<div class="pull-right">--}}
+                                {{--<a href="/logout" class="btn btn-default btn-flat">Sign out</a>--}}
+                            {{--</div>--}}
+                        {{--</li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
+            {{--</ul>--}}
+        {{--</div>--}}
     </nav>
 </header>

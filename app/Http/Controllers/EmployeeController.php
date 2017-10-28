@@ -303,7 +303,7 @@ class EmployeeController extends Controller
 
                 $employee = json_decode((string)$response->getBody());
 
-//                dd($employee);
+                dd($employee);
 
                 //direct user based on whether record updated successfully or not
                 if($employee->success == true)
@@ -320,10 +320,12 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             $err = 'Error updating employee details';
             return view('error')->with('error', $err);
         }
         catch (\ErrorException $error) {
+            dd($error);
             $e = 'Error updating employee';
             return view('error')->with('error', $e);
         }

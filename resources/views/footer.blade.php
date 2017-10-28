@@ -12,4 +12,7 @@
         </strong>  All rights reserved.
         <a href="/privacy" style="color:#663974;" target="_blank">  Privacy Policy</a>
     </center>
+    <div>
+        <p class="email-footer">Contact: odinlitemail@gmail.com</p>
+    </div>
 </footer>

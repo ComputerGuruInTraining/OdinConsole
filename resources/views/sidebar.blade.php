@@ -43,22 +43,20 @@
 
             <div class="list-divider"></div>
 
+            {{--<li class="active"><a href="/settings" class="menu"><span>Settings</span></a></li>--}}
+
             {{--FIXME: sidebar - SOLUTION: routes need to be in the form "employees-create" not "employees/create"--}}
-            {{--<li class="treeview">--}}
-                {{--<a href="/locations"><span>Locations</span> <i class="fa fa-angle-left pull-right"></i></a>--}}
-                {{--<ul class="treeview-menu">--}}
-                    {{--<li><a href="location-add">Add Location</a></li>--}}
-                    {{--<li><a href="#">Edit Location</a></li>--}}
-                {{--</ul>--}}
-            {{--</li>--}}
+            <li class="treeview">
+                <a href="/settings"><span>Settings</span></a>
+                <a href="/logout"><span>Sign Out</span></a>
+            </li>
             {{--<!--TODO: v2: personalised links, created by user and most frequent links as the default in this section until personalization-->--}}
             {{--<li class="header"><h4>My Links</h4></li>--}}
-            {{--<li class="active"><a href="#"><span>Create User</span></a></li>--}}
+            {{--<li class="active"><a href="/location"><span>Locations</span></a></li>--}}
             {{--<li class="treeview">--}}
-                {{--<a href="/employing"><span>Employee Create</span> <i class="fa fa-angle-left pull-right"></i></a>--}}
+                {{--<a href="/location"><span>Locations</span> <i class="fa fa-angle-left pull-right"></i></a>--}}
                 {{--<ul class="treeview-menu">--}}
-                    {{--<li><a href="locations">Location</a></li>--}}
-                    {{--<li><a href="#">Edit Location</a></li>--}}
+                    {{--<li><a href="/location-create">Create Location</a></li>--}}
                 {{--</ul>--}}
             {{--</li>--}}
             {{--<div class="list-divider"></div>--}}

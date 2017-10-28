@@ -10,7 +10,7 @@
         <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-
+{{--alternate theme style--}}
         <style>
             body {
                 margin-top: 5%;
@@ -27,15 +27,16 @@
             }
 
             .row>.title-bg-app>.title-block-app{
-                background-color: #f5f5f5 !important;
-                height: 150px;
-                margin-top: 50px;
+                background-color: #402045 !important;
+                height: 100px;
+                margin-top: 60px;
                 width: 100%;
             }
 
             .title-block-app{
-                padding-top: 50px;
+                padding-top: 25px;
                 text-align: center;
+                color: #fff;
             }
 
             .title-content-app > .title-heading-app{

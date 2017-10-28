@@ -1,21 +1,6 @@
 @extends('layouts.master_layout')
 @include('sidebar')
 
-{{--@section('custom-scripts')--}}
-    {{--<script>--}}
-        {{--function infoTip(){--}}
-            {{--$('#info-tip').popover('show')--}}
-        {{--}--}}
-    {{--</script>--}}
-
-    {{--<script>--}}
-        {{--$(document).ready(function(){--}}
-            {{--$('[data-toggle="popover"]').popover();--}}
-        {{--});--}}
-    {{--</script>--}}
-{{--@stop--}}
-
-
 @section('title-item')
     Add Shift to Roster
 @stop
@@ -100,6 +85,3 @@
 
     </div>
 @stop
-
-
-

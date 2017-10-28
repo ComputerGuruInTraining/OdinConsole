@@ -5,7 +5,7 @@
 
     <div style="padding:15px 0px 10px 0px;" class='form-group form-buttons'>
         <button type="button" class="btn btn-primary padding-bottom" data-container="body" data-toggle="popover" data-placement="top"
-                data-content="Change GeoLocation Gather Rate from every 1 min to every 10 seconds" onclick="adjFreq()">
+                data-content="Change GeoLocation Gather Rate from every 5 min to every 30 seconds" onclick="adjFreq()">
             <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate
         </button>
         <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover" data-placement="top"
@@ -23,7 +23,7 @@
         var long;
         var positions = [];
         var interval;
-        var frequency = 60000;
+        var frequency = 300000;//5 mins
 
         google.maps.event.addDomListener(window, "load", function () {
 
@@ -252,7 +252,7 @@
 
         //allows the option to change the frequency of updating Markers as set in setInterval function
         function adjFreq(){
-            frequency = 10000;
+            frequency = 30000;
 
             //clear interval or else effectively an interval at 5sec and 10sec, although one might think the value would be replaced
             clearInterval(interval);
