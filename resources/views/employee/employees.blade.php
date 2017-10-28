@@ -16,8 +16,8 @@
                 </ul>
             </div>
         @endif
-        <div style="padding:15px 0px 10px 0px;">
-            <button type="button" class="btn btn-success" onclick="window.location.href='employees/create'">
+        <div class="active" style="padding:15px 0px 10px 0px;">
+            <button type="button" class="btn btn-success menu" onclick="window.location.href='employees/create'">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Employee
             </button>
         </div>
@@ -47,7 +47,7 @@
 
                         <td>
                             {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}
-                            <a href="employee-edit-{{$employee->user_id}}">Edit</a> | <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
+                            <a href="/employees/{{$employee->user_id}}/edit">Edit</a> | <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
 
                         </td>
 

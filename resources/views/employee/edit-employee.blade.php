@@ -16,9 +16,13 @@
             </ul>
         </div>
     @endif
-        {{ Form::model($employee, ['url' => '/employee-updated-' . $employee->user_id, 'method' => 'put']) }}
+        {{--{{ Form::open(['route' => ['rosters.update', $assigned[0]->assigned_shift_id], 'method'=>'put']) }}--}}
 
-        {{--{{ Form::open(['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}--}}
+        {{--{{ Form::open(['route' => ['employeeupdate', $employee->user_id], 'method'=>'put']) }}--}}
+
+        {{--{{ Form::model($employee, ['url' => '/employee-updated-' . $employee->user_id, 'method' => 'put']) }}--}}
+
+        {{ Form::open(['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}
     {{--{{ Form::model($employee, ['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}--}}
     <div class='form-group'>
         {{ Form::label('first_name', 'First Name') }}
@@ -32,10 +36,8 @@
 
     <div class='form-group'>
         {{ Form::label('dateOfBirth', 'Date of Birth') }}
-        {{ Form::text('dateOfBirth', $dateBirth, array('class' => 'datepicker')) }}
-
+        {{ Form::text('dateOfBirth', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
     </div>
-
 
     <div class='form-group'>
       {{ Form::label('male', 'Male') }}

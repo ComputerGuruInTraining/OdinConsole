@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\UserController;
+//use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +33,7 @@ Route::get('/map-geolocation', 'DashboardController@index');
 
 Route::get('/login', 'HomeController@getLogin');
 
-Route::get('logout', 'HomeController@getLogout');
+Route::get('/logout', 'HomeController@getLogout');
 
 //manual route to fix nav via header problem caused by the url format
 Route::get('/report-{id}', 'ReportController@show');
@@ -62,7 +62,7 @@ Route::get('/reset/link', function(){
 Route::get('/reset/pw', 'ForgotPWController@resetPW');
 
 //route to show Settings page when the Settings btn is pressed eg via Header Avatar Dropdown
-Route::get('settings', 'UserController@index');
+Route::get('/settings', 'UserController@index');
 
 Route::get('/register', 'UserController@registerCompany');
 
@@ -95,7 +95,7 @@ Route::get('location-show', 'LocationController@show')->name('location-show');
 //to combat the header navigation error which is caused by the route format
 
 
-Route::get('employees', 'EmployeeController@index');
+//Route::get('employees', 'EmployeeController@index');
 //FIXME 1a: date picker does not work for urls in the format /employee-create
 //FIXME 1b: but header nav does not work for urls in the format employee/create
 //Route::get('employee-tocreate', 'EmployeeController@create');
@@ -104,13 +104,16 @@ Route::get('employees', 'EmployeeController@index');
 //
 //Route::post('employee-created', 'EmployeeController@store');
 
-Route::get('employee-edit-{id}', 'EmployeeController@edit');
+//Route::get('employeeedit{id}', 'EmployeeController@edit');
 
-Route::put('employee-updated-{id}', 'EmployeeController@update');
+//Route::put('employeeupdated{id}', 'EmployeeController@update')->name('employeeupdate');
 
-Route::resource('/employees', 'EmployeeController', ['except' => [
-    'edit', 'update', 'index'
-]]);
+Route::resource('/employees', 'EmployeeController'
+//    ,
+//    ['except' => [
+//    'edit', 'update'
+//]]
+);
 
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){

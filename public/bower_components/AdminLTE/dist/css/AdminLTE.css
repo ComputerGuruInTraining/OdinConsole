@@ -10,13 +10,30 @@
 Odin theming
 */
 
+div.content-wrapper.content-wrapper-alt{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+header.main-header.header-custom.header-alt{
+    border: none;
+}
+
+.text-bold{
+    font-weight: 600;
+}
+
+.content-app{
+    margin: 15px !important;
+    line-height: 3.0rem;
+    text-align: justify;
+}
 
 .edit-links{
     color: #1e7b1e;
 }
 
 #inline{
-
     display: inline-block;
 }
 
@@ -72,11 +89,18 @@ a.dropdown-toggle, a.dropdown-toggle hover{
 }
 
 .header-menu{
-    font-size: large;
+    font-size: medium;
     float: right;
     padding-right: 30px;
     padding-top: 20px;
     max-width: 150px;
+}
+
+.user-name{
+    position: absolute;
+    right: 15px;
+    top: 30px;
+    font-size: smaller;
 }
 
 a.dropdown-toggle.header-icon{
@@ -94,6 +118,16 @@ a.dropdown-toggle.header-icon{
     /*right: 100px;*/
 }
 
+.email-footer-alt{
+    font-size: small;
+    margin-top: -15px;
+}
+
+.email-footer{
+    text-align: center;
+    margin-top: 0px;
+}
+
 /*Register Page*/
 .register-headings{
     padding-left: 75px;
@@ -104,12 +138,12 @@ a.dropdown-toggle.header-icon{
 /*confirm-alt page*/
 
 .panel-bg{
-    border-color: #663974;
+    border-color: #402045;
 }
 
 .panel-head{
     color: white !important;
-    background-color: #663974 !important;
+    background-color: #402045 !important;
 }
 
 .margin-top-alt{
@@ -151,17 +185,17 @@ body{
 }
 
 aside.main-sidebar.header-custom{
-    border-right: 1px solid #663974 !important;
-    border-bottom: 1px solid #663974 !important;
+    border-right: 1px solid #402045 !important;
+    border-bottom: 1px solid #402045 !important;
 }
 
 header.main-header.header-custom{
-    border-bottom: 1px solid #663974;
+    border-bottom: 1px solid #402045;
 }
 section.content-header{
-    border-bottom: 1px solid #663974;
-    border-left: 1px solid #663974;
-    border-right: 1px solid #663974;
+    border-bottom: 1px solid #402045;
+    border-left: 1px solid #402045;
+    border-right: 1px solid #402045;
     margin-top: -1px;
 }
 
@@ -187,7 +221,7 @@ section.content-header{
 .list-divider{
     padding-top: 5px;
     margin: 10px;
-    border-bottom: 1px solid #663974;
+    border-bottom: 1px solid #402045;
 }
 
 .form-buttons{
@@ -264,7 +298,23 @@ section.content-header{
 
 .container-fluid{
     padding-left: 0px;
+    padding-right: 0px;
+}
 
+.form-pages.content-app.master_alt.support-pg{
+    text-align: center;
+}
+
+h1.master-alt{
+    text-align: center;
+}
+
+.form-pages.content-app.master_alt{
+    margin: 15px 180px !important;
+}
+
+.odin-logo.header-alt{
+    padding-bottom: 15px;
 }
 
 .group-list:nth-child(even){
@@ -276,7 +326,7 @@ section.content-header{
 
 .row-heading{
     font-weight: bold;
-    color: #663974;
+    color: #402045;
     font-size: large;
 }
 
@@ -292,7 +342,7 @@ section.content-header{
 
 /*Report Show Page Styling*/
 .report-title {
-    color: #663974;
+    color: #402045;
 }
 
 #report-heading{
@@ -489,7 +539,7 @@ h6,
 /* General Links */
 a {
     /*color: #3c8dbc;*/
-    color: #663974;
+    color: #402045;
 }
 a:hover,
 a:active,
@@ -584,12 +634,12 @@ a:focus {
     content: "\f0c9";
 }
 .main-header .sidebar-toggle:hover {
-    color: #663974;
+    color: #402045;
 }
 .main-header .sidebar-toggle:focus,
 .main-header .sidebar-toggle:active {
     background: transparent;
-    color: #663974;
+    color: #402045;
 }
 .main-header .sidebar-toggle .icon-bar {
     display: none;
@@ -637,7 +687,7 @@ a:focus {
     font-family: Monospace;
     position: relative;
     padding: 5px 15px 5px 15px;
-    background-color: #663974;
+    background-color: #402045;
     border: 1px solid rgb(210, 214, 222);
 }
 .content-header > h1 {
@@ -749,7 +799,7 @@ a:focus {
     padding-top: 50px;
     background-color:white;
     border: 0.1px solid rgb(210, 214, 222);
-    color:#663974;
+    color:#402045;
     min-height: 100%;
     width: 230px;
     z-index: 810;
@@ -850,7 +900,7 @@ a:focus {
 .sidebar-menu > li > a {
     padding: 5px 5px 5px 15px;
     display: block;
-    color: #663974;
+    color: #402045;
 }
 .sidebar-menu > li > a > .fa,
 .sidebar-menu > li > a > .glyphicon,
@@ -2603,7 +2653,7 @@ a:focus {
     background-color: #008d4c;
 }
 .btn-info {
-    background-color: #663974;
+    background-color: #402045;
     border-color: #e1e1e1;
 }
 .btn-info:hover,

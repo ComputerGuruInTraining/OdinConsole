@@ -1,23 +1,14 @@
-@extends('layouts.master')
+@extends('layouts.master_layout_alt_header')
 
-@section('title') Support @stop
+@section('title-item') Support @stop
 
-@section('content')
+@section('page-content')
+    <div class='form-pages content-app master_alt support-pg'>
 
-    <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px"
-         width="200px"
-         style="position: absolute; left:30px; top:30px;"/>
-
-    <div class="row">
-        <div class="title-bg-app">
-            <div class="title-block-app">
-                <p class="title-app">Support</pclass>
-            </div>
-        </div>
-        <div class="title-content-app title-content-alt-app">
-            <p class="title-heading-app">Questions, Suggestions, Feedbacks, Concerns?</p>
-            <p class="title-text-app">We are happy to hear from you</p>
-            <p>Email us at: <span class="title-text-app text-bold">odinlitemail@gmail.com</span></p>
-        </div>
+        {{--<div class="content-app title-content-alt-app">--}}
+            <p class="heading-app">Questions, Suggestions, Feedbacks, Concerns?</p>
+            {{--<p class="text-app">We are happy to hear from you</p>--}}
+            <p>Email us at: <span class="text-bold">odinlitemail@gmail.com</span></p>
+        {{--</div>--}}
     </div>
 @stop
