@@ -21,6 +21,7 @@
         {{--{{ Form::open(['route' => ['employeeupdate', $employee->user_id], 'method'=>'put']) }}--}}
 
         {{--{{ Form::model($employee, ['url' => '/employee-updated-' . $employee->user_id, 'method' => 'put']) }}--}}
+        {{--{{ Form::open(['route' => ['rosters.update', $assigned[0]->assigned_shift_id], 'method'=>'put']) }}--}}
 
         {{ Form::open(['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}
     {{--{{ Form::model($employee, ['route' => ['employees.update', $employee->user_id], 'method'=>'put']) }}--}}
