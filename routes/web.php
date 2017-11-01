@@ -44,6 +44,8 @@ Route::resource('/reports', 'ReportController');
 
 Route::resource('/rosters', 'RosterController');
 
+Route::resource('/employees', 'EmployeeController');
+
 //global confirm-delete view
 Route::get('confirm-delete/{id}/{url}', function($id, $url){
     if (session()->has('token')) {
@@ -108,12 +110,6 @@ Route::get('location-show', 'LocationController@show')->name('location-show');
 
 //Route::put('employeeupdated{id}', 'EmployeeController@update')->name('employeeupdate');
 
-Route::resource('/employees', 'EmployeeController'
-//    ,
-//    ['except' => [
-//    'edit', 'update'
-//]]
-);
 
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){

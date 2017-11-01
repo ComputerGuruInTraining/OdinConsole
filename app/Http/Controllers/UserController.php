@@ -126,7 +126,7 @@ class UserController extends Controller
                     )
                 );
                 $reply = json_decode((string)$response->getBody());
-              //  dd($reply);
+                dd($reply);
                     //Redirect user based on success or failure of db insert
                 if($reply->success == true) {
                     $msg = 'You have successfully added '.$first_name.' '.$last_name.' to the system. 

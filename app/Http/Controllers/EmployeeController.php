@@ -117,6 +117,8 @@ class EmployeeController extends Controller
                 $password=  Hash::make(str_random(8));
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
+//                dd($dob);
+
                 $response = $client->post(Config::get('constants.API_URL').'employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
@@ -267,8 +269,8 @@ class EmployeeController extends Controller
                 //validate input meet's db constraints
                 $this->validate($request, [
                     'dateOfBirth' => 'required',
-                    'sex' => 'required|max:255',
-                    'mobile' => 'required',
+                    'sex' => 'required',
+                    'mobile' => 'required|max:10',
                     'email' => 'required|max:255',
                     'first_name' => 'required|max:255',
                     'last_name' => 'required|max:255'
@@ -280,16 +282,17 @@ class EmployeeController extends Controller
                 $dob = Input::get('dateOfBirth');
 
                 //process dob before adding to db
-                $dateOfBirth = dateFormat($dob);
+                $dateOfBirth = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
+
+//                $dateOfBirth = dateFormat($dob);
 
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
-              //  $password=  Hash::make(Input::get('password'));
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post(Config::get('constants.API_URL').'employees/'.$id.'/edit', array(
+                $response = $client->post(Config::get('constants.API_URL').'employees/'.$id.'/update', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json',
@@ -300,6 +303,7 @@ class EmployeeController extends Controller
                         )
                     )
                 );
+
 
                 $employee = json_decode((string)$response->getBody());
 
