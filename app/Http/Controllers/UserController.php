@@ -48,12 +48,14 @@ class UserController extends Controller
 
                 $compInfo = json_decode((string)$resp->getBody());
 
-//                dd($compInfo->company->id);
 
                 $users = array_sort($users, 'last_name', SORT_ASC);
 
+                $url = 'user';
 
-                return view('company-settings.index', compact('users', 'compInfo'));
+//                dd($compInfo, $users);
+
+                return view('company-settings.index', compact('users', 'compInfo', 'url'));
 
             }
             //user does not have a token
@@ -103,8 +105,8 @@ class UserController extends Controller
                 ]);
 
                 //data to be inserted into db
-                $first_name = Input::get('first_name');
-                $last_name = Input::get('last_name');
+                $first_name = ucwords(Input::get('first_name'));
+                $last_name = ucwords(Input::get('last_name'));
                 $email = Input::get('email');
 
                 //api request variables
@@ -126,7 +128,7 @@ class UserController extends Controller
                     )
                 );
                 $reply = json_decode((string)$response->getBody());
-                dd($reply);
+
                     //Redirect user based on success or failure of db insert
                 if($reply->success == true) {
                     $msg = 'You have successfully added '.$first_name.' '.$last_name.' to the system. 
@@ -221,8 +223,8 @@ class UserController extends Controller
                 $token = session('token');
 
                 //get the data from the form
-                $first_name = Input::get('first_name');
-                $last_name = Input::get('last_name');
+                $first_name = ucwords(Input::get('first_name'));
+                $last_name = ucwords(Input::get('last_name'));
                 $email = Input::get('email');
 
 

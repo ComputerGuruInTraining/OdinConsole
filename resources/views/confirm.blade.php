@@ -1,6 +1,6 @@
 {{--Usage: generic confirmation page using a layouts.master with app sidebar and header. Useful when logged into app--}}
 
-@extends('layouts.master_layout')
+@extends('layouts.master_layout_recent_date')
 @extends('sidebar')
 
 @section('title-item')

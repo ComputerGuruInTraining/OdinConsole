@@ -117,10 +117,14 @@
                             <td>{{ $user->email }}</td>
                             {{--<td>{{ $user->created_at->format('F d, Y h:ia') }}</td>--}}
                             <td>
-                                <a href="/user/{{ $user->user_id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-                                {{ Form::open(['url' => '/user/' . $user->user_id, 'method' => 'DELETE']) }}
-                                {{ Form::submit('Delete', ['class' => 'btn btn-danger'])}}
-                                {{ Form::close() }}
+                                <a href="/user/{{ $user->user_id }}/edit">Edit</a>
+                                |
+                                <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
+
+                                {{--<a href="/user/{{ $user->user_id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>--}}
+                                {{--{{ Form::open(['url' => '/user/' . $user->user_id, 'method' => 'DELETE']) }}--}}
+                                {{--{{ Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
+                                {{--{{ Form::close() }}--}}
                             </td>
                         </tr>
                     @endforeach
@@ -154,17 +158,29 @@
                 <th>
                     Primary Contact:
                 </th>
-                <td>
-                    {{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}
-                </td>
+                @if($compInfo->contact != null)
+                    <td>
+                        {{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}
+                    </td>
+                @else
+                    <td>
+                        Contact has been deleted via Settings>Users Page
+                    </td>
+                @endif
             </tr>
             <tr>
                 <th>
                     Contact Email:
                 </th>
+                @if($compInfo->contact != null)
                 <td>
                     {{$compInfo->contact->email}}
                 </td>
+                @else
+                    <td>
+                        Contact has been deleted via Settings>Users Page
+                    </td>
+                @endif
             </tr>
             </div>
         </table>

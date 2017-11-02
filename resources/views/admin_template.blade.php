@@ -1,4 +1,4 @@
-@extends('layouts.master_layout')
+@extends('layouts.master_layout_recent_date')
 @extends('sidebar')
 {{--@extends('navbar')--}}
 {{--@extends('layouts.list')--}}

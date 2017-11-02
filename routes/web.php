@@ -70,17 +70,8 @@ Route::get('/register', 'UserController@registerCompany');
 
 Route::post('/register/company', 'UserController@postRegister');
 
-// TODO: Implement app wide for better navigation
-//manually define routes in order for sidebar and header toggle functionality to work
-
-//Route::get('employee-create', 'EmployeeController@create');
-//
-//Route::get('reporting', 'ReportController@create');
-//
-
 
 //Route::resource('/locations', 'LocationController');
-//Following all work and are implemented in app
 Route::get('location', 'LocationController@index');
 
 Route::get('location-create', 'LocationController@create');
@@ -93,23 +84,7 @@ Route::get('location-edit-{id}', 'LocationController@edit');
 
 Route::get('location-show', 'LocationController@show')->name('location-show');
 
-//in process of manually overriding auto routes created by using ResourceController
-//to combat the header navigation error which is caused by the route format
-
-
-//Route::get('employees', 'EmployeeController@index');
-//FIXME 1a: date picker does not work for urls in the format /employee-create
-//FIXME 1b: but header nav does not work for urls in the format employee/create
-//Route::get('employee-tocreate', 'EmployeeController@create');
-
-//Route::get('employee-create', 'EmployeeController@create');
-//
-//Route::post('employee-created', 'EmployeeController@store');
-
-//Route::get('employeeedit{id}', 'EmployeeController@edit');
-
-//Route::put('employeeupdated{id}', 'EmployeeController@update')->name('employeeupdate');
-
+Route::delete("location-deleted-{id}", 'LocationController@destroy');
 
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){
@@ -119,8 +94,6 @@ Route::get('confirmdel-{id}-{url}', function($id, $url){
         return $confirmView;
     }
 });
-
-Route::delete("location-deleted-{id}", 'LocationController@destroy');
 
 Route::get('/pdfSave-{id}', 'ReportController@pdfSave');
 
