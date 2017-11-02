@@ -1,5 +1,4 @@
-{{--TODO: change to extend a create_layout once layout exists--}}
-@extends('layouts.master_layout')
+@extends('layouts.master_layout_recent_date')
 @extends('sidebar')
 
 @section('title-item')

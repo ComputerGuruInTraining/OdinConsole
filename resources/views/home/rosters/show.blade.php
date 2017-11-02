@@ -1,4 +1,4 @@
-@extends('layouts.list')
+{{--@extends('layouts.list')--}}
 @extends('sidebar_custom')
 
 @section('title')

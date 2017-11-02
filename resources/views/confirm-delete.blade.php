@@ -1,4 +1,4 @@
-@extends('layouts.master_layout')
+@extends('layouts.master_layout_recent_date')
 @extends('sidebar')
 
 @section('title-item')
@@ -6,7 +6,7 @@
 @stop
 
 @section('page-content')
-    <div class="confirm">Are you sure you would like to delete this from the database?
+    <div class="confirm">Are you sure you would like this to be deleted from the database?
         <br/>
         <br/>
         {{$msg}}

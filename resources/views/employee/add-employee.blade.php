@@ -1,4 +1,4 @@
-@extends('layouts.master_layout')
+@extends('layouts.master_layout_dob')
 @extends('sidebar')
 
 @section('title-item')

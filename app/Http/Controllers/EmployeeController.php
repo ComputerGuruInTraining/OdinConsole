@@ -12,7 +12,6 @@ use Redirect;
 use GuzzleHttp;
 use DateTime;
 use Config;
-//use Psy\Exception;
 
 class EmployeeController extends Controller
 {
@@ -108,16 +107,15 @@ class EmployeeController extends Controller
                     'last_name' => 'required|max:255'
                 ]);
 
-                $first_name = Input::get('first_name');
-                $last_name = Input::get('last_name');
+                $first_name = ucwords(Input::get('first_name'));
+                $last_name = ucwords(Input::get('last_name'));
                 $dob = Input::get('dateOfBirth');
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
                 $email = Input::get('email');
-                $password=  Hash::make(str_random(8));
+
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
-//                dd($dob);
 
                 $response = $client->post(Config::get('constants.API_URL').'employees', array(
                         'headers' => array(
@@ -126,7 +124,7 @@ class EmployeeController extends Controller
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
                             'dateOfBirth' => $dob, 'sex' => $gender,
-                            'mobile' => $mobile,'email'=>$email,'password'=>$password, 'company_id' => $compId
+                            'mobile' => $mobile,'email'=>$email, 'company_id' => $compId
                         )
                     )
                 );
@@ -277,14 +275,12 @@ class EmployeeController extends Controller
                 ]);
 
                 //get the data from the form
-                $first_name = Input::get('first_name');
-                $last_name = Input::get('last_name');
+                $first_name = ucwords(Input::get('first_name'));
+                $last_name = ucwords(Input::get('last_name'));
                 $dob = Input::get('dateOfBirth');
 
                 //process dob before adding to db
                 $dateOfBirth = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
-
-//                $dateOfBirth = dateFormat($dob);
 
                 $gender = Input::get('sex');
                 $mobile = Input::get('mobile');
@@ -304,10 +300,7 @@ class EmployeeController extends Controller
                     )
                 );
 
-
                 $employee = json_decode((string)$response->getBody());
-
-                dd($employee);
 
                 //direct user based on whether record updated successfully or not
                 if($employee->success == true)
