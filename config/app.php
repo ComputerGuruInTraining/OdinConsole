@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://odinlitemgmt.azurewebsites.net/'),
+    'url' => env('APP_URL', 'https://odinlitemgmt.azurewebsites.net/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -163,10 +163,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Barryvdh\Snappy\ServiceProvider::class,
-        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-/***        Barryvdh\DomPDF\ServiceProvider::class,***/
 
 
 
@@ -222,7 +219,6 @@ return [
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
-//        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
         'Redis' => Illuminate\Support\Facades\Redis::class,
@@ -237,7 +233,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => 'Collective\Html\FormFacade',
         'Html' => 'Collective\Html\HtmlFacade',
-        'LaravelPDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
