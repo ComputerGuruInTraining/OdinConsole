@@ -661,8 +661,6 @@ class ReportController extends Controller
                     ]
                 ]);
 
-//                $responseMsg = json_decode((string)$response->getBody());
-
                 $theAction = 'You have successfully deleted the report';
 
                 return view('confirm')->with('theAction', $theAction);
@@ -676,11 +674,5 @@ class ReportController extends Controller
             echo $e;
             return Redirect::to('/reports');
         }
-    }
-
-    function generate() {
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->loadFile('<h1>Test</h1>');
-        return $pdf->stream();
     }
 }
