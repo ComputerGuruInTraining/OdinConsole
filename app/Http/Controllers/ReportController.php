@@ -10,6 +10,8 @@ use Input;
 use DateTime;
 use Config;
 use PDF;
+//use LaravelPDF;
+use App;
 
 class ReportController extends Controller
 {
@@ -378,7 +380,7 @@ class ReportController extends Controller
 
                         if ($request->has('download')) {
                             // pass view file
-                            $pdf = PDF::loadView('report/case_notes/pdf')->setOrientation('landscape');
+                            $pdf = PDF::loadView('report/case_notes/pdf')->setPaper('a4', 'landscape');
                             // download pdf w current date in the name
                             $dateTime = Carbon::now();
                             $date = substr($dateTime, 0, 10);
@@ -674,5 +676,11 @@ class ReportController extends Controller
             echo $e;
             return Redirect::to('/reports');
         }
+    }
+
+    function generate() {
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadFile('<h1>Test</h1>');
+        return $pdf->stream();
     }
 }

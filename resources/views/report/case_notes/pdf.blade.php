@@ -140,13 +140,15 @@
 
                     <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}">Download PDF</a>
 
+{{--                    <a href="{{ route('laravelPdf') }}">Download Laravel PDF</a>--}}
+
                 </div>
-                <table class="col-md-12 margin-bottom">
-                    <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
-                    <tr class="report-header-row"><td>Premise:</td></td><td class="report-header">{{$cases->location->address}}</td></tr>
-                    <tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>
-                    <tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>
-                </table>
+                <div class="col-md-12 margin-bottom">
+                    <h4 id="report-date">{{$start}} - {{$end}}</h4>
+                    <span class="report-header-row padding-pdf"><p>Premise:</p><p class="report-header">{{$cases->location->address}}</p></span>
+                    <span class="report-header-row"><p>Hours Monitoring Premise:</p><p class="report-header"> {{$cases->reportCases->total_hours}}</p></span>
+                    <span class="report-header-row"><p>Guard Presence at Location:</p><p class="report-header">{{$cases->reportCases->total_guards}}</p></span>
+                </div>
 
                 <table class="table">
                     {{--if there are case notes to report--}}
