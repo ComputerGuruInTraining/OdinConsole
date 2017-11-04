@@ -38,7 +38,11 @@ Route::get('/logout', 'HomeController@getLogout');
 //manual route to fix nav via header problem caused by the url format
 Route::get('/report-{id}', 'ReportController@show');
 
+//snappy but binary cannot be made executable on azure
 Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
+
+Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
+
 
 Route::resource('/reports', 'ReportController');
 
