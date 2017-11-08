@@ -7,27 +7,27 @@
  */
 
 //global confirm delete fn
-if(! function_exists('confirmDlt')){
-    function confirmDlt($id, $url) {
-        try{
+if (!function_exists('confirmDlt')) {
+    function confirmDlt($id, $url)
+    {
+        try {
 
             $msg = '';
 
-            if($url == 'employees'){
+            if ($url == 'employees') {
                 $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
             }
 
-            if($url == 'locations'){
+            if ($url == 'locations') {
                 $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
             }
 
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
-        } catch(\ErrorException $error){
+        } catch (\ErrorException $error) {
 //            echo $error;
             Redirect::to('/rosters');
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
 //            echo $e;
             Redirect::to('/rosters');
         }
@@ -35,32 +35,32 @@ if(! function_exists('confirmDlt')){
 }
 
 //global delete confirm fn for manually defined routes which enable header toggle buttons eg menu
-if(! function_exists('confirmDel')){
-    function confirmDel($id, $url) {
-        try{
+if (!function_exists('confirmDel')) {
+    function confirmDel($id, $url)
+    {
+        try {
 
             $msg = '';
 
-            if($url == 'rosters'){
+            if ($url == 'rosters') {
                 $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
                     this will delete all the shift details for that date.';
             }
 
-            if($url == 'employees'){
+            if ($url == 'employees') {
                 $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
             }
 
-            if($url == 'locations'){
+            if ($url == 'locations') {
                 $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
             }
 
             return view('confirm-del')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
-        } catch(\ErrorException $error){
+        } catch (\ErrorException $error) {
 //            echo $error;
             Redirect::to('/rosters');
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
 //            echo $e;
             Redirect::to('/rosters');
         }
@@ -68,7 +68,7 @@ if(! function_exists('confirmDel')){
 }
 
 //usage: when storing shift in db & when storing a new report
-if(! function_exists('jobDateTime')) {
+if (!function_exists('jobDateTime')) {
     function jobDateTime($date, $time)
     {
         $y = substr($date, 6, 4);
@@ -81,7 +81,7 @@ if(! function_exists('jobDateTime')) {
     }
 }
 
-if(! function_exists('dateFormat')) {
+if (!function_exists('dateFormat')) {
     function dateFormat($date)
     {
         $y = substr($date, 6, 4);
@@ -94,7 +94,7 @@ if(! function_exists('dateFormat')) {
     }
 }
 
-if(! function_exists('stringTime')) {
+if (!function_exists('stringTime')) {
     function stringTime($tm)
     {
         $time = $tm->format("g") . '.' . $tm->format("i") . ' ' . $tm->format("a");
@@ -102,11 +102,11 @@ if(! function_exists('stringTime')) {
     }
 }
 
-if(! function_exists('timeMidnight')) {
-    function timeMidnight($time){
-        if($time != null) {
-            if($time == '12.00 am')
-            {
+if (!function_exists('timeMidnight')) {
+    function timeMidnight($time)
+    {
+        if ($time != null) {
+            if ($time == '12.00 am') {
                 $time = 'Midnight';
             }
         }
@@ -114,7 +114,7 @@ if(! function_exists('timeMidnight')) {
     }
 }
 
-if(! function_exists('jobDuration')) {
+if (!function_exists('jobDuration')) {
     function jobDuration($carbonStart, $carbonEnd)
     {
         //calculate duration based on start date and time and end date and time
@@ -125,7 +125,7 @@ if(! function_exists('jobDuration')) {
 }
 
 //global oauth fn
-if(! function_exists('oauth2')) {
+if (!function_exists('oauth2')) {
 
     function oauth2($email, $password)
     {
@@ -135,7 +135,7 @@ if(! function_exists('oauth2')) {
             $url = Config::get('constants.STANDARD_URL');
             $urlApi = Config::get('constants.API_URL');
 
-            $response = $client->post($url.'oauth/token', [
+            $response = $client->post($url . 'oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
                     'client_id' => 14,
@@ -150,7 +150,7 @@ if(! function_exists('oauth2')) {
             $auth = json_decode((string)$response->getBody());
 
             //get user
-            $responseUser = $client->get($urlApi.'user', [
+            $responseUser = $client->get($urlApi . 'user', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
@@ -158,7 +158,7 @@ if(! function_exists('oauth2')) {
 
             $user = json_decode((string)$responseUser->getBody());
 
-            $responseStatus = $client->get($urlApi.'status/' . $user->company_id, [
+            $responseStatus = $client->get($urlApi . 'status/' . $user->company_id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
@@ -170,7 +170,7 @@ if(! function_exists('oauth2')) {
             if ($status != "active") {
                 return false;
             } else {
-                $responseRole = $client->get($urlApi.'user/role/' . $user->id, [
+                $responseRole = $client->get($urlApi . 'user/role/' . $user->id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $auth->access_token,
                     ]
@@ -205,7 +205,7 @@ if(! function_exists('oauth2')) {
     }
 }
 
-if(! function_exists('formatDates')) {
+if (!function_exists('formatDates')) {
     function formatDates($date)
     {
         $dt = new DateTime($date);
@@ -215,7 +215,7 @@ if(! function_exists('formatDates')) {
 }
 //calculate time and date based on geoCoords using Google API
 //return the values to be used to calculate the date and time
-if(! function_exists('timezone')) {
+if (!function_exists('timezone')) {
     function timezone($lat, $long, $t)
     {
         $dateForTS = date_create($t);
@@ -233,9 +233,10 @@ if(! function_exists('timezone')) {
 
     }
 }
+
 //calculate time and date based on geoCoords using Google API
 //return the $date and $time
-if(! function_exists('timezoneDT')) {
+if (!function_exists('timezoneDT')) {
     function timezoneDT($lat, $long, $t)
     {
         $dateForTS = date_create($t);
@@ -254,10 +255,42 @@ if(! function_exists('timezoneDT')) {
 
         $time = date('g.i a', $tsUsingResult);
 
-        return array($date, $time);
+        $collection = collect(['date' => $date, 'time' => $time]);
+
+        return $collection;
 
     }
 }
+
+
+//
+//$collection = timezone($lat, $long, $cases->reportCaseNotes[0]->created_at);
+//
+//if (!function_exists('timezoneDateAndTime')) {
+//
+//    function timezoneDateAndTime($lat, $long, $dtString)
+//    {
+//
+////gather dstOffset and rawOffset from google api using timezone function
+//        $tzResults = timezone($lat, $long, $dtString);
+//
+//
+////friendly dates
+//        $dateForTS = date_create($dtString);
+//        $dateInTS = date_timestamp_get($dateForTS);
+//
+////google timezone api returns the time in seconds from utc time (rawOffset)
+////and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+//        $tsUsingResult = $dateInTS + $tzResults->get('dstOffset') + $tzResults->get('rawOffset');
+//
+////convert timestamp to a datetime string
+//        $date = date('m/d/Y', $tsUsingResult);
+//
+//        $time = date('g.i a', $tsUsingResult);
+//
+//        return $date $time;
+//    }
+//}
 
 //if(! function_exists('pdfFile')) {
 //    function pdfFile($id, $cases, $end)
@@ -311,7 +344,7 @@ if(! function_exists('timezoneDT')) {
 //        $html = "";
 
 //failing every time when just refresh page and when started from reports page through
-            //error loading pdf, although pdf created
+//error loading pdf, although pdf created
 //            $array = [1,2,3];
 //            foreach($array as $a) {
 //
@@ -323,7 +356,7 @@ if(! function_exists('timezoneDT')) {
 //            break;
 //        }
 
-        //error loading pdf, although pdf created
+//error loading pdf, although pdf created
 //        $snappy = App::make('snappy.pdf');
 //
 //        $array = [1,2,3];
@@ -338,7 +371,7 @@ if(! function_exists('timezoneDT')) {
 //            break;
 //        }
 //        echo $pdf;
-        //error loading pdf, although pdf created
+//error loading pdf, although pdf created
 
 //        $snappy = App::make('snappy.pdf');
 //
@@ -357,11 +390,9 @@ if(! function_exists('timezoneDT')) {
 //        echo $snappy->getOutputFromHtml($html);
 
 
-
 //        dd($cases->location->address);
 //        $html = "<h1>Bill</h1><p>You owe me money, dude.".$cases->location->address."</p>";
 //           <tr class='report-header-row'><td>Premise:</td></td><td class='report-header'>".$cases->location->address."</td></tr>";
-
 
 
 //
@@ -426,9 +457,6 @@ if(! function_exists('timezoneDT')) {
 //
 
 
-
-
-
 /**PDF Trial and Error****/
 //        echo  $snappy->generateFromHtml($html, '/bill-123.pdf');//provides a download file
 //        $snappy->generateFromHtml($html, '/tmp/bill-123.pdf');
@@ -452,7 +480,6 @@ if(! function_exists('timezoneDT')) {
 //1 ('http://www.australiangeographic.com.au/'), 1(odinlite.net),
 //pdf success, specific page fail: 1(http://odinlitemgmt.azurewebsites.net/reports/24 DUE TO AUTH/LOGIN REQUIRED),
 // 1('http://odinliteapi.azurewebsites.net/home' -> also login)
-
 
 
 //trailing backslash gives error: This site can't be reach x 2
@@ -482,8 +509,6 @@ if(! function_exists('timezoneDT')) {
 //        $snappy->generate('http://www.github.com', '/tmp/github.pdf');
 
 
-
-
 //using url
 //works if called from ReportController, but not from button function,
 //note: both odinlite.com/public and odinlite.com/public/password/confirm work, although styling improperly positioned
@@ -502,7 +527,6 @@ if(! function_exists('timezoneDT')) {
 //        header('Content-Type: application/pdf');
 //        header('Content-Disposition: attachment; filename="file6.pdf"');
 //        echo $snappy->getOutput('http://odinlite.com/public');//provides a download fi
-
 
 
 //using html

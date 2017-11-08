@@ -5,6 +5,7 @@
     <style>
         .report-title {
             color: #663974;
+            margin-left: 5px;
         }
 
         #report-heading{
@@ -14,21 +15,26 @@
 
         .report-header{
             padding-left: 15px;
-            color: #000;
             font-size: large;
+            color: rgb(51, 51, 51);
         }
 
         #report-date{
             color: #777;
         }
 
-        .report-header-row{
-            line-height: 1.5;
-            vertical-align: top;
+        .report-header-row>p, p.report-header{
+            color: rgb(51, 51, 51);
+
         }
 
-        .margin-bottom {
-            margin-bottom: 20px;
+        /*.report-header-row{*/
+            /*line-height: 1.5;*/
+            /*vertical-align: top;*/
+        /*}*/
+
+        .margin-table {
+            margin-bottom: 25px !important;
         }
 
         /*Fonts Large*/
@@ -38,6 +44,10 @@
         {
             font-size: large !important;
             text-align: left;
+        }
+
+        td, tr{
+            height: 18px;
         }
 
         .table > tbody > tr > th,
@@ -89,6 +99,15 @@
             min-height: .01%;
             overflow-x: auto;
         }
+
+        .table-report, table>tr>td.table-report{
+            /*line-height: 20px;*/
+            /*height: 16px;*/
+            /*margin: -5px 0px;*/
+            padding: -15px -20px -15px -10px;
+            /*margin-right: 5px;*/
+        }
+
         @media screen and (max-width: 767px) {
             .table-responsive {
                 width: 100%;
@@ -138,16 +157,18 @@
                 <div>
                     <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
 
-                    <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}">Download PDF</a>
+{{--                    <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}">Download PDF</a>--}}
 
 {{--                    <a href="{{ route('laravelPdf') }}">Download Laravel PDF</a>--}}
 
                 </div>
-                <div class="col-md-12 margin-bottom">
-                    <h4 id="report-date">{{$start}} - {{$end}}</h4>
-                    <span class="report-header-row padding-pdf"><p>Premise:</p><p class="report-header">{{$cases->location->address}}</p></span>
-                    <span class="report-header-row"><p>Hours Monitoring Premise:</p><p class="report-header"> {{$cases->reportCases->total_hours}}</p></span>
-                    <span class="report-header-row"><p>Guard Presence at Location:</p><p class="report-header">{{$cases->reportCases->total_guards}}</p></span>
+                <div class="col-md-12 margin-table">
+                    <table>
+                    <tr><td class="table-report"><h4 id="report-date" >{{$start}} - {{$end}}</h4></td></tr>
+                        <tr class="table-report"><td class="report-header-row table-report"><p>Premise:</p></td><td class="table-report"><p class="report-header table-report">{{$cases->location->address}}</p></td></tr>
+                        <tr class="table-report"><td  class="report-header-row table-report"><p>Hours Monitoring Premise:</p></td><td class="table-report"><p class="report-header table-report"> {{$cases->reportCases->total_hours}}</p></td></tr>
+                        <tr class="table-report"><td  class="report-header-row table-report"><p>Guard Presence at Location:</p></td><td class="table-report"><p class="report-header table-report">{{$cases->reportCases->total_guards}}</p></td></tr>
+                    </table>
                 </div>
 
                 <table class="table">

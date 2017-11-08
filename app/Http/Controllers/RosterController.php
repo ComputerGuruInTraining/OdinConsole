@@ -469,7 +469,7 @@ class RosterController extends Controller
 
     }
 
-    //TODO: remove function groupByDate and just have groupBy, previously a longer function was used
+    //TODO: remove function groupByShift and just have groupBy, previously a longer function was used
     public function groupByShift($assigned)
     {
         //group the collection by startDate for grouping as tbody in the view

@@ -48,7 +48,7 @@
                 {{--report types provided by our app--}}
                 {{--Case Notes for a Location over a period--}}
                 <option value="Case Notes">Case Notes</option>
-                {{--<option value="Cases and Checks">Case Notes and Location Checks</option>--}}
+                <option value="Location Checks">Location Checks</option>
                 {{--Exact Times the premise was visited by a guard over a period--}}
                 {{--<option value="caseNotes">Guard Patrols</option>--}}
             </select>
