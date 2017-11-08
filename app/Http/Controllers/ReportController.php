@@ -315,7 +315,7 @@ class ReportController extends Controller
                     if ($checks != 'error') {
 
                         $groupShiftChecks = $this->formatLocationChecksData($checks);
-//                        dd($checksFormat);
+//                        dd($groupShiftChecks);
 
 
 //

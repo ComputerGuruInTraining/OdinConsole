@@ -366,6 +366,11 @@ h1.master-alt{
     vertical-align: top;
 }
 
+.max-width{
+
+    max-width: 60px;
+}
+
 /*Roster page styling*/
 .heading-row{
     border-bottom: 1px solid #f4f4f4;
