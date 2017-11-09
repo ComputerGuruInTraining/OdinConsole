@@ -7,6 +7,10 @@
     <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
     <!-- Font Awesome -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    {{--Font Family by Google--}}
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+
     {{--Bootstrap stylesheet--}}
     <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}"
           type="text/css">

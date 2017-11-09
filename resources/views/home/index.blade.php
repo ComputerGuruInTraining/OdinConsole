@@ -33,7 +33,7 @@
                         <div class="alert error">{{ $error }}</div>
                     @endforeach
                 @endif
-                <div class="panel panel-default" style="border-color: #402045;">
+                <div class="panel panel-default" style="border-color: #4d2970;">
                     <div class="panel-heading panel-head">Login</div>
                     <div class="panel-body">
                         {{ Form::open(['role' => 'form','method' => 'POST']) }}
@@ -43,7 +43,7 @@
                                 {{ Form::text('username', null, [
                                 'placeholder' => 'Email',
                                  'class' => 'form-control',
-                                 'style' =>  'border: 1px solid #402045;
+                                 'style' =>  'border: 1px solid #4d2970;
                                     -webkit-text-fill-color: grey;
                                     -webkit-box-shadow: 0 0 0px 1000px white inset;
                                     transition: background-color 5000s ease-in-out 0s;'
@@ -55,7 +55,7 @@
                                 {{ Form::password('password', [
                                 'placeholder' => 'Password',
                                  'class' => 'form-control login-input',
-                                'style' =>  'border: 1px solid #402045;
+                                'style' =>  'border: 1px solid #4d2970;
                                     -webkit-text-fill-color: grey;
                                     -webkit-box-shadow: 0 0 0px 1000px white inset;
                                     transition: background-color 5000s ease-in-out 0s;'
@@ -66,13 +66,13 @@
                             <div class='form-group'>
                                 <a href="/register" class="btn" style="margin-right: 3px;
                                         color: white;
-                                background-color:#402045;
+                                background-color:#4d2970;
                                 font-size: large;">Register Company</a>
 
                                 {{ Form::submit('Login', [
                                     'class' => 'btn login-btns',
                                      'style' => 'color: white;
-                                     background-color: #402045;
+                                     background-color: #4d2970;
                                      position: absolute;
                                      right: 30px;
                                      font-size: large;'
@@ -81,7 +81,7 @@
                             </div>
 
                             <div style="text-align: center;">
-                                <a href='/reset/link' style="color: #402045; text-align: center;">Forgot Password?</a>
+                                <a href='/reset/link' style="color: #4d2970; text-align: center;">Forgot Password?</a>
                             </div>
                         </div>
                         {{ Form::close() }}

@@ -305,8 +305,7 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
-                }
-                else if ($report->type == 'Location Checks') {
+                } else if ($report->type == 'Location Checks') {
 
                     $checks = $this->getLocationChecks($id, $token, $report);
 //                    dd($checks);
@@ -337,7 +336,7 @@ class ReportController extends Controller
                     }
                 }
 
-            }else {
+            } else {
                 //ie no session token exists and therefore the user is not authenticated
 
                 return Redirect::to('/login');
@@ -354,98 +353,105 @@ class ReportController extends Controller
 
     }
 
+
+
     public function formatLocationChecksData($checks)
     {
+        //format check in timestamp to be a user friendly date and time which accounts for the timezone
+        foreach ($checks->shiftChecks as $i => $item) {
+//TODO: consider adding an endnote to report advising of this info
 
-        //format date and time elements of check ins and check outs
-//                            $dt = new DateTime($item->check_ins);
-//                            $date = $dt->format('m/d/Y');
-//                            $time = $dt->format('g.i a');
-//
-//                            //add to object
-//                            $checks->shiftChecks[$i]->date = $date;
-//                            $checks->shiftChecks[$i]->time = $time;
-//                        $latitude = $checks->shiftChecks->user_loc_check_in_id;//todo
-                        foreach ($checks->shiftChecks as $i => $item) {
+            $no_data = 0;
+            //constant
+//            define("$no_data", 0);
+//          check ins
+//         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
+            //(because of check_ins datetime is a default value for the field)
+            if ($item->check_ins != null) {
 
-                            //check ins
+                $tzDT = $this->viaTimezone($item->checkin_latitude,
+                    $item->checkin_longitude,
+                    $checks->location->latitude,
+                    $checks->location->longitude, $item->check_ins);
 
-//                            $lat = "";
-//                            $long = "";
-//
-//                            if (($checks->shiftChecks->checkin_latitude != "")
-//                                && ($checks->shiftChecks->checkin_longitude != "")
-//                            ) {
-//
-//                                $lat = $checks->shiftChecks->checkin_latitude;
-//                                $long = $checks->shiftChecks->checkin_longitude;
-//
-//                            } else {
-//                                //use the location for the check in timezone
-//                                //TODO: consider adding an endnote to report advising of this info
-//                                $lat = $checks->location->latitude;
-//                                $long = $checks->location->longitude;
-//                            }
-//
-//                            $tzDT = timezoneDT($lat, $long, $checks->shiftChecks->check_ins);
-
-                            $noDataMsg = 'No Data';
-
-//                            dd($item->check_ins, $item->checkin_latitude,
-//                                $item->checkin_longitude,
-//                                $item->checkout_latitude,
-//                                $item->checkout_longitude,
-//                                 $item->check_outs);
-
-//                            check ins
-//                            if there is a value for the check_in datetime (ie check_ins property)
-                            if($item->check_ins != null) {
-
-                                $tzDT = $this->viaTimezone($item->checkin_latitude,
-                                    $item->checkin_longitude,
-                                    $checks->location->latitude,
-                                    $checks->location->longitude, $item->check_ins);
-
-                                $checks->shiftChecks[$i]->dateTzCheckIn = $tzDT->get('date');
-                                $checks->shiftChecks[$i]->timeTzCheckIn = $tzDT->get('time');
-                            }else{
-
-                                $checks->shiftChecks[$i]->dateTzCheckIn = $noDataMsg;
-                                $checks->shiftChecks[$i]->timeTzCheckIn = $noDataMsg;
-
-                            }
-//                            check outs
-                            //if there is a value for the check_out datetime (ie check_outs property)
-
-                            if($item->check_outs != null) {
-                                $tz = $this->viaTimezone($item->checkout_latitude,
-                                    $item->checkout_longitude,
-                                    $checks->location->latitude,
-                                    $checks->location->longitude, $item->check_outs);
-
-                                $checks->shiftChecks[$i]->dateTzCheckOut = $tz->get('date');
-                                $checks->shiftChecks[$i]->timeTzCheckOut = $tz->get('time');
-
-                            }else{
-                                $checks->shiftChecks[$i]->dateTzCheckOut = $noDataMsg;
-                                $checks->shiftChecks[$i]->timeTzCheckOut = $noDataMsg;
-                            }
-
-                        }
-
-                        //change to collection datatype from array for using groupBy fn
-                        $checksCollection = collect($checks->shiftChecks);
-                //
-                //                        //group by date for better view
-                        $groupShiftChecks = $checksCollection->groupBy('dateTzCheckIn');
+                $checks->shiftChecks[$i]->dateTzCheckIn = $tzDT->get('date');
+                $checks->shiftChecks[$i]->timeTzCheckIn = $tzDT->get('time');
 
 
-//                        foreach ($cases->reportCaseNotes as $i => $item) {
-//                            //change to collection datatype from array for using groupBy fn
-//                            $caseNotes = collect($cases->reportCaseNotes);
-//                        }
-//                return $checks;
-                return $groupShiftChecks;
+                //if there is geoLocation data for the location check
+                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+//                        $checks->location->latitude, $checks->location->longitude);
+                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+                    $result = geoRange($distance);
+
+                    $checks->shiftChecks[$i]->withinRange = $result;
+
+                    //for testing purposes only: 1
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+
+                } else {
+                    //for testing purposes only: 1
+//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+                    $checks->shiftChecks[$i]->withinRange = "-";
+
+
+                    //for testing purposes only: 2
+
+//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+
+                    //
+                    //Latitude -35.381536
+//                    longitude: 149.058894
+
+
+//                    $checks->shiftChecks[$i]->withinRange = $distance + " should equal 0 as same location";
+//                    $checks->shiftChecks[$i]->withinRange = $distance2 + " not gathered";
+
+                }
+
+
+            } else {
+
+                $checks->shiftChecks[$i]->dateTzCheckIn = $no_data;
+                $checks->shiftChecks[$i]->timeTzCheckIn = $no_data;
+
+            }
+
+//           check outs
+            //if there is a value for the check_out datetime (ie check_outs property)
+
+            if ($item->check_outs != null) {
+                $tz = $this->viaTimezone($item->checkout_latitude,
+                    $item->checkout_longitude,
+                    $checks->location->latitude,
+                    $checks->location->longitude, $item->check_outs);
+
+                $checks->shiftChecks[$i]->dateTzCheckOut = $tz->get('date');
+                $checks->shiftChecks[$i]->timeTzCheckOut = $tz->get('time');
+
+            } else {
+                $checks->shiftChecks[$i]->dateTzCheckOut = $no_data;
+                $checks->shiftChecks[$i]->timeTzCheckOut = $no_data;
+            }
+
+
+
+        }
+
+//        dd($checks);
+
+        //change to collection datatype from array for using groupBy fn
+        $checksCollection = collect($checks->shiftChecks);
+
+        //group by date for better view
+        $groupShiftChecks = $checksCollection->groupBy('dateTzCheckIn');
+
+        return $groupShiftChecks;
     }
 
     function viaTimezone($geoLatitude, $geoLongitude, $locLatitude, $locLongitude, $dateTime)
@@ -466,7 +472,6 @@ class ReportController extends Controller
         $tzDT = timezoneDT($lat, $long, $dateTime);
 
         return $tzDT;
-
 
 
     }
@@ -524,7 +529,7 @@ class ReportController extends Controller
                             // download pdf w current date in the name
                             $dateTime = Carbon::now();
                             $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Report '.$date.'.pdf');
+                            return $pdf->download('Report ' . $date . '.pdf');
                         }
 
                         return view('report/case_notes/pdf');
@@ -539,7 +544,7 @@ class ReportController extends Controller
                 //
                 //            }
 
-            }else {
+            } else {
                 //ie no session token exists and therefore the user is not authenticated
 
                 return Redirect::to('/login');
@@ -605,11 +610,11 @@ class ReportController extends Controller
                 return $checks;
             }
 
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             echo $e;
             return Redirect::to('/reports');
-        }catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             $errors = collect($error);
             return Redirect::to('/reports')->with('errors', $errors);
         }
@@ -620,7 +625,7 @@ class ReportController extends Controller
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get(Config::get('constants.API_URL').'reportcases/' . $id, [
+            $response = $client->get(Config::get('constants.API_URL') . 'reportcases/' . $id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -663,11 +668,11 @@ class ReportController extends Controller
                 return $cases;
             }
 
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             echo $e;
             return Redirect::to('/reports');
-        }catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             $errors = collect($error);
             return Redirect::to('/reports')->with('errors', $errors);
         }
@@ -677,7 +682,7 @@ class ReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -690,7 +695,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get(Config::get('constants.API_URL').'report/' . $id, [
+                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -700,7 +705,7 @@ class ReportController extends Controller
 
                 if ($report->type == 'Case Notes') {
 
-                    $response = $client->get(Config::get('constants.API_URL').'reportcases/' . $id, [
+                    $response = $client->get(Config::get('constants.API_URL') . 'reportcases/' . $id, [
                         'headers' => [
                             'Authorization' => 'Bearer ' . $token,
                         ]
@@ -708,12 +713,11 @@ class ReportController extends Controller
 
                     $cases = json_decode((string)$response->getBody());
 
-                    if($cases->success == false) {
+                    if ($cases->success == false) {
                         $err = 'There were no case notes created during the period that the selected report covers.';
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                    else {
+                    } else {
 
                         //format dates to be 3rd January 2107 for report date range
                         //  foreach($report as $i => $item){
@@ -729,7 +733,7 @@ class ReportController extends Controller
                         $edate = $edt->format('jS F Y');
 
                         //format dates to be mm/dd/yyyy for case notes
-                        foreach($cases->reportCaseNotes as $i => $item){
+                        foreach ($cases->reportCaseNotes as $i => $item) {
                             //add the extracted date to each of the objects and format date
                             $t = $cases->reportCaseNotes[$i]->created_at;
 
@@ -764,13 +768,11 @@ class ReportController extends Controller
             else {
                 return Redirect::to('/login');
             }
-        }
-            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+        } //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
-        }
-        catch (\ErrorException $error) {
+        } catch (\ErrorException $error) {
             $errors = collect($error);
             return Redirect::to('/reports')->with('errors', $errors);
         }
@@ -781,8 +783,8 @@ class ReportController extends Controller
      * Update the specified resource in storage.
      * See CaseNoteController@update
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
 //    public function update(Request $request, $id)
@@ -793,7 +795,7 @@ class ReportController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -806,7 +808,7 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $client->post(Config::get('constants.API_URL').'reports/'.$id, [
+                $client->post(Config::get('constants.API_URL') . 'reports/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                         'X-HTTP-Method-Override' => 'DELETE'
@@ -816,13 +818,11 @@ class ReportController extends Controller
                 $theAction = 'You have successfully deleted the report';
 
                 return view('confirm')->with('theAction', $theAction);
-            }
-            //user not authenticated
+            } //user not authenticated
             else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo $e;
             return Redirect::to('/reports');
         }

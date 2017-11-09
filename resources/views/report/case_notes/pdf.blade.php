@@ -4,12 +4,12 @@
 
     <style>
         .report-title {
-            color: #663974;
+            color: #4d2970;
             margin-left: 5px;
         }
 
         #report-heading{
-            font-family: papyrus, courier, georgia;
+            font-family: Futura, "Trebuchet MS", Arial, sans-serif;
             font-size: x-large;
         }
 

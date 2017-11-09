@@ -138,12 +138,12 @@ a.dropdown-toggle.header-icon{
 /*confirm-alt page*/
 
 .panel-bg{
-    border-color: #402045;
+    border-color: #4d2970;
 }
 
 .panel-head{
     color: white !important;
-    background-color: #402045 !important;
+    background-color: #4d2970 !important;
 }
 
 .margin-top-alt{
@@ -173,29 +173,29 @@ body{
 /*Sidebar Menu*/
 .menu{
     font-size: x-large;
-    font-family: inherit;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
 }
 
 .menu-heading{
     font-size: x-large;
     padding-top: 15px;
     text-transform: UPPERCASE;
-    font-family: inherit;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     margin-top: 20px;
 }
 
 aside.main-sidebar.header-custom{
-    border-right: 1px solid #402045 !important;
-    border-bottom: 1px solid #402045 !important;
+    border-right: 1px solid #4d2970 !important;
+    border-bottom: 1px solid #4d2970 !important;
 }
 
 header.main-header.header-custom{
-    border-bottom: 1px solid #402045;
+    border-bottom: 1px solid #4d2970;
 }
 section.content-header{
-    border-bottom: 1px solid #402045;
-    border-left: 1px solid #402045;
-    border-right: 1px solid #402045;
+    border-bottom: 1px solid #4d2970;
+    border-left: 1px solid #4d2970;
+    border-right: 1px solid #4d2970;
     margin-top: -1px;
 }
 
@@ -221,7 +221,7 @@ section.content-header{
 .list-divider{
     padding-top: 5px;
     margin: 10px;
-    border-bottom: 1px solid #402045;
+    border-bottom: 1px solid #4d2970;
 }
 
 .form-buttons{
@@ -326,7 +326,7 @@ h1.master-alt{
 
 .row-heading{
     font-weight: bold;
-    color: #402045;
+    color: #4d2970;
     font-size: large;
 }
 
@@ -342,22 +342,28 @@ h1.master-alt{
 
 /*Report Show Page Styling*/
 .report-title {
-    color: #402045;
+    color: #4d2970;
 }
 
 #report-heading{
-    font-family: papyrus, courier, georgia;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: xx-large;
 }
 
 .report-header{
     padding-left: 15px;
     color: #000;
-    font-size: larger;
+    /*font-size: larger;*/
 }
 
 #report-date{
     color: #777;
+}
+
+.grey-larger{
+    color: #777;
+    font-size: 18px;
+
 }
 
 .report-header-row{
@@ -369,6 +375,19 @@ h1.master-alt{
 .max-width{
 
     max-width: 60px;
+}
+
+/*geo within range*/
+.green-tick{
+    color: #1e7b1e;
+}
+
+.red-cross{
+    color: #B22222;
+}
+
+.orange-tick{
+   color: #db8b0b;
 }
 
 /*Roster page styling*/
@@ -394,7 +413,7 @@ body {
     height: 100%;
 }
 body {
-    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-weight: 400;
     overflow-x: hidden;
     overflow-y: auto;
@@ -539,12 +558,13 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+;
 }
 /* General Links */
 a {
     /*color: #3c8dbc;*/
-    color: #402045;
+    color: #4d2970;
 }
 a:hover,
 a:active,
@@ -639,12 +659,12 @@ a:focus {
     content: "\f0c9";
 }
 .main-header .sidebar-toggle:hover {
-    color: #402045;
+    color: #4d2970;
 }
 .main-header .sidebar-toggle:focus,
 .main-header .sidebar-toggle:active {
     background: transparent;
-    color: #402045;
+    color: #4d2970;
 }
 .main-header .sidebar-toggle .icon-bar {
     display: none;
@@ -674,7 +694,7 @@ a:focus {
     line-height: 50px;
     text-align: left;
     width: 230px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     padding: 0 15px;
     font-weight: 300;
     overflow: hidden;
@@ -689,10 +709,10 @@ a:focus {
     color: #fff;
 }
 .content-header {
-    font-family: Monospace;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     position: relative;
     padding: 5px 15px 5px 15px;
-    background-color: #402045;
+    background-color: #4d2970;
     border: 1px solid rgb(210, 214, 222);
 }
 .content-header > h1 {
@@ -804,7 +824,7 @@ a:focus {
     padding-top: 50px;
     background-color:white;
     border: 0.1px solid rgb(210, 214, 222);
-    color:#402045;
+    color:#4d2970;
     min-height: 100%;
     width: 230px;
     z-index: 810;
@@ -905,7 +925,7 @@ a:focus {
 .sidebar-menu > li > a {
     padding: 5px 5px 5px 15px;
     display: block;
-    color: #402045;
+    color: #4d2970;
 }
 .sidebar-menu > li > a > .fa,
 .sidebar-menu > li > a > .glyphicon,
@@ -2658,7 +2678,7 @@ a:focus {
     background-color: #008d4c;
 }
 .btn-info {
-    background-color: #402045;
+    background-color: #4d2970;
     border-color: #e1e1e1;
 }
 .btn-info:hover,

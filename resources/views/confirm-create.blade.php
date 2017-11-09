@@ -8,11 +8,11 @@
 @section('page-content')
     {{--TODO: make a bit more robust and adaptable to different items.--}}
     <div class="padding">
-        You have successfully added a {{$entity}} for <b style="color:#663974;">{{ $theData }}</b>.
+        You have successfully added a {{$entity}} for <b style="color:#4d2970;">{{ $theData }}</b>.
     </div>
     <div class="padding">
         <a href="/{{$url}}/create" class="btn btn-success" style="margin-right: 3px;">Add {{$entity}}</a>
     </div>
-    {{--<div class="form-pages">The shift has been saved as <b style="color:#663974;">{{ $theName }}</b>.</div>--}}
+    {{--<div class="form-pages">The shift has been saved as <b style="color:#4d2970;">{{ $theName }}</b>.</div>--}}
 
 @stop
