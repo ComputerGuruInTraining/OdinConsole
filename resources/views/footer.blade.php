@@ -8,9 +8,9 @@
     <!-- Default to the left -->
     <center>
         <strong>Copyright © 2017
-            <a href="http://www.odincasemanagement.com/" style="color:#663974;" target="_blank">Odin Case Management Pty Ltd </a>
+            <a href="http://www.odincasemanagement.com/" style="color:#4d2970;" target="_blank">Odin Case Management Pty Ltd </a>
         </strong>  All rights reserved.
-        <a href="/privacy" style="color:#663974;" target="_blank">  Privacy Policy</a>
+        <a href="/privacy" style="color:#4d2970;" target="_blank">  Privacy Policy</a>
     </center>
     <div>
         <p class="email-footer">Contact: odinlitemail@gmail.com</p>

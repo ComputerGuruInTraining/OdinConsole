@@ -13,8 +13,8 @@
                         <div class='alert error'>{{ $error }}</div>
                     @endforeach
                 @endif
-                <div class="panel panel-default" style="border-color: #663974;">
-                    <div class="panel-heading"  style="color: white; background-color: #663974;">Register Company</div>
+                <div class="panel panel-default" style="border-color: #4d2970;">
+                    <div class="panel-heading"  style="color: white; background-color: #4d2970;">Register Company</div>
                     <div class="panel-body">
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/register/company') }}">
@@ -120,12 +120,12 @@
 
                                     <div class="form-group">
                                         <div class="col-md-6 col-md-offset-4">
-                                            <button type="submit" class="btn btn-primary" style="color: white; background-color: #663974;">
+                                            <button type="submit" class="btn btn-primary" style="color: white; background-color: #4d2970;">
                                                 Register
                                             </button>
                                             <a href="/login" class="btn btn-primary" style="
                                                 color: white;
-                                                background-color: #663974;
+                                                background-color: #4d2970;
                                                 font-size: large;">Cancel</a>
                                         </div>
                                     </div>

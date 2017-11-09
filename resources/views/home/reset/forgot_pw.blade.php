@@ -13,8 +13,8 @@
                         <div class='bg-danger alert'>{{ $error }}</div>
                     @endforeach
                 @endif
-                <div class="panel panel-default" style="border-color: #663974;">
-                    <div class="panel-heading"  style="color: white; background-color: #663974;">Reset Password</div>
+                <div class="panel panel-default" style="border-color: #4d2970;">
+                    <div class="panel-heading"  style="color: white; background-color: #4d2970;">Reset Password</div>
                     <div class="panel-body">
                         @if (session('status'))
                             <div class="alert alert-success">
@@ -41,7 +41,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" class="btn btn-primary" style="color: white; background-color: #663974;">
+                                    <button type="submit" class="btn btn-primary" style="color: white; background-color: #4d2970;">
                                         Send Password Reset Link
                                     </button>
                                 </div>

@@ -12,6 +12,11 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 {{--alternate theme style--}}
         <style>
+
+            body, div, p, tr, td, th, span{
+                font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+            }
+
             body {
                 margin-top: 5%;
             }
@@ -27,7 +32,7 @@
             }
 
             .row>.title-bg-app>.title-block-app{
-                background-color: #402045 !important;
+                background-color: #4d2970 !important;
                 height: 100px;
                 margin-top: 60px;
                 width: 100%;
