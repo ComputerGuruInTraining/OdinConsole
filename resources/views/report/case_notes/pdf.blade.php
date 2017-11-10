@@ -1,10 +1,11 @@
 <html>
 <head>
-    <title>Report PDF</title>
+    <title>Case Notes Report PDF</title>
 
+{{--internal stylesheet being used as external stylesheet takes much longer to load, even if only contains the same styles--}}
     <style>
         .report-title {
-            color: #4d2970;
+            /*color: #4d2970;*/
             margin-left: 5px;
         }
 
@@ -16,22 +17,16 @@
         .report-header{
             padding-left: 15px;
             font-size: large;
-            color: rgb(51, 51, 51);
+        }
+
+        .grey-larger{
+            color: #777;
+            font-size: 18px;
         }
 
         #report-date{
             color: #777;
         }
-
-        .report-header-row>p, p.report-header{
-            color: rgb(51, 51, 51);
-
-        }
-
-        /*.report-header-row{*/
-            /*line-height: 1.5;*/
-            /*vertical-align: top;*/
-        /*}*/
 
         .margin-table {
             margin-bottom: 25px !important;
@@ -52,7 +47,7 @@
 
         .table > tbody > tr > th,
         .table > tbody > tr > td{
-            padding: 5px;
+            padding: 8px;
 
         }
 
@@ -101,11 +96,7 @@
         }
 
         .table-report, table>tr>td.table-report{
-            /*line-height: 20px;*/
-            /*height: 16px;*/
-            /*margin: -5px 0px;*/
             padding: -15px -20px -15px -10px;
-            /*margin-right: 5px;*/
         }
 
         @media screen and (max-width: 767px) {
@@ -156,18 +147,18 @@
             <div class="table-responsive">
                 <div>
                     <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-
-{{--                    <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}">Download PDF</a>--}}
-
-{{--                    <a href="{{ route('laravelPdf') }}">Download Laravel PDF</a>--}}
-
                 </div>
                 <div class="col-md-12 margin-table">
                     <table>
-                    <tr><td class="table-report"><h4 id="report-date" >{{$start}} - {{$end}}</h4></td></tr>
-                        <tr class="table-report"><td class="report-header-row table-report"><p>Premise:</p></td><td class="table-report"><p class="report-header table-report">{{$cases->location->address}}</p></td></tr>
-                        <tr class="table-report"><td  class="report-header-row table-report"><p>Hours Monitoring Premise:</p></td><td class="table-report"><p class="report-header table-report"> {{$cases->reportCases->total_hours}}</p></td></tr>
-                        <tr class="table-report"><td  class="report-header-row table-report"><p>Guard Presence at Location:</p></td><td class="table-report"><p class="report-header table-report">{{$cases->reportCases->total_guards}}</p></td></tr>
+                    <tr><td class="table-report grey-larger"><h4 id="report-date grey-larger" >{{$start}} - {{$end}}</h4></td></tr>
+                        <tr class="table-report"><td class="report-header-row table-report grey-larger"><p>Premise:</p></td>
+                            <td class="table-report"><p class="report-header table-report grey-larger">{{$cases->location->address}}</p></td>
+                        </tr>
+                        {{--<tr class="table-report"><td  class="report-header-row table-report"><p>Hours Monitoring Premise:</p></td>
+                        <td class="table-report"><p class="report-header table-report"> {{$cases->reportCases->total_hours}}</p></td></tr>--}}
+                        <tr class="table-report"><td  class="report-header-row table-report grey-larger"><p>Guard Presence at Location:</p></td>
+                            <td class="table-report grey-larger"><p class="report-header table-report">{{$cases->reportCases->total_guards}}</p></td>
+                        </tr>
                     </table>
                 </div>
 
