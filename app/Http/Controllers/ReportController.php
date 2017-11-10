@@ -308,22 +308,28 @@ class ReportController extends Controller
                 } else if ($report->type == 'Location Checks') {
 
                     $checks = $this->getLocationChecks($id, $token, $report);
-//                    dd($checks);
 
                     //ie success == false
                     if ($checks != 'error') {
 
-                        $groupShiftChecks = $this->formatLocationChecksData($checks);
-//                        dd($groupShiftChecks);
+//                        $groupShiftChecks = $this->formatLocationChecksData($checks);
+                        $collectChecks = $this->formatLocationChecksData($checks);
 
+                        //number of check ins at premise
+                        $checkIns = $collectChecks->pluck('check_ins');
 
-//
+                        $total = $checkIns->count();
+
+                        //group by date for better view
+                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
+
                         view()->share(array(
                             'shiftChecks' => $groupShiftChecks,
                             'location' => $checks->location,
                             'report' => $report,
                             'start' => $sdate,
-                            'end' => $edate
+                            'end' => $edate,
+                            'total' => $total
                         ));
 
                         return view('report/location_checks/show');
@@ -349,19 +355,16 @@ class ReportController extends Controller
             $msg = 'Error exception displaying report on webpage';
             return view('error')->with('error', $msg);
         }
-
-
     }
 
-
-
+    //returns a collection
     public function formatLocationChecksData($checks)
     {
         //format check in timestamp to be a user friendly date and time which accounts for the timezone
         foreach ($checks->shiftChecks as $i => $item) {
 //TODO: consider adding an endnote to report advising of this info
 
-            $no_data = 0;
+            $no_data = '';
             //constant
 //            define("$no_data", 0);
 //          check ins
@@ -377,17 +380,27 @@ class ReportController extends Controller
                 $checks->shiftChecks[$i]->dateTzCheckIn = $tzDT->get('date');
                 $checks->shiftChecks[$i]->timeTzCheckIn = $tzDT->get('time');
 
-
                 //if there is geoLocation data for the location check
                 if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
 
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
-//                        $checks->location->latitude, $checks->location->longitude);
-                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+                        $checks->location->latitude, $checks->location->longitude);
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
 
                     $result = geoRange($distance);
 
                     $checks->shiftChecks[$i]->withinRange = $result;
+
+                    if ($item->withinRange == 'yes'){
+
+                        $checks->shiftChecks[$i]->img =  'if_checkmark-g_86134';
+                    }
+                    elseif($item->withinRange == 'ok') {
+                        $checks->shiftChecks[$i]->img = 'if_checkmark-o_86136';
+                    }
+                    elseif($item->withinRange == 'no'){
+                        $checks->shiftChecks[$i]->img = 'if_cross_5233';
+                    }
 
                     //for testing purposes only: 1
 
@@ -398,6 +411,8 @@ class ReportController extends Controller
                     //for testing purposes only: 1
 //                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
                     $checks->shiftChecks[$i]->withinRange = "-";
+
+                    $checks->shiftChecks[$i]->img = 'if_minus_216340';//TODO: change to minus
 
 
                     //for testing purposes only: 2
@@ -443,15 +458,21 @@ class ReportController extends Controller
 
         }
 
-//        dd($checks);
+//        //number of check ins at premise
+//        //change to collection datatype from array for using groupBy fn and count
+        $collectChecks = collect($checks->shiftChecks);
+//
+//        $checkIns = $collectChecks->pluck('check_ins');
+//
+//        $total = $checkIns->count();
+//
+////        $checksCollection = collect($checks->shiftChecks);
+//
+//        //group by date for better view
+//        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
 
-        //change to collection datatype from array for using groupBy fn
-        $checksCollection = collect($checks->shiftChecks);
-
-        //group by date for better view
-        $groupShiftChecks = $checksCollection->groupBy('dateTzCheckIn');
-
-        return $groupShiftChecks;
+        return $collectChecks;
+//        return $groupShiftChecks;
     }
 
     function viaTimezone($geoLatitude, $geoLongitude, $locLatitude, $locLongitude, $dateTime)
@@ -529,7 +550,7 @@ class ReportController extends Controller
                             // download pdf w current date in the name
                             $dateTime = Carbon::now();
                             $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Report ' . $date . '.pdf');
+                            return $pdf->download('Case Notes Report ' . $date . '.pdf');
                         }
 
                         return view('report/case_notes/pdf');
@@ -539,10 +560,51 @@ class ReportController extends Controller
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
                 }
-                //else if ($report->type == 'Location Checks') {
-                //
-                //
-                //            }
+                else if ($report->type == 'Location Checks') {
+                    $checks = $this->getLocationChecks($id, $token, $report);
+
+                    //ie success == false
+                    if ($checks != 'error') {
+
+//                        $groupShiftChecks = $this->formatLocationChecksData($checks);
+                        $collectChecks = $this->formatLocationChecksData($checks);
+
+                        //number of check ins at premise
+                        $checkIns = $collectChecks->pluck('check_ins');
+
+                        $total = $checkIns->count();
+
+                        //group by date for better view
+                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
+
+                        view()->share(array(
+                            'shiftChecks' => $groupShiftChecks,
+                            'location' => $checks->location,
+                            'report' => $report,
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $total
+                        ));
+
+                        if ($request->has('download')) {
+                            // pass view file
+                            $pdf = PDF::loadView('report/location_checks/pdf')->setPaper('a4', 'landscape');
+                            // download pdf w current date in the name
+                            $dateTime = Carbon::now();
+                            $date = substr($dateTime, 0, 10);
+                            return $pdf->download('Location Checks Report ' . $date .'.pdf');
+                        }
+
+                        return view('report/location_checks/pdf');
+
+                    } else {
+                        //TODO: test me
+                        $err = 'There were no location checks during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+
+                }
 
             } else {
                 //ie no session token exists and therefore the user is not authenticated
