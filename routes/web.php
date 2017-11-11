@@ -39,6 +39,9 @@ Route::get('/error-page', function(){
     }
 });
 
+//download case notes image, calls download function in functions.php
+//Route::get('/download/{img}', 'download');
+
 Route::resource('/user', 'UserController');
 
 
@@ -120,3 +123,4 @@ Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
 Route::get('/support', 'DashboardController@support');
 
 Route::get('/privacy', 'DashboardController@privacy');
+

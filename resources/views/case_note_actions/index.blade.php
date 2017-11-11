@@ -61,9 +61,9 @@
                                 <td class="min-width">{{$item->time}}</td>
                                 <td>{{$item->title}}</td>
                                 <td class="desc-max-width">{{$item->description}}</td>
-                                <td>{{$item->img}}</td>
+                                {{--<td>{{$item->img}}</td>--}}
                                 <td class="max-width word-wrap">
-                                    <a href="https://odinliteapi.scm.azurewebsites.net/api/vfs/site/storage/app/images/1506220921465.jpeg" target="_blank">Image</a>
+                                    <a href="/download/{{$item->img}}" target="_blank">Image</a>
                                 </td>
                                 <td>{{$item->first_name}} {{$item->last_name}}</td>
                                 <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>

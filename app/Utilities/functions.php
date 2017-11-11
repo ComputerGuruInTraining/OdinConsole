@@ -309,11 +309,13 @@ if (!function_exists('geoRange')) {
         return $result;
     }
 }
-
-//if (!function_exists('')) {
 //
-//    function ()
+//if (!function_exists('download')) {
+//
+//    function download($img)
 //    {
+//        //http request
+//
 //
 //    }
 //}
