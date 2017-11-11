@@ -417,6 +417,25 @@ textarea#desc.form-control.case-desc{
 
 }
 
+/*Case Notes Styling*/
+.padding-left{
+
+    padding-left: 10px;
+}
+
+.word-wrap{
+    word-wrap: break-word;
+}
+
+.min-width{
+    min-width: 100px;
+}
+
+.desc-max-width{
+
+    max-width: 250px;
+}
+
 /*
  * Core: General Layout Style
  * -------------------------

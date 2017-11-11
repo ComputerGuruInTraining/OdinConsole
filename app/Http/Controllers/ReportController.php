@@ -34,7 +34,7 @@ class ReportController extends Controller
 
                 $response = $client->get(Config::get('constants.API_URL') . 'reports/list/' . $compId, [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token,//TODO: Access_token saved for global use
+                        'Authorization' => 'Bearer ' . $token,
                     ]
                 ]);
 
@@ -412,8 +412,7 @@ class ReportController extends Controller
 //                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
                     $checks->shiftChecks[$i]->withinRange = "-";
 
-                    $checks->shiftChecks[$i]->img = 'if_minus_216340';//TODO: change to minus
-
+                    $checks->shiftChecks[$i]->img = 'if_minus_216340';
 
                     //for testing purposes only: 2
 
@@ -699,6 +698,11 @@ class ReportController extends Controller
                 return 'error';
 
             } else {
+
+                //IMPORTANT: just uses the one latitude and longitude for each calculation
+                //because the report is for a single location, therefore the values are always the same
+                //see LocationChecks for an example of timezone conversion that uses a different location each time
+
                 //extract location latitude and longitude to be used to find timezone
                 //for this report atm, case note geoLocation is presumed to be location of premise
                 $lat = $cases->location->latitude;

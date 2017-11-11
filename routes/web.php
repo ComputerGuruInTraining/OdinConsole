@@ -23,6 +23,21 @@ Route::post('/', 'HomeController@postIndex');
 
 Route::get('/admin', 'DashboardController@index');
 
+//generic error exception msg route
+Route::get('/error', function(){
+    if (session()->has('token')) {
+        $msg = Config::get('constants.ERROR_GENERIC');
+        return view('error')->with('error', $msg);
+    }
+});
+
+//generic server error msg route
+Route::get('/error-page', function(){
+    if (session()->has('token')) {
+        $msg = Config::get('constants.ERROR_SERVER');
+        return view('error')->with('error', $msg);
+    }
+});
 
 Route::resource('/user', 'UserController');
 
