@@ -18,8 +18,133 @@ class CaseNoteController extends Controller
      */
     public function index()
     {
-        return Redirect::to('/reports');
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $compId = session('compId');
+
+                $response = $client->get(Config::get('constants.API_URL') . '/casenotes/list/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $data = json_decode((string)$response->getBody());
+
+//                dd($data);
+//                dd(gettype($data->cases), gettype($data->locations));
+
+                $dataFormat = $this->formatCaseNotes($data);
+
+                $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
+//
+                $groupedData = $cases->groupBy('location');
+////
+//                $casesGroup = $groupedData->groupBy('case_id');
+
+
+//                $groupedData = $cases->groupBy('location_id')->toArray() +
+//                    $cases->groupBy('case_id')->toArray();
+//                dd($cases);
+//                dd($cases);
+//                dd($groupedData,
+//                    $dataFormat->locations);
+//                dd(gettype($data->cases), gettype($data->locations));
+//                dd($dataFormat);
+
+//                foreach ($reports as $i => $item) {
+//                    //add the extracted date to each of the objects and format date
+//                    $s = $item->date_start;
+//
+//                    $sdt = new DateTime($s);
+//                    $sdate = $sdt->format('m/d/Y');
+//
+//                    $e = $item->date_end;
+//
+//                    $edt = new DateTime($e);
+//                    $edate = $edt->format('m/d/Y');
+//
+//                    $reports[$i]->form_start = $sdate;
+//                    $reports[$i]->form_end = $edate;
+//                }
+
+                return view('case_note_actions/index')->with(array(
+                    'cases' => $groupedData,
+//                    'locations' => $dataFormat->locations,
+                    'url' => 'case-notes'
+                ));
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/error-page');
+        } catch (\ErrorException $error) {
+            return Redirect::to('/error');
+        }
     }
+
+    /*
+     * Format: date, time and add to each object
+     * */
+    public function formatCaseNotes($data){
+      //  ensure there are $locations before adding the location names onto the end of case object
+
+
+        //per case_note, if the location_id is equal to the location object id
+        //use the location object latitude and longitude
+        //and the case_note created_at timestamp
+        //to convert to a timezone date and time
+//        if(sizeof($data->locations) > 0) {
+            foreach ($data as $i => $case) {
+//                dd($case, $i, $data[$i]->location_id);
+
+//        foreach()
+//                foreach ($data->locations as $location){
+//                    if ($location->id == $data->cases[$i]->location_id) {
+
+                        //extract location latitude and longitude to be used to find timezone
+                        //for this atm, case note geoLocation is presumed to be location of premise
+//                        $lat = $location->latitude;
+//                        $long = $location->longitude;
+                        //calculate the date and time based on the location and any of the case notes created_at timestamp
+                        $collection = timezone($data[$i]->locLat, $data[$i]->locLong, $case->created_at);
+//
+//                        //format dates to be mm/dd/yyyy for case notes
+//                            //add the extracted date to each of the objects and format date to be mm/dd/yyyy
+                            $t = $case->created_at;
+//
+//                            //friendly dates
+                            $dateForTS = date_create($t);
+                            $dateInTS = date_timestamp_get($dateForTS);
+//
+//                            //google timezone api returns the time in seconds from utc time (rawOffset)
+//                            //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                            $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
+//
+//                            //convert timestamp to a datetime string
+                            $date = date('m/d/Y', $tsUsingResult);
+//
+                            $time = date('g.i a', $tsUsingResult);
+//
+                        $data[$i]->date = $date;
+                        $data[$i]->time = $time;
+
+
+
+
+//                        $cases[$i]->location = $location->name;
+//                    }
+//                }
+            }
+//        }
+            return $data;
+    }
+
 //
 //    /**
 //     * Show the form for creating a new resource.
@@ -130,7 +255,6 @@ class CaseNoteController extends Controller
                 //validate input meet's db constraints
                 $this->validate($request, [
                     'title' => 'required|max:255',
-                    'desc' => 'required|max:255'
                 ]);
 
                 //get the data from the form

@@ -38,9 +38,9 @@
                         <td>{{$report->location}}</td>
                         <td>{{$report->type}}</td>
                         <td><a href="report-{{$report->id}}">View Report</a> |
-                            <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}">Download PDF</a>
+                            <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="edit-links">Download PDF</a>
                             |  <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete Report</a>
-                            | <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>
+                            {{--| <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>--}}
                         </td>
                     </tr>
                     </tbody>

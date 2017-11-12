@@ -9,12 +9,12 @@
     <div class="col-md-12">
         <div>
             <div class='table-responsive'>
-                <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
+                <h3 class="report-title" id="report-heading">Manage Report {{$report->type}} </h3>
                 {{--<div class="report-header">--}}
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
                     <tr class="report-header-row"><td>Premise:</td></td><td class="report-header">{{$cases->location->name}}</td></tr>
-                    <tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>
+                    {{--<tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>--}}
                     <tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>
                 {{--</div>--}}
                  </table>

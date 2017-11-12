@@ -9,6 +9,13 @@
     <div class="col-md-12">
         <div>
             <div class='table-responsive'>
+                {{--| <a href= class="edit-links">Edit or Delete Case Notes</a>--}}
+                <div style="padding:15px 0px 10px 0px;">
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/reports/{{$report->id}}/edit'">
+                       Manage Report Case Notes
+                    </button>
+                </div>
+
                 <div id="inline">
                 <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
                 </div>
