@@ -143,7 +143,6 @@ class RosterController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return Redirect::to('/rosters');
         }
@@ -183,7 +182,6 @@ class RosterController extends Controller
             return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
             //rather than displaying an error page, redirect users to dashboard/login page (preferable)
             return Redirect::to('/rosters');
         }
@@ -459,7 +457,6 @@ class RosterController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
             return Redirect::to('/rosters');
         }
         catch (\ErrorException $error) {

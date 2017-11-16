@@ -65,7 +65,6 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            // echo $e;
             return view('admin_template');
         } catch (\ErrorException $error) {
             return Redirect::to('/admin');
@@ -105,10 +104,8 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return Redirect::to('/reports');
         } catch (\ErrorException $error) {
-            echo $error;
             return Redirect::to('/reports');
         }
 
@@ -172,11 +169,9 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            // dd($e);
             $msg = 'Http Error generating report';
             return view('error')->with('error', $msg);
         } catch (\ErrorException $error) {
-            //dd($error);
             $msg = 'Error exception generating report';
             return view('error')->with('error', $msg);
         }
@@ -239,11 +234,9 @@ class ReportController extends Controller
             return $result;
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            // dd($e);
             $msg = 'Http Error generating report';
             return view('error')->with('error', $msg);
         } catch (\ErrorException $error) {
-            //dd($error);
             $msg = 'Error exception generating report';
             return view('error')->with('error', $msg);
         }
@@ -282,8 +275,6 @@ class ReportController extends Controller
 
                     $cases = $this->getCaseNotes($id, $token);
 
-//                    dd($cases);
-
                     if ($cases != 'error') {
                         foreach ($cases->reportCaseNotes as $i => $item) {
                             //change to collection datatype from array for using groupBy fn
@@ -307,7 +298,7 @@ class ReportController extends Controller
                     }
                 } else if ($report->type == 'Location Checks') {
 
-                    $checks = $this->getLocationChecks($id, $token, $report);
+                    $checks = $this->getLocationChecks($id, $token);
 
                     //ie success == false
                     if ($checks != 'error') {
@@ -527,7 +518,7 @@ class ReportController extends Controller
 
                 if ($report->type == 'Case Notes') {
 
-                    $cases = $this->getCaseNotes($id, $token, $report);
+                    $cases = $this->getCaseNotes($id, $token);
 
                     if ($cases != 'error') {
                         foreach ($cases->reportCaseNotes as $i => $item) {
@@ -560,7 +551,7 @@ class ReportController extends Controller
                     }
                 }
                 else if ($report->type == 'Location Checks') {
-                    $checks = $this->getLocationChecks($id, $token, $report);
+                    $checks = $this->getLocationChecks($id, $token);
 
                     //ie success == false
                     if ($checks != 'error') {
@@ -635,7 +626,6 @@ class ReportController extends Controller
 
             $checks = json_decode((string)$response->getBody());
 
-
             if ($checks->success == false) {
                 return 'error';
 //
@@ -673,11 +663,11 @@ class ReportController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            echo $e;
-            return Redirect::to('/reports');
+            $msg = 'Error exception displaying report';
+            return view('error')->with('error', $msg);
         } catch (\ErrorException $error) {
-            $errors = collect($error);
-            return Redirect::to('/reports')->with('errors', $errors);
+            $msg = 'Error exception displaying report on webpage';
+            return view('error')->with('error', $msg);
         }
     }
 
@@ -736,7 +726,6 @@ class ReportController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            echo $e;
             return Redirect::to('/reports');
         } catch (\ErrorException $error) {
             $errors = collect($error);
@@ -836,7 +825,6 @@ class ReportController extends Controller
             }
         } //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return Redirect::to('/reports');
         } catch (\ErrorException $error) {
             $errors = collect($error);
@@ -889,7 +877,6 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return Redirect::to('/reports');
         }
     }

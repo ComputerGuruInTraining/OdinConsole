@@ -135,6 +135,15 @@ class CaseNoteController extends Controller
                         $data[$i]->time = $time;
 
 
+                        //convert to substring the filepath to be used to download the file, if there is an image
+                        $stringImg = $case->img;
+
+                        if($stringImg != ""){
+                            $substrImg = substrImg($stringImg);
+                            $data[$i]->img = $substrImg;
+//                            dd($data[$i]->img, $substrImg);
+                        }
+
 
 
 //                        $cases[$i]->location = $location->name;
@@ -224,7 +233,6 @@ class CaseNoteController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             $err = 'Error';
             $errors = collect($err);
             return Redirect::back()
@@ -281,7 +289,9 @@ class CaseNoteController extends Controller
                 {
                     $theAction = 'You have successfully edited the case note details';
 
-                    return view('confirm')->with(array('theAction' => $theAction));
+                    return view('confirm')->with(array(
+                        'theAction' => $theAction
+                       ));
                 }
                 else{
                     return redirect()->route("case-notes.edit");
@@ -327,9 +337,36 @@ class CaseNoteController extends Controller
             }
         }
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo $e;
             return Redirect::to('/reports');
         }
+
+    }
+
+    function download($img)
+    {
+        //http request
+        if (session()->has('token')) {
+            //retrieve token needed for authorized http requests
+//            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+//            $compId = session('compId');
+
+            $response = $client->get(Config::get('constants.STANDARD_URL') . '/download-photo/'.$img, [
+//                'headers' => array(
+//                    'Content-Type' => 'application/json'
+//                ),
+            ]);
+
+            $data = json_decode((string)$response->getBody());
+
+            //a file is returned from inthe response which forces the user's browser to download the photo
+
+            dd($data);
+
+        }
+
 
     }
 }

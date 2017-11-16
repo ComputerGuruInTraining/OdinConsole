@@ -30,7 +30,7 @@
 
             <div class='form-group form-buttons'>
                 {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
-                <a href ='/reports' class = "btn btn-info">Cancel</a>
+                <a href ='/case-notes' class = "btn btn-info">Cancel</a>
             </div>
 
         {{ Form::close() }}
