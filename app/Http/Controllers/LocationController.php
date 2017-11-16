@@ -317,7 +317,6 @@ class LocationController extends Controller
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
                 $errors = collect($e);
-                echo($error);
                 return Redirect::to('/location');
 //fixme: proper validation: ->with('errors', $errors)
             } else {

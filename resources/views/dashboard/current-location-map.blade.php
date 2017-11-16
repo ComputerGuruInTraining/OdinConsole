@@ -24,15 +24,20 @@
         var positions = [];
         var interval;
         var frequency = 300000;//5 mins
+        var zoom = 11;//default value
 
         google.maps.event.addDomListener(window, "load", function () {
 
+            //used for the initial rendering of the map including the center of the map
             currentPositions();
             mapCenter();
-            initMap();
-            setMarkers();
-            showMarkers();
+            initMap(zoom);
 
+            if (positions.length > 0){
+                setMarkers();//and info windows
+                showMarkers();
+            }
+            //update Markers is used for continuous data gathering and marker setting
             interval = setInterval(function(){
                    updateMarkers();
             }, frequency);
@@ -42,8 +47,9 @@
         function mapCenter(){
 
             //store in a JS variable the location details in the $center variable passed from controller
-            var locationCo = '{"address":"' + "<?php echo $center->address;?>" +
-                '", ' + '"latitude":"' + "<?php echo $center->latitude;?>" +
+            var locationCo = '{' +'"address":"' + "<?php echo $center->address;?>" +
+                '", ' +
+                '"latitude":"' + "<?php echo $center->latitude;?>" +
                 '", ' + '"longitude":"' + "<?php echo $center->longitude;?>" + '"}';
 
             var center = JSON.parse(locationCo);
@@ -54,15 +60,16 @@
             }else{
                 lat = center.latitude;
                 long = center.longitude;
+                zoom = 3;
             }
         }
 
-        function initMap() {
+        function initMap(zoom) {
 
             map = new google.maps.Map(document.getElementById("map-user"), {
 
                 center: new google.maps.LatLng(lat, long),
-                zoom: 15,
+                zoom: zoom,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
         }
@@ -77,27 +84,32 @@
             //update function will retrieve values from api then update values in positions array
             update();
 
-            setMarkers();
-            showMarkers();
+            if(positions.length > 0) {
+                setMarkers();
+                showMarkers();
+            }
         }
 
         //used for initial positions gathered upon page load
         function currentPositions() {
+            //if there are no items in the $current_locations ie no geoData for mobile users for the period
+            @if(count($currentLocations) > 0)
 
-            @foreach ($currentLocations as $location)
-                //store the value in a js string which will then be parsed to an object
-                //js variable is easier to use thoughout the fns, and allows storing of all the values in the location object
-            var location = '{"address":"' + "<?php echo $location->address;?>" +
-                '", ' + '"latitude":"' + "<?php echo $location->latitude;?>" +
-                '", ' + '"longitude":"' + "<?php echo $location->longitude;?>" +
-                '", ' + '"user_first_name":"' + "<?php echo $location->user_first_name;?>" +
-                '", ' + '"user_last_name":"' + "<?php echo $location->user_last_name;?>" +
-                '", ' + '"created_at":"' + "<?php echo $location->created_at;?>" + '"}';
+                @foreach ($currentLocations as $location)
+                    //store the value in a js string which will then be parsed to an object
+                    //js variable is easier to use thoughout the fns, and allows storing of all the values in the location object
+                var location = '{"address":"' + "<?php echo $location->address;?>" +
+                    '", ' + '"latitude":"' + "<?php echo $location->latitude;?>" +
+                    '", ' + '"longitude":"' + "<?php echo $location->longitude;?>" +
+                    '", ' + '"user_first_name":"' + "<?php echo $location->user_first_name;?>" +
+                    '", ' + '"user_last_name":"' + "<?php echo $location->user_last_name;?>" +
+                    '", ' + '"created_at":"' + "<?php echo $location->created_at;?>" + '"}';
 
-                var posJs = JSON.parse(location);
+                    var posJs = JSON.parse(location);
 
-                positions.push(posJs);
-            @endforeach
+                    positions.push(posJs);
+                @endforeach
+            @endif
         }
 
         //assigns values to markers and info windows using positions array

@@ -309,13 +309,28 @@ if (!function_exists('geoRange')) {
         return $result;
     }
 }
+
+if (!function_exists('substrImg')) {
+
+    function substrImg($stringImg)
+    {
+        $substrImg1 = substr($stringImg, 9);
+
+        //remove 5 characters from the end of the filepath (ie remove .jpeg)
+        $substrImg = substr($substrImg1, 0, -6);
+
+        return $substrImg;
+    }
+}
+
+//TODO: WIP
+//if (!function_exists('navTo')) {
+//    function navTo($id, $url){
+//        if($id == 0){
+//            return Redirect::to('/'.$url);
 //
-//if (!function_exists('download')) {
-//
-//    function download($img)
-//    {
-//        //http request
-//
-//
+//        }else{
+//            return Redirect::to('/'.$url.'-'.$id);
+//        }
 //    }
 //}

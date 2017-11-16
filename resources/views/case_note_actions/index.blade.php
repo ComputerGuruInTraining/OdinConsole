@@ -62,9 +62,11 @@
                                 <td>{{$item->title}}</td>
                                 <td class="desc-max-width">{{$item->description}}</td>
                                 {{--<td>{{$item->img}}</td>--}}
-                                <td class="max-width word-wrap">
-                                    <a href="/download/{{$item->img}}" target="_blank">Image</a>
+                                <td class="max-width">
+                                    <div>{{$item->img}}</div>
+                                    {{--<a href="/download/{$item->img}">{{$item->img}}</a>--}}
                                 </td>
+
                                 <td>{{$item->first_name}} {{$item->last_name}}</td>
                                 <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
                                     |

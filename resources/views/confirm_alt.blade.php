@@ -1,5 +1,4 @@
 {{--Usage: generic confirmation page using layouts.master_layout without app sidebar and header. Useful when not logged into app--}}
-
 @extends('layouts.master')
 
 @section('title')
@@ -19,7 +18,13 @@
                         <p> {{ $line1 }}</p>
                         <p> {{ $line2 }}</p>
                     </div>
+                    <a href="/" class="btn" style="margin: 20px;
+                                        color: white;
+                                background-color:#4d2970;
+                                font-size: large;">Back to Login</a>
+
                 </div>
+
             </div>
         </div>
     </div>

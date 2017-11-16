@@ -46,7 +46,25 @@ class DashboardController extends Controller{
 
             $location = json_decode((string)$response3->getBody());
 
-//            dd($currentLocations);
+            //the $location is used for the center of the map
+            //if there are no records returned for the company's mobile users current_location
+            //however, if the company is new and has not yet added a location,
+            //we need to use a default location
+
+            //default =  San Francisco, CA, USA
+            define('DEFAULT_LAT', 37.77493);
+            define('DEFAULT_LONG', -122.419416);
+
+            if(!isset($location->latitude)){
+                $location->latitude = DEFAULT_LAT;
+                $location->longitude = DEFAULT_LONG;
+                $location->address = 'San Francisco, CA, USA';
+            }
+
+
+
+
+//            dd($location->latitude, $location->longitude);
 
             $company = $this->getCompanyDetail();
 

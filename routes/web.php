@@ -40,7 +40,7 @@ Route::get('/error-page', function(){
 });
 
 //download case notes image, calls download function in functions.php
-//Route::get('/download/{img}', 'download');
+Route::get('/download/{img}', 'CaseNoteController@download');
 
 Route::resource('/user', 'UserController');
 
@@ -53,7 +53,6 @@ Route::get('/login', 'HomeController@getLogin');
 
 Route::get('/logout', 'HomeController@getLogout');
 
-//manual route to fix nav via header problem caused by the url format
 Route::get('/report-{id}', 'ReportController@show');
 
 Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
@@ -124,3 +123,11 @@ Route::get('/support', 'DashboardController@support');
 
 Route::get('/privacy', 'DashboardController@privacy');
 
+//global route to different pages TODO: WIP
+//Route::get('{url}-{id}', function($id, $url){
+//    if (session()->has('token')) {
+//        //defined in functions.php
+//        $navTo = navTo($id, $url);
+//        return $navTo;
+//    }
+//});
