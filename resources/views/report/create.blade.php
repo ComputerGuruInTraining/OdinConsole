@@ -30,7 +30,7 @@
         </div>
 
         <div class='form-group'>
-            {{ Form::label('dateTo', 'End Date of Report: &nbsp;&nbsp;') }}
+            {{ Form::label('dateTo', 'End Date of Report: &nbsp;') }}
             {{ Form::text('dateTo', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
         </div>
 

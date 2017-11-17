@@ -10,19 +10,14 @@ use GuzzleHttp;
 use GuzzleHttp\Exception;
 use GuzzleHttp\Client;
 use Redirect;
-use DateTimeZone;
 use Config;
+
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\View;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
-
-//public $j = 0;
-//public $i = 0;
-//public $locations = [];
-//public $employees = [];
-    //global class variables
-    //protected $accessToken;
 
     /**
      * Display a listing of the resource.
@@ -157,7 +152,7 @@ class RosterController extends Controller
 
     public function store(Request $request)
     {
-        //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
+        //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations?? true still??
         try {
             $this->validate($request, [
                 'title' => 'required|max:255',
@@ -173,31 +168,45 @@ class RosterController extends Controller
             //get the data from the form and perform necessary calculations prior to inserting into db
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
+                try {
+                    $dateStart = $this->formData($request);
 
-                $dateStart = $this->formData($request);
+                    if($dateStart == 'error'){
+
+                        $e = 'Error storing shift details';
+                        $errors = collect($e);
+                        return view('/home/rosters/create')->with('errors', $errors);
+                    }
+                    else{
+                        return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                    }
+
+                } catch(\Exception $exception) {
+                    return Redirect::to('rosters/create')
+                        ->withInput()
+                        ->withErrors('Server error storing shift details. Please ensure input valid.');
+                }
             } else {
                 return Redirect::to('/login');
             }
 
-            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Server error storing shift');
+        } catch (\ErrorException $error) {
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Error storing shift details');
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Error storing shift. Please check input is valid.');
         }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-            return Redirect::to('/rosters');
-        }
-        catch (\ErrorException $error) {
-            $msg = 'Error exception generating report';
-            return view('error')->with('error', $msg);
-        }catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
-        }
-
     }
 
+    //IMPORTANT: Don't catch in the "helper" function, only catch in the calling function ie store()
     function formData($request){
-        try{
             //data for validation
             $locationArray = $request->input('locations');
             $employeeArray = $request->input('employees');
@@ -239,13 +248,11 @@ class RosterController extends Controller
 
             $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-            return $dateStart;
-
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-        return Redirect::to('/rosters');
-        }
+            if($assigned->success == true) {
+                return $dateStart;
+            }else{
+                return 'error';
+            }
     }
 
     /**
@@ -362,7 +369,8 @@ class RosterController extends Controller
                 $compId = session('compId');
 
                 $this->validate($request, [
-                    //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
+                    //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db.?? true still??
+                    // Should be no change if nothing selected for that field. same for locations.
                     'title' => 'required|max:255',
                     'desc' => 'required|max:255',
                     'employees' => 'required',
@@ -387,10 +395,6 @@ class RosterController extends Controller
                 //process start date and time before adding to db
                 $strStart = jobDateTime($dateStart, $timeStart);
                 $strEnd = jobDateTime($dateEnd, $timeEnd);
-
-                dd($checks,$strStart,
-                             $strEnd, $title, $desc,
-                            $compId, $employees, $locations);
 
                 //TODO: create roster and auto-populate id
                 $roster_id = 1;
