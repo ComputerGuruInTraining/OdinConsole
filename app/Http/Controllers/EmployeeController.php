@@ -116,7 +116,6 @@ class EmployeeController extends Controller
 
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
-
                 $response = $client->post(Config::get('constants.API_URL').'employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,

@@ -168,8 +168,12 @@ class RosterController extends Controller
             //get the data from the form and perform necessary calculations prior to inserting into db
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
+//                try{
+                    $dateStart = $this->formData($request);
 
-                $dateStart = $this->formData($request);
+//                catch(Exception $e) {
+//                        echo 'Message: ' .$e->getMessage();
+//                }
 
                 if($dateStart == 'error'){
 
@@ -185,26 +189,22 @@ class RosterController extends Controller
             }
 
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            $error = ;
-//            $errors = collect($error);
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Server error storing shift');
-//            return view('/home/rosters/create')->with('errors', $errors);
         } catch (\ErrorException $error) {
-            $e = 'Error storing shift details';
-            $errors = collect($e);
-            return view('/home/rosters/create')->with('errors', $errors);
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Error storing shift details');
         } catch (\InvalidArgumentException $err) {
-            $error = 'Error storing shift. Please check input is valid.';
-            $errors = collect($error);
-            return view('/home/rosters/create')->with('errors', $errors);
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Error storing shift. Please check input is valid.');
         }
-
     }
 
+    //IMPORTANT: Don't catch in the "helper" function, only catch in the calling function ie store()
     function formData($request){
-//        try{
             //data for validation
             $locationArray = $request->input('locations');
             $employeeArray = $request->input('employees');
@@ -249,27 +249,10 @@ class RosterController extends Controller
             if($assigned->success == true) {
                 return $dateStart;
             }else{
+//                throw new Exception("Operation has failed.");
+
                 return 'error';
-
             }
-
-//        }
-//        catch (GuzzleHttp\Exception\BadResponseException $e) {
-////            $error = ;
-////            $errors = collect($error);
-//            return Redirect::to('rosters/create')
-//                ->withInput()
-//                ->withErrors('Server error storing shift');
-////            return view('/home/rosters/create')->with('errors', $errors);
-//        } catch (\ErrorException $error) {
-//            $e = 'Error storing shift details';
-//            $errors = collect($e);
-//            return view('/home/rosters/create')->with('errors', $errors);
-//        } catch (\InvalidArgumentException $err) {
-//            $error = 'Error storing shift. Please check input is valid.';
-//            $errors = collect($error);
-//            return view('/home/rosters/create')->with('errors', $errors);
-//        }
     }
 
     /**
@@ -411,10 +394,6 @@ class RosterController extends Controller
                 //process start date and time before adding to db
                 $strStart = jobDateTime($dateStart, $timeStart);
                 $strEnd = jobDateTime($dateEnd, $timeEnd);
-
-                dd($checks,$strStart,
-                             $strEnd, $title, $desc,
-                            $compId, $employees, $locations);
 
                 //TODO: create roster and auto-populate id
                 $roster_id = 1;
