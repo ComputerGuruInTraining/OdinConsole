@@ -152,7 +152,7 @@ class RosterController extends Controller
 
     public function store(Request $request)
     {
-        //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations
+        //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations?? true still??
         try {
             $this->validate($request, [
                 'title' => 'required|max:255',
@@ -168,21 +168,23 @@ class RosterController extends Controller
             //get the data from the form and perform necessary calculations prior to inserting into db
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
-//                try{
+                try {
                     $dateStart = $this->formData($request);
 
-//                catch(Exception $e) {
-//                        echo 'Message: ' .$e->getMessage();
-//                }
+                    if($dateStart == 'error'){
 
-                if($dateStart == 'error'){
+                        $e = 'Error storing shift details';
+                        $errors = collect($e);
+                        return view('/home/rosters/create')->with('errors', $errors);
+                    }
+                    else{
+                        return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                    }
 
-                    $e = 'Error storing shift details';
-                    $errors = collect($e);
-                    return view('/home/rosters/create')->with('errors', $errors);
-                }
-                else{
-                    return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                } catch(\Exception $exception) {
+                    return Redirect::to('rosters/create')
+                        ->withInput()
+                        ->withErrors('Server error storing shift details. Please ensure input valid.');
                 }
             } else {
                 return Redirect::to('/login');
@@ -249,8 +251,6 @@ class RosterController extends Controller
             if($assigned->success == true) {
                 return $dateStart;
             }else{
-//                throw new Exception("Operation has failed.");
-
                 return 'error';
             }
     }
@@ -369,7 +369,8 @@ class RosterController extends Controller
                 $compId = session('compId');
 
                 $this->validate($request, [
-                    //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db. Should be no change if nothing selected for that field. same for locations.
+                    //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db.?? true still??
+                    // Should be no change if nothing selected for that field. same for locations.
                     'title' => 'required|max:255',
                     'desc' => 'required|max:255',
                     'employees' => 'required',
