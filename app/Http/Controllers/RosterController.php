@@ -188,6 +188,10 @@ class RosterController extends Controller
         catch (\ErrorException $error) {
             $msg = 'Error exception generating report';
             return view('error')->with('error', $msg);
+        }catch (\InvalidArgumentException $err) {
+            $error = 'Error storing employee. Please check input is valid.';
+            $errors = collect($error);
+            return view('/employee/add-employee')->with('errors', $errors);
         }
 
     }
@@ -419,6 +423,10 @@ class RosterController extends Controller
             return Redirect::to('/rosters/'.$id.'/edit');
         }catch(\ErrorException $error){
             return Redirect::to('/rosters/'.$id.'/edit');
+        }catch (\InvalidArgumentException $err) {
+            $error = 'Error storing employee. Please check input is valid.';
+            $errors = collect($error);
+            return view('/employee/add-employee')->with('errors', $errors);
         }
     }
 

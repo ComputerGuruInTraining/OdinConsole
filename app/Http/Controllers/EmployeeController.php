@@ -101,7 +101,7 @@ class EmployeeController extends Controller
                 $this->validate($request, [
                     'dateOfBirth' => 'required',
                     'sex' => 'required|max:255',
-                    'mobile' => 'required',
+                    'mobile' => 'required|max:25',
                     'email' => 'required|max:255',
                     'first_name' => 'required|max:255',
                     'last_name' => 'required|max:255'
@@ -161,6 +161,10 @@ class EmployeeController extends Controller
             $e = 'Error storing employee details';
             $errors = collect($e);
             return view('employee/add-employee')->with('errors', $errors);
+        } catch (\InvalidArgumentException $err) {
+            $error = 'Error storing employee. Please check input is valid.';
+            $errors = collect($error);
+            return view('/employee/add-employee')->with('errors', $errors);
         }
     }
 
@@ -268,7 +272,7 @@ class EmployeeController extends Controller
                 $this->validate($request, [
                     'dateOfBirth' => 'required',
                     'sex' => 'required',
-                    'mobile' => 'required|max:10',
+                    'mobile' => 'required|max:25',
                     'email' => 'required|max:255',
                     'first_name' => 'required|max:255',
                     'last_name' => 'required|max:255'
@@ -325,6 +329,10 @@ class EmployeeController extends Controller
             dd($error);
             $e = 'Error updating employee';
             return view('error')->with('error', $e);
+        } catch (\InvalidArgumentException $err) {
+            $error = 'Error storing employee. Please check input is valid.';
+            $errors = collect($error);
+            return view('/employee/add-employee')->with('errors', $errors);
         }
     }
 

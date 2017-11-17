@@ -43,7 +43,7 @@
 </div>
 <div class='form-group'>
   {{ Form::label('mobile','Mobile')}}
-  {{ Form::number('mobile', null, ['placeholder' => 'Mobile', 'class' => 'form-control']) }}
+  {{ Form::text('mobile', null, ['placeholder' => 'Mobile', 'class' => 'form-control']) }}
 
 </div>
 
