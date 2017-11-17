@@ -38,10 +38,10 @@
         </div>
 
         <div class='form-group'>
-            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
+            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;') }}
             {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
             &nbsp;&nbsp;&nbsp;
-            {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
+            {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
             <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()">
             @include('clock-picker')
         </div>

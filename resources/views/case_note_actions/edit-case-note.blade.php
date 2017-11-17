@@ -6,7 +6,7 @@
 @stop
 
 @section('page-content')
-    <div class='col-md-4 form-pages'>
+    <div class='col-md-8 form-pages'>
         @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <ul>

@@ -6,7 +6,7 @@
 @stop
 
 @section('page-content')
-    <div class=' col-md-8 form-pages'>
+    <div class='col-md-8 form-pages'>
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
@@ -43,10 +43,10 @@
             </div>
 
             <div class='form-group'>
-                {{ Form::label('endDate', 'End Date&nbsp;&nbsp;&nbsp;') }}
+                {{ Form::label('endDate', 'End Date&nbsp;&nbsp;') }}
                 {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
-                {{ Form::label('endTime', 'End Time&nbsp;&nbsp;&nbsp;') }}
+                {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
                 <input class="input-b" value="" name="endTime" data-default={{$endTime}}>
                 @include('clock-picker')
             </div>
