@@ -60,14 +60,14 @@
       {{$employee->email}}
     </td>
   </tr>
-  <tr>
-    <th>
-      Address:
-    </th>
-    <td>
-      {{$employee->address}}
-    </td>
-  </tr>
+  {{--<tr>--}}
+    {{--<th>--}}
+      {{--Address:--}}
+    {{--</th>--}}
+    {{--<td>--}}
+      {{--{{$employee->address}}--}}
+    {{--</td>--}}
+  {{--</tr>--}}
 
 </table>
 
