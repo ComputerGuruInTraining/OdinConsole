@@ -218,10 +218,6 @@ class RosterController extends Controller
             $strStart = jobDateTime($dateStart, $timeStart);
             $strEnd = jobDateTime($dateEnd, $timeEnd);
 
-            dd($checks,$strStart,
-                $strEnd, $title, $desc,
-                $compId, $employeeArray, $locationArray);
-
             $client = new GuzzleHttp\Client;
 
             $response = $client->post(Config::get('constants.API_URL').'assignedshifts', array(
