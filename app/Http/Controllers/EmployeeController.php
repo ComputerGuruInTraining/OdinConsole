@@ -233,17 +233,12 @@ class EmployeeController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employee details.';
-//            $errors = collect($err);
             return view('error')->with('error', $err);
         } catch (\ErrorException $error) {
-//            $es = $error;
             $e = 'Error displaying employee details for editing.';
-//            $errors = collect($e);
             return view('error')->with('error', $e);
         } catch (\Exception $error) {
-//            $es = $error;
             $e = 'Error displaying employee details for update.';
-//            $errors = collect($e);
             return view('error')->with('error', $e);
         }
 //        catch ( $error) {

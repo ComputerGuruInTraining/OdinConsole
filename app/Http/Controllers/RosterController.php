@@ -10,19 +10,14 @@ use GuzzleHttp;
 use GuzzleHttp\Exception;
 use GuzzleHttp\Client;
 use Redirect;
-use DateTimeZone;
 use Config;
+
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\View;
 
 //FIXME: dates month and day mixed up with formatting
 class RosterController extends Controller
 {
-
-//public $j = 0;
-//public $i = 0;
-//public $locations = [];
-//public $employees = [];
-    //global class variables
-    //protected $accessToken;
 
     /**
      * Display a listing of the resource.
@@ -175,29 +170,41 @@ class RosterController extends Controller
                 //retrieve token needed for authorized http requests
 
                 $dateStart = $this->formData($request);
+
+                if($dateStart == 'error'){
+
+                    $e = 'Error storing shift details';
+                    $errors = collect($e);
+                    return view('/home/rosters/create')->with('errors', $errors);
+                }
+                else{
+                    return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                }
             } else {
                 return Redirect::to('/login');
             }
 
-            return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-            return Redirect::to('/rosters');
-        }
-        catch (\ErrorException $error) {
-            $msg = 'Error exception generating report';
-            return view('error')->with('error', $msg);
-        }catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            $error = ;
+//            $errors = collect($error);
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Server error storing shift');
+//            return view('/home/rosters/create')->with('errors', $errors);
+        } catch (\ErrorException $error) {
+            $e = 'Error storing shift details';
+            $errors = collect($e);
+            return view('/home/rosters/create')->with('errors', $errors);
+        } catch (\InvalidArgumentException $err) {
+            $error = 'Error storing shift. Please check input is valid.';
             $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
+            return view('/home/rosters/create')->with('errors', $errors);
         }
 
     }
 
     function formData($request){
-        try{
+//        try{
             //data for validation
             $locationArray = $request->input('locations');
             $employeeArray = $request->input('employees');
@@ -239,13 +246,30 @@ class RosterController extends Controller
 
             $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-            return $dateStart;
+            if($assigned->success == true) {
+                return $dateStart;
+            }else{
+                return 'error';
 
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-        return Redirect::to('/rosters');
-        }
+            }
+
+//        }
+//        catch (GuzzleHttp\Exception\BadResponseException $e) {
+////            $error = ;
+////            $errors = collect($error);
+//            return Redirect::to('rosters/create')
+//                ->withInput()
+//                ->withErrors('Server error storing shift');
+////            return view('/home/rosters/create')->with('errors', $errors);
+//        } catch (\ErrorException $error) {
+//            $e = 'Error storing shift details';
+//            $errors = collect($e);
+//            return view('/home/rosters/create')->with('errors', $errors);
+//        } catch (\InvalidArgumentException $err) {
+//            $error = 'Error storing shift. Please check input is valid.';
+//            $errors = collect($error);
+//            return view('/home/rosters/create')->with('errors', $errors);
+//        }
     }
 
     /**
