@@ -90,11 +90,26 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page
-            return view('admin_template');
-        }catch (\ErrorException $error) {
-            return Redirect::to('/admin');
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying shifts';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying shift details';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying shift details';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading shifts';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -136,10 +151,26 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //rather than displaying an error page, redirect users to dashboard/login page (preferable)
-            return Redirect::to('/rosters');
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add shift page';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add shift form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying add shift';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add shift page';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -195,18 +226,26 @@ class RosterController extends Controller
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Operation failed');
+
         } catch (\ErrorException $error) {
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Error storing shift details');
+
         } catch (\InvalidArgumentException $err) {
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Error storing shift. Please check input is valid.');
+
         }catch(\Exception $exception) {
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Operation failed. Please ensure input valid.');
+
+        }catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -350,9 +389,25 @@ class RosterController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-                return Redirect::to('/rosters');
-        }catch (\ErrorException $error) {
-            return Redirect::to('/admin');
+            $err = 'Error displaying edit shift page';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit shift form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit shift';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit shift page';
+            return view('error')->with('error', $error);
         }
 
     }
@@ -428,14 +483,30 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }catch(GuzzleHttp\Exception\BadResponseException $e){
-            return Redirect::to('/rosters/'.$id.'/edit');
-        }catch(\ErrorException $error){
-            return Redirect::to('/rosters/'.$id.'/edit');
-        }catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/rosters/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Operation failed');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('/rosters/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating shift details');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/rosters/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating shift. Please check input is valid.');
+
+        }catch(\Exception $exception) {
+            return Redirect::to('/rosters/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid.');
+
+        }catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -468,15 +539,26 @@ class RosterController extends Controller
             else{
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/rosters');
-        }
-        catch (\ErrorException $error) {
-            $msg = 'Error exception generating report';
-            return view('error')->with('error', $msg);
-        }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error deleting shift. Error code: BadResponseException';
+            return view('error')->with('error', $err);
 
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting shift. Error code: ErrorException';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error deleting shift. Error code: Exception';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error deleting shift. Error code: InvalidArgumentException';
+            return view('error')->with('error', $error);
+        }
     }
 
     //TODO: remove function groupByShift and just have groupBy, previously a longer function was used

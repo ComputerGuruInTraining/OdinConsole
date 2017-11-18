@@ -24,12 +24,24 @@ if (!function_exists('confirmDlt')) {
 
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error deleting item';
+            return view('error')->with('error', $err);
+
         } catch (\ErrorException $error) {
-//            echo $error;
-            Redirect::to('/rosters');
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
-            Redirect::to('/rosters');
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error deleting item';
+            return view('error')->with('error', $error);
         }
     }
 }
@@ -57,13 +69,26 @@ if (!function_exists('confirmDel')) {
 
             return view('confirm-del')->with(array('id' => $id, 'url' => $url, 'msg' => $msg));
 
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error deleting item';
+            return view('error')->with('error', $err);
+
         } catch (\ErrorException $error) {
-//            echo $error;
-            Redirect::to('/rosters');
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            echo $e;
-            Redirect::to('/rosters');
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error deleting item';
+            return view('error')->with('error', $error);
         }
+
     }
 }
 

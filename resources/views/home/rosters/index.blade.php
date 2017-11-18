@@ -39,7 +39,8 @@
                                 <td>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
                                 <td>".$formattedShift[0]->unique_employees."</td>
                                 <td>
-                                    <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a> | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #990000;'>Delete</a>
+                                    <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a>
+                                    | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #990000;'>Delete</a>
                                 </td>
                          </tr>";
 
