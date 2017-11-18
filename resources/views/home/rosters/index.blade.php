@@ -31,8 +31,8 @@
 
                 @php
                     foreach($assigned as $index => $formattedShift){
-                        //display the first row with values in all the columns
-                       echo "<tr><td class='group-data'>".$formattedShift[0]->shift_title."</td></tr>
+                        //display the first record with values in all the columns
+                       echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title."</td></tr>
                              <tbody class='group-list'>
                                 <tr><td>".$formattedShift[0]->unique_date."</td>
                                 <td>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
