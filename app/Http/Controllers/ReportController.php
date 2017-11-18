@@ -182,8 +182,10 @@ class ReportController extends Controller
                             'url' => 'reports'
                         ));
                 } else if ($result->success == false) {
-                    //TODO: untested result-> ... == false
                     $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
+                    return view('error')->with('error', $msg);
+                } else{
+                    $msg = 'A report was not generated for the location as there is no shift data for the period.';
                     return view('error')->with('error', $msg);
                 }
 
@@ -249,7 +251,7 @@ class ReportController extends Controller
      */
     public function postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId)
     {
-        try {
+
             $client = new GuzzleHttp\Client;
 
             $response = $client->post(Config::get('constants.API_URL') . 'reports/casesandchecks', array(
@@ -268,14 +270,6 @@ class ReportController extends Controller
             $result = GuzzleHttp\json_decode((string)$response->getBody());
 
             return $result;
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $msg = 'Http Error generating report';
-            return view('error')->with('error', $msg);
-        } catch (\ErrorException $error) {
-            $msg = 'Error exception generating report';
-            return view('error')->with('error', $msg);
-        }
     }
 
     /**

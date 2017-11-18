@@ -38,7 +38,7 @@
                 {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
                 {{ Form::label('startTime', 'Start Time') }}
-                <input class="input-a" value="" name="startTime" data-default={{$startTime}}>
+                <input class="input-a" value={{$startTime}} name="startTime" data-default={{$startTime}} placeholder={{$startTime}}>
                 @include('clock-picker')
             </div>
 
@@ -47,7 +47,7 @@
                 {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
                 {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
-                <input class="input-b" value="" name="endTime" data-default={{$endTime}}>
+                <input class="input-b" value={{$endTime}} name="endTime" data-default={{$endTime}} placeholder={{$endTime}}>
                 @include('clock-picker')
             </div>
 
