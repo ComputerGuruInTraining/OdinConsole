@@ -149,6 +149,7 @@ class RosterController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+    //error catching has been tested
 
     public function store(Request $request)
     {
@@ -184,7 +185,7 @@ class RosterController extends Controller
                 } catch(\Exception $exception) {
                     return Redirect::to('rosters/create')
                         ->withInput()
-                        ->withErrors('Server error storing shift details. Please ensure input valid.');
+                        ->withErrors('Operation failed. Please ensure input valid.');
                 }
             } else {
                 return Redirect::to('/login');
@@ -193,7 +194,7 @@ class RosterController extends Controller
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::to('rosters/create')
                 ->withInput()
-                ->withErrors('Server error storing shift');
+                ->withErrors('Operation failed');
         } catch (\ErrorException $error) {
             return Redirect::to('rosters/create')
                 ->withInput()
@@ -202,6 +203,10 @@ class RosterController extends Controller
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Error storing shift. Please check input is valid.');
+        }catch(\Exception $exception) {
+            return Redirect::to('rosters/create')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid.');
         }
     }
 

@@ -13,6 +13,10 @@ use GuzzleHttp;
 use DateTime;
 use Config;
 
+//todo: necessary??
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\View;
+
 class EmployeeController extends Controller
 {
     /**
@@ -20,6 +24,8 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function index()
     {
         try {
@@ -87,6 +93,8 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //error catching has been tested
     public function store(Request $request)
     {
         try {
@@ -164,7 +172,16 @@ class EmployeeController extends Controller
             $error = 'Error storing employee. Please check input is valid.';
             $errors = collect($error);
             return view('/employee/add-employee')->with('errors', $errors);
+        } catch(\Exception $exception) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid.');
+        } catch(\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
+
     }
 
     /**

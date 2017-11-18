@@ -1,17 +1,15 @@
 @extends('layouts.master_layout_recent_date')
 @extends('sidebar')
-{{--@extends('navbar')--}}
-{{--@extends('layouts.list')--}}
 
 @section('my side-menu')
-    Demo
+    Console
 @stop
 
 @section('title-item')
-    Demo
+    Console
 @stop
 
 @section('title-list')
-    Demo
+    Console
 @stop
 

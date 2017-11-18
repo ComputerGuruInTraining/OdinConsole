@@ -21,6 +21,8 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    //error catching to be tested
     public function index()
     {
         try {
@@ -40,20 +42,24 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-                foreach ($reports as $i => $item) {
-                    //add the extracted date to each of the objects and format date
-                    $s = $item->date_start;
+//                dd($reports);
+                if (count($reports) > 0) {
+                    foreach ($reports as $i => $item) {
+                        //add the extracted date to each of the objects and format date
+                        $s = $item->date_start;
 
-                    $sdt = new DateTime($s);
-                    $sdate = $sdt->format('m/d/Y');
+                        $sdt = new DateTime($s);
+                        $sdate = $sdt->format('m/d/Y');
 
-                    $e = $item->date_end;
+                        $e = $item->date_end;
 
-                    $edt = new DateTime($e);
-                    $edate = $edt->format('m/d/Y');
+                        $edt = new DateTime($e);
+                        $edate = $edt->format('m/d/Y');
 
-                    $reports[$i]->form_start = $sdate;
-                    $reports[$i]->form_end = $edate;
+                        $reports[$i]->form_start = $sdate;
+                        $reports[$i]->form_end = $edate;
+                    }
+
                 }
 
                 return view('report/reports')->with(array(
@@ -65,9 +71,25 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return view('admin_template');
+            $err = 'Error displaying reports';
+            return view('error')->with('error', $err);
+
         } catch (\ErrorException $error) {
-            return Redirect::to('/admin');
+            $e = 'Error displaying generated reports';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying report details';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading reports';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -161,7 +183,7 @@ class ReportController extends Controller
                         ));
                 } else if ($result->success == false) {
                     //TODO: untested result-> ... == false
-                    $msg = 'Failed to generate report';
+                    $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
                     return view('error')->with('error', $msg);
                 }
 
@@ -169,15 +191,25 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $msg = 'Http Error generating report';
-            return view('error')->with('error', $msg);
+            return Redirect::to('reports/create')
+                ->withInput()
+                ->withErrors('Operation failed');
         } catch (\ErrorException $error) {
-            $msg = 'Error exception generating report';
-            return view('error')->with('error', $msg);
-        }catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
+            return Redirect::to('reports/create')
+                ->withInput()
+                ->withErrors('Error generating report');
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('reports/create')
+                ->withInput()
+                ->withErrors('Error generating report. Please check input is valid.');
+        }catch(\Exception $exception) {
+            return Redirect::to('reports/create')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid.');
+        }catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -386,14 +418,12 @@ class ReportController extends Controller
 
                     $checks->shiftChecks[$i]->withinRange = $result;
 
-                    if ($item->withinRange == 'yes'){
+                    if ($item->withinRange == 'yes') {
 
-                        $checks->shiftChecks[$i]->img =  'if_checkmark-g_86134';
-                    }
-                    elseif($item->withinRange == 'ok') {
+                        $checks->shiftChecks[$i]->img = 'if_checkmark-g_86134';
+                    } elseif ($item->withinRange == 'ok') {
                         $checks->shiftChecks[$i]->img = 'if_checkmark-o_86136';
-                    }
-                    elseif($item->withinRange == 'no'){
+                    } elseif ($item->withinRange == 'no') {
                         $checks->shiftChecks[$i]->img = 'if_cross_5233';
                     }
 
@@ -447,7 +477,6 @@ class ReportController extends Controller
                 $checks->shiftChecks[$i]->dateTzCheckOut = $no_data;
                 $checks->shiftChecks[$i]->timeTzCheckOut = $no_data;
             }
-
 
 
         }
@@ -553,8 +582,7 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
-                }
-                else if ($report->type == 'Location Checks') {
+                } else if ($report->type == 'Location Checks') {
                     $checks = $this->getLocationChecks($id, $token);
 
                     //ie success == false
@@ -586,7 +614,7 @@ class ReportController extends Controller
                             // download pdf w current date in the name
                             $dateTime = Carbon::now();
                             $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Location Checks Report ' . $date .'.pdf');
+                            return $pdf->download('Location Checks Report ' . $date . '.pdf');
                         }
 
                         return view('report/location_checks/pdf');
