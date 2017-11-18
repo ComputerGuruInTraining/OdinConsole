@@ -332,12 +332,10 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             $err = 'Error updating employee details';
             return view('error')->with('error', $err);
         }
         catch (\ErrorException $error) {
-            dd($error);
             $e = 'Error updating employee';
             return view('error')->with('error', $e);
         } catch (\InvalidArgumentException $err) {
