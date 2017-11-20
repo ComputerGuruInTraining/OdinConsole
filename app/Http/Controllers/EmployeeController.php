@@ -56,19 +56,32 @@ class EmployeeController extends Controller
                     $employees[$i]->dateBirth = $date;
                 }
 
-
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
 
             }
             else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/admin');
-        }
-        catch (\ErrorException $error) {
-            return Redirect::to('/admin');
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying employees';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying employee page';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display employees';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading employees';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -79,11 +92,32 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        if (session()->has('token')) {
-            return view('employee/add-employee');
-        }
-        else {
-            return Redirect::to('/login');
+        try {
+            if (session()->has('token')) {
+                return view('employee/add-employee');
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add employee page';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add employee form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying form';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add employee page';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -138,7 +172,7 @@ class EmployeeController extends Controller
 
                 $employee = json_decode((string)$response->getBody());
 
-                //direct user based on whether record updated successfully or not
+                //direct user based on whether record stored successfully or not
                 if($employee->success == true)
                 {
                     //display confirmation page
@@ -161,27 +195,25 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $error = 'Error storing employee';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
-        } catch (\ErrorException $error) {
-            $e = 'Error storing employee details';
-            $errors = collect($e);
-            return view('employee/add-employee')->with('errors', $errors);
-        } catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
-        } catch(\Exception $exception) {
             return Redirect::to('employees/create')
                 ->withInput()
-                ->withErrors('Operation failed. Please ensure input valid.');
-        } catch(\TokenMismatchException $mismatch) {
+                ->withErrors('Operation failed. Please ensure input valid and email unique.');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Error storing employee');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Error storing employee details. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
                 ->withInput()
                 ->withErrors('Session expired. Please login.');
         }
-
     }
 
     /**
@@ -248,21 +280,26 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error displaying employee details.';
+            $err = 'Error displaying employee details';
             return view('error')->with('error', $err);
+
         } catch (\ErrorException $error) {
-            $e = 'Error displaying employee details for editing.';
+            $e = 'Error displaying employee details for editing';
             return view('error')->with('error', $e);
-        } catch (\Exception $error) {
-            $e = 'Error displaying employee details for update.';
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying employee details for update';
             return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit employee page';
+            return view('error')->with('error', $error);
         }
-//        catch ( $error) {
-//            $es = $error;
-//            $e = 'Error displaying employee details for editing.';
-//            $errors = collect($e);
-//            return view('employees');
-//        }
     }
 
     /**
@@ -332,16 +369,25 @@ class EmployeeController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error updating employee details';
-            return view('error')->with('error', $err);
-        }
-        catch (\ErrorException $error) {
-            $e = 'Error updating employee';
-            return view('error')->with('error', $e);
+            return Redirect::to('/employees/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Operation failed. Please check input and ensure email unique.');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('/employees/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating employee details');
+
         } catch (\InvalidArgumentException $err) {
-            $error = 'Error storing employee. Please check input is valid.';
-            $errors = collect($error);
-            return view('/employee/add-employee')->with('errors', $errors);
+            return Redirect::to('/employees/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating employee. Please check input is valid.');
+
+        }
+        catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -385,12 +431,25 @@ class EmployeeController extends Controller
                //not authenticated
                return Redirect::to('/login');
            }
-       }
-       catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/employees');
-        }
-       catch (\ErrorException $error) {
-           return Redirect::to('/employees');
+       }catch (GuzzleHttp\Exception\BadResponseException $e) {
+           $err = 'Operation Failed';
+           return view('error')->with('error', $err);
+
+       } catch (\ErrorException $error) {
+           $e = 'Error deleting employee';
+           return view('error')->with('error', $e);
+
+       } catch (\Exception $err) {
+           $e = 'Error removing employee from database';
+           return view('error')->with('error', $e);
+
+       } catch (\TokenMismatchException $mismatch) {
+           return Redirect::to('login')
+               ->withInput()
+               ->withErrors('Session expired. Please login.');
+       } catch (\InvalidArgumentException $invalid) {
+           $error = 'Error removing employee from system';
+           return view('error')->with('error', $error);
        }
     }
 

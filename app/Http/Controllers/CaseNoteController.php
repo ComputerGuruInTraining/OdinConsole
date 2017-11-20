@@ -35,13 +35,10 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
-//                dd($data);
-//                dd(gettype($data->cases), gettype($data->locations));
-
                 $dataFormat = $this->formatCaseNotes($data);
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
-//
+
                 $groupedData = $cases->groupBy('location');
 ////
 //                $casesGroup = $groupedData->groupBy('case_id');
@@ -82,9 +79,25 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/error-page');
+            $err = 'Error displaying case notes';
+            return view('error')->with('error', $err);
+
         } catch (\ErrorException $error) {
-            return Redirect::to('/error');
+            $e = 'Error displaying case notes page';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display case notes';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading case notes';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -231,18 +244,25 @@ class CaseNoteController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error';
-            $errors = collect($err);
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::back()
-                ->withErrors('Error getting case note');
-        }
-        catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Error';
-            $errors = collect($e);
-            return view('location/create-locations')->with('errors', $errors);
+                ->withErrors('Error displaying edit case note page');
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit case note form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit case note';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit case note page';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -263,6 +283,7 @@ class CaseNoteController extends Controller
                 //validate input meet's db constraints
                 $this->validate($request, [
                     'title' => 'required|max:255',
+                    'desc' => 'max:255'
                 ]);
 
                 //get the data from the form
@@ -300,9 +321,34 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $error) {
-            $e = 'Please fill in all required fields or check input';
-            $errors = collect($e);
-            return view('report/case_notes/edit')->with('errors', $errors);
+            return Redirect::to('/case-notes/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating case note. Please fill in all required fields or check input.');
+
+        } catch (\ErrorException $error) {
+            //catches for such things as input doesn't feed well into code
+            // and update fails due to db integrity constraints
+                return Redirect::to('/case-notes/'.$id.'/edit')
+                    ->withInput()
+                    ->withErrors('Unable to update the case note. Probably due to invalid input.');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/case-notes/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating case note. Please check input is valid.');
+
+        }
+//catch(\Exception $exception) {
+//            //one instance is when no address input
+//            return Redirect::to('/case-notes/'.$id.'/edit')
+//                ->withInput()
+//                ->withErrors('Operation failed. Please ensure input valid.');
+//
+//        }
+        catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -335,11 +381,26 @@ class CaseNoteController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
-        }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Operation Failed';
+            return view('error')->with('error', $err);
 
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting case note';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing case note from database';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing case note from system';
+            return view('error')->with('error', $error);
+        }
     }
 
     function download($img)
@@ -364,9 +425,7 @@ class CaseNoteController extends Controller
             //a file is returned from inthe response which forces the user's browser to download the photo
 
             dd($data);
-
         }
-
 
     }
 }
