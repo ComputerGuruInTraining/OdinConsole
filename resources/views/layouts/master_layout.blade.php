@@ -12,7 +12,7 @@
     <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 
     {{--Bootstrap stylesheet--}}
-    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}"
+    <link rel="stylesheet" href="{{ asset("/bower_components/AdminLTE/bootstrap/css/bootstrap.min.css") }}"
           type="text/css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css">

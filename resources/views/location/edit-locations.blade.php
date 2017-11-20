@@ -34,7 +34,7 @@
 
         <div class='form-group padding-top'>
             {{ Form::label('notes', 'Additional Address Details') }}
-            {{ Form::text('notes', $location->notes, ['placeholder' => 'eg Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{ Form::text('notes', $location->notes, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group form-buttons'>

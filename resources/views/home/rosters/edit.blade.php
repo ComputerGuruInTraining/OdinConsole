@@ -53,7 +53,9 @@
 
             <div class='form-group'>
                     {!! Form::Label('employees', 'Select Employee:') !!}
-                    <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
+                (Tip: ctrl/cmd to select more than one)
+
+                <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
                         {{--Highlight assigned_shift_employees--}}
                         @foreach($myEmployees as $myEmployee)
                                  <option value="{{$myEmployee->mobile_user_id}}" selected multiple>{{$myEmployee->employee}}</option>

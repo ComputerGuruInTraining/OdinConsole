@@ -68,6 +68,13 @@
             border: 1px solid #ccc;
             border-top: none;
         }
+
+        /*.alert-danger{*/
+            /*border-color: #d73925;*/
+            /*color: #fff !important;*/
+            /*background-color: #990000 !important;*/
+        /*}*/
+
     </style>
 @stop
 @section('page-content')
