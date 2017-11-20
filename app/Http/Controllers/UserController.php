@@ -363,9 +363,15 @@ class UserController extends Controller
 
                 if($user->success == true)
                 {
-                    $msg = 'You have successfully deleted the user';
-                    //display confirmation page
-                    return view('confirm')->with('theAction', $msg);
+                    $sessionId = session('id');
+
+                    if($id == $sessionId){
+                        return Redirect::to('/logout');
+                    }else {
+                        $msg = 'You have successfully deleted the user';
+                        //display confirmation page
+                        return view('confirm')->with('theAction', $msg);
+                    }
                 }
                 else {
                     return Redirect::to('company/settings')->withErrors('Failed to delete user');
