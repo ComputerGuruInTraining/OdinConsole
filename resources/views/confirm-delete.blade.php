@@ -7,9 +7,9 @@
 
 @section('page-content')
     <div class="confirm">Are you sure you would like this to be deleted from the database?
-        <br/>
-        <br/>
-        {{$msg}}
+        {{--<br/>--}}
+        {{--<br/>--}}
+        {{--{{$msg}}--}}
 
     </div>
     <div class="delete-btns">

@@ -37,7 +37,7 @@
 
     <div class='form-group'>
         {{ Form::label('dateOfBirth', 'Date of Birth') }}
-        {{ Form::text('dateOfBirth', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
+        {{ Form::text('dateOfBirth', $dateBirth, array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
     </div>
 
     <div class='form-group'>

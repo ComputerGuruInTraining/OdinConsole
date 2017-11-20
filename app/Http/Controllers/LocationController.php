@@ -32,10 +32,6 @@ class LocationController extends Controller
 
                 $compId = session('compId');
 
-//                $urlApi = Config::get('constants.API_URL');
-
-//                dd($urlApi, $token, $compId);//have data in all 3
-
                 $response = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -50,16 +46,28 @@ class LocationController extends Controller
 
             }
             else {
-                echo "<script>console.log( 'No session token' );</script>";
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return view('admin_template');
-        }
-        catch (\ErrorException $error) {
-            echo "<script>console.log( 'Error Exception' );</script>";
-            return Redirect::to('/login');
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying locations';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying location page';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display locations';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading locations';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -69,12 +77,12 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
-    {
-            $success = 'response with string';
-            return $success;
-
-    }
+//    public function show()
+//    {
+//            $success = 'response with string';
+//            return $success;
+//
+//    }
 
     /**
      * Show the form for creating a new resource.
@@ -83,11 +91,32 @@ class LocationController extends Controller
      */
     public function create()
     {
-        if (session()->has('token')) {
-            return view('location/create-locations');
-        }
-        else {
-            return Redirect::to('/login');
+        try {
+            if (session()->has('token')) {
+                return view('location/create-locations');
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add location page';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add location form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying add location';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add location page';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -148,16 +177,41 @@ class LocationController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Please provide a valid address and ensure the address is not already stored in the database.';
+        }  catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Unable to store the location. Probably due to an invalid address 
+                or the address is already stored in the database.';
             $errors = collect($err);
             return view('location/create-locations')->with('errors', $errors);
-        }
-        catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-                $e = 'Please fill in all required fields';
+
+        } catch (\ErrorException $error) {
+            //catches for such things as address not able to be converted to geocoords
+            // and update fails due to db integrity constraints
+            if ($error->getMessage() == 'Undefined offset: 0') {
+                $e = 'Please provide a valid address';
                 $errors = collect($e);
                 return view('location/create-locations')->with('errors', $errors);
+            } else {
+                return Redirect::to('/location-create')
+                    ->withInput()
+                    ->withErrors('Unable to store the location. Probably due to invalid input.');
+            }
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/location-create')
+                ->withInput()
+                ->withErrors('Error storing location. Please check input is valid.');
+
+        }
+//        catch(\Exception $exception) {
+//            return Redirect::to('/location-create')
+//                ->withInput()
+//                ->withErrors('Operation failed. Please ensure input valid.');
+//
+//        }
+        catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -215,17 +269,26 @@ class LocationController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error';
-            $errors = collect($err);
-            return view('location/create-locations')->with('errors', $errors);
-        }
-        catch (\ErrorException $error) {
-            //this catches for the instances where an address that cannot be converted to a geocode is input
-            $e = 'Error';
-            $errors = collect($e);
-            return view('location/create-locations')->with('errors', $errors);
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying edit location page';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit location form';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit location';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit location page';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -239,10 +302,6 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
-
-//        echo "<script>console.log( 'Location Update fn entered' );</script>";
-
-
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -304,24 +363,41 @@ class LocationController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo "<script>console.log( 'Bad Response exception' );</script>";
+            return Redirect::to('location-edit-'.$id)
+                ->withInput()
+                ->withErrors('Unable to update the location. Probably due to an invalid address 
+                or the address is already stored in the database.');
 
-//            $err = 'Please provide valid changes';
-//            $errors = collect($err);
-            return Redirect::to('/location');
-        }
-        catch (\ErrorException $error) {
-            echo "<script>console.log( 'Error exception' );</script>";
-
-            //catches for such things as address not able to be converted to geocoords and update fails due to db integrity constraints
+        }catch (\ErrorException $error) {
+            //catches for such things as address not able to be converted to geocoords
+            // and update fails due to db integrity constraints
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
                 $errors = collect($e);
-                return Redirect::to('/location');
-//fixme: proper validation: ->with('errors', $errors)
+                return view('location/edit-locations')->with('errors', $errors);
             } else {
-                return Redirect::to('/location');
+                return Redirect::to('/location-edit-'.$id)
+                    ->withInput()
+                    ->withErrors('Unable to update the location. Probably due to invalid input.');
             }
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/location-edit-'.$id)
+                ->withInput()
+                ->withErrors('Error updating location. Please check input is valid.');
+
+        }
+//        catch(\Exception $exception) {
+//            //one instance is when no address input
+//            return Redirect::to('/location-edit-'.$id)
+//                ->withInput()
+//                ->withErrors('Operation failed. Please ensure input valid.');
+//
+//        }
+        catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
     }
 
@@ -353,9 +429,25 @@ class LocationController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/location');
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Operation Failed';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting location';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing location from database';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing location from system';
+            return view('error')->with('error', $error);
         }
     }
 

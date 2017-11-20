@@ -40,6 +40,9 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 
+//                dd($users);
+////null before api change
+
                 $resp = $client->get(Config::get('constants.API_URL').'company/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -49,26 +52,42 @@ class UserController extends Controller
                 $compInfo = json_decode((string)$resp->getBody());
 
 
-                $users = array_sort($users, 'last_name', SORT_ASC);
+//                $users = array_sort($users, 'last_name', SORT_ASC);//undefined property
+                //then Invalid argument supplied for foreach()
 
                 $url = 'user';
 
-//                dd($compInfo, $users);
-
-                return view('company-settings.index', compact('users', 'compInfo', 'url'));
+                return view('company-settings.index')->with(array('users' => $users, 'compInfo' => $compInfo, 'url' => $url));
 
             }
             //user does not have a token
             else {
                 return Redirect::to('/login');
             }
-        }
-        //api error
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return view('company-settings/index');
-        }
-        catch (\ErrorException $error) {
-            return Redirect::to('/login');
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying users';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying user page';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display users';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading users';
+            return view('error')->with('error', $error);
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error')->with('error', $error);
+
         }
 	}
 
@@ -79,11 +98,27 @@ class UserController extends Controller
 	 */
 	public function create()
 	{
-        if (session()->has('token')) {
-            return view('user/create');
-        }
-        else {
-            return Redirect::to('/login');
+	    try {
+            if (session()->has('token')) {
+                return view('user/create');
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/company/settings')->withErrors('Error displaying users');
+        }//error returned to laravel and caught
+        catch (\ErrorException $error) {
+            return Redirect::to('/company/settings')->withErrors('Error loading users page');
+        } catch (\Exception $err) {
+            return Redirect::to('/company/settings')->withErrors('Error displaying users page');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            return Redirect::to('/company/settings')->withErrors('Error displaying list of users');
         }
 	}
 
@@ -148,14 +183,24 @@ class UserController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error creating user. Please ensure email is valid.';
-            $errors = collect($err);
-            return view('user/create')->with('errors', $errors);
-        }
-        catch (\ErrorException $error) {
-            $e = 'Please fill in all required fields with valid input';
-            $errors = collect($e);
-            return view('user/create')->with('errors', $errors);
+            return Redirect::to('user/create')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid and email unique.');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('user/create')
+                ->withInput()
+                ->withErrors('Error storing user');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('user/create')
+                ->withInput()
+                ->withErrors('Error storing user details. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
 	}
 
@@ -188,16 +233,26 @@ class UserController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Error displaying page';
-            $errors = collect($err);
-            return view('company-settings/index')->with('errors', $errors);
-        }
-        catch (\ErrorException $error) {
-            $e = 'Error displaying page';
-            $errors = collect($e);
-            return view('company-settings/index')->with('errors', $errors);
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying user details';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying user details for editing';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying user details for update';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit user page';
+            return view('error')->with('error', $error);
         }
 	}
 
@@ -260,10 +315,25 @@ class UserController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('company/settings')->withErrors('Please provide valid changes and ensure email is unique.');
+            return Redirect::to('/user/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Operation failed. Please check input and ensure email unique.');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('/user/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating user details. Please check input valid and email unique.');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/user/'.$id.'/edit')
+                ->withInput()
+                ->withErrors('Error updating user. Please check input is valid.');
+
         }
-        catch (\ErrorException $error) {
-            return Redirect::to('company/settings')->withErrors('Please provide valid changes and ensure the email is unique.');
+        catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
         }
 	}
 
@@ -311,6 +381,16 @@ class UserController extends Controller
         }//error returned to laravel and caught
         catch (\ErrorException $error) {
             return Redirect::to('/company/settings')->withErrors('Error deleting the user');
+        } catch (\Exception $err) {
+            return Redirect::to('/company/settings')->withErrors('Error deleting user from database');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            return Redirect::to('/company/settings')->withErrors('Error deleting user from system');
         }
 	}
 
@@ -333,7 +413,7 @@ class UserController extends Controller
                 'company' => 'required|max:255',
                 'owner' => 'nullable|max:255',
                 'emailUser' => 'required|email|max:255',
-                'password' => 'required|min:6|confirmed',
+                'password' => 'required|min:6|confirmed|max:15',
                 'first' => 'required|max:255',
                 'last' => 'required|max:255'
             ]);
@@ -374,15 +454,20 @@ class UserController extends Controller
                 return view('home.register');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'There is an error in the input. 
-            This could be caused by an invalid email or an email that already exists in the system. Please check your input.';
-            $errors = collect($err);
-            return view('home.register')->with('errors', $errors);
+            return Redirect::to('/register')
+                ->withInput()
+                ->withErrors('There is an error in the input. 
+            This could be caused by an invalid email or an email that already exists in the system. Please check your input.');
         } catch (\ErrorException $error) {
-            $e = 'Please fill in all required fields';
-            $errors = collect($e);
-            return view('home.register')->with('errors', $errors);
-
+            return Redirect::to('/register')
+                ->withInput()
+                ->withErrors('Unable to complete the request. Please check you have provided all required input as this may 
+                 be the cause.');
+        }catch (\InvalidArgumentException $err) {
+            return Redirect::to('/register')
+                ->withInput()
+                ->withErrors('Unable to complete the request. Please check input is valid as this may 
+                 be the cause.');
         }
     }
 

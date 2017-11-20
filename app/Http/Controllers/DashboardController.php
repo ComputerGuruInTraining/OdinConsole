@@ -13,71 +13,89 @@ use Config;
 class DashboardController extends Controller{
 
     public function index(){
+        try {
 
-        if (session()->has('token')) {
-            $token = session('token');
-            $client = new GuzzleHttp\Client;
+            if (session()->has('token')) {
+                $token = session('token');
+                $client = new GuzzleHttp\Client;
 
-            $compId = session('compId');
+                $compId = session('compId');
 
-            //get current logged in console user to personalise dashboard
-            $response = $client->get(Config::get('constants.API_URL').'user', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
+                //get current logged in console user to personalise dashboard
+                $response = $client->get(Config::get('constants.API_URL') . 'user', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        )
                     )
-                )
-            );
-            $users = json_decode((string)$response->getBody());
+                );
+                $users = json_decode((string)$response->getBody());
 
-            $response2 = $client->get(Config::get('constants.API_URL').'dashboard/' . $compId . '/current-location', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $response2 = $client->get(Config::get('constants.API_URL') . 'dashboard/' . $compId . '/current-location', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $currentLocations = json_decode((string)$response2->getBody());
+                $currentLocations = json_decode((string)$response2->getBody());
 
-            $response3 = $client->get(Config::get('constants.API_URL').'location/' . $compId, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ]
-            ]);
+                $response3 = $client->get(Config::get('constants.API_URL') . 'location/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
 
-            $location = json_decode((string)$response3->getBody());
+                $location = json_decode((string)$response3->getBody());
 
-            //the $location is used for the center of the map
-            //if there are no records returned for the company's mobile users current_location
-            //however, if the company is new and has not yet added a location,
-            //we need to use a default location
+                //the $location is used for the center of the map
+                //if there are no records returned for the company's mobile users current_location
+                //however, if the company is new and has not yet added a location,
+                //we need to use a default location
 
-            //default =  San Francisco, CA, USA
-            define('DEFAULT_LAT', 37.77493);
-            define('DEFAULT_LONG', -122.419416);
+                //default =  San Francisco, CA, USA
+                define('DEFAULT_LAT', 37.77493);
+                define('DEFAULT_LONG', -122.419416);
 
-            if(!isset($location->latitude)){
-                $location->latitude = DEFAULT_LAT;
-                $location->longitude = DEFAULT_LONG;
-                $location->address = 'San Francisco, CA, USA';
-            }
-
-
-
+                if (!isset($location->latitude)) {
+                    $location->latitude = DEFAULT_LAT;
+                    $location->longitude = DEFAULT_LONG;
+                    $location->address = 'San Francisco, CA, USA';
+                }
 
 //            dd($location->latitude, $location->longitude);
 
-            $company = $this->getCompanyDetail();
+                $company = $this->getCompanyDetail();
 
-            return view('dashboard.dashboard')->with(
-                array('users' => $users,
-                'currentLocations' => $currentLocations,
-                'company' => $company,
-                'center' => $location
-            ));
+                return view('dashboard.dashboard')->with(
+                    array('users' => $users,
+                        'currentLocations' => $currentLocations,
+                        'company' => $company,
+                        'center' => $location
+                    ));
 
-        }
-        else {
-            return Redirect::to('/login');
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying map';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying GeoLocation map';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display map';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading map';
+            return view('error')->with('error', $error);
         }
     }
 
@@ -101,10 +119,10 @@ class DashboardController extends Controller{
         }
     }
 
-    public function testFunction(Request $request){
-        $locations = Location::all('latitude', 'longitude', 'name');
-        return $locations;
-    }
+//    public function testFunction(Request $request){
+//        $locations = Location::all('latitude', 'longitude', 'name');
+//        return $locations;
+//    }
 
     public function privacy()
     {

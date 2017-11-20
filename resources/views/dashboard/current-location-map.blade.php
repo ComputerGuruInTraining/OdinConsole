@@ -9,7 +9,7 @@
             <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate
         </button>
         <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover" data-placement="top"
-                data-content="Change from every 1m to every 10s" onclick="info()"
+                data-content="Change from every 5m to every 30s" onclick="info()"
                 style="color:#3c8dbc; border: none; background-color: transparent;">
             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </button>
