@@ -66,15 +66,18 @@ class UserController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying users';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',
+$err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying user page';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display users';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -83,10 +86,12 @@ class UserController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading users';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
         } catch(\handleViewException $handle){
             $error = 'Error displaying page';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
 
         }
 	}
@@ -235,15 +240,18 @@ class UserController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying user details';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',
+$err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying user details for editing';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying user details for update';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -252,7 +260,8 @@ class UserController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit user page';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
         }
 	}
 

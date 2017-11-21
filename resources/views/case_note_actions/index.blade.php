@@ -23,7 +23,7 @@
                     {{--<th>Location</th>--}}
                     <th>Case Id</th>
                     <th>Date</th>
-                    <th>Time</th>
+                    {{--<th>Time</th>--}}
                     <th>Title</th>
                     <th>Description</th>
                     <th>Image</th>
@@ -45,7 +45,7 @@
                         <tr>
                             <td class="report-title" colspan="4">{{$index}}</td>
                             <td></td>
-                            <td></td>
+                            {{--<td></td>--}}
                             <td></td>
                             <td></td>
                             <td></td>
@@ -58,12 +58,12 @@
                                 {{--<td></td>--}}
                                 <td class="padding-left max-width">{{$item->case_id}}</td>
                                 <td>{{$item->date}}</td>
-                                <td class="min-width">{{$item->time}}</td>
+{{--                                <td class="min-width">{{$item->time}}</td>--}}
                                 <td>{{$item->title}}</td>
                                 <td class="desc-max-width">{{$item->description}}</td>
                                 {{--<td>{{$item->img}}</td>--}}
                                 <td class="max-width">
-                                    <div>{{$item->img}}</div>
+                                    <div>{{$item->hasImg}}</div>
                                     {{--<a href="/download/{$item->img}">{{$item->img}}</a>--}}
                                 </td>
 

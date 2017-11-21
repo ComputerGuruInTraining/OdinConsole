@@ -22,10 +22,10 @@ Route::post('/', 'HomeController@postIndex');
 Route::get('/admin', 'DashboardController@index');
 
 //generic error exception msg route
-Route::get('/error', function(){
+Route::get('/error-msg', function(){
     if (session()->has('token')) {
         $msg = Config::get('constants.ERROR_GENERIC');
-        return view('error')->with('error', $msg);
+        return view('error-msg')->with('msg', $msg);
     }
 });
 
@@ -33,7 +33,7 @@ Route::get('/error', function(){
 Route::get('/error-page', function(){
     if (session()->has('token')) {
         $msg = Config::get('constants.ERROR_SERVER');
-        return view('error')->with('error', $msg);
+        return view('error-msg')->with('msg', $msg);
     }
 });
 
