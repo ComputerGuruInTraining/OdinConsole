@@ -31,7 +31,7 @@
                     <tr>
                         {{--<th>Premise</th>--}}
                         <th>Date</th>
-                        <th>Time</th>
+                        {{--<th>Time</th>--}}
                         <th>Case Title</th>
                         <th>Case Description</th>
                         <th>Case Image</th>
@@ -51,15 +51,14 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                             </tr>
                             @foreach ($groupCases->get($index) as $item)
                                 <tr>
                                     <td></td>
-                                    <td>{{$item->case_time}}</td>
+{{--                                    <td>{{$item->case_time}}</td>--}}
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
-                                    <td>{{$item->img}}</td>
+                                    <td>{{$item->hasImg}}</td>
                                     <td>{{$item->employee}}</td>
                                     <td>{{$item->case_id}}</td>
                                 </tr>
@@ -74,6 +73,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                        </tr>
                     @endif
                 </table>
             </div>

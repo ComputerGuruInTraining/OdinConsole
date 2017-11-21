@@ -152,8 +152,10 @@ class CaseNoteController extends Controller
                         $stringImg = $case->img;
 
                         if($stringImg != ""){
-                            $substrImg = substrImg($stringImg);
-                            $data[$i]->img = $substrImg;
+//                            $substrImg = substrImg($stringImg);
+//                            $data[$i]->img = $substrImg;
+                              $data[$i]->img = "Y";
+
 //                            dd($data[$i]->img, $substrImg);
                         }
 

@@ -3,9 +3,9 @@
 
     <!-- Logo -->
     <div class="pull-left image" style="max-width:200px;">
-        <a href='/admin' class="logo">
+        <div class="logo">
             <img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo header-alt" alt="Odin Logo" />
-        </a>
+        </div>
     </div>
 
     <!-- Header Navbar -->
