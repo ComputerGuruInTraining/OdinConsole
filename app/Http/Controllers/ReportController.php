@@ -72,15 +72,15 @@ class ReportController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying reports';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying generated reports';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying report details';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -89,7 +89,7 @@ class ReportController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading reports';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -160,7 +160,7 @@ class ReportController extends Controller
                 $dateFromStr = Input::get('dateFrom');
                 $dateToStr = Input::get('dateTo');
 
-                //convert date strings from mm/dd/yyyy to dd-mm-yyyy
+                //convert date strings from mm/dd/yyyy to dd-mm-yyyy, retain string format
                 $dateFrom = jobDateTime($dateFromStr, "00:00");
                 $dateTo = jobDateTime($dateToStr, "00:00");
 
@@ -181,12 +181,15 @@ class ReportController extends Controller
                             'btnText' => 'Generate Report',
                             'url' => 'reports'
                         ));
-                } else if ($result->success == false) {
-                    $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
-                    return view('error')->with('error', $msg);
-                } else{
+                }
+// else if ($result->success == false) {
+////                    dd("false :)");//yep, echoes that
+//                    $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
+//                    return view('error-msg')->with('msg', $msg);
+//                }
+                else{
                     $msg = 'A report was not generated for the location as there is no shift data for the period.';
-                    return view('error')->with('error', $msg);
+                    return view('error-msg')->with('msg', $msg);
                 }
 
             } else {
@@ -305,7 +308,7 @@ class ReportController extends Controller
 
                     $cases = $this->getCaseNotes($id, $token);
 
-                    if ($cases != 'error') {
+                    if ($cases != 'errorInResult') {
                         foreach ($cases->reportCaseNotes as $i => $item) {
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);
@@ -331,7 +334,7 @@ class ReportController extends Controller
                     $checks = $this->getLocationChecks($id, $token);
 
                     //ie success == false
-                    if ($checks != 'error') {
+                    if ($checks != 'errorInResult') {
 
 //                        $groupShiftChecks = $this->formatLocationChecksData($checks);
                         $collectChecks = $this->formatLocationChecksData($checks);
@@ -371,10 +374,10 @@ class ReportController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             $msg = 'Error exception displaying report';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         } catch (\ErrorException $error) {
             $msg = 'Error exception displaying report on webpage';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         }
     }
 
@@ -547,7 +550,7 @@ class ReportController extends Controller
 
                     $cases = $this->getCaseNotes($id, $token);
 
-                    if ($cases != 'error') {
+                    if ($cases != 'errorInResult') {
                         foreach ($cases->reportCaseNotes as $i => $item) {
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);
@@ -580,7 +583,7 @@ class ReportController extends Controller
                     $checks = $this->getLocationChecks($id, $token);
 
                     //ie success == false
-                    if ($checks != 'error') {
+                    if ($checks != 'errorInResult') {
 
 //                        $groupShiftChecks = $this->formatLocationChecksData($checks);
                         $collectChecks = $this->formatLocationChecksData($checks);
@@ -630,10 +633,10 @@ class ReportController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             $msg = 'Error exception displaying report';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         } catch (\ErrorException $error) {
             $msg = 'Error exception displaying report on webpage';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         }
 
 
@@ -653,7 +656,7 @@ class ReportController extends Controller
             $checks = json_decode((string)$response->getBody());
 
             if ($checks->success == false) {
-                return 'error';
+                return 'errorInResult';
 //
             } else {
 //                //extract location latitude and longitude to be used to find timezone
@@ -690,10 +693,10 @@ class ReportController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
             $msg = 'Error exception displaying report';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         } catch (\ErrorException $error) {
             $msg = 'Error exception displaying report on webpage';
-            return view('error')->with('error', $msg);
+            return view('error-msg')->with('msg', $msg);
         }
     }
 
@@ -711,7 +714,7 @@ class ReportController extends Controller
             $cases = json_decode((string)$response->getBody());
 
             if ($cases->success == false) {
-                return 'error';
+                return 'errorInResult';
 
             } else {
 

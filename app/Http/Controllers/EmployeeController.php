@@ -117,7 +117,8 @@ class EmployeeController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add employee page';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 
@@ -281,15 +282,18 @@ class EmployeeController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employee details';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying employee details for editing';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying employee details for update';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -298,7 +302,8 @@ class EmployeeController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit employee page';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 
@@ -362,7 +367,8 @@ class EmployeeController extends Controller
                     return view('confirm')->with(array('theAction' => $theAction));
                 }
                 else{
-                    return view('error')->with('error', 'Failed to update employee record successfully');
+                                return view('error-msg')->with('msg',
+ 'Failed to update employee record successfully');
                 }
             } else {
                 //not authenticated
@@ -433,15 +439,18 @@ class EmployeeController extends Controller
            }
        }catch (GuzzleHttp\Exception\BadResponseException $e) {
            $err = 'Operation Failed';
-           return view('error')->with('error', $err);
+                       return view('error-msg')->with('msg',
+ $err);
 
        } catch (\ErrorException $error) {
            $e = 'Error deleting employee';
-           return view('error')->with('error', $e);
+                       return view('error-msg')->with('msg',
+ $e);
 
        } catch (\Exception $err) {
            $e = 'Error removing employee from database';
-           return view('error')->with('error', $e);
+                       return view('error-msg')->with('msg',
+ $e);
 
        } catch (\TokenMismatchException $mismatch) {
            return Redirect::to('login')
@@ -449,7 +458,8 @@ class EmployeeController extends Controller
                ->withErrors('Session expired. Please login.');
        } catch (\InvalidArgumentException $invalid) {
            $error = 'Error removing employee from system';
-           return view('error')->with('error', $error);
+                       return view('error-msg')->with('msg',
+ $error);
        }
     }
 

@@ -50,15 +50,18 @@ class LocationController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying locations';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying location page';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display locations';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -67,7 +70,8 @@ class LocationController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading locations';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 
@@ -99,15 +103,18 @@ class LocationController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying add location page';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying add location form';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying add location';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -116,7 +123,8 @@ class LocationController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add location page';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 
@@ -271,15 +279,18 @@ class LocationController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying edit location page';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit location form';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying edit location';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -288,7 +299,8 @@ class LocationController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit location page';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 
@@ -431,15 +443,18 @@ class LocationController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Operation Failed';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error deleting location';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Error removing location from database';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -447,7 +462,8 @@ class LocationController extends Controller
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing location from system';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 

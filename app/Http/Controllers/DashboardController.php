@@ -78,15 +78,18 @@ class DashboardController extends Controller{
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying map';
-            return view('error')->with('error', $err);
+                        return view('error-msg')->with('msg',
+ $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying GeoLocation map';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display map';
-            return view('error')->with('error', $e);
+                        return view('error-msg')->with('msg',
+ $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -95,7 +98,8 @@ class DashboardController extends Controller{
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading map';
-            return view('error')->with('error', $error);
+                        return view('error-msg')->with('msg',
+ $error);
         }
     }
 

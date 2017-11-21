@@ -80,15 +80,18 @@ class CaseNoteController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying case notes';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',
+$err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying case notes page';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display case notes';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -97,7 +100,8 @@ class CaseNoteController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading case notes';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
         }
     }
 
@@ -142,10 +146,10 @@ class CaseNoteController extends Controller
 //                            //convert timestamp to a datetime string
                             $date = date('m/d/Y', $tsUsingResult);
 //
-                            $time = date('g.i a', $tsUsingResult);
+//                            $time = date('g.i a', $tsUsingResult);
 //
                         $data[$i]->date = $date;
-                        $data[$i]->time = $time;
+//                        $data[$i]->time = $time;
 
 
                         //convert to substring the filepath to be used to download the file, if there is an image
@@ -154,9 +158,13 @@ class CaseNoteController extends Controller
                         if($stringImg != ""){
 //                            $substrImg = substrImg($stringImg);
 //                            $data[$i]->img = $substrImg;
-                              $data[$i]->img = "Y";
+                              $data[$i]->hasImg = "Y";
 
 //                            dd($data[$i]->img, $substrImg);
+                        }else{
+
+                            $data[$i]->hasImg = "-";
+
                         }
 
 
@@ -230,7 +238,7 @@ class CaseNoteController extends Controller
 
                 $dt = new DateTime($t);
                 $noteDate = $dt->format('m/d/Y');
-                $time = $dt->format('g.i a');
+//                $time = $dt->format('g.i a');
 
                 $employee = $data->firstName[0].' '.$data->lastName[0];
 
@@ -238,7 +246,7 @@ class CaseNoteController extends Controller
                     ->with(array(
                         'data' => $data,
                         'noteDate' => $noteDate,
-                        'time' => $time,
+//                        'time' => $time,
                         'employee' => $employee
                     ));
 
@@ -251,11 +259,13 @@ class CaseNoteController extends Controller
                 ->withErrors('Error displaying edit case note page');
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit case note form';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying edit case note';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -264,7 +274,8 @@ class CaseNoteController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit case note page';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
         }
     }
 
@@ -385,15 +396,18 @@ class CaseNoteController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Operation Failed';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',
+$err);
 
         } catch (\ErrorException $error) {
             $e = 'Error deleting case note';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\Exception $err) {
             $e = 'Error removing case note from database';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',
+$e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -401,7 +415,8 @@ class CaseNoteController extends Controller
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing case note from system';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',
+$error);
         }
     }
 

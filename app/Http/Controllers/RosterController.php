@@ -92,15 +92,15 @@ class RosterController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying shifts';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',  $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying shift details';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display shift details';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -109,7 +109,7 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading shifts';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',  $error);
         }
     }
 
@@ -153,15 +153,15 @@ class RosterController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying add shift page';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',  $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying add shift form';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying add shift';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -170,7 +170,7 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add shift page';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',  $error);
         }
     }
 
@@ -392,15 +392,15 @@ class RosterController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying edit shift page';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',  $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit shift form';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying edit shift';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -409,7 +409,7 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit shift page';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',  $error);
         }
 
     }
@@ -545,15 +545,15 @@ class RosterController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error deleting shift. Error code: BadResponseException';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg',  $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error deleting shift. Error code: ErrorException';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\Exception $err) {
             $e = 'Error deleting shift. Error code: Exception';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg',  $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -561,7 +561,7 @@ class RosterController extends Controller
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error deleting shift. Error code: InvalidArgumentException';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg',  $error);
         }
     }
 
