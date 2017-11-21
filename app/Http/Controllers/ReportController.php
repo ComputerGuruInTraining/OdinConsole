@@ -161,8 +161,8 @@ class ReportController extends Controller
                 $dateToStr = Input::get('dateTo');
 
                 //convert date strings from mm/dd/yyyy to dd-mm-yyyy, retain string format
-                $dateFrom = jobDateTime($dateFromStr, "00:00");
-                $dateTo = jobDateTime($dateToStr, "00:00");
+                $dateFrom = jobDateTime($dateFromStr, "00:00");//start of the day
+                $dateTo = jobDateTime($dateToStr, "23:59");//end of the day
 
                 $token = session('token');
                 $compId = session('compId');
@@ -188,7 +188,7 @@ class ReportController extends Controller
 //                    return view('error-msg')->with('msg', $msg);
 //                }
                 else{
-                    $msg = 'A report was not generated for the location as there is no shift data for the period.';
+                    $msg = 'A report was not generated for the location as there is no report data for the period.';
                     return view('error-msg')->with('msg', $msg);
                 }
 
@@ -198,7 +198,7 @@ class ReportController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::to('reports/create')
                 ->withInput()
-                ->withErrors('Operation failed');
+                ->withErrors('Operation failed.');
         } catch (\ErrorException $error) {
             return Redirect::to('reports/create')
                 ->withInput()

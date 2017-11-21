@@ -57,6 +57,8 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+@yield('custom-scripts-body')
+
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}

@@ -2,7 +2,23 @@
 @include('sidebar')
 
 @section('title-item')
-    Add Shift to Roster
+    Add Shift
+@stop
+
+@section('custom-scripts-body')
+    <script>
+
+        function checkAmt() {
+            var values = $('#mySelect').val();
+            console.log(values);
+            if(values.length > 1){
+                document.getElementById("checks_amt").removeAttribute("disabled");
+            }else if(values.length == 1){
+                document.getElementById("checks_amt").setAttribute("disabled", "disabled");
+            }
+        }
+
+    </script>
 @stop
 
 @section('page-content')
@@ -52,20 +68,11 @@
         {{--<div style="color: #dd4b39; padding-bottom: 8px;">--}}
             {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
         {{--</div>--}}
-
-        <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee:') !!}
-            (Tip: ctrl/cmd to select more than one)
-
-            <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
-                @foreach($empList as $emp)
-                    <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                @endforeach
-            </select>
-        </div>
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
-            <select class="form-control" multiple="multiple" name="locations[]" size="10" onkeypress="return noenter()">
+            (Tip: ctrl/cmd to select more than one)
+            <select class="form-control" multiple="multiple" id="mySelect" onFocusOut="checkAmt()" name="locations[]"
+                    size="10" onkeypress="return noenter()">
                 @foreach($locList as $loc)
                     <option value="{{$loc->id}}">{{$loc->name}}</option>
                 @endforeach
@@ -73,8 +80,18 @@
         </div>
 
         <div class='form-group'>
+            {!! Form::Label('employees', 'Select Employee:') !!}
+
+            <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
+                @foreach($empList as $emp)
+                    <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class='form-group'>
             {!! Form::Label('checks', 'Number of Visits Required:') !!}
-            {{ Form::text('checks', 1, array('class' => 'form-control')) }}
+            {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
         </div>
 
         <div class='form-group form-buttons'>
