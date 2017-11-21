@@ -742,10 +742,17 @@ class ReportController extends Controller
                     //convert timestamp to a datetime string
                     $date = date('m/d/Y', $tsUsingResult);
 
-                    $time = date('g.i a', $tsUsingResult);
+                    //if img, mark Y TODO: link
+                    if($item->img != "") {
+                        $cases->reportCaseNotes[$i]->hasImg = 'Y';
+                    }else{
+                        $cases->reportCaseNotes[$i]->hasImg = '-';
+
+                    }
+//                    $time = date('g.i a', $tsUsingResult);
 
                     $cases->reportCaseNotes[$i]->case_date = $date;
-                    $cases->reportCaseNotes[$i]->case_time = $time;
+//                    $cases->reportCaseNotes[$i]->case_time = $time;
                 }
                 return $cases;
             }
@@ -820,10 +827,19 @@ class ReportController extends Controller
 
                             $dt = new DateTime($t);
                             $date = $dt->format('m/d/Y');
-                            $time = $dt->format('g.i a');
+//                            $time = $dt->format('g.i a');
 
                             $cases->reportCaseNotes[$i]->case_date = $date;
-                            $cases->reportCaseNotes[$i]->case_time = $time;
+
+                            //if img, mark Y TODO: link
+                            if($item->img != "") {
+                                $cases->reportCaseNotes[$i]->hasImg = 'Y';
+                            }else{
+                                $cases->reportCaseNotes[$i]->hasImg = '-';
+
+                            }
+
+//                            $cases->reportCaseNotes[$i]->case_time = $time;
 
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);

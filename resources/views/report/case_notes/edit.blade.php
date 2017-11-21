@@ -23,9 +23,10 @@
                     {{--if there are case notes to report--}}
                     <tr>
                         <th>Date</th>
-                        <th>Time</th>
+                        {{--<th>Time</th>--}}
                         <th>Case Title</th>
                         <th>Case Description</th>
+                        <th>Case Image</th>
                         <th>Reporting Guard</th>
                         <th>Actions</th>
                     </tr>
@@ -45,9 +46,10 @@
                             @foreach ($groupCases->get($index) as $item)
                                 <tr>
                                     <td></td>
-                                    <td>{{$item->case_time}}</td>
+{{--                                    <td>{{$item->case_time}}</td>--}}
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
+                                    <td>{{$item->hasImg}}</td>
                                     <td>{{$item->employee}}</td>
                                     <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
                                         |
@@ -65,6 +67,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                        </tr>
                     @endif
                 </table>
             </div>

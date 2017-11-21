@@ -6,10 +6,7 @@
 @stop
 
 @section('page-content')
-    <div class="confirm">Are you sure you would like to delete this from the database?
-        {{--<br/>--}}
-        {{--<br/>--}}
-        {{--{{$msg}}--}}
+    <div class="confirm">Are you sure you would like to delete the item from the database?
 
     </div>
     <div class="delete-btns">

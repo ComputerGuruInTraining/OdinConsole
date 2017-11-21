@@ -4,27 +4,27 @@
 
 {{--@section('my-styles')--}}
 
-    {{--<style>--}}
-        {{--.top-text {--}}
-            {{--position: absolute;--}}
-            {{--right: 50px;--}}
-            {{--top: 50px;--}}
-        {{--}--}}
+{{--<style>--}}
+{{--.top-text {--}}
+{{--position: absolute;--}}
+{{--right: 50px;--}}
+{{--top: 50px;--}}
+{{--}--}}
 
-        {{--#grey-color {--}}
-            {{--color: #555;--}}
-        {{--}--}}
+{{--#grey-color {--}}
+{{--color: #555;--}}
+{{--}--}}
 
-    {{--</style>--}}
+{{--</style>--}}
 
 {{--@stop--}}
 
 @section('content')
-
-    <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px" width="200px"
+    <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px"
+         width="200px"
          style="position: absolute; left:30px; top:30px;"/>
 
-    <div><a href="/support"><h4 class="top-text" id="grey-color">Support</h4></a></div>
+    <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
     <div class="container" style="padding-top: 150px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" style="font-size: large;">
@@ -81,7 +81,7 @@
                             </div>
 
                             <div style="text-align: center;">
-                                <a href='/reset/link' style="color: #4d2970; text-align: center;">Forgot Password?</a>
+                                <a href='/reset/link' style="color: #4d2970; text-align: center;" target="_blank">Forgot Password?</a>
                             </div>
                         </div>
                         {{ Form::close() }}
