@@ -367,32 +367,7 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
-                $collectSelectEmp = collect($employeesUnique);
-
-                $userIdSelects = $collectSelectEmp->pluck('mobile_user_id');
-
-                $collectEmp = collect($employees);
-
-                $userIds = $collectEmp->pluck('user_id');
-
-
-//                dd($userIdSelects , $userIds);
-
-                //employees and locations that are not selected for the assigned_shift
-                $nonAsgEmp = $userIds->diff($userIdSelects);
-
-                //loop through employees and if the $nonAsgEmp
-//
-//
-
-                $empNotSelected = collect([]);
-                foreach($nonAsgEmp as $emp){
-                    foreach($employees as $employee){
-                        if($emp == $employee->user_id){
-                          $collection =  $empNotSelected->push($employee);
-                        }
-                    }
-                }
+                $empNotSelected = $this->nonSelectedList($employeesUnique, $employees);
 
                 //$coll
 //                dd($empNotSelected);
@@ -410,7 +385,7 @@ class RosterController extends Controller
                 $endTime = ((string)$carbonEnd->format('H:i'));
 
                 return view('home/rosters/edit')->with(array(
-                    'nonAsgEmp' => $nonAsgEmp,
+//                    'nonAsgEmp' => $nonAsgEmp,
                     'empList' => $empNotSelected,
                     'locList' => $locations,
                     'assigned' => $assigned,
@@ -447,6 +422,38 @@ class RosterController extends Controller
             return view('error-msg')->with('msg',  $error);
         }
 
+    }
+
+    public function nonSelectedList($employeesUnique, $employees){
+
+        $collectSelectEmp = collect($employeesUnique);
+
+        $userIdSelects = $collectSelectEmp->pluck('mobile_user_id');
+
+        $collectEmp = collect($employees);
+
+        $userIds = $collectEmp->pluck('user_id');
+
+
+//                dd($userIdSelects , $userIds);
+
+        //employees and locations that are not selected for the assigned_shift
+        $nonAsgEmp = $userIds->diff($userIdSelects);
+
+        //loop through employees and if the $nonAsgEmp
+//
+//
+
+        $empNotSelected = collect([]);
+        foreach($nonAsgEmp as $emp){
+            foreach($employees as $employee){
+                if($emp == $employee->user_id){
+                    $collection =  $empNotSelected->push($employee);
+                }
+            }
+        }
+
+        return $empNotSelected;
     }
 
     /**
