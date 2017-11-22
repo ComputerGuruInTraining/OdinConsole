@@ -92,9 +92,9 @@
                     @endforeach
                     {{--List all the locations besides those that are selected at the top of the list because stored in db--}}
                     @foreach($locList as $loc)
-                        @if($loc->id != $myLocation->location_id)
+{{--                        @if($loc->id != $myLocation->location_id)--}}
                             <option value="{{$loc->id}}">{{$loc->name}}</option>
-                        @endif
+                        {{--@endif--}}
                     @endforeach
                 </select>
             </div>

@@ -367,8 +367,15 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
-                $empNotSelected = $this->nonSelectedList($employeesUnique, $employees);
+                $empNotSelected = $this->nonSelectedList($employeesUnique, $employees,
+                    'mobile_user_id', 'user_id');
 
+//                dd($locationsUnique, $locations, $employeesUnique, $employees);
+                $locNotSelected = $this->nonSelectedList($locationsUnique, $locations,
+                    'location_id', 'id');
+
+
+//                dd($locNotSelected);
                 //$coll
 //                dd($empNotSelected);
 
@@ -387,7 +394,7 @@ class RosterController extends Controller
                 return view('home/rosters/edit')->with(array(
 //                    'nonAsgEmp' => $nonAsgEmp,
                     'empList' => $empNotSelected,
-                    'locList' => $locations,
+                    'locList' => $locNotSelected,
                     'assigned' => $assigned,
                     'myLocations' => $locationsUnique,
                     'myEmployees' => $employeesUnique,
@@ -424,36 +431,30 @@ class RosterController extends Controller
 
     }
 
-    public function nonSelectedList($employeesUnique, $employees){
+    public function nonSelectedList($selected, $list, $propertySelected, $propertyList){
 
-        $collectSelectEmp = collect($employeesUnique);
+        $collectSelect = collect($selected);
 
-        $userIdSelects = $collectSelectEmp->pluck('mobile_user_id');
+        $collectPropertySelected = $collectSelect->pluck($propertySelected);
 
-        $collectEmp = collect($employees);
+        $collect = collect($list);
 
-        $userIds = $collectEmp->pluck('user_id');
-
-
-//                dd($userIdSelects , $userIds);
+        $collectPropertyList = $collect->pluck($propertyList);
 
         //employees and locations that are not selected for the assigned_shift
-        $nonAsgEmp = $userIds->diff($userIdSelects);
+        $nonAsg = $collectPropertyList->diff($collectPropertySelected);
 
-        //loop through employees and if the $nonAsgEmp
-//
-//
+        $notSelected = collect([]);
 
-        $empNotSelected = collect([]);
-        foreach($nonAsgEmp as $emp){
-            foreach($employees as $employee){
-                if($emp == $employee->user_id){
-                    $collection =  $empNotSelected->push($employee);
+        foreach($nonAsg as $non){
+            foreach($list as $item){
+                if($non == $item->$propertyList){
+                    $notSelected->push($item);
                 }
             }
         }
 
-        return $empNotSelected;
+        return $notSelected;
     }
 
     /**
