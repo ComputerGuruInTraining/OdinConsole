@@ -40,38 +40,9 @@ class CaseNoteController extends Controller
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
                 $groupedData = $cases->groupBy('location');
-////
-//                $casesGroup = $groupedData->groupBy('case_id');
-
-
-//                $groupedData = $cases->groupBy('location_id')->toArray() +
-//                    $cases->groupBy('case_id')->toArray();
-//                dd($cases);
-//                dd($cases);
-//                dd($groupedData,
-//                    $dataFormat->locations);
-//                dd(gettype($data->cases), gettype($data->locations));
-//                dd($dataFormat);
-
-//                foreach ($reports as $i => $item) {
-//                    //add the extracted date to each of the objects and format date
-//                    $s = $item->date_start;
-//
-//                    $sdt = new DateTime($s);
-//                    $sdate = $sdt->format('m/d/Y');
-//
-//                    $e = $item->date_end;
-//
-//                    $edt = new DateTime($e);
-//                    $edate = $edt->format('m/d/Y');
-//
-//                    $reports[$i]->form_start = $sdate;
-//                    $reports[$i]->form_end = $edate;
-//                }
 
                 return view('case_note_actions/index')->with(array(
                     'cases' => $groupedData,
-//                    'locations' => $dataFormat->locations,
                     'url' => 'case-notes'
                 ));
 
@@ -80,18 +51,15 @@ class CaseNoteController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying case notes';
-            return view('error-msg')->with('msg',
-$err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying case notes page';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display case notes';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -100,8 +68,7 @@ $e);
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading case notes';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -116,18 +83,7 @@ $error);
         //use the location object latitude and longitude
         //and the case_note created_at timestamp
         //to convert to a timezone date and time
-//        if(sizeof($data->locations) > 0) {
             foreach ($data as $i => $case) {
-//                dd($case, $i, $data[$i]->location_id);
-
-//        foreach()
-//                foreach ($data->locations as $location){
-//                    if ($location->id == $data->cases[$i]->location_id) {
-
-                        //extract location latitude and longitude to be used to find timezone
-                        //for this atm, case note geoLocation is presumed to be location of premise
-//                        $lat = $location->latitude;
-//                        $long = $location->longitude;
                         //calculate the date and time based on the location and any of the case notes created_at timestamp
                         $collection = timezone($data[$i]->locLat, $data[$i]->locLong, $case->created_at);
 //
@@ -166,14 +122,7 @@ $error);
                             $data[$i]->hasImg = "-";
 
                         }
-
-
-
-//                        $cases[$i]->location = $location->name;
-//                    }
-//                }
             }
-//        }
             return $data;
     }
 
@@ -259,13 +208,11 @@ $error);
                 ->withErrors('Error displaying edit case note page');
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit case note form';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying edit case note';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -274,8 +221,7 @@ $e);
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit case note page';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -351,13 +297,6 @@ $error);
                 ->withErrors('Error updating case note. Please check input is valid.');
 
         }
-//catch(\Exception $exception) {
-//            //one instance is when no address input
-//            return Redirect::to('/case-notes/'.$id.'/edit')
-//                ->withInput()
-//                ->withErrors('Operation failed. Please ensure input valid.');
-//
-//        }
         catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
                 ->withInput()
@@ -396,18 +335,15 @@ $error);
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Operation Failed';
-            return view('error-msg')->with('msg',
-$err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error deleting case note';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error removing case note from database';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -415,11 +351,11 @@ $e);
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing case note from system';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
+    //todo: work in progress
     function download($img)
     {
         //http request
