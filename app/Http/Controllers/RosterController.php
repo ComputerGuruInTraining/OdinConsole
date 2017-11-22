@@ -367,6 +367,40 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
+                $collectSelectEmp = collect($employeesUnique);
+
+                $userIdSelects = $collectSelectEmp->pluck('mobile_user_id');
+
+                $collectEmp = collect($employees);
+
+                $userIds = $collectEmp->pluck('user_id');
+
+
+//                dd($userIdSelects , $userIds);
+
+                //employees and locations that are not selected for the assigned_shift
+                $nonAsgEmp = $userIds->diff($userIdSelects);
+
+                //loop through employees and if the $nonAsgEmp
+//
+//
+
+                $empNotSelected = collect([]);
+                foreach($nonAsgEmp as $emp){
+                    foreach($employees as $employee){
+                        if($emp == $employee->user_id){
+                          $collection =  $empNotSelected->push($employee);
+                        }
+                    }
+                }
+
+                //$coll
+//                dd($empNotSelected);
+
+
+//                $employees->whereIn('user_id', )
+
+
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
 
                 $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
@@ -376,7 +410,8 @@ class RosterController extends Controller
                 $endTime = ((string)$carbonEnd->format('H:i'));
 
                 return view('home/rosters/edit')->with(array(
-                    'empList' => $employees,
+                    'nonAsgEmp' => $nonAsgEmp,
+                    'empList' => $empNotSelected,
                     'locList' => $locations,
                     'assigned' => $assigned,
                     'myLocations' => $locationsUnique,

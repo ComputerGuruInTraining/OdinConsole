@@ -111,9 +111,9 @@
                     @endforeach
                     {{--List all the employees besides those that are selected at the top of the list because stored in db--}}
                     @foreach($empList as $emp)
-                        @if($emp->user_id != $myEmployee->mobile_user_id)
+{{--                        @if($emp->user_id != $myEmployee->mobile_user_id)--}}
                             <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                        @endif
+                        {{--@endif--}}
                     @endforeach
                 </select>
             </div>
