@@ -466,7 +466,20 @@ $error);
                 return view('/confirm_alt')->with(array('title' => 'Confirmation of Success', 'line1' => $msgLine1, 'line2' => $msgLine2));
 
             } else {
-                return view('home.register');
+                //success == false
+                if($company->nonUnique == "Not Unique"){
+                    //email already exists and registration will not occur
+                    return Redirect::back()
+                        ->withInput()
+                        ->withErrors('Registration has not been successful at this time because the email address provided is already
+                        stored in the system.  <br> If you have previously registered and have not received the activation email, 
+                        please contact the support team.');
+                }else{
+                    //uncertain this would even occur, mostly an error will be thrown and caught below, but as a back up
+                    return Redirect::back()
+                        ->withInput()
+                        ->withErrors('Registration has not been successful at this time. Please check your input and try again');
+                }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::to('/register')

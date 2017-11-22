@@ -5,12 +5,14 @@
 @section('content')
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
+    <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
+
     <div class="container" style="padding-top: 70px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" >
                 @if (count( $errors ) > 0)
                     @foreach ($errors->all() as $error)
-                        <div class='alert error'>{{ $error }}</div>
+                        <div class='alert error'>{!! $error !!}</div>
                     @endforeach
                 @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
