@@ -439,18 +439,15 @@ class EmployeeController extends Controller
            }
        }catch (GuzzleHttp\Exception\BadResponseException $e) {
            $err = 'Operation Failed';
-                       return view('error-msg')->with('msg',
- $err);
+                       return view('error-msg')->with('msg', $err);
 
        } catch (\ErrorException $error) {
            $e = 'Error deleting employee';
-                       return view('error-msg')->with('msg',
- $e);
+                       return view('error-msg')->with('msg', $e);
 
        } catch (\Exception $err) {
            $e = 'Error removing employee from database';
-                       return view('error-msg')->with('msg',
- $e);
+                       return view('error-msg')->with('msg', $e);
 
        } catch (\TokenMismatchException $mismatch) {
            return Redirect::to('login')
@@ -458,8 +455,7 @@ class EmployeeController extends Controller
                ->withErrors('Session expired. Please login.');
        } catch (\InvalidArgumentException $invalid) {
            $error = 'Error removing employee from system';
-                       return view('error-msg')->with('msg',
- $error);
+                       return view('error-msg')->with('msg', $error);
        }
     }
 

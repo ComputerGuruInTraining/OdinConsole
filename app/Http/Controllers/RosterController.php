@@ -193,7 +193,7 @@ class RosterController extends Controller
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required',
-                'checks' => 'digits:1'
+                'checks' => 'digits_between:1,9'
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db
@@ -236,12 +236,6 @@ class RosterController extends Controller
                 ->withErrors('Error storing shift. Please check input is valid.');
 
         }
-//        catch(\Exception $exception) {
-//            return Redirect::to('rosters/create')
-//                ->withInput()
-//                ->withErrors('Operation failed. Please ensure input valid.');
-//
-//        }
         catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
                 ->withInput()
@@ -490,7 +484,7 @@ class RosterController extends Controller
                     'startTime' => 'required',
                     'endDateTxt' => 'required',
                     'endTime' => 'required',
-                    'checks' => 'digits:1'
+                    'checks' => 'digits_between:1,9'
                 ]);
 
                 //get user input

@@ -126,9 +126,25 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
+            $err = 'Error displaying add report page';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            return Redirect::to('/reports');
+            $e = 'Error displaying add report form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying add report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add report page';
+            return view('error-msg')->with('msg', $error);
         }
 
 //        return view('report/create')->with();
@@ -372,13 +388,36 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            $msg = 'Error exception displaying report';
-            return view('error-msg')->with('msg', $msg);
+            $err = 'Error displaying report';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            $msg = 'Error exception displaying report on webpage';
-            return view('error-msg')->with('msg', $msg);
+            $e = 'Error displaying report details';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error loading report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading report details';
+            return view('error-msg')->with('msg', $error);
         }
+
+//        catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+//            $msg = 'Error exception displaying report';
+//            return view('error-msg')->with('msg', $msg);
+//        } catch (\ErrorException $error) {
+//            $msg = 'Error exception displaying report on webpage';
+//            return view('error-msg')->with('msg', $msg);
+//        }
+
     }
 
     //returns a collection
@@ -631,15 +670,26 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            $msg = 'Error exception displaying report';
-            return view('error-msg')->with('msg', $msg);
+            $err = 'Error displaying report';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            $msg = 'Error exception displaying report on webpage';
-            return view('error-msg')->with('msg', $msg);
+            $e = 'Error displaying report details';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error loading report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading report details';
+            return view('error-msg')->with('msg', $error);
         }
-
-
     }
 
     public function getLocationChecks($id, $token)
@@ -762,10 +812,11 @@ class ReportController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            return Redirect::to('/reports');
+            $msg = 'Error exception displaying report';
+            return view('error-msg')->with('msg', $msg);
         } catch (\ErrorException $error) {
-            $errors = collect($error);
-            return Redirect::to('/reports')->with('errors', $errors);
+            $msg = 'Error exception displaying report on webpage';
+            return view('error-msg')->with('msg', $msg);
         }
     }
 
@@ -870,12 +921,26 @@ class ReportController extends Controller
             }
         } //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
-        } catch (\ErrorException $error) {
-            $errors = collect($error);
-            return Redirect::to('/reports')->with('errors', $errors);
-        }
+            $err = 'Error displaying edit report page';
+            return view('error-msg')->with('msg', $err);
 
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit report form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit report page';
+            return view('error-msg')->with('msg', $error);
+        }
     }
 
     /**
@@ -922,7 +987,24 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
+            $err = 'Operation Failed. Report not deleted.';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing report from database';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing report from system';
+            return view('error-msg')->with('msg', $error);
         }
     }
 }

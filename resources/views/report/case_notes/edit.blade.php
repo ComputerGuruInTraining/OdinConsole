@@ -13,13 +13,20 @@
                 {{--<div class="report-header">--}}
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
-                    <tr class="report-header-row"><td>Premise:</td></td><td class="report-header">{{$cases->location->name}}</td></tr>
+                    <tr class="report-header-row">
+                        <td>Premise:</td>
+                        </td>
+                        <td class="report-header">{{$cases->location->name}}</td>
+                    </tr>
                     {{--<tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>--}}
-                    <tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>
-                {{--</div>--}}
-                 </table>
+                    <tr class="report-header-row">
+                        <td>Guard Presence at Location:</td>
+                        <td class="report-header">{{$cases->reportCases->total_guards}}</td>
+                    </tr>
+                    {{--</div>--}}
+                </table>
 
-            <table class="table table-hover">
+                <table class="table table-hover">
                     {{--if there are case notes to report--}}
                     <tr>
                         <th>Date</th>
@@ -36,7 +43,7 @@
                             <tbody class="group-list">
 
                             <tr>
-                            <td class="report-title">{{$index}}</td>
+                                <td class="report-title">{{$index}}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -46,15 +53,23 @@
                             @foreach ($groupCases->get($index) as $item)
                                 <tr>
                                     <td></td>
-{{--                                    <td>{{$item->case_time}}</td>--}}
+                                    {{--                                    <td>{{$item->case_time}}</td>--}}
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
                                     <td>{{$item->hasImg}}</td>
                                     <td>{{$item->employee}}</td>
-                                    <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
-                                        |
-                                        <a href="/confirm-delete/{{$item->id}}/{{$url}}" style="color: #990000;">Delete</a>
-                                    </td>
+                                    @if($item->title != "Nothing to Report")
+
+                                        <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
+                                            |
+                                            <a href="/confirm-delete/{{$item->id}}/{{$url}}" style="color: #990000;">Delete</a>
+                                        </td>
+                                    @else
+                                        <td>
+                                        <a href="/confirm-delete/{{$item->id}}/{{$url}}"
+                                           style="color: #990000;">Delete</a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
