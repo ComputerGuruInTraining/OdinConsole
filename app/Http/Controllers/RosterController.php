@@ -192,7 +192,8 @@ class RosterController extends Controller
                 'startDateTxt' => 'required',
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
-                'endTime' => 'required'
+                'endTime' => 'required',
+                'checks' => 'digits:1'
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db
@@ -488,7 +489,8 @@ class RosterController extends Controller
                     'startDateTxt' => 'required',
                     'startTime' => 'required',
                     'endDateTxt' => 'required',
-                    'endTime' => 'required'
+                    'endTime' => 'required',
+                    'checks' => 'digits:1'
                 ]);
 
                 //get user input
