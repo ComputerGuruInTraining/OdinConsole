@@ -70,7 +70,11 @@
         {{--</div>--}}
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
-            (Tip: ctrl/cmd to select more than one)
+
+            <div class="alert alert-info alert-custom">
+                <strong>Tip!</strong> ctrl/cmd to select more than one
+            </div>
+
             <select class="form-control" multiple="multiple" id="mySelect" onFocusOut="checkAmt()" name="locations[]"
                     size="10" onkeypress="return noenter()">
                 @foreach($locList as $loc)
@@ -87,6 +91,10 @@
                     <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
                 @endforeach
             </select>
+        </div>
+
+        <div class="alert alert-warning alert-custom">
+            <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
         </div>
 
         <div class='form-group'>

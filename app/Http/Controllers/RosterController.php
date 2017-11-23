@@ -37,7 +37,7 @@ class RosterController extends Controller
 
                 $companyId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL').'assignedshifts/list/' . $companyId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'assignedshifts/list/' . $companyId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -86,21 +86,20 @@ class RosterController extends Controller
                 $assigned = $this->groupByShift($assigned);
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
-            }
-            else{
+            } else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying shifts';
-            return view('error-msg')->with('msg',  $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying shift details';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display shift details';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -109,7 +108,7 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading shifts';
-            return view('error-msg')->with('msg',  $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -130,7 +129,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get(Config::get('constants.API_URL').'employees/list/'.$compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -138,7 +137,7 @@ class RosterController extends Controller
 
                 $employees = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $response2 = $client->get(Config::get('constants.API_URL').'locations/list/'.$compId, [
+                $response2 = $client->get(Config::get('constants.API_URL') . 'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -147,21 +146,20 @@ class RosterController extends Controller
                 $locations = GuzzleHttp\json_decode((string)$response2->getBody());
 
                 return view('home/rosters/create')->with(array('empList' => $employees, 'locList' => $locations));
-            }
-            else{
+            } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying add shift page';
-            return view('error-msg')->with('msg',  $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying add shift form';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying add shift';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -170,7 +168,7 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add shift page';
-            return view('error-msg')->with('msg',  $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -203,17 +201,16 @@ class RosterController extends Controller
                 try {
                     $dateStart = $this->formData($request);
 
-                    if($dateStart == 'error'){
+                    if ($dateStart == 'error') {
 
                         $e = 'Error storing shift details';
                         $errors = collect($e);
                         return view('/home/rosters/create')->with('errors', $errors);
-                    }
-                    else{
+                    } else {
                         return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
                     }
 
-                } catch(\Exception $exception) {
+                } catch (\Exception $exception) {
                     return Redirect::to('rosters/create')
                         ->withInput()
                         ->withErrors('Operation failed. Please ensure input valid.');
@@ -222,7 +219,7 @@ class RosterController extends Controller
                 return Redirect::to('/login');
             }
 
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Operation failed');
@@ -252,53 +249,61 @@ class RosterController extends Controller
     }
 
     //IMPORTANT: Don't catch in the "helper" function, only catch in the calling function ie store()
-    function formData($request){
-            //data for validation
-            $locationArray = $request->input('locations');
-            $employeeArray = $request->input('employees');
-            $checks = Input::get('checks');
-            $title = $request->input('title');
-            $desc = $request->input('desc');
+    function formData($request)
+    {
+        $token = session('token');
+        $compId = session('compId');
 
-            //TODO: rosters for a date-range
-            $roster_id = 1;
+        //TODO: rosters for a date-range
+        $roster_id = 1;
 
-            $token = session('token');
-            $compId = session('compId');
+        //data for validation
+        $locationArray = $request->input('locations');
+        $employeeArray = $request->input('employees');
+        $checks = Input::get('checks');
+        $title = $request->input('title');
+        $desc = $request->input('desc');
 
-            //get data from form for non laravel validated inputs
-            $dateStart = $request->input('startDateTxt');
-            $timeStart = Input::get('startTime');//hh:mm
-            $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
-            $timeEnd = Input::get('endTime');//hh:mm
+        //get data from form for non laravel validated inputs
+        $dateStart = $request->input('startDateTxt');
+        $timeStart = Input::get('startTime');//hh:mm
+        $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
+        $timeEnd = Input::get('endTime');//hh:mm
 
-            //process start date and time before adding to db
-            //function in functions.php
-            $strStart = jobDateTime($dateStart, $timeStart);
-            $strEnd = jobDateTime($dateEnd, $timeEnd);
+        //account for situation where checks is disabled and value is null
+        //but value should be 1 as only disabled when 1 location and therefore 1 check
+        if ($checks == null) {
 
-            $client = new GuzzleHttp\Client;
+            $checks = 1;
+        }
 
-            $response = $client->post(Config::get('constants.API_URL').'assignedshifts', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
-                    ),
-                    'json' => array(
-                        'checks' => $checks, 'start' => $strStart,
-                        'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
-                        'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
-                    )
+        //process start date and time before adding to db
+        //function in functions.php
+        $strStart = jobDateTime($dateStart, $timeStart);
+        $strEnd = jobDateTime($dateEnd, $timeEnd);
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post(Config::get('constants.API_URL') . 'assignedshifts', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'checks' => $checks, 'start' => $strStart,
+                    'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
+                    'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
                 )
-            );
+            )
+        );
 
-            $assigned = GuzzleHttp\json_decode((string)$response->getBody());
+        $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-            if($assigned->success == true) {
-                return $dateStart;
-            }else{
-                return 'error';
-            }
+        if ($assigned->success == true) {
+            return $dateStart;
+        } else {
+            return 'error';
+        }
     }
 
     /**
@@ -337,7 +342,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL') . 'assignedshifts/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -345,7 +350,7 @@ class RosterController extends Controller
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
-                $responseUsers = $client->get(Config::get('constants.API_URL').'employees/list/' . $compId, [
+                $responseUsers = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -353,7 +358,7 @@ class RosterController extends Controller
 
                 $employees = GuzzleHttp\json_decode((string)$responseUsers->getBody());
 
-                $responseLocs = $client->get(Config::get('constants.API_URL').'locations/list/' . $compId, [
+                $responseLocs = $client->get(Config::get('constants.API_URL') . 'locations/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -367,6 +372,22 @@ class RosterController extends Controller
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
 
+                $empNotSelected = $this->nonSelectedList($employeesUnique, $employees,
+                    'mobile_user_id', 'user_id');
+
+//                dd($locationsUnique, $locations, $employeesUnique, $employees);
+                $locNotSelected = $this->nonSelectedList($locationsUnique, $locations,
+                    'location_id', 'id');
+
+
+//                dd($locNotSelected);
+                //$coll
+//                dd($empNotSelected);
+
+
+//                $employees->whereIn('user_id', )
+
+
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
 
                 $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
@@ -376,8 +397,9 @@ class RosterController extends Controller
                 $endTime = ((string)$carbonEnd->format('H:i'));
 
                 return view('home/rosters/edit')->with(array(
-                    'empList' => $employees,
-                    'locList' => $locations,
+//                    'nonAsgEmp' => $nonAsgEmp,
+                    'empList' => $empNotSelected,
+                    'locList' => $locNotSelected,
                     'assigned' => $assigned,
                     'myLocations' => $locationsUnique,
                     'myEmployees' => $employeesUnique,
@@ -386,21 +408,20 @@ class RosterController extends Controller
                     'endDate' => $endDate,
                     'endTime' => $endTime
                 ));
-            }
-            else{
+            } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying edit shift page';
-            return view('error-msg')->with('msg',  $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit shift form';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying edit shift';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -409,9 +430,36 @@ class RosterController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit shift page';
-            return view('error-msg')->with('msg',  $error);
+            return view('error-msg')->with('msg', $error);
         }
 
+    }
+
+    public function nonSelectedList($selected, $list, $propertySelected, $propertyList)
+    {
+
+        $collectSelect = collect($selected);
+
+        $collectPropertySelected = $collectSelect->pluck($propertySelected);
+
+        $collect = collect($list);
+
+        $collectPropertyList = $collect->pluck($propertyList);
+
+        //employees and locations that are not selected for the assigned_shift
+        $nonAsg = $collectPropertyList->diff($collectPropertySelected);
+
+        $notSelected = collect([]);
+
+        foreach ($nonAsg as $non) {
+            foreach ($list as $item) {
+                if ($non == $item->$propertyList) {
+                    $notSelected->push($item);
+                }
+            }
+        }
+
+        return $notSelected;
     }
 
     /**
@@ -454,6 +502,13 @@ class RosterController extends Controller
                 $title = Input::get('title');
                 $desc = Input::get('desc');
 
+                //account for situation where checks is disabled and value is null
+                //but value should be 1 as only disabled when 1 location and therefore 1 check
+                if ($checks == null) {
+
+                    $checks = 1;
+                }
+
                 //process start date and time before adding to db
                 $strStart = jobDateTime($dateStart, $timeStart);
                 $strEnd = jobDateTime($dateEnd, $timeEnd);
@@ -463,7 +518,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post(Config::get('constants.API_URL').'assignedshifts/' . $id . '/edit', array(
+                $response = $client->post(Config::get('constants.API_URL') . 'assignedshifts/' . $id . '/edit', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json',
@@ -481,22 +536,21 @@ class RosterController extends Controller
 
                 $theAction = 'You have successfully edited the shift';
                 return view('confirm')->with(array('theAction' => $theAction));
-            }
-            else{
+            } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/rosters/'.$id.'/edit')
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/rosters/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Operation failed');
 
         } catch (\ErrorException $error) {
-            return Redirect::to('/rosters/'.$id.'/edit')
+            return Redirect::to('/rosters/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Error updating shift details');
 
         } catch (\InvalidArgumentException $err) {
-            return Redirect::to('/rosters/'.$id.'/edit')
+            return Redirect::to('/rosters/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Error updating shift. Please check input is valid.');
 
@@ -530,7 +584,7 @@ class RosterController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post(Config::get('constants.API_URL').'assignedshift/'.$id, [
+                $response = $client->post(Config::get('constants.API_URL') . 'assignedshift/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                         'X-HTTP-Method-Override' => 'DELETE'
@@ -539,21 +593,20 @@ class RosterController extends Controller
 
                 $theAction = 'You have successfully deleted the shift';
                 return view('confirm')->with('theAction', $theAction);
-            }
-            else{
+            } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error deleting shift. Error code: BadResponseException';
-            return view('error-msg')->with('msg',  $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error deleting shift. Error code: ErrorException';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error deleting shift. Error code: Exception';
-            return view('error-msg')->with('msg',  $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -561,7 +614,7 @@ class RosterController extends Controller
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error deleting shift. Error code: InvalidArgumentException';
-            return view('error-msg')->with('msg',  $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -576,49 +629,50 @@ class RosterController extends Controller
 //function defined for global use
     public function compareValues($jobs)
     {
-            for ($i = 0; $i < count($jobs); $i++) {
-                for ($j = 0; $j < count($jobs); $j++) {
+        for ($i = 0; $i < count($jobs); $i++) {
+            for ($j = 0; $j < count($jobs); $j++) {
 
-                    //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
-                    //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
-                    if (($jobs[$i]->start_date == $jobs[$j]->start_date)
-                        &&($jobs[$i]->start_time == $jobs[$j]->start_time)
-                        && ($jobs[$i]->end_time == $jobs[$j]->end_time)) {
+                //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
+                //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
+                if (($jobs[$i]->start_date == $jobs[$j]->start_date)
+                    && ($jobs[$i]->start_time == $jobs[$j]->start_time)
+                    && ($jobs[$i]->end_time == $jobs[$j]->end_time)
+                ) {
 
+                    if ($i > $j) {
+                        $jobs[$i]->unique_date = null;
+                        $jobs[$i]->start_time = null;
+                        $jobs[$i]->end_time = null;
+                    }
+                    //if locations and checks and startTime and endTime the same,
+                    //change values of these fields to null for the duplicates:
+                    if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
+                        && ($jobs[$i]->checks == $jobs[$j]->checks)
+                    ) {
                         if ($i > $j) {
-                            $jobs[$i]->unique_date = null;
                             $jobs[$i]->start_time = null;
                             $jobs[$i]->end_time = null;
+                            $jobs[$i]->unique_locations = null;
+                            $jobs[$i]->checks = null;
                         }
-                        //if locations and checks and startTime and endTime the same,
-                        //change values of these fields to null for the duplicates:
-                        if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
-                            && ($jobs[$i]->checks == $jobs[$j]->checks)) {
-                            if ($i > $j) {
-                                $jobs[$i]->start_time = null;
-                                $jobs[$i]->end_time = null;
-                                $jobs[$i]->unique_locations = null;
-                                $jobs[$i]->checks = null;
-                            }
-                            //if only locations and checks the same, then:
-                        } else if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
-                            && ($jobs[$i]->checks == $jobs[$j]->checks)
-                        ) {
-                            if ($i > $j) {
-                                $jobs[$i]->unique_locations = null;
-                                $jobs[$i]->checks = null;
-                            }
+                        //if only locations and checks the same, then:
+                    } else if (($jobs[$i]->unique_locations == $jobs[$j]->unique_locations)
+                        && ($jobs[$i]->checks == $jobs[$j]->checks)
+                    ) {
+                        if ($i > $j) {
+                            $jobs[$i]->unique_locations = null;
+                            $jobs[$i]->checks = null;
                         }
-                        else if($jobs[$i]->unique_employees == $jobs[$j]->unique_employees){
-                            if ($i > $j) {
-                                $jobs[$i]->unique_employees = null;
-                            }
-
+                    } else if ($jobs[$i]->unique_employees == $jobs[$j]->unique_employees) {
+                        if ($i > $j) {
+                            $jobs[$i]->unique_employees = null;
                         }
 
                     }
+
                 }
             }
+        }
         return $jobs;
     }
 }
