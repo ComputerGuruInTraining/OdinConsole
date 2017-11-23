@@ -58,7 +58,9 @@ Route::get('/pdf-{id}', 'ReportController@view')->name('pdf');
 Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 
 
-Route::resource('/reports', 'ReportController');
+Route::resource('/reports', 'ReportController', ['except' => [
+    'edit'
+]]);
 
 Route::resource('/rosters', 'RosterController');
 
@@ -72,6 +74,33 @@ Route::get('confirm-delete/{id}/{url}', function($id, $url){
         return $confirmView;
     }
 });
+//
+////report case note confirm-delete view
+//Route::get('confirm-delete-report-case/{url}/{id}', function($url, $id){
+//    if (session()->has('token')) {
+//        //confirmDlt defined in functions.php
+//        $confirmView = confirmDltReportCaseNote($url, $id);
+//        return $confirmView;
+//    }
+//});
+
+//reports/344/edit/2524/case-notes/
+//global confirm-delete view
+///delete/{{$urlCancel}}/{{$item->id}}/{{$reportId}}
+Route::get('/delete/{urlCancel}/{id}/{reportId}', function($urlCancel, $id, $reportId){
+    if (session()->has('token')) {
+        //confirmDlt defined in functions.php
+        $confirmView = confirmDltReportCaseNote($id, $urlCancel, $reportId);
+        return $confirmView;
+    }
+});
+
+Route::get('reports-{id}-edit', 'ReportController@edit');
+
+//$urlManage = 'reports-'.$id.'-edit';//need id of report
+
+//id parameter is the id of the case note
+Route::delete("report/{reportId}/delete/{id}", 'ReportController@destroyCaseNote');
 
 //route for when the Forgot Password? Link pressed on Login page
 Route::get('/reset/link', function(){
@@ -120,6 +149,16 @@ Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
 Route::get('/support', 'DashboardController@support');
 
 Route::get('/privacy', 'DashboardController@privacy');
+
+//go back to previous page global route
+Route::get('cancel-delete', function(){
+    if (session()->has('token')) {
+
+//        return redirect()->back()->getTargetUrl();
+//        return redirect()->getUrlGenerator()->previous();//prints it on screen
+        return redirect()->back();//refreshes page
+    }
+});
 
 //global route to different pages TODO: WIP
 //Route::get('{url}-{id}', function($id, $url){

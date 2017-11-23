@@ -42,7 +42,7 @@ class HomeController extends BaseController
         //else, not api authenticated so user credentials not valid
         return Redirect::back()
             ->withInput()
-            ->withErrors('Error: Either email/password combo does not exist or you do not have access. 
+            ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
             Please ensure the account has been activated as this could be the problem.');
     }
 

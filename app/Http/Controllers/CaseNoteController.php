@@ -334,7 +334,7 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            $err = 'Operation Failed';
+            $err = 'Operation Failed. Case Note was not deleted.';
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {

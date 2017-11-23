@@ -901,12 +901,20 @@ class ReportController extends Controller
 
                         }
 
+                        $urlCancel = 'reports-'.$id.'-edit';
+
+                        //pass through report id, attach the case note id on the Manage Report Case Notes Page
+//                        $urlDel = '/report/'.$id.'/delete/';
+//                        $urlDel = 'case-notes';
+                        $reportId = $id;
+
                         return view('report/case_notes/edit')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,
                             'start' => $sdate,
                             'end' => $edate,
-                            'url' => 'case-notes'
+                            'urlCancel' => $urlCancel,
+                            'reportId' => $reportId
                         ));
 
 
@@ -1004,6 +1012,61 @@ class ReportController extends Controller
                 ->withErrors('Session expired. Please login.');
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing report from system';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyCaseNote($reportId, $id)
+    {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->post(Config::get('constants.API_URL').'casenote/'.$id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
+
+                    ]
+                ]);
+
+                $theAction = 'You have successfully deleted the case note';
+
+                return view('confirm-id-url-msg')->with(array(
+                    'theAction' => $theAction,
+                    'reportId' => $reportId
+
+                    ));
+            } else {
+                return Redirect::to('/login');
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Operation Failed. Case Note was not deleted.';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting case note';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing case note from database';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing case note from system';
             return view('error-msg')->with('msg', $error);
         }
     }

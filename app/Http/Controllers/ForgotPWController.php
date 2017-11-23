@@ -49,8 +49,7 @@ class ForgotPWController extends Controller
             $e = 'The password reset has not been successful. Please ensure the email address you have provided is correct';
             $errors = collect($e);
             return view('home/reset/forgot_pw')->with('errors', $errors);
-        }
-        catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //this catches for the an invalid email reset pw request where the email does not exist and the error occurs at the server
             //when attempting to send an email
             return Redirect::back()

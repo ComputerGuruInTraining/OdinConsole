@@ -62,12 +62,13 @@
 
                                         <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
                                             |
-                                            <a href="/confirm-delete/{{$item->id}}/{{$url}}" style="color: #990000;">Delete</a>
+                                            <a href="/delete/{{$urlCancel}}/{{$item->id}}/{{$reportId}}" style="color: #990000;">Delete</a>
                                         </td>
                                     @else
                                         <td>
-                                        <a href="/confirm-delete/{{$item->id}}/{{$url}}"
-                                           style="color: #990000;">Delete</a>
+                                            <a href="/delete/{{$urlCancel}}/{{$item->id}}/{{$reportId}}" style="color: #990000;">Delete</a>
+                                            {{--<a href="/confirm-delete/{{$item->id}}/{{$url}}"--}}
+                                           {{--style="color: #990000;">Delete</a>--}}
                                         </td>
                                     @endif
                                 </tr>
