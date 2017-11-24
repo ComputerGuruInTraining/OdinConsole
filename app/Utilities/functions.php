@@ -356,14 +356,18 @@ if (!function_exists('geoRange')) {
     function geoRange($distance){
 
         //200m
-        define("GOOD_RANGE", 0.2);
-        define("OK_RANGE", 0.5);
+//            define("OUR_GOOD_RANGE", 0.2);
+//
+//            define("OUR_OK_RANGE", 0.5);
 
-        if($distance <= GOOD_RANGE){
+        $goodRange = 0.2;
+        $okRange = 0.5;
+        
+        if($distance <= $goodRange){
 
             $result = 'yes';
 
-        }else if($distance <= OK_RANGE){
+        }else if($distance <= $okRange){
 
             $result = 'ok';
 

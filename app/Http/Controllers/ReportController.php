@@ -349,11 +349,15 @@ class ReportController extends Controller
 
                     $checks = $this->getLocationChecks($id, $token);
 
+//                    dd($checks);//good
+
                     //ie success == false
                     if ($checks != 'errorInResult') {
 
 //                        $groupShiftChecks = $this->formatLocationChecksData($checks);
                         $collectChecks = $this->formatLocationChecksData($checks);
+
+//                        dd($collectChecks);
 
                         //number of check ins at premise
                         $checkIns = $collectChecks->pluck('check_ins');
@@ -392,6 +396,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
+            dd($error);
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
 
