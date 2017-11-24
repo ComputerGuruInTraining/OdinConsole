@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Models\Dashboard;
@@ -9,10 +10,11 @@ use Redirect;
 use Config;
 
 
+class DashboardController extends Controller
+{
 
-class DashboardController extends Controller{
-
-    public function index(){
+    public function index()
+    {
         try {
 
             if (session()->has('token')) {
@@ -76,20 +78,17 @@ class DashboardController extends Controller{
             } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying map';
-                        return view('error-msg')->with('msg',
- $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying GeoLocation map';
-                        return view('error-msg')->with('msg',
- $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display map';
-                        return view('error-msg')->with('msg',
- $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -98,18 +97,18 @@ class DashboardController extends Controller{
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading map';
-                        return view('error-msg')->with('msg',
- $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
-    public function getCompanyDetail(){
+    public function getCompanyDetail()
+    {
         if (session()->has('token')) {
             $token = session('token');
             $client = new GuzzleHttp\Client;
 
             $compId = session('compId');
-            $response = $client->get(Config::get('constants.API_URL').'dashboard/' . $compId . '/company-detail', [
+            $response = $client->get(Config::get('constants.API_URL') . 'dashboard/' . $compId . '/company-detail', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -117,8 +116,7 @@ class DashboardController extends Controller{
 
             $company = json_decode((string)$response->getBody());
             return $company;
-        }
-        else {
+        } else {
             return Redirect::to('/login');
         }
     }
@@ -139,4 +137,5 @@ class DashboardController extends Controller{
     }
 
 }
+
 ?>

@@ -22,6 +22,16 @@ if (!function_exists('confirmDlt')) {
 //                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
 //            }
 
+//            if($url == 'case-notes'){
+//
+////                $url = redirect()->back();
+////                $url = redirect()->back()->getTargetUrl();
+////                $url = re('routeName', ['id' => 1], false);
+////                $url = $request->path();
+//
+//
+//            }
+
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url));
 
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
@@ -68,6 +78,37 @@ if (!function_exists('confirmDel')) {
 //            }
 
             return view('confirm-del')->with(array('id' => $id, 'url' => $url));
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error deleting item';
+            return view('error')->with('error', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error deleting item';
+            return view('error')->with('error', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error deleting item';
+            return view('error')->with('error', $error);
+        }
+
+    }
+}
+
+if (!function_exists('confirmDltReportCaseNote')) {
+    function confirmDltReportCaseNote($id, $urlCancel, $reportId)
+    {
+        try {
+            return view('confirm-delete-report-case')
+                ->with(array('urlCancel' => $urlCancel, 'id' => $id, 'reportId' => $reportId));
+
 
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error deleting item';

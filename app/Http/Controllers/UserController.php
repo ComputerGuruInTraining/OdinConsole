@@ -40,9 +40,6 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 
-//                dd($users);
-////null before api change
-
                 $resp = $client->get(Config::get('constants.API_URL').'company/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -52,8 +49,7 @@ class UserController extends Controller
                 $compInfo = json_decode((string)$resp->getBody());
 
 
-//                $users = array_sort($users, 'last_name', SORT_ASC);//undefined property
-                //then Invalid argument supplied for foreach()
+                $users = array_sort($users, 'last_name', SORT_ASC);
 
                 $url = 'user';
 

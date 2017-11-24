@@ -126,9 +126,25 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
+            $err = 'Error displaying add report page';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            return Redirect::to('/reports');
+            $e = 'Error displaying add report form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying add report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add report page';
+            return view('error-msg')->with('msg', $error);
         }
 
 //        return view('report/create')->with();
@@ -187,7 +203,7 @@ class ReportController extends Controller
 //                    $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
 //                    return view('error-msg')->with('msg', $msg);
 //                }
-                else{
+                else {
                     $msg = 'A report was not generated for the location as there is no report data for the period.';
                     return view('error-msg')->with('msg', $msg);
                 }
@@ -207,11 +223,11 @@ class ReportController extends Controller
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Error generating report. Please check input is valid.');
-        }catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Operation failed. Please ensure input valid.');
-        }catch (\TokenMismatchException $mismatch) {
+        } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
                 ->withInput()
                 ->withErrors('Session expired. Please login.');
@@ -255,24 +271,24 @@ class ReportController extends Controller
     public function postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId)
     {
 
-            $client = new GuzzleHttp\Client;
+        $client = new GuzzleHttp\Client;
 
-            $response = $client->post(Config::get('constants.API_URL') . 'reports/casesandchecks', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $token,
-                        'Content-Type' => 'application/json'
-                    ),
-                    'json' => array(
-                        'location' => $location, 'type' => $type,
-                        'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
-                        'compId' => $compId
-                    )
+        $response = $client->post(Config::get('constants.API_URL') . 'reports/casesandchecks', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'location' => $location, 'type' => $type,
+                    'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
+                    'compId' => $compId
                 )
-            );
+            )
+        );
 
-            $result = GuzzleHttp\json_decode((string)$response->getBody());
+        $result = GuzzleHttp\json_decode((string)$response->getBody());
 
-            return $result;
+        return $result;
     }
 
     /**
@@ -372,13 +388,36 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            $msg = 'Error exception displaying report';
-            return view('error-msg')->with('msg', $msg);
+            $err = 'Error displaying report';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            $msg = 'Error exception displaying report on webpage';
-            return view('error-msg')->with('msg', $msg);
+            $e = 'Error displaying report details';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error loading report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading report details';
+            return view('error-msg')->with('msg', $error);
         }
+
+//        catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+//            $msg = 'Error exception displaying report';
+//            return view('error-msg')->with('msg', $msg);
+//        } catch (\ErrorException $error) {
+//            $msg = 'Error exception displaying report on webpage';
+//            return view('error-msg')->with('msg', $msg);
+//        }
+
     }
 
     //returns a collection
@@ -631,15 +670,26 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            $msg = 'Error exception displaying report';
-            return view('error-msg')->with('msg', $msg);
+            $err = 'Error displaying report';
+            return view('error-msg')->with('msg', $err);
+
         } catch (\ErrorException $error) {
-            $msg = 'Error exception displaying report on webpage';
-            return view('error-msg')->with('msg', $msg);
+            $e = 'Error displaying report details';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error loading report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading report details';
+            return view('error-msg')->with('msg', $error);
         }
-
-
     }
 
     public function getLocationChecks($id, $token)
@@ -746,9 +796,9 @@ class ReportController extends Controller
                     $date = date('m/d/Y', $tsUsingResult);
 
                     //if img, mark Y TODO: link
-                    if($item->img != "") {
+                    if ($item->img != "") {
                         $cases->reportCaseNotes[$i]->hasImg = 'Y';
-                    }else{
+                    } else {
                         $cases->reportCaseNotes[$i]->hasImg = '-';
 
                     }
@@ -762,10 +812,11 @@ class ReportController extends Controller
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-            return Redirect::to('/reports');
+            $msg = 'Error exception displaying report';
+            return view('error-msg')->with('msg', $msg);
         } catch (\ErrorException $error) {
-            $errors = collect($error);
-            return Redirect::to('/reports')->with('errors', $errors);
+            $msg = 'Error exception displaying report on webpage';
+            return view('error-msg')->with('msg', $msg);
         }
     }
 
@@ -835,9 +886,9 @@ class ReportController extends Controller
                             $cases->reportCaseNotes[$i]->case_date = $date;
 
                             //if img, mark Y TODO: link
-                            if($item->img != "") {
+                            if ($item->img != "") {
                                 $cases->reportCaseNotes[$i]->hasImg = 'Y';
-                            }else{
+                            } else {
                                 $cases->reportCaseNotes[$i]->hasImg = '-';
 
                             }
@@ -850,12 +901,20 @@ class ReportController extends Controller
 
                         }
 
+                        $urlCancel = 'reports-' . $id . '-edit';
+
+                        //pass through report id, attach the case note id on the Manage Report Case Notes Page
+//                        $urlDel = '/report/'.$id.'/delete/';
+//                        $urlDel = 'case-notes';
+                        $reportId = $id;
+
                         return view('report/case_notes/edit')->with(array('cases' => $cases,
                             'groupCases' => $groupCases,
                             'report' => $report,
                             'start' => $sdate,
                             'end' => $edate,
-                            'url' => 'case-notes'
+                            'urlCancel' => $urlCancel,
+                            'reportId' => $reportId
                         ));
 
 
@@ -870,26 +929,175 @@ class ReportController extends Controller
             }
         } //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
-        } catch (\ErrorException $error) {
-            $errors = collect($error);
-            return Redirect::to('/reports')->with('errors', $errors);
-        }
+            $err = 'Error displaying edit report page';
+            return view('error-msg')->with('msg', $err);
 
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit report form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit report page';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
+
+    /**
+     * Show the form for editing the selected case note in the report.
+     * @param $reportId
+     * @param $caseNoteId
+     */
+
+    public function editCaseNote($caseNoteId, $reportId)
+    {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->get(Config::get('constants.API_URL') . 'casenote/' . $caseNoteId . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                $data = json_decode((string)$response->getBody());
+
+                //format dates to be mm/dd/yyyy for case notes and extract time
+                $t = $data->caseNote->created_at;
+
+                $dt = new DateTime($t);
+                $noteDate = $dt->format('m/d/Y');
+
+                $employee = $data->firstName[0] . ' ' . $data->lastName[0];
+
+                return view('report/case_notes/edit-case-note')
+                    ->with(array(
+                        'data' => $data,
+                        'noteDate' => $noteDate,
+                        'employee' => $employee,
+                        'reportId' => $reportId
+                    ));
+
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::back()
+                ->withErrors('Error displaying edit case note page');
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit case note form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying edit case note';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit case note page';
+            return view('error-msg')->with('msg', $error);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
-     * See CaseNoteController@update
+     * Update the case note for the report
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  int $id of the case_note
      * @return \Illuminate\Http\Response
      */
-//    public function update(Request $request, $id)
-//    {
-//        //
-//    }
+    public function update(Request $request, $caseNoteId, $reportId)
+    {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                //validate input meet's db constraints
+                $this->validate($request, [
+                    'title' => 'required|max:255',
+                    'desc' => 'max:255'
+                ]);
+
+                //get the data from the form
+                $title = Input::get('title');
+                $desc = Input::get('desc');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->post(Config::get('constants.API_URL') . 'casenote/' . $caseNoteId . '/edit', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json',
+                            'X-HTTP-Method-Override' => 'PUT'
+                        ),
+                        'json' => array('title' => $title, 'desc' => $desc
+                        )
+                    )
+                );
+
+                $casenote = json_decode((string)$response->getBody());
+
+                //direct user based on whether record updated successfully or not
+                if ($casenote->success == true) {
+
+                    $theAction = 'You have successfully edited the case note';
+
+                    return view('confirm-id-url-msg')->with(array(
+                        'theAction' => $theAction,
+                        'reportId' => $reportId
+                    ));
+                } else {
+                    return Redirect::to('/edit-case-notes/' . $caseNoteId . '/reports/' . $reportId)
+                        ->withInput()
+                        ->withErrors('Unable to update the case note. Please check input is valid.');
+                }
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $error) {
+            return Redirect::to('/edit-case-notes/' . $caseNoteId . '/reports/' . $reportId)
+                ->withInput()
+                ->withErrors('Error updating case note. Please fill in all required fields or check input.');
+
+        } catch (\ErrorException $error) {
+            //catches for such things as input doesn't feed well into code
+            // and update fails due to db integrity constraints
+            return Redirect::to('/edit-case-notes/' . $caseNoteId . '/reports/' . $reportId)
+                ->withInput()
+                ->withErrors('Unable to update the case note. Probably due to invalid input.');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/edit-case-notes/' . $caseNoteId . '/reports/' . $reportId)
+                ->withInput()
+                ->withErrors('Error updating case note. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        }
+
+
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -922,7 +1130,79 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/reports');
+            $err = 'Operation Failed. Report not deleted.';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting report';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing report from database';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing report from system';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyCaseNote($reportId, $id)
+    {
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->post(Config::get('constants.API_URL') . 'casenote/' . $id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
+
+                    ]
+                ]);
+
+                $theAction = 'You have successfully deleted the case note';
+
+                return view('confirm-id-url-msg')->with(array(
+                    'theAction' => $theAction,
+                    'reportId' => $reportId
+
+                ));
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Operation Failed. Case Note was not deleted.';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting case note';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error removing case note from database';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing case note from system';
+            return view('error-msg')->with('msg', $error);
         }
     }
 }

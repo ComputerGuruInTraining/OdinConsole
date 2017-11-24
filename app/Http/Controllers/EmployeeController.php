@@ -37,7 +37,7 @@ class EmployeeController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL').'employees/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -45,7 +45,7 @@ class EmployeeController extends Controller
 
                 $employees = json_decode((string)$response->getBody());
                 //format dates to be mm/dd/yyyy for case notes
-                foreach($employees as $i => $item){
+                foreach ($employees as $i => $item) {
                     //convert string date to DateTime and format date
                     $t = $employees[$i]->dob;
 
@@ -58,21 +58,20 @@ class EmployeeController extends Controller
 
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
 
-            }
-            else {
+            } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employees';
-            return view('error')->with('error', $err);
+            return view('error_msg')->with('error_msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying employee page';
-            return view('error')->with('error', $e);
+            return view('error_msg')->with('error_msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display employees';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -81,7 +80,7 @@ class EmployeeController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading employees';
-            return view('error')->with('error', $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
@@ -98,17 +97,17 @@ class EmployeeController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying add employee page';
-            return view('error')->with('error', $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying add employee form';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying form';
-            return view('error')->with('error', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -117,15 +116,14 @@ class EmployeeController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add employee page';
-                        return view('error-msg')->with('msg',
- $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
 
@@ -159,14 +157,14 @@ class EmployeeController extends Controller
 
                 $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
 
-                $response = $client->post(Config::get('constants.API_URL').'employees', array(
+                $response = $client->post(Config::get('constants.API_URL') . 'employees', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
                             'dateOfBirth' => $dob, 'sex' => $gender,
-                            'mobile' => $mobile,'email'=>$email, 'company_id' => $compId
+                            'mobile' => $mobile, 'email' => $email, 'company_id' => $compId
                         )
                     )
                 );
@@ -174,8 +172,7 @@ class EmployeeController extends Controller
                 $employee = json_decode((string)$response->getBody());
 
                 //direct user based on whether record stored successfully or not
-                if($employee->success == true)
-                {
+                if ($employee->success == true) {
                     //display confirmation page
                     $theAction = 'The new employee has been added to the system and an email has been sent to 
                     the supplied email address advising them to download the OdinLite mobile app and create a password for their
@@ -184,14 +181,12 @@ class EmployeeController extends Controller
 
                     return view('confirm')->with(array('theAction' => $theAction));
 
-                }
-                else{
+                } else {
                     $error = 'Error storing employee';
                     $errors = collect($error);
                     return view('/employee/add-employee')->with('errors', $errors);
                 }
-            }
-            //not authenticated
+            } //not authenticated
             else {
                 return Redirect::to('/login');
             }
@@ -220,7 +215,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Employee $employee)
@@ -242,7 +237,7 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -255,7 +250,7 @@ class EmployeeController extends Controller
                 $client = new GuzzleHttp\Client;
 
 
-                $response = $client->get(Config::get('constants.API_URL').'employees/' . $id . '/edit', [
+                $response = $client->get(Config::get('constants.API_URL') . 'employees/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -275,25 +270,21 @@ class EmployeeController extends Controller
                     'dateBirth' => $dateBirth
                 ));
 
-            }
-            //not authenticated
+            } //not authenticated
             else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employee details';
-                        return view('error-msg')->with('msg',
- $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying employee details for editing';
-                        return view('error-msg')->with('msg',
- $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying employee details for update';
-                        return view('error-msg')->with('msg',
- $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -302,16 +293,15 @@ class EmployeeController extends Controller
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit employee page';
-                        return view('error-msg')->with('msg',
- $error);
+            return view('error-msg')->with('msg', $error);
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -345,14 +335,14 @@ class EmployeeController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->post(Config::get('constants.API_URL').'employees/'.$id.'/update', array(
+                $response = $client->post(Config::get('constants.API_URL') . 'employees/' . $id . '/update', array(
                         'headers' => array(
                             'Authorization' => 'Bearer ' . $token,
                             'Content-Type' => 'application/json',
                             'X-HTTP-Method-Override' => 'PUT'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email, 'dateOfBirth'=> $dateOfBirth, 'sex'=>$gender, 'mobile'=> $mobile
+                            'email' => $email, 'dateOfBirth' => $dateOfBirth, 'sex' => $gender, 'mobile' => $mobile
                         )
                     )
                 );
@@ -360,37 +350,34 @@ class EmployeeController extends Controller
                 $employee = json_decode((string)$response->getBody());
 
                 //direct user based on whether record updated successfully or not
-                if($employee->success == true)
-                {
+                if ($employee->success == true) {
                     $theAction = 'You have successfully edited the employee details';
 
                     return view('confirm')->with(array('theAction' => $theAction));
-                }
-                else{
-                                return view('error-msg')->with('msg',
- 'Failed to update employee record successfully');
+                } else {
+                    return view('error-msg')->with('msg',
+                        'Failed to update employee record successfully');
                 }
             } else {
                 //not authenticated
                 return Redirect::to('/login');
             }
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/employees/'.$id.'/edit')
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/employees/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Operation failed. Please check input and ensure email unique.');
 
         } catch (\ErrorException $error) {
-            return Redirect::to('/employees/'.$id.'/edit')
+            return Redirect::to('/employees/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Error updating employee details');
 
         } catch (\InvalidArgumentException $err) {
-            return Redirect::to('/employees/'.$id.'/edit')
+            return Redirect::to('/employees/' . $id . '/edit')
                 ->withInput()
                 ->withErrors('Error updating employee. Please check input is valid.');
 
-        }
-        catch (\TokenMismatchException $mismatch) {
+        } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
                 ->withInput()
                 ->withErrors('Session expired. Please login.');
@@ -400,73 +387,60 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-       try {
-           if (session()->has('token')) {
-               //retrieve token needed for authorized http requests
-               $token = session('token');
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
 
-               $client = new GuzzleHttp\Client;
+                $client = new GuzzleHttp\Client;
 
-               $response = $client->post(Config::get('constants.API_URL').'employees/' . $id, [
-                   'headers' => [
-                       'Authorization' => 'Bearer ' . $token,
-                       'X-HTTP-Method-Override' => 'DELETE'
-                   ]
-               ]);
+                $response = $client->post(Config::get('constants.API_URL') . 'employees/' . $id, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'X-HTTP-Method-Override' => 'DELETE'
+                    ]
+                ]);
 
-               $employee = json_decode((string)$response->getBody());
+                $employee = json_decode((string)$response->getBody());
 
-               if($employee->success == true)
-               {
-                   $theAction = 'You have successfully deleted the employee';
+                if ($employee->success == true) {
+                    $theAction = 'You have successfully deleted the employee';
 
-                   return view('confirm')->with(array('theAction' => $theAction));
-               }
-               else{
-                   $theAction = 'Error deleting employee';
+                    return view('confirm')->with(array('theAction' => $theAction));
+                } else {
+                    $theAction = 'Error deleting employee';
 
-                   return view('confirm')->with(array('theAction' => $theAction));
-               }
+                    return view('confirm')->with(array('theAction' => $theAction));
+                }
 
-           } else {
-               //not authenticated
-               return Redirect::to('/login');
-           }
-       }catch (GuzzleHttp\Exception\BadResponseException $e) {
-           $err = 'Operation Failed';
-                       return view('error-msg')->with('msg',
- $err);
+            } else {
+                //not authenticated
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Operation Failed. Unable to delete employee.';
+            return view('error-msg')->with('msg', $err);
 
-       } catch (\ErrorException $error) {
-           $e = 'Error deleting employee';
-                       return view('error-msg')->with('msg',
- $e);
+        } catch (\ErrorException $error) {
+            $e = 'Error deleting employee';
+            return view('error-msg')->with('msg', $e);
 
-       } catch (\Exception $err) {
-           $e = 'Error removing employee from database';
-                       return view('error-msg')->with('msg',
- $e);
+        } catch (\Exception $err) {
+            $e = 'Error removing employee from database';
+            return view('error-msg')->with('msg', $e);
 
-       } catch (\TokenMismatchException $mismatch) {
-           return Redirect::to('login')
-               ->withInput()
-               ->withErrors('Session expired. Please login.');
-       } catch (\InvalidArgumentException $invalid) {
-           $error = 'Error removing employee from system';
-                       return view('error-msg')->with('msg',
- $error);
-       }
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error removing employee from system';
+            return view('error-msg')->with('msg', $error);
+        }
     }
-
-//    public function formatDob($dob){
-//
-//        $newDob = Carbon::createFromFormat('d/m/Y', $dob)->format('Y-m-d');
-//        return $newDob;
-//
-//    }
 }
