@@ -452,6 +452,7 @@ $error);
 
             $company = json_decode((string)$response->getBody());
 
+//            dd($company->checkEmail->email);
             if ($company->success == true) {
 
                 $msgLine1 = 'The company account has been created and an email has been sent to ' . $emailUser . ' to 
@@ -481,12 +482,13 @@ $error);
             return Redirect::to('/register')
                 ->withInput()
                 ->withErrors('There is an error in the input. 
-            This could be caused by an invalid email or an email that already exists in the system. Please check your input.');
+            This could be caused by an invalid email or 
+            an email that already exists in the system. Please check your input.');
         } catch (\ErrorException $error) {
             return Redirect::to('/register')
                 ->withInput()
-                ->withErrors('Unable to complete the request. Please check you have provided all required input as this may 
-                 be the cause.');
+                ->withErrors('Unable to complete the request. 
+                Please check you have provided all required input as this may be the cause.');
         }catch (\InvalidArgumentException $err) {
             return Redirect::to('/register')
                 ->withInput()

@@ -27,7 +27,6 @@ class RosterController extends Controller
 
     public function index()
     {
-        //TODO: HIGH v1 complete: only retrieve assigned shifts for the users associated with the company id
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
@@ -44,8 +43,6 @@ class RosterController extends Controller
                 ]);
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
-
-//                dd($assigned);
 
                 foreach ($assigned as $i => $item) {
                     //add the extracted date to each of the objects and format date
