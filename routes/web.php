@@ -59,7 +59,7 @@ Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 
 
 Route::resource('/reports', 'ReportController', ['except' => [
-    'edit'
+    'edit', 'update'
 ]]);
 
 Route::resource('/rosters', 'RosterController');
@@ -97,7 +97,9 @@ Route::get('/delete/{urlCancel}/{id}/{reportId}', function($urlCancel, $id, $rep
 
 Route::get('reports-{id}-edit', 'ReportController@edit');
 
-//$urlManage = 'reports-'.$id.'-edit';//need id of report
+Route::get('/edit-case-notes/{caseNoteId}/reports/{reportId}', 'ReportController@editCaseNote');
+
+Route::put('/report/{caseNoteId}/{reportId}', 'ReportController@update')->name('updateReportCase');
 
 //id parameter is the id of the case note
 Route::delete("report/{reportId}/delete/{id}", 'ReportController@destroyCaseNote');

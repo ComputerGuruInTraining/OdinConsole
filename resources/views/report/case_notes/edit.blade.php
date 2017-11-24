@@ -60,7 +60,7 @@
                                     <td>{{$item->employee}}</td>
                                     @if($item->title != "Nothing to Report")
 
-                                        <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
+                                        <td><a href="/edit-case-notes/{{$item->id}}/reports/{{$reportId}}" class="edit-links">Edit</a>
                                             |
                                             <a href="/delete/{{$urlCancel}}/{{$item->id}}/{{$reportId}}" style="color: #990000;">Delete</a>
                                         </td>
