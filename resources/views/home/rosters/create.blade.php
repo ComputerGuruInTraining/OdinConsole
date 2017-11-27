@@ -11,9 +11,9 @@
         function checkAmt() {
             var values = $('#mySelect').val();
             console.log(values);
-            if(values.length > 1){
+            if (values.length > 1) {
                 document.getElementById("checks_amt").removeAttribute("disabled");
-            }else if(values.length == 1){
+            } else if (values.length == 1) {
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
             }
         }
@@ -33,7 +33,7 @@
     @endif
 
     {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
-    <div class='form-pages col-md-8' >
+    <div class='form-pages col-md-8'>
         <div class='form-group'>
             {!! Form::Label('title', 'Shift Title:') !!}
             {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
@@ -46,19 +46,20 @@
 
         <div class='form-group'>
             {{ Form::label('startDate', 'Start Date') }}
-            {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
+            {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
             {{ Form::label('startTime', 'Start Time') }}
-            <input class="input-a" value="" name="startTime" data-default="9:00" >
+            <input class="input-a" value="" name="startTime" data-default="9:00" placeholder="10:00">
             @include('clock-picker')
         </div>
 
         <div class='form-group'>
             {{ Form::label('endDate', 'End Date&nbsp;&nbsp;') }}
-            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
+            {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
             {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
-            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()">
+            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()"
+                   placeholder="16:00">
             @include('clock-picker')
         </div>
 
@@ -66,7 +67,7 @@
         FIXME: jquery scripts interfering with the operation of popover tip --}}
 
         {{--<div style="color: #dd4b39; padding-bottom: 8px;">--}}
-            {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
+        {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
         {{--</div>--}}
         <div class='form-group'>
             {!! Form::Label('locations', 'Select Location:') !!}
@@ -77,19 +78,31 @@
 
             <select class="form-control" multiple="multiple" id="mySelect" onFocusOut="checkAmt()" name="locations[]"
                     size="10" onkeypress="return noenter()">
-                @foreach($locList as $loc)
-                    <option value="{{$loc->id}}">{{$loc->name}}</option>
-                @endforeach
+                @if(count($locList) == 0)
+                    <option value="" disabled>Add Locations via Locations Page</option>
+                @else
+                    @foreach($locList as $loc)
+                        <option value="{{$loc->id}}">{{$loc->name}}</option>
+                    @endforeach
+                @endif
+
             </select>
         </div>
 
         <div class='form-group'>
             {!! Form::Label('employees', 'Select Employee:') !!}
 
-            <select class="form-control" name="employees[]" multiple="multiple" size="auto" onkeypress="return noenter()">
-                @foreach($empList as $emp)
-                    <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                @endforeach
+            <select class="form-control" name="employees[]" multiple="multiple" size="auto"
+                    onkeypress="return noenter()">
+
+                @if(count($empList) == 0)
+                    <option value="" disabled>Add Employees via Employees Page</option>
+                @else
+                    @foreach($empList as $emp)
+                        <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                    @endforeach
+                @endif
+
             </select>
         </div>
 
@@ -98,7 +111,7 @@
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('checks', 'Number of Visits Required:') !!}
+            {!! Form::Label('checks', 'Location Checks:') !!}
             {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
         </div>
 

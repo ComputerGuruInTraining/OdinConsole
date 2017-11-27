@@ -396,7 +396,6 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
-            dd($error);
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
 

@@ -362,7 +362,7 @@ if (!function_exists('geoRange')) {
 
         $goodRange = 0.2;
         $okRange = 0.5;
-        
+
         if($distance <= $goodRange){
 
             $result = 'yes';
