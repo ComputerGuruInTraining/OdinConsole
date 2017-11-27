@@ -8,6 +8,42 @@
 @section('custom-scripts-body')
     <script>
 
+        var expanded = false;
+        var locExpanded = false;
+
+        function showCheckboxes() {
+            var checkboxes = document.getElementById("checkboxes");
+            var selectBox = document.getElementsByClassName("selectBox")[0];
+            if (!expanded) {
+                checkboxes.style.display = "block";
+                selectBox.style.margin = "0px";
+
+                expanded = true;
+            } else {
+                checkboxes.style.display = "none";
+                selectBox.style.margin = "15px";
+
+                expanded = false;
+            }
+        }
+
+        function showLocCheckboxes() {
+            var checkboxesLoc = document.getElementById("checkboxesLoc");
+            var selectBoxLoc = document.getElementsByClassName("selectBoxLoc")[0];
+
+            if (!locExpanded) {
+                checkboxesLoc.style.display = "block";
+                selectBoxLoc.style.margin = "0px";
+
+                locExpanded = true;
+            } else {
+                checkboxesLoc.style.display = "none";
+                selectBoxLoc.style.margin = "15px";
+
+                locExpanded = false;
+            }
+        }
+
         function checkAmt() {
             var values = $('#mySelect').val();
             console.log(values);
@@ -69,58 +105,88 @@
         {{--<div style="color: #dd4b39; padding-bottom: 8px;">--}}
         {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
         {{--</div>--}}
-        <div class='form-group'>
-            {!! Form::Label('locations', 'Select Location:') !!}
 
-            <div class="alert alert-info alert-custom">
-                <strong>Tip!</strong> ctrl/cmd to select more than one
+        <div class='form-group'>
+
+            <div class="multiselect" width="100%">
+                <div class="selectBoxLoc" onclick="showLocCheckboxes()">
+                    <select onFocusOut="checkAmt()">
+                        <option class="select-option">Select Location:</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+
+                <div id="checkboxesLoc">
+
+                    @foreach($locList as $loc)
+                        <label for="{{$loc->id}}">
+                            <input type="checkbox" name="locations[]" value="{{$loc->id}}"/>    {{$loc->name}}</label>
+                    @endforeach
+
+                </div>
+
             </div>
 
-            <select class="form-control" multiple="multiple" id="mySelect" onFocusOut="checkAmt()" name="locations[]"
-                    size="10" onkeypress="return noenter()">
-                @if(count($locList) == 0)
-                    <option value="" disabled>Add Locations via Locations Page</option>
-                @else
-                    @foreach($locList as $loc)
-                        <option value="{{$loc->id}}">{{$loc->name}}</option>
-                    @endforeach
-                @endif
-
-            </select>
         </div>
 
+        {{--<div class='form-group'>--}}
+            {{--{!! Form::Label('locations', 'Select Location:') !!}--}}
+
+            {{--<div class="alert alert-info alert-custom">--}}
+                {{--<strong>Tip!</strong> ctrl/cmd to select more than one--}}
+            {{--</div>--}}
+
+            {{--<select class="form-control" multiple="multiple" id="mySelect"  name="locations[]"--}}
+                    {{--size="10" onkeypress="return noenter()">--}}
+                {{--@if(count($locList) == 0)--}}
+                    {{--<option value="" disabled>Add Locations via Locations Page</option>--}}
+                {{--@else--}}
+                    {{--@foreach($locList as $loc)--}}
+                        {{--<option value="{{$loc->id}}">{{$loc->name}}</option>--}}
+                    {{--@endforeach--}}
+                {{--@endif--}}
+
+            {{--</select>--}}
+        {{--</div>--}}
+
         <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee:') !!}
 
-            <select class="form-control" name="employees[]" multiple="multiple" size="auto"
-                    onkeypress="return noenter()">
+            <div class="multiselect" width="100%">
+                <div class="selectBox" onclick="showCheckboxes()">
+                    <select>
+                        <option class="select-option">Select Employee:</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
 
-                @if(count($empList) == 0)
-                    <option value="" disabled>Add Employees via Employees Page</option>
-                @else
+                <div id="checkboxes">
+
                     @foreach($empList as $emp)
-                        <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                        <label for="{{$emp->user_id}}">
+                            <input type="checkbox" name="employees[]" value="{{$emp->user_id}}" id="{{$emp->user_id}}"/>    {{$emp->first_name}} {{$emp->last_name}}</label>
                     @endforeach
-                @endif
 
-            </select>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="alert alert-warning alert-custom">
-            <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
+            <div class="alert alert-warning alert-custom">
+                <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
+            </div>
+
+            <div class='form-group'>
+                {!! Form::Label('checks', 'Location Checks:') !!}
+                {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
+            </div>
+
+            <div class='form-group form-buttons'>
+                {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+                <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            </div>
+
+            {{ Form::close() }}
+
         </div>
-
-        <div class='form-group'>
-            {!! Form::Label('checks', 'Location Checks:') !!}
-            {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
-        </div>
-
-        <div class='form-group form-buttons'>
-            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-            <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
-        </div>
-
-        {{ Form::close() }}
-
-    </div>
 @stop
