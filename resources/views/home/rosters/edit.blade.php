@@ -8,23 +8,56 @@
 @section('custom-scripts-body')
     <script>
 
-        function checkAmt() {
+        var expanded = false;
+        var locExpanded = false;
 
-            var values = $('#mySelect').val();
+        function showCheckboxesEdit() {
+            var checkboxes = document.getElementById("checkboxes");
+            var selectBox = document.getElementsByClassName("selectBox")[0];
+            if (!expanded) {
+                checkboxes.style.display = "block";
+                selectBox.style.margin = "0px";
+
+                expanded = true;
+            } else {
+                checkboxes.style.display = "none";
+                selectBox.style.margin = "15px";
+
+                expanded = false;
+            }
+        }
+
+        function showLocCheckboxesEdit() {
+            var checkboxesLoc = document.getElementById("checkboxesLoc");
+            var selectBoxLoc = document.getElementsByClassName("selectBoxLoc")[0];
+
+            if (!locExpanded) {
+                checkboxesLoc.style.display = "block";
+                selectBoxLoc.style.margin = "0px";
+
+                locExpanded = true;
+            } else {
+                checkboxesLoc.style.display = "none";
+                selectBoxLoc.style.margin = "15px";
+
+                locExpanded = false;
+            }
+        }
+
+        function checkAmtEdit() {
+
+            myArray = [];
+
+            $("#checkboxesLoc input:checkbox:checked").each(function(){ myArray.push($(this).val()); })
             var elem = document.getElementById("checks_amt");
 
-            if (values.length > 1) {
+            if (myArray.length > 1) {
                 if (elem.hasAttribute('disabled')) {
                     elem.removeAttribute("disabled");
-
                 }
-            } else if (values.length == 1) {
-
+            } else if (myArray.length == 1) {
                 if (!elem.hasAttribute('disabled')) {
-
                     elem.setAttribute("disabled", "disabled");
-//                    elem.value = 1;
-//                    alert('For shifts with single locations, the checks amount will take the default of 1 check');//fixme improve a div on screen instead
                 }
             }
         }
@@ -44,6 +77,7 @@
                 </ul>
             </div>
         @endif
+
         <div>
             {{--$assigned is an array with some values the same for all items, but location and employee details differ. --}}
             {{--Assigned_shift_id and date and time values are the same for all items therefore, just access the first items details for these fields--}}
@@ -81,44 +115,63 @@
             </div>
 
             <div class='form-group'>
-                {!! Form::Label('locations', 'Select Location:') !!}
-                <div class="alert alert-info alert-custom">
-                    <strong>Tip!</strong> ctrl/cmd to select more than one
-                </div>
+                <div class="multiselect" width="100%">
+                    <div class="selectBoxLoc" onclick="showLocCheckboxesEdit()">
+                        <select>
+                            <option class="select-option">Select Location:</option>
+                        </select>
+                        <div class="overSelect"></div>
+                    </div>
 
-                <select class="form-control" name="locations[]" multiple="multiple" size="auto"
-                        id="mySelect" onFocusOut="checkAmt()" onkeypress="return noenter()">
-                    {{--Highlight assigned shift locations--}}
-                    @foreach($myLocations as $myLocation)
-                        <option value="{{$myLocation->location_id}}" selected
-                                multiple>{{$myLocation->location}}</option>
-                    @endforeach
-                    {{--List all the locations besides those that are selected at the top of the list because stored in db--}}
-                    @foreach($locList as $loc)
-{{--                        @if($loc->id != $myLocation->location_id)--}}
-                            <option value="{{$loc->id}}">{{$loc->name}}</option>
-                        {{--@endif--}}
-                    @endforeach
-                </select>
+                    <div id="checkboxesLoc" onchange="checkAmtEdit()">
+
+                        {{--Highlight assigned shift locations--}}
+                        @foreach($myLocations as $myLocation)
+                            <label for="{{$myLocation->location_id}}">
+                                <input type="checkbox" name="locations[]" value="{{$myLocation->location_id}}" checked
+                                       id="{{$myLocation->location_id}}"/> {{$myLocation->location}}</label>
+                        @endforeach
+
+                        {{--List all the locations besides those that are selected at the top of the list because stored in db--}}
+                        @foreach($locList as $loc)
+                            <label for="{{$loc->id}}">
+                                <input type="checkbox" name="locations[]" value="{{$loc->id}}"
+                                       id="{{$loc->id}}"/> {{$loc->name}}</label>
+                        @endforeach
+
+                    </div>
+
+                </div>
             </div>
 
             <div class='form-group'>
-                {!! Form::Label('employees', 'Select Employee:') !!}
 
-                <select class="form-control" name="employees[]" multiple="multiple" size="auto"
-                        onkeypress="return noenter()">
-                    {{--Highlight assigned_shift_employees--}}
-                    @foreach($myEmployees as $myEmployee)
-                        <option value="{{$myEmployee->mobile_user_id}}" selected
-                                multiple>{{$myEmployee->employee}}</option>
-                    @endforeach
-                    {{--List all the employees besides those that are selected at the top of the list because stored in db--}}
-                    @foreach($empList as $emp)
-{{--                        @if($emp->user_id != $myEmployee->mobile_user_id)--}}
-                            <option value="{{$emp->user_id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
-                        {{--@endif--}}
-                    @endforeach
-                </select>
+                <div class="multiselect" width="100%">
+                    <div class="selectBox" onclick="showCheckboxesEdit()">
+                        <select>
+                            <option class="select-option">Select Employee:</option>
+                        </select>
+                        <div class="overSelect"></div>
+                    </div>
+
+                    <div id="checkboxes">
+                        {{--Highlight assigned_shift_employees--}}
+                        @foreach($myEmployees as $myEmployee)
+                            <label for="{{$myEmployee->mobile_user_id}}">
+                                <input type="checkbox" name="employees[]" value="{{$myEmployee->mobile_user_id}}"
+                                       checked
+                                       id="{{$myEmployee->mobile_user_id}}"/> {{$myEmployee->employee}}</label>
+                        @endforeach
+
+                        {{--List all the employees besides those that are selected at the top of the list because stored in db--}}
+                        @foreach($empList as $emp)
+                            <label for="{{$emp->user_id}}">
+                                <input type="checkbox" name="employees[]" value="{{$emp->user_id}}"
+                                       id="{{$emp->user_id}}"/> {{$emp->first_name}} {{$emp->last_name}}</label>
+                        @endforeach
+                    </div>
+                </div>
+
             </div>
 
             <div class="alert alert-warning alert-custom">

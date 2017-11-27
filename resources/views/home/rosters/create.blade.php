@@ -44,23 +44,17 @@
             }
         }
 
-
-
         function checkAmt() {
 
             myArray = [];
 
-            var values = $("#checkboxesLoc input:checkbox:checked").each(function(){ myArray.push($(this).val()); })
-
-//            for(var i=0; i< myArray.length; i++){
-//
-//                console.log(myArray[i]);
-//
-//            }
+            $("#checkboxesLoc input:checkbox:checked").each(function () {
+                myArray.push($(this).val());
+            })
 
             if (myArray.length > 1) {
                 document.getElementById("checks_amt").removeAttribute("disabled");
-            } else if (values.length == 1) {
+            } else if (myArray.length == 1) {
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
             }
         }
@@ -111,8 +105,7 @@
         </div>
 
         <div class='form-group'>
-
-            <div class="multiselect" width="100%" onFocusOut="checkAmt()">
+            <div class="multiselect" width="100%">
                 <div class="selectBoxLoc" onclick="showLocCheckboxes()">
                     <select>
                         <option class="select-option">Select Location:</option>
@@ -121,37 +114,27 @@
                 </div>
 
                 <div id="checkboxesLoc" onchange="checkAmt()">
+                    @if(isset($locOld))
+                        @if(count($locOld) > 1)
+                            @foreach($locOld as $locOldItem)
+                                {{$locOldItem}}
+                            @endforeach
+                        @else
+                            $locOld
+                        @endif
+                    @else
+                        @foreach($locList as $loc)
 
-                    @foreach($locList as $loc)
-                        <label for="{{$loc->id}}">
-                            <input type="checkbox" name="locations[]" value="{{$loc->id}}" id="{{$loc->id}}"/>    {{$loc->name}}</label>
-                    @endforeach
+                            <label for="{{$loc->id}}">
+                                <input type="checkbox" name="locations[]" value="{{$loc->id}}"
+                                       id="{{$loc->id}}"/> {{$loc->name}}</label>
+                        @endforeach
+                    @endif
 
                 </div>
 
             </div>
-
         </div>
-
-        {{--<div class='form-group'>--}}
-            {{--{!! Form::Label('locations', 'Select Location:') !!}--}}
-
-            {{--<div class="alert alert-info alert-custom">--}}
-                {{--<strong>Tip!</strong> ctrl/cmd to select more than one--}}
-            {{--</div>--}}
-
-            {{--<select class="form-control" multiple="multiple" id="mySelect"  name="locations[]"--}}
-                    {{--size="10" onkeypress="return noenter()">--}}
-                {{--@if(count($locList) == 0)--}}
-                    {{--<option value="" disabled>Add Locations via Locations Page</option>--}}
-                {{--@else--}}
-                    {{--@foreach($locList as $loc)--}}
-                        {{--<option value="{{$loc->id}}">{{$loc->name}}</option>--}}
-                    {{--@endforeach--}}
-                {{--@endif--}}
-
-            {{--</select>--}}
-        {{--</div>--}}
 
         <div class='form-group'>
 
@@ -167,7 +150,8 @@
 
                     @foreach($empList as $emp)
                         <label for="{{$emp->user_id}}">
-                            <input type="checkbox" name="employees[]" value="{{$emp->user_id}}" id="{{$emp->user_id}}"/>    {{$emp->first_name}} {{$emp->last_name}}</label>
+                            <input type="checkbox" name="employees[]" value="{{$emp->user_id}}"
+                                   id="{{$emp->user_id}}"/> {{$emp->first_name}} {{$emp->last_name}}</label>
                     @endforeach
 
                 </div>
@@ -176,21 +160,21 @@
 
         </div>
 
-            <div class="alert alert-warning alert-custom">
-                <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
-            </div>
-
-            <div class='form-group'>
-                {!! Form::Label('checks', 'Location Checks:') !!}
-                {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
-            </div>
-
-            <div class='form-group form-buttons'>
-                {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-                <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
-            </div>
-
-            {{ Form::close() }}
-
+        <div class="alert alert-warning alert-custom">
+            <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
         </div>
+
+        <div class='form-group'>
+            {!! Form::Label('checks', 'Location Checks:') !!}
+            {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
+        </div>
+
+        <div class='form-group form-buttons'>
+            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+            <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+        </div>
+
+        {{ Form::close() }}
+
+    </div>
 @stop

@@ -25,6 +25,8 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    private $locOld;
+
     public function index()
     {
         try {
@@ -181,6 +183,12 @@ class RosterController extends Controller
     {
         //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations?? true still??
         try {
+            Input::flash();
+            $empOld = Input::old('employees');
+            $this->locOld = Input::old('locations');
+            $startTimeOld = Input::old('startTime');
+            $endTimeOld = Input::old('endTime');
+
             $this->validate($request, [
                 'title' => 'required|max:255',
                 'desc' => 'required|max:255',
@@ -202,8 +210,10 @@ class RosterController extends Controller
                     if ($dateStart == 'error') {
 
                         $e = 'Error storing shift details';
-                        $errors = collect($e);
-                        return view('/home/rosters/create')->with('errors', $errors);
+//                        $errors = collect($e);
+                        return Redirect::to('rosters/create')
+                            ->withInput()
+                            ->withErrors($e);
                     } else {
                         return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
                     }
