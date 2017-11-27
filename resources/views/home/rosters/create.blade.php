@@ -44,10 +44,21 @@
             }
         }
 
+
+
         function checkAmt() {
-            var values = $('#mySelect').val();
-            console.log(values);
-            if (values.length > 1) {
+
+            myArray = [];
+
+            var values = $("#checkboxesLoc input:checkbox:checked").each(function(){ myArray.push($(this).val()); })
+
+//            for(var i=0; i< myArray.length; i++){
+//
+//                console.log(myArray[i]);
+//
+//            }
+
+            if (myArray.length > 1) {
                 document.getElementById("checks_amt").removeAttribute("disabled");
             } else if (values.length == 1) {
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
@@ -99,28 +110,21 @@
             @include('clock-picker')
         </div>
 
-        {{--TODO: v2 tip with info icon and then press for this tip
-        FIXME: jquery scripts interfering with the operation of popover tip --}}
-
-        {{--<div style="color: #dd4b39; padding-bottom: 8px;">--}}
-        {{--Tip: Hold down ctrl/cmd to add more than one employee or location. Release ctrl/cmd to scroll the list.--}}
-        {{--</div>--}}
-
         <div class='form-group'>
 
-            <div class="multiselect" width="100%">
+            <div class="multiselect" width="100%" onFocusOut="checkAmt()">
                 <div class="selectBoxLoc" onclick="showLocCheckboxes()">
-                    <select onFocusOut="checkAmt()">
+                    <select>
                         <option class="select-option">Select Location:</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>
 
-                <div id="checkboxesLoc">
+                <div id="checkboxesLoc" onchange="checkAmt()">
 
                     @foreach($locList as $loc)
                         <label for="{{$loc->id}}">
-                            <input type="checkbox" name="locations[]" value="{{$loc->id}}"/>    {{$loc->name}}</label>
+                            <input type="checkbox" name="locations[]" value="{{$loc->id}}" id="{{$loc->id}}"/>    {{$loc->name}}</label>
                     @endforeach
 
                 </div>
