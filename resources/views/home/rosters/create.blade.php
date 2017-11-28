@@ -77,7 +77,8 @@
     <div class='form-pages col-md-8'>
         <div class='form-group'>
             {!! Form::Label('title', 'Shift Title:') !!}
-            {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
+            {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security',
+            'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
