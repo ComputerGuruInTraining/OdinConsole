@@ -90,7 +90,8 @@
             {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
             {{ Form::label('startTime', 'Start Time') }}
-            <input class="input-a" value="" name="startTime" data-default="9:00" placeholder="10:00">
+            <input class="input-a" value="{{ old('startTime') }}" name="startTime" data-default="9:00"
+                   placeholder="10:00">
             @include('clock-picker')
         </div>
 
@@ -99,12 +100,14 @@
             {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
             {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
-            <input class="input-b" value="" name="endTime" data-default="17:00" onkeypress="return noenter()"
+            <input class="input-b" value="{{ old('endTime') }}" name="endTime" data-default="17:00"
+                   onkeypress="return noenter()"
                    placeholder="16:00">
             @include('clock-picker')
         </div>
 
         <div class='form-group'>
+
             <div class="multiselect" width="100%">
                 <div class="selectBoxLoc" onclick="showLocCheckboxes()">
                     <select>
@@ -114,30 +117,55 @@
                 </div>
 
                 <div id="checkboxesLoc" onchange="checkAmt()">
-                    @if(isset($locOld))
-                        @if(count($locOld) > 1)
-                            @foreach($locOld as $locOldItem)
-                                {{$locOldItem}}
-                            @endforeach
-                        @else
-                            $locOld
-                        @endif
-                    @else
-                        @foreach($locList as $loc)
+                    @php
+                        if(count(old('locations')) > 0){
+                                foreach(old('locations') as $locOldItem){
+                                    foreach($locList as $loc){
+                                        if($locOldItem == $loc->id)  {
 
-                            <label for="{{$loc->id}}">
-                                <input type="checkbox" name="locations[]" value="{{$loc->id}}"
-                                       id="{{$loc->id}}"/> {{$loc->name}}</label>
-                        @endforeach
-                    @endif
+                                            echo
+                                            " <label for='".$locOldItem."'>
+                                            <input type='checkbox' name='locations[]' value='".$locOldItem."' checked
+                                                   id='".$locOldItem."'/>".$loc->name."</label>";
 
+                                           break;
+                                        }
+                                    }
+                                }
+
+                           foreach($locList as $loc){
+
+                               $sameSame = false;
+
+                               foreach(old('locations') as $locOldItem){
+                                    if($loc->id == $locOldItem){
+                                            $sameSame = true;
+                                    }
+
+                                }
+
+                                if(!$sameSame){
+                                    echo
+                                            " <label for='".$loc->id."'>
+                                            <input type='checkbox' name='locations[]' value='".$loc->id."'
+                                                   id='".$loc->id."'/>".$loc->name."</label>";
+                               }
+
+                         }
+                        }else{
+                             foreach($locList as $loc){
+                              echo
+                                        " <label for='".$loc->id."'>
+                                        <input type='checkbox' name='locations[]' value='".$loc->id."'
+                                               id='".$loc->id."'/>".$loc->name."</label>";
+                             }
+                        }
+                    @endphp
                 </div>
-
             </div>
         </div>
 
         <div class='form-group'>
-
             <div class="multiselect" width="100%">
                 <div class="selectBox" onclick="showCheckboxes()">
                     <select>
@@ -147,17 +175,53 @@
                 </div>
 
                 <div id="checkboxes">
+                    @php
+                        if(count(old('employees')) > 0){
+                                foreach(old('employees') as $empOldItem){
+                                    foreach($empList as $emp){
+                                        if($empOldItem == $emp->user_id)  {
 
-                    @foreach($empList as $emp)
-                        <label for="{{$emp->user_id}}">
-                            <input type="checkbox" name="employees[]" value="{{$emp->user_id}}"
-                                   id="{{$emp->user_id}}"/> {{$emp->first_name}} {{$emp->last_name}}</label>
-                    @endforeach
+                                            echo
+                                            " <label for='".$empOldItem."'>
+                                            <input type='checkbox' name='employees[]' value='".$empOldItem."' checked
+                                                   id='".$empOldItem."'/>".$emp->first_name." ".$emp->last_name."</label>";
+
+                                           break;
+                                        }
+                                    }
+                                }
+
+                           foreach($empList as $emp){
+
+                               $sameEmp = false;
+
+                               foreach(old('employees') as $empOldItem){
+                                    if($emp->user_id == $empOldItem){
+                                            $sameEmp = true;
+                                    }
+
+                                }
+
+                                if(!$sameEmp){
+                                    echo
+                                            " <label for='".$emp->user_id."'>
+                                            <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                                   id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
+                               }
+
+                         }
+                        }else{
+                             foreach($empList as $emp){
+                              echo
+                                        " <label for='".$emp->user_id."'>
+                                        <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                               id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
+                             }
+                        }
+                    @endphp
 
                 </div>
-
             </div>
-
         </div>
 
         <div class="alert alert-warning alert-custom">
@@ -178,3 +242,4 @@
 
     </div>
 @stop
+

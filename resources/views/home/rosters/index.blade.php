@@ -35,12 +35,12 @@
                        echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title."</td></tr>
                              <tbody class='group-list'>
                                 <tr><td>".$formattedShift[0]->unique_date."</td>
-                                <td>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
+                                <td class='col-min-width'>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
                                 <td>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
-                                <td>".$formattedShift[0]->unique_employees."</td>
+                                <td class='col-max-width'>".$formattedShift[0]->unique_employees."</td>
                                 <td>
                                     <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a>
-                                    | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."'style='color: #990000;'>Delete</a>
+                                    | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."' style='color: #990000;'>Delete</a>
                                 </td>
                          </tr>";
 
@@ -73,7 +73,6 @@
 
                          $smallestArray = min($locLen, $empLen);
                          $biggestArray = max($locLen, $empLen);
-{{--                         $remainingItems = $biggestArray - $smallestArray;--}}
 
                         //loop through the smallest array and display values from both the arrays
                         for($index = 0; $index<$smallestArray; $index++){
@@ -103,8 +102,6 @@
                            }
                            else if($biggestArray == sizeof($locations)){
                                 for($r = $smallestArray; $r<$biggestArray; $r++){
-
-{{--                               for($r = 0; $r<$remainingItems; $r++){--}}
                                        echo"<tr>
                                             <td></td>
                                             <td></td>

@@ -10,6 +10,12 @@
 Odin theming
 */
 
+/*For shared use around app*/
+
+.col-max-width{
+    max-width: 250px;
+}
+
 /*select lists on add shift page*/
 
 .selectBox, .selectBoxLoc {
@@ -581,6 +587,10 @@ body {
     .sidebar-collapse .right-side,
     .sidebar-collapse .main-footer {
         margin-left: 0;
+    }
+
+    .col-min-width{
+        min-width: 170px;
     }
 }
 @media (max-width: 767px) {

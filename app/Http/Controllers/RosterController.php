@@ -25,7 +25,8 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    private $locOld;
+    protected $locOld;
+    public $startTimeOld;
 
     public function index()
     {
@@ -186,7 +187,7 @@ class RosterController extends Controller
             Input::flash();
             $empOld = Input::old('employees');
             $this->locOld = Input::old('locations');
-            $startTimeOld = Input::old('startTime');
+            $this->startTimeOld = Input::old('startTime');
             $endTimeOld = Input::old('endTime');
 
             $this->validate($request, [
