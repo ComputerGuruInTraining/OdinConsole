@@ -393,6 +393,16 @@ if (!function_exists('substrImg')) {
     }
 }
 
+
+//if (!function_exists('substrImg')) {
+//
+//    function substrImg($stringImg)
+//    {
+//        setName()
+//    }
+//
+//}
+
 //TODO: WIP
 //if (!function_exists('navTo')) {
 //    function navTo($id, $url){

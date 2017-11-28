@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        {{ Form::open(['role' => 'form', 'url' => '/location-created']) }}
+        {{ Form::open(['role' => 'form', 'url' => '/location-create-confirm']) }}
         @include('map')
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias *') }}
@@ -34,7 +34,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+            {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
             <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}
