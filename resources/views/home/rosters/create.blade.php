@@ -230,7 +230,15 @@
 
         <div class='form-group'>
             {!! Form::Label('checks', 'Location Checks:') !!}
-            {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
+            @if(count(old('locations')) > 0)
+                @if(count(old('locations')) > 1)
+                     {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt')) }}
+                @else
+                    {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
+                @endif
+            @else
+                {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
+            @endif
         </div>
 
         <div class='form-group form-buttons'>

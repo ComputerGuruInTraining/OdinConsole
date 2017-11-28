@@ -32,13 +32,13 @@
                 @php
                     foreach($assigned as $index => $formattedShift){
                         //display the first record with values in all the columns
-                       echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title."</td></tr>
+                       echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title.", Location checks: ".$formattedShift[0]->checks."</td></tr>
                              <tbody class='group-list'>
                                 <tr><td>".$formattedShift[0]->unique_date."</td>
                                 <td class='col-min-width'>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
-                                <td>".$formattedShift[0]->unique_locations." (".$formattedShift[0]->checks." check/s)</td>
-                                <td class='col-max-width'>".$formattedShift[0]->unique_employees."</td>
-                                <td>
+                                <td class='col-min-width-med'>".$formattedShift[0]->unique_locations."</td>
+                                <td>".$formattedShift[0]->unique_employees."</td>
+                                <td class='col-min-width-sm'>
                                     <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a>
                                     | <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."' style='color: #990000;'>Delete</a>
                                 </td>

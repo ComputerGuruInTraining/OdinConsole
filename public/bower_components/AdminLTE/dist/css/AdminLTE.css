@@ -10,11 +10,6 @@
 Odin theming
 */
 
-/*For shared use around app*/
-
-.col-max-width{
-    max-width: 250px;
-}
 
 /*select lists on add shift page*/
 
@@ -589,8 +584,17 @@ body {
         margin-left: 0;
     }
 
+    .col-min-width-sm{
+
+        min-width: 140px;
+    }
+
     .col-min-width{
         min-width: 170px;
+    }
+
+    .col-min-width-med{
+        min-width: 260px;
     }
 }
 @media (max-width: 767px) {
