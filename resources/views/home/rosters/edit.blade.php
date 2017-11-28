@@ -129,7 +129,7 @@
                         @php
                             if(count(old('locations')) > 0){
                                     foreach(old('locations') as $locOldItem){
-                                        foreach($locList as $loc){
+                                        foreach($locationsAll as $loc){
                                             if($locOldItem == $loc->id)  {
 
                                                 echo
@@ -142,7 +142,7 @@
                                         }
                                     }
 
-                               foreach($locList as $loc){
+                               foreach($locationsAll as $loc){
 
                                    $sameSame = false;
 
@@ -159,60 +159,29 @@
                                                 <input type='checkbox' name='locations[]' value='".$loc->id."'
                                                        id='".$loc->id."'/>".$loc->name."</label>";
                                    }
+
+                             }
+                             //if no old input, use values stored in db and other items not stored in db
+                                }else{
+                                //Highlight assigned_shift_locations
+                                    foreach($myLocations as $myLocation){
+                                        echo "<label for='".$myLocation->location_id."'>
+                                        <input type='checkbox' name='locations[]' value='".$myLocation->location_id."'
+                                               checked
+                                               id='".$myLocation->location_id."'/>    ".$myLocation->location."</label>";
+                                    }
+
+                                    //List all the locations besides those that are selected at the top of the list
+                                    //because stored in db
+                                    foreach($locList as $loc){
+                                     echo "<label for='".$loc->id."'>
+                                        <input type='checkbox' name='locations[]' value='".$loc->id."'
+                                               id='".$loc->id."'/>    ".$loc->name."</label>";
+
+
+                                    }
                                 }
-
-                               /*Ensure the values that were stored in the database display in the list
-                                if not included in old input*/
-                                foreach($myLocations as $myLocation){
-
-                                       $notEqualLoc = false;
-
-                                       foreach(old('locations') as $locOldItem){
-                                            if($myLocation->location_id != $locOldItem){
-                                                $notEqualLoc = true;
-                                            }
-                                       }
-
-                                      if($notEqualLoc){
-                                            echo "<label for='".$myLocation->location_id."'>
-                                            <input type='checkbox' name='employees[]' value='".$myLocation->location_id."'
-                                           id='".$myLocation->location_id."'/>    ".$myLocation->location."</label>";
-                                       }
-                               }
-                            }else{
-                            //Highlight assigned_shift_locations
-                                foreach($myLocations as $myLocation){
-                                    echo "<label for='".$myLocation->location_id."'>
-                                    <input type='checkbox' name='locations[]' value='".$myLocation->location_id."'
-                                           checked
-                                           id='".$myLocation->location_id."'/>    ".$myLocation->location."</label>";
-                                }
-
-                                //List all the locations besides those that are selected at the top of the list
-                                //because stored in db
-                                foreach($locList as $loc){
-                                 echo "<label for='".$loc->id."'>
-                                    <input type='checkbox' name='locations[]' value='".$loc->id."'
-                                           id='".$loc->id."'/>    ".$loc->name."</label>";
-
-
-                                }
-                            }
                         @endphp
-
-                        {{--Highlight assigned shift locations--}}
-                        {{--@foreach($myLocations as $myLocation)--}}
-                            {{--<label for="{{$myLocation->location_id}}">--}}
-                                {{--<input type="checkbox" name="locations[]" value="{{$myLocation->location_id}}" checked--}}
-                                       {{--id="{{$myLocation->location_id}}"/> {{$myLocation->location}}</label>--}}
-                        {{--@endforeach--}}
-
-                        {{--List all the locations besides those that are selected at the top of the list because stored in db--}}
-                        {{--@foreach($locList as $loc)--}}
-                            {{--<label for="{{$loc->id}}">--}}
-                                {{--<input type="checkbox" name="locations[]" value="{{$loc->id}}"--}}
-                                       {{--id="{{$loc->id}}"/> {{$loc->name}}</label>--}}
-                        {{--@endforeach--}}
 
                     </div>
 
@@ -232,89 +201,58 @@
                     <div id="checkboxes">
                         @php
                             if(count(old('employees')) > 0){
-
-                                    //display oldInput as checked checkboxes
                                     foreach(old('employees') as $empOldItem){
-                                        //display the items that were not already stored in the db and are old input
-                                        foreach($empList as $emp){
+                                        foreach($employeesAll as $emp){
                                             if($empOldItem == $emp->user_id)  {
 
                                                 echo
                                                 " <label for='".$empOldItem."'>
-                                                <input type='checkbox' name='employees[]' value='".$empOldItem."'
-                                                        checked
-                                                       id='".$empOldItem."'/>   ".$emp->first_name." ".$emp->last_name."</label>";
+                                                <input type='checkbox' name='employees[]' value='".$empOldItem."' checked
+                                                       id='".$empOldItem."'/>".$emp->first_name." ".$emp->last_name."</label>";
 
                                                break;
                                             }
                                         }
-                                        //display the items that were stored in the db and are old input
-                                        foreach($myEmployees as $myEmployee){
-                                            if($empOldItem == $myEmployee->mobile_user_id)  {
-                                                echo "<label for='".$myEmployee->mobile_user_id."'>
-                                                <input type='checkbox' name='employees[]' value='".$myEmployee->mobile_user_id."'
-                                                       checked
-                                                       id='".$myEmployee->mobile_user_id."'/>    ".$myEmployee->employee."</label>";
-                                           }
-                                        }
                                     }
 
-                                    //display the rest of the employees not stored in the db previously as unchecked checkboxes
-                                   foreach($empList as $emp){
+                               foreach($employeesAll as $emp){
 
-                                       $sameEmp = false;
+                                   $sameEmp = false;
 
-                                       foreach(old('employees') as $empOldItem){
-                                            if($emp->user_id == $empOldItem){
-                                                    $sameEmp = true;
-                                            }
-
+                                   foreach(old('employees') as $empOldItem){
+                                        if($emp->user_id == $empOldItem){
+                                                $sameEmp = true;
                                         }
 
-                                        if(!$sameEmp){
-                                            echo
-                                                    " <label for='".$emp->user_id."'>
-                                                    <input type='checkbox' name='employees[]' value='".$emp->user_id."'
-                                                           id='".$emp->user_id."'/>    ".$emp->first_name." ".$emp->last_name."</label>";
-                                        }
                                     }
 
-                                  /*display the rest of the employees that were stored in the db previously*/
-                                   foreach($myEmployees as $myEmployee){
-
-                                       $notEqual = false;
-
-                                       foreach(old('employees') as $empOldItem){
-                                            if($myEmployee->mobile_user_id != old($empOldItem)){
-                                                $notEqual = true;
-                                            }
-                                       }
-
-                                      if($notEqual){
-                                            echo "<label for='".$myEmployee->mobile_user_id."'>
-                                            <input type='checkbox' name='employees[]' value='".$myEmployee->mobile_user_id."'
-                                           id='".$myEmployee->mobile_user_id."'/>    ".$myEmployee->employee."</label>";
-                                       }
+                                    if(!$sameEmp){
+                                        echo
+                                                " <label for='".$emp->user_id."'>
+                                                <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                                       id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
                                    }
 
+                                }
                             }else{
+                                     //if no old input, use values stored in db and other items not stored in db
 
-                                 //Highlight assigned_shift_employees
-                                foreach($myEmployees as $myEmployee){
-                                    echo "<label for='".$myEmployee->mobile_user_id."'>
-                                    <input type='checkbox' name='employees[]' value='".$myEmployee->mobile_user_id."'
-                                           checked
-                                           id='".$myEmployee->mobile_user_id."'/>    ".$myEmployee->employee."</label>";
-                                }
+                                     //Highlight assigned_shift_employees
+                                    foreach($myEmployees as $myEmployee){
+                                        echo "<label for='".$myEmployee->mobile_user_id."'>
+                                        <input type='checkbox' name='employees[]' value='".$myEmployee->mobile_user_id."'
+                                               checked
+                                               id='".$myEmployee->mobile_user_id."'/>    ".$myEmployee->employee."</label>";
+                                    }
 
-                                //List all the employees besides those that are selected at the top of the list because stored in db
-                                foreach($empList as $emp){
-                                 echo "<label for='".$emp->user_id."'>
-                                    <input type='checkbox' name='employees[]' value='".$emp->user_id."'
-                                           id='".$emp->user_id."'/>    ".$emp->first_name." ".$emp->last_name."</label>";
+                                    //List all the employees besides those that are selected at the top of the list because stored in db
+                                    foreach($empList as $emp){
+                                     echo "<label for='".$emp->user_id."'>
+                                        <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                               id='".$emp->user_id."'/>    ".$emp->first_name." ".$emp->last_name."</label>";
 
 
-                                }
+                                    }
                             }
                         @endphp
                     </div>

@@ -387,6 +387,10 @@ class RosterController extends Controller
 
                 $empNotSelected = array_sort($empNotSelected, 'last_name', SORT_ASC);
 
+                $employees = array_sort($employees, 'last_name', SORT_ASC);
+
+                $locations = array_sort($locations, 'name', SORT_ASC);
+
                 //format dates
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
 
