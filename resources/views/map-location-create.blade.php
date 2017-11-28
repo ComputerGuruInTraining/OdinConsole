@@ -1,25 +1,27 @@
 <section class="map">
-<!-- Google Maps Javascript API -->
+    <!-- Google Maps Javascript API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
 
-{{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
+    {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
     {{--If user inputs an address, and then selects a different address, need a catch or code to update the input field value--}}
 
     <div id="map"></div>
 
     {{ Form::label('address', 'Address *') }}
 
-    <div class="alert alert-warning alert-custom">
-        <strong>Important!</strong> Please include the country for accurate geoCoding
-    </div>
-
-    <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
-
+    <input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>
 
     <script>
+
+        var lat = "<?php echo $lat;?>";
+
+        var long = "<?php echo $long;?>";
+
+        var locationCenter = new google.maps.LatLng(lat, long);
+
         var mapOptions = {
-            center: new google.maps.LatLng(37.7831,-122.4039),
-            zoom: 12,
+            center: locationCenter,
+            zoom: 14,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -34,34 +36,24 @@
         //        var autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'));
 
         autocomplete.bindTo('bounds',map);
+
         var infoWindow = new google.maps.InfoWindow();
+
+        var iconDir = '{{ asset("/icons/marker.png") }}';
+
         var marker = new google.maps.Marker({
-            map: map
+            position: locationCenter,
+            map: map,
+            icon: iconDir
         });
 
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            infoWindow.close();
-            var place = autocomplete.getPlace();
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-            }
-            marker.setPosition(place.geometry.location);
-            console.log(place);
-            infoWindow.setContent('<div><strong>' + place.formatted_address + '</strong><br>');
-            infoWindow.open(map, marker);
-            google.maps.event.addListener(marker,'click',function(e){
+        var address = "<?php echo $address;?>";
 
-                infoWindow.open(map, marker);
-                document.getElementById('autocomplete').value = place.formatted_address;
-                console.log(place);
-
-            });
-
+        google.maps.event.addListener(marker, 'click', function () {
+            infoWindow.setContent("<h5>" + address + "</h5><p>" +
+                position.address + "</p>");
+            infoWindow.open(map, this);
         });
 
-//        google.maps.event.addListener(marker, 'click')
     </script>
 </section>

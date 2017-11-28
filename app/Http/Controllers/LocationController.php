@@ -157,33 +157,30 @@ class LocationController extends Controller
 //                $longitude = $geoCoords->results[0]->geometry->location->lng;
 //                $notes = ucfirst(Input::get('info'));
 
-                $name = session('name');
-
-                dd($name);
+                $alias = session('alias');
                 $address = session('address');
                 $latitude = session('latitude');
                 $longitude = session('longitude');
                 $notes = session('notes');
 
-                
-//                $response = $client->post(Config::get('constants.API_URL') . 'locations', array(
-//                        'headers' => array(
-//                            'Authorization' => 'Bearer ' . $token,
-//                            'Content-Type' => 'application/json'
-//                        ),
-//                        'json' => array('name' => $name, 'address' => $address,
-//                            'latitude' => $latitude, 'longitude' => $longitude,
-//                            'notes' => $notes, 'compId' => $compId
-//                        )
-//                    )
-//                );
+                $response = $client->post(Config::get('constants.API_URL') . 'locations', array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array('name' => $alias, 'address' => $address,
+                            'latitude' => $latitude, 'longitude' => $longitude,
+                            'notes' => $notes, 'compId' => $compId
+                        )
+                    )
+                );
 
-//                $reply = json_decode((string)$response->getBody());
+                $reply = json_decode((string)$response->getBody());
 
                 if ($reply->success == true) {
                     //display confirmation page
                     return view('confirm-create-manual')->with(array(
-                        'theData' => $this->name,
+                        'theData' => $address,
                         'url' => 'location-create',
                         'entity' => 'Location')
                     );
@@ -462,12 +459,6 @@ class LocationController extends Controller
     {
         try {
             if (session()->has('token')) {
-                //retrieve token needed for authorized http requests
-//                $token = session('token');
-//
-//                $client = new GuzzleHttp\Client;
-//
-//                $compId = session('compId');
 
 //            validate data
                 $this->validate($request, [
@@ -479,14 +470,14 @@ class LocationController extends Controller
 
                 $name = ucfirst(Input::get('name'));
                 $address = Input::get('address');
-                $geoCoords = $this->geoCode($this->address);
+                $geoCoords = $this->geoCode($address);
                 $latitude = $geoCoords->results[0]->geometry->location->lat;
                 $longitude = $geoCoords->results[0]->geometry->location->lng;
                 $notes = ucfirst(Input::get('info'));
 
-                //save for use by store()
+                //save in session for use by store()
                 session([
-                    'name' => $name,
+                    'alias' => $name,
                     'address' => $address,
                     'latitude' => $latitude,
                     'longitude' => $longitude,
@@ -494,7 +485,7 @@ class LocationController extends Controller
                     ]);
 
                 return view('location/confirm-create-locations')->with(array(
-                    'name' => $name,
+                    'alias' => $name,
                     'address' => $address,
                     'notes' => $notes,
                     'lat' => $latitude,
@@ -508,16 +499,19 @@ class LocationController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Unable to store the location. Probably due to an invalid address 
                 or the address is already stored in the database.';
-            $errors = collect($err);
-            return view('location/create-locations')->with('errors', $errors);
+            return Redirect::to('/location-create')
+                ->withInput()
+                ->withErrors($err);
 
         } catch (\ErrorException $error) {
             //catches for such things as address not able to be converted to geocoords
             // and update fails due to db integrity constraints
             if ($error->getMessage() == 'Undefined offset: 0') {
                 $e = 'Please provide a valid address';
-                $errors = collect($e);
-                return view('location/create-locations')->with('errors', $errors);
+//                $errors = collect($e);
+                return Redirect::to('/location-create')
+                    ->withInput()
+                    ->withErrors($e);
             } else {
                 return Redirect::to('/location-create')
                     ->withInput()

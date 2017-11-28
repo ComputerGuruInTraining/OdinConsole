@@ -21,7 +21,7 @@
         @endif
 
         {{ Form::open(['role' => 'form', 'url' => '/location-created']) }}
-        {{--@extends('map-location-create')--}}
+        @extends('map-location-create')
 
             <section class="map">
                 <!-- Google Maps Javascript API -->
@@ -34,8 +34,9 @@
 
                 {{ Form::label('address', 'Address *') }}
 
-                <input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>
+{{--                @yield('input')--}}
 
+                <input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>
 
                 <script>
 
@@ -86,7 +87,7 @@
 
             <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias *') }}
-            {{ Form::text('name', $name, ['class' => 'form-control', 'disabled' => 'disabled']) }}
+            {{ Form::text('name', $alias, ['class' => 'form-control', 'disabled' => 'disabled']) }}
         </div>
 
         <div class='form-group'>
