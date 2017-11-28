@@ -405,7 +405,9 @@ class RosterController extends Controller
                     'startDate' => $startDate,
                     'startTime' => $startTime,
                     'endDate' => $endDate,
-                    'endTime' => $endTime
+                    'endTime' => $endTime,
+                    'locationsAll' => $locations,
+                    'employeesAll' => $employees
                 ));
             } else {
                 return Redirect::to('/login');
