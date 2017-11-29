@@ -24,7 +24,7 @@
 
         var mapOptions = {
             center: locationCenter,
-            zoom: 14,
+            zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 

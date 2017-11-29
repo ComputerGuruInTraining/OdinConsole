@@ -22,7 +22,7 @@
                     var lat = "<?php echo $location->latitude;?>";
                     var long = "<?php echo $location->longitude;?>";
                     var address = "<?php echo $location->address;?>";
-                    var zoom = 14;
+                    var zoom = 17;
                 @else
                     var lat = 37.7831;
                     var long = -122.4039;
@@ -49,8 +49,11 @@
 
         autocomplete.bindTo('bounds',map);
         var infoWindow = new google.maps.InfoWindow();
+        var iconDir = '{{ asset("/icons/marker.png") }}';
+
         var marker = new google.maps.Marker({
-            map: map
+            map: map,
+            icon: iconDir
         });
 
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -76,7 +79,19 @@
 
         });
 
-       
+        @if(isset($location->latitude))
+
+                var myMarker = new google.maps.Marker({
+                    position: locationCenter,
+                    map: map,
+                    icon: iconDir
+                });
+
+                google.maps.event.addListener(myMarker, 'click', function () {
+                    infoWindow.setContent("<h5>" + address + "</h5>");
+                    infoWindow.open(map, this);
+                });
+        @endif
 
     </script>
 </section>
