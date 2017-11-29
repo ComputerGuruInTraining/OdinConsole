@@ -87,30 +87,30 @@
             {{ Form::open(['route' => ['rosters.update', $assigned[0]->assigned_shift_id], 'method'=>'put']) }}
 
             <div class='form-group'>
-                {!! Form::Label('title', 'Shift Title:') !!}
+                {!! Form::Label('title', 'Shift Title *') !!}
                 {{ Form::text('title', $assigned[0]->shift_title, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
             </div>
 
             <div class='form-group'>
-                {!! Form::Label('desc', 'Shift Description:') !!}
+                {!! Form::Label('desc', 'Shift Description *') !!}
                 {{ Form::text('desc', $assigned[0]->shift_description, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
             </div>
 
             <div class='form-group'>
-                {{ Form::label('startDate', 'Start Date') }}
+                {{ Form::label('startDate', 'Start Date *') }}
                 {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
-                {{ Form::label('startTime', 'Start Time') }}
+                {{ Form::label('startTime', 'Start Time *') }}
                 <input class="input-a" value="{{ old('startTime') ? old('startTime') : $startTime}}" name="startTime"
                        data-default={{$startTime}} placeholder={{$startTime}}>
                 @include('clock-picker')
             </div>
 
             <div class='form-group'>
-                {{ Form::label('endDate', 'End Date&nbsp;&nbsp;') }}
+                {{ Form::label('endDate', 'End Date *&nbsp;&nbsp;') }}
                 {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
                 &nbsp;&nbsp;&nbsp;
-                {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
+                {{ Form::label('endTime', 'End Time *&nbsp;&nbsp;') }}
                 <input class="input-b" value={{ old('endTime') ? old('endTime') : $endTime}} name="endTime"
                        data-default={{$endTime}} placeholder={{$endTime}}>
                 @include('clock-picker')
@@ -120,7 +120,7 @@
                 <div class="multiselect" width="100%">
                     <div class="selectBoxLoc" onclick="showLocCheckboxesEdit()">
                         <select>
-                            <option class="select-option">Select Location:</option>
+                            <option class="select-option">Select Location *</option>
                         </select>
                         <div class="overSelect"></div>
                     </div>
@@ -193,7 +193,7 @@
                 <div class="multiselect" width="100%">
                     <div class="selectBox" onclick="showCheckboxesEdit()">
                         <select>
-                            <option class="select-option">Select Employee:</option>
+                            <option class="select-option">Select Employee *</option>
                         </select>
                         <div class="overSelect"></div>
                     </div>
@@ -265,7 +265,7 @@
             </div>
 
             <div class='form-group'>
-                {!! Form::Label('checks', 'Location Checks:') !!}
+                {!! Form::Label('checks', 'Location Checks *') !!}
                 {{--apply disabled to the checks field if only 1 location has been stored in the db--}}
                 @if(count($myLocations) > 1)
                     {{ Form::text('checks', $assigned[0]->checks, array('class' => 'form-control',

@@ -22,7 +22,7 @@
                     <th>Alias</th>
                     <th>Address</th>
                     <th>Notes</th>
-                    <th>Actions</th>
+                    <th>Manage</th>
                 </tr>
                 @foreach($locations as $location)
                     <tbody class='group-list'>

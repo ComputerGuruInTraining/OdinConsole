@@ -24,7 +24,7 @@
                     <th>Time</th>
                     <th>Locations</th>
                     <th>Assigned to</th>
-                    <th>Actions</th>
+                    <th>Manage</th>
                 </tr>
 
 

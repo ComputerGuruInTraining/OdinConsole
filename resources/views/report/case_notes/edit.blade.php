@@ -10,7 +10,6 @@
         <div>
             <div class='table-responsive'>
                 <h3 class="report-title" id="report-heading">Manage Report {{$report->type}} </h3>
-                {{--<div class="report-header">--}}
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
                     <tr class="report-header-row">
@@ -18,12 +17,10 @@
                         </td>
                         <td class="report-header">{{$cases->location->name}}</td>
                     </tr>
-                    {{--<tr class="report-header-row"><td>Hours Monitoring Premise:</td><td class="report-header"> {{$cases->reportCases->total_hours}}</td></tr>--}}
                     <tr class="report-header-row">
                         <td>Guard Presence at Location:</td>
                         <td class="report-header">{{$cases->reportCases->total_guards}}</td>
                     </tr>
-                    {{--</div>--}}
                 </table>
 
                 <table class="table table-hover">
@@ -35,7 +32,7 @@
                         <th>Case Description</th>
                         <th>Case Image</th>
                         <th>Reporting Guard</th>
-                        <th>Actions</th>
+                        <th>Manage</th>
                     </tr>
                     @if(count($cases->reportCaseNotes) != 0)
 
@@ -67,8 +64,6 @@
                                     @else
                                         <td>
                                             <a href="/delete/{{$urlCancel}}/{{$item->id}}/{{$reportId}}" style="color: #990000;">Delete</a>
-                                            {{--<a href="/confirm-delete/{{$item->id}}/{{$url}}"--}}
-                                           {{--style="color: #990000;">Delete</a>--}}
                                         </td>
                                     @endif
                                 </tr>

@@ -16,14 +16,10 @@
                 </ul>
             </div>
         @endif
-            {{--/report/{caseNoteId}/{reportId}--}}
         {{ Form::open(['route' => ['updateReportCase', $data->caseNote->id, $reportId], 'method'=>'put']) }}
-{{--            {{ Form::model($report, ['url' => '/report/' . $data->caseNote->id.'/'.$reportId, 'method' => 'put']) }}--}}
-
-{{--            {{ Form::open(['url' => '/report/' . $data->caseNote->id.'/'.$reportId, 'method' => 'put']) }}--}}
 
             <div class='form-group'>
-                {{ Form::label('title', 'Title') }}
+                {{ Form::label('title', 'Title *') }}
                 {{ Form::text('title', $data->caseNote->title, ['placeholder' => 'Title', 'class' => 'form-control']) }}
             </div>
 

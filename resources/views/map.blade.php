@@ -7,12 +7,10 @@
 
     <div id="map"></div>
 
+    <br>
+
     @if(!isset($show))
         {{ Form::label('address', 'Address *') }}
-
-        {{--<div class="alert alert-warning alert-custom">--}}
-            {{--<strong>Important!</strong> Please include the country for accurate GeoCoding--}}
-        {{--</div>--}}
 
         {{--FIXME: pressing enter still causes submit btn event to fire, and error msg is displayed to user on create page thankfully input saved --}}
         <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>

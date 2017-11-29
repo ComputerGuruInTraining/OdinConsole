@@ -25,17 +25,17 @@
         {{ Form::open(['role' => 'form', 'url' => '/reports']) }}
 
         <div class='form-group'>
-            {{ Form::label('dateFrom', 'Start Date of Report:') }}
+            {{ Form::label('dateFrom', 'Start Date of Report *') }}
             {{ Form::text('dateFrom', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
-            {{ Form::label('dateTo', 'End Date of Report: &nbsp;') }}
+            {{ Form::label('dateTo', 'End Date of Report * &nbsp;') }}
             {{ Form::text('dateTo', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('locations', 'Select Location:') !!}
+            {!! Form::Label('locations', 'Select Location *') !!}
             <select class="form-control" name="location" onkeypress="return noenter()">
                 @foreach($locations as $loc)
                     <option value="{{$loc->id}}">{{$loc->name}}</option>
@@ -43,13 +43,13 @@
             </select>
         </div>
         <div class='form-group'>
-            {!! Form::Label('type', 'Select Activity:') !!}
+            {!! Form::Label('type', 'Select Activity *') !!}
             <select class="form-control" name="type" onkeypress="return noenter()">
                 {{--report types provided by our app--}}
                 {{--Case Notes for a Location over a period--}}
                 <option value="Case Notes">Case Notes</option>
                 <option value="Location Checks">Location Checks</option>
-                {{--Exact Times the premise was visited by a guard over a period--}}
+                {{--TODO: Exact Times the premise was visited by a guard over a period--}}
                 {{--<option value="caseNotes">Guard Patrols</option>--}}
             </select>
         </div>

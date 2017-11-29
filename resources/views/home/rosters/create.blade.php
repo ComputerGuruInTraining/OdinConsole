@@ -76,31 +76,31 @@
     {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
     <div class='form-pages col-md-8'>
         <div class='form-group'>
-            {!! Form::Label('title', 'Shift Title:') !!}
+            {!! Form::Label('title', 'Shift Title *') !!}
             {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security',
             'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('desc', 'Shift Description:') !!}
+            {!! Form::Label('desc', 'Shift Description *') !!}
             {{ Form::text('desc', null, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
         </div>
 
         <div class='form-group'>
-            {{ Form::label('startDate', 'Start Date') }}
+            {{ Form::label('startDate', 'Start Date *') }}
             {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
-            {{ Form::label('startTime', 'Start Time') }}
+            {{ Form::label('startTime', 'Start Time *') }}
             <input class="input-a" value="{{ old('startTime') }}" name="startTime" data-default="9:00"
                    placeholder="10:00">
             @include('clock-picker')
         </div>
 
         <div class='form-group'>
-            {{ Form::label('endDate', 'End Date&nbsp;&nbsp;') }}
+            {{ Form::label('endDate', 'End Date *&nbsp;&nbsp;') }}
             {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
             &nbsp;&nbsp;&nbsp;
-            {{ Form::label('endTime', 'End Time&nbsp;&nbsp;') }}
+            {{ Form::label('endTime', 'End Time *&nbsp;&nbsp;') }}
             <input class="input-b" value="{{ old('endTime') }}" name="endTime" data-default="17:00"
                    onkeypress="return noenter()"
                    placeholder="16:00">
@@ -112,7 +112,7 @@
             <div class="multiselect" width="100%">
                 <div class="selectBoxLoc" onclick="showLocCheckboxes()">
                     <select>
-                        <option class="select-option">Select Location:</option>
+                        <option class="select-option">Select Location  *</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>
@@ -170,7 +170,7 @@
             <div class="multiselect" width="100%">
                 <div class="selectBox" onclick="showCheckboxes()">
                     <select>
-                        <option class="select-option">Select Employee:</option>
+                        <option class="select-option">Select Employee  *</option>
                     </select>
                     <div class="overSelect"></div>
                 </div>
@@ -230,7 +230,7 @@
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('checks', 'Location Checks:') !!}
+            {!! Form::Label('checks', 'Location Checks *') !!}
             @if(count(old('locations')) > 0)
                 @if(count(old('locations')) > 1)
                      {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt')) }}

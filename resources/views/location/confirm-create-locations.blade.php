@@ -32,12 +32,12 @@
         {{--@stop--}}
 
         <div class='form-group padding-top'>
-            {{ Form::label('name', 'Address Alias *') }}
+            {{ Form::label('name', 'Address Alias') }}
             {{ Form::text('name', $alias, ['class' => 'form-control', 'disabled' => 'disabled']) }}
         </div>
 
         <div class='form-group'>
-            {{ Form::label('info', 'Additional Address Details') }}
+            {{ Form::label('info', 'Location Notes') }}
             {{ Form::text('info', $notes, ['class' => 'form-control', 'disabled' => 'disabled']) }}
         </div>
 

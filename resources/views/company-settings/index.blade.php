@@ -96,13 +96,9 @@
 
     <div id="Users" class="tabcontent col-md-12">
 
-        {{--<div class=>--}}
 
             <div style="padding:15px 0px 10px 0px;">
                 <a href="/user/create" class="btn btn-success" style="margin-right: 3px;">Add User</a>
-                {{--<button type="button" class="btn btn-success" onclick="user.create">--}}
-                    {{--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User--}}
-                {{--</button>--}}
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
@@ -112,7 +108,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
-                        <th>Action</th>
+                        <th>Manage</th>
                     </tr>
                     </thead>
 
@@ -127,18 +123,12 @@
                                 <a href="/user/{{ $user->user_id }}/edit">Edit</a>
                                 |
                                 <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
-
-                                {{--<a href="/user/{{ $user->user_id }}/edit" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>--}}
-                                {{--{{ Form::open(['url' => '/user/' . $user->user_id, 'method' => 'DELETE']) }}--}}
-                                {{--{{ Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
-                                {{--{{ Form::close() }}--}}
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
 
                 </table>
-            {{--</div>--}}
 
         </div>
     </div>
