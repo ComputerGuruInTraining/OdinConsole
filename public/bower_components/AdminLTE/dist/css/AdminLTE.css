@@ -10,6 +10,11 @@
 Odin theming
 */
 
+/*Styles to be shared across app*/
+.margin-top{
+
+    margin-top: 20px;
+}
 
 /*select lists on add shift page*/
 
@@ -21,8 +26,6 @@ Odin theming
 
 .selectBox select, .selectBoxLoc select {
     width: 100%;
-    /*font-size: 14px;*/
-    /*padding: 10px 0;*/
     font-weight: bold;
 }
 
@@ -416,7 +419,8 @@ h1.master-alt{
 
 /*styling for location list table Action btns*/
 .column-width{
-    width: 15%;
+    /*width: 15%;*/
+    min-width: 200px;
 }
 
 /*Report Show Page Styling*/

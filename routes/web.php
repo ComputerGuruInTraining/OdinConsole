@@ -135,7 +135,7 @@ Route::put('/location-edit-confirm-{id}', 'LocationController@confirmEdit');
 
 Route::get('location-edit-{id}', 'LocationController@edit');
 
-Route::get('location-show', 'LocationController@show')->name('location-show');
+Route::get('location-show-{id}', 'LocationController@show')->name('location-show');
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
 

@@ -47,7 +47,9 @@ class LocationController extends Controller
 
                 $locations = array_sort($locations, 'name', SORT_ASC);
 
-                return view('location/locations')->with(array('locations' => $locations, 'url' => 'location'));
+                return view('location/locations')->with(array(
+                    'locations' => $locations,
+                    'url' => 'location'));
 
             } else {
                 return Redirect::to('/login');
@@ -81,12 +83,51 @@ class LocationController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-//    public function show()
-//    {
+    public function show($id)
+    {
+        try {
+            if (session()->has('token')) {
+
+                $location = $this->getLocation($id);
+
+
 //            $success = 'response with string';
-//            return $success;
-//
-//    }
+
+                //the $show variable is used on the map to determine whether to include input fields or not
+            return view('location/show')->with(array(
+                'location' => $location,
+                'show' => 'show',
+                'url' => 'location'
+                ));
+
+            } else {
+                return Redirect::to('/login');
+            }
+
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying locations';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying location page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display locations';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading locations';
+            return view('error-msg')->with('msg', $error);
+        }
+
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -607,6 +648,7 @@ class LocationController extends Controller
     }
 
     function getLocation($id){
+
         $token = session('token');
 
         $client = new GuzzleHttp\Client;

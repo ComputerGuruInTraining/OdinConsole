@@ -21,7 +21,7 @@
         {{ Form::model($location, ['url' => '/location-edit-confirm-' . $location->id, 'method' => 'put']) }}
 
         <div class='form-group padding-top'>
-            {{ Form::label('address', 'Address:') }}
+            {{ Form::label('address', 'Address') }}
             <p>{{$location->address}}</p>
         </div>
 
@@ -33,7 +33,7 @@
         </div>
 
         <div class='form-group padding-top'>
-            {{ Form::label('notes', 'Additional Address Details') }}
+            {{ Form::label('notes', 'Location Notes') }}
             {{ Form::text('notes', $location->notes, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 

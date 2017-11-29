@@ -29,7 +29,7 @@
         </div>
 
         <div class='form-group'>
-            {{ Form::label('info', 'Additional Address Details') }}
+            {{ Form::label('info', 'Location Notes') }}
             {{ Form::text('info', null, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 

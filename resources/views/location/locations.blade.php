@@ -30,8 +30,9 @@
                         <td>{{$location->name}}</td>
                         <td>{{$location->address}}</td>
                         <td>{{$location->notes}}</td>
-                        <td class="column-width">
-                            <a href="/location-edit-{{$location->id}}">Edit</a>
+                        <td class="column-width ">
+                            <a href="/location-show-{{$location->id}}">View</a>
+                            | <a href="/location-edit-{{$location->id}}">Edit</a>
                             | <a href="/confirmdel-{{$location->id}}-{{$url}}" style="color: #990000;">Delete</a>
                             {{--<a href="/locations/{{$location->id}}/edit">Edit</a> | <a href="/confirm-delete/{{$location->id}}/{{$url}}" style="color: #990000;">Delete</a>--}}
                         </td>
