@@ -10,6 +10,70 @@
 Odin theming
 */
 
+/*Styles to be shared across app*/
+.margin-top{
+
+    margin-top: 20px;
+}
+
+/*select lists on add shift page*/
+
+.selectBox, .selectBoxLoc {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 0px !important;
+}
+
+.selectBox select, .selectBoxLoc select {
+    width: 100%;
+    font-weight: bold;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-bottom: 0px;
+}
+
+#checkboxes, #checkboxesLoc {
+    display: none;
+    border: 1px #dadada solid;
+    margin-bottom: 20px;
+    height: 100px;
+    overflow: scroll;
+    border-radius: 5px;
+    margin-top: -5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 5px;
+}
+
+#checkboxes label, #checkboxesLoc label {
+    display: block;
+    font-weight: 100;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+#checkboxes label:hover, #checkboxesLoc label:hover {
+    background-color: #1e90ff;
+}
+
+div#checkboxes>label, div#checkboxes, div.overSelect, div.selectBox, div.selectBoxLoc, div#checkboxesLoc, div#checkboxesLoc>label{
+
+    min-width: 400px;
+}
+
+/*.select-option{*/
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+/*}*/
+
+/*sidemenu*/
+
 .sidebar-menu li > a:link{
     color: #4d2970;
     text-decoration: none;
@@ -151,7 +215,7 @@ a.dropdown-toggle.header-icon{
 .register-headings{
     padding-left: 75px;
     font-size: 20px;
-    font-family: cursive, Sans-Serif;
+    /*font-family: cursive, Sans-Serif;*/
 }
 
 /*confirm-alt page*/
@@ -277,7 +341,6 @@ section.content-header{
     display: none;
 }
 
-
 .manage-btns{
     padding-top: 150px;
  }
@@ -356,7 +419,8 @@ h1.master-alt{
 
 /*styling for location list table Action btns*/
 .column-width{
-    width: 15%;
+    /*width: 15%;*/
+    min-width: 200px;
 }
 
 /*Report Show Page Styling*/
@@ -470,6 +534,7 @@ body {
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
+    margin-bottom: 10px;
 }
 .wrapper:before,
 .wrapper:after {
@@ -520,6 +585,19 @@ body {
     .sidebar-collapse .right-side,
     .sidebar-collapse .main-footer {
         margin-left: 0;
+    }
+
+    .col-min-width-sm{
+
+        min-width: 140px;
+    }
+
+    .col-min-width{
+        min-width: 170px;
+    }
+
+    .col-min-width-med{
+        min-width: 260px;
     }
 }
 @media (max-width: 767px) {

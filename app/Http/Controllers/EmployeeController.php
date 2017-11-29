@@ -56,6 +56,8 @@ class EmployeeController extends Controller
                     $employees[$i]->dateBirth = $date;
                 }
 
+                $employees = array_sort($employees, 'last_name', SORT_ASC);
+
                 return view('employee/employees')->with(array('employees' => $employees, 'url' => 'employees'));
 
             } else {

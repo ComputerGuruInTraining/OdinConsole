@@ -1,20 +1,38 @@
 <section class="map">
 <!-- Google Maps Javascript API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7xSpcb0ZqETybsCNdsyofP0Fmx_RurvQ&libraries=places"></script>
-    {{--<script type="text/javascript">--}}
-        {{--function noenter() {--}}
-            {{--return !(window.event && window.event.keyCode == 13); }--}}
-    {{--</script>--}}
+
 {{--TODO: check into pm &callback=initMap which I removed to allow auto-complete to work. Ramifications/Usage--}}
     {{--If user inputs an address, and then selects a different address, need a catch or code to update the input field value--}}
 
-    <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
     <div id="map"></div>
 
+    <br>
+
+    @if(!isset($show))
+        {{ Form::label('address', 'Address *') }}
+
+        {{--FIXME: pressing enter still causes submit btn event to fire, and error msg is displayed to user on create page thankfully input saved --}}
+        <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
+    @endif
     <script>
+
+                @if(isset($location->latitude))
+                    var lat = "<?php echo $location->latitude;?>";
+                    var long = "<?php echo $location->longitude;?>";
+                    var address = "<?php echo $location->address;?>";
+                    var zoom = 17;
+                @else
+                    var lat = 37.7831;
+                    var long = -122.4039;
+                    var zoom = 3;
+                @endif
+
+        var locationCenter = new google.maps.LatLng(lat, long);
+
         var mapOptions = {
-            center: new google.maps.LatLng(37.7831,-122.4039),
-            zoom: 12,
+            center: locationCenter,
+            zoom: zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -30,8 +48,11 @@
 
         autocomplete.bindTo('bounds',map);
         var infoWindow = new google.maps.InfoWindow();
+        var iconDir = '{{ asset("/icons/marker.png") }}';
+
         var marker = new google.maps.Marker({
-            map: map
+            map: map,
+            icon: iconDir
         });
 
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -57,6 +78,19 @@
 
         });
 
-//        google.maps.event.addListener(marker, 'click')
+        @if(isset($location->latitude))
+
+                var myMarker = new google.maps.Marker({
+                    position: locationCenter,
+                    map: map,
+                    icon: iconDir
+                });
+
+                google.maps.event.addListener(myMarker, 'click', function () {
+                    infoWindow.setContent("<h5>" + address + "</h5>");
+                    infoWindow.open(map, this);
+                });
+        @endif
+
     </script>
 </section>

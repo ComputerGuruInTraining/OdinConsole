@@ -19,7 +19,7 @@
         {{ Form::open(['route' => ['case-notes.update', $data->caseNote->id], 'method'=>'put']) }}
 
             <div class='form-group'>
-                {{ Form::label('title', 'Title') }}
+                {{ Form::label('title', 'Title *') }}
                 {{ Form::text('title', $data->caseNote->title, ['placeholder' => 'Title', 'class' => 'form-control']) }}
             </div>
 

@@ -28,7 +28,7 @@
                     <th>Description</th>
                     <th>Image</th>
                     <th>Reporting Guard</th>
-                    <th>Actions</th>
+                    <th>Manage</th>
                 </tr>
                 {{--Check to ensure there are case notes or else an error will be thrown--}}
                 {{--                @if(count($cases) != 0)--}}

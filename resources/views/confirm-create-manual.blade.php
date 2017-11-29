@@ -13,6 +13,5 @@
     <div class="padding">
         <a href="/{{$url}}" class="btn btn-success" style="margin-right: 3px;">Add {{$entity}}</a>
     </div>
-    {{--<div class="form-pages">The shift has been saved as <b style="color:#4d2970;">{{ $theName }}</b>.</div>--}}
 
 @stop

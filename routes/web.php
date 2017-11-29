@@ -127,11 +127,15 @@ Route::get('location-create', 'LocationController@create');
 
 Route::post('location-created', 'LocationController@store');
 
+Route::post('/location-create-confirm', 'LocationController@confirmCreate');
+
 Route::put('location-updated-{id}', 'LocationController@update');
+
+Route::put('/location-edit-confirm-{id}', 'LocationController@confirmEdit');
 
 Route::get('location-edit-{id}', 'LocationController@edit');
 
-Route::get('location-show', 'LocationController@show')->name('location-show');
+Route::get('location-show-{id}', 'LocationController@show')->name('location-show');
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
 
@@ -161,6 +165,8 @@ Route::get('cancel-delete', function(){
         return redirect()->back();//refreshes page
     }
 });
+
+
 
 //global route to different pages TODO: WIP
 //Route::get('{url}-{id}', function($id, $url){

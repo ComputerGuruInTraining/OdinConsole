@@ -31,7 +31,7 @@
                     <th>Gender</th>
                     <th>Mobile</th>
                     <th>Email</th>
-                    <th>Actions</th>
+                    <th>Manage</th>
                 </tr>
 
                 @foreach($employees as $employee)

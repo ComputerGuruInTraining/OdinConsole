@@ -25,6 +25,9 @@ class RosterController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    protected $locOld;
+    public $startTimeOld;
+
     public function index()
     {
         try {
@@ -142,6 +145,11 @@ class RosterController extends Controller
 
                 $locations = GuzzleHttp\json_decode((string)$response2->getBody());
 
+                //sort the lists before sending to view
+                $locations = array_sort($locations, 'name', SORT_ASC);
+
+                $employees = array_sort($employees, 'last_name', SORT_ASC);
+
                 return view('home/rosters/create')->with(array('empList' => $employees, 'locList' => $locations));
             } else {
                 return Redirect::to('/login');
@@ -181,6 +189,7 @@ class RosterController extends Controller
     {
         //TODO: improve. atm, if nothing is selected by the user, the default item is added to db. same for locations?? true still??
         try {
+
             $this->validate($request, [
                 'title' => 'required|max:255',
                 'desc' => 'required|max:255',
@@ -202,8 +211,10 @@ class RosterController extends Controller
                     if ($dateStart == 'error') {
 
                         $e = 'Error storing shift details';
-                        $errors = collect($e);
-                        return view('/home/rosters/create')->with('errors', $errors);
+//                        $errors = collect($e);
+                        return Redirect::to('rosters/create')
+                            ->withInput()
+                            ->withErrors($e);
                     } else {
                         return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
                     }
@@ -371,15 +382,16 @@ class RosterController extends Controller
                 $locNotSelected = $this->nonSelectedList($locationsUnique, $locations,
                     'location_id', 'id');
 
+                //sort the lists before sending to view
+                $locNotSelected = array_sort($locNotSelected, 'name', SORT_ASC);
 
-//                dd($locNotSelected);
-                //$coll
-//                dd($empNotSelected);
+                $empNotSelected = array_sort($empNotSelected, 'last_name', SORT_ASC);
 
+                $employees = array_sort($employees, 'last_name', SORT_ASC);
 
-//                $employees->whereIn('user_id', )
+                $locations = array_sort($locations, 'name', SORT_ASC);
 
-
+                //format dates
                 $carbonStart = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->start);
 
                 $carbonEnd = Carbon::createFromFormat('Y-m-d H:i:s', $assigned[0]->end);
@@ -389,7 +401,6 @@ class RosterController extends Controller
                 $endTime = ((string)$carbonEnd->format('H:i'));
 
                 return view('home/rosters/edit')->with(array(
-//                    'nonAsgEmp' => $nonAsgEmp,
                     'empList' => $empNotSelected,
                     'locList' => $locNotSelected,
                     'assigned' => $assigned,
@@ -398,7 +409,9 @@ class RosterController extends Controller
                     'startDate' => $startDate,
                     'startTime' => $startTime,
                     'endDate' => $endDate,
-                    'endTime' => $endTime
+                    'endTime' => $endTime,
+                    'locationsAll' => $locations,
+                    'employeesAll' => $employees
                 ));
             } else {
                 return Redirect::to('/login');

@@ -29,7 +29,7 @@
                     <th>Date Range</th>
                     <th>Location</th>
                     <th>Report Type</th>
-                    <th>Actions</th>
+                    <th>Manage</th>
                 </tr>
                 {{--check to ensure at least one report exists first, otherwise view error thrown--}}
                 @if(count($reports) > 0)

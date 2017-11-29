@@ -20,17 +20,17 @@
     {{ Form::open(['role' => 'form', 'url' => '/user', 'action' => 'POST']) }}
 
     <div class='form-group'>
-        {{ Form::label('first_name', 'First Name') }}
+        {{ Form::label('first_name', 'First Name *') }}
         {{ Form::text('first_name', null, ['placeholder' => 'First Name', 'class' => 'form-control']) }}
     </div>
 
     <div class='form-group'>
-        {{ Form::label('last_name', 'Last Name') }}
+        {{ Form::label('last_name', 'Last Name *') }}
         {{ Form::text('last_name', null, ['placeholder' => 'Last Name', 'class' => 'form-control']) }}
     </div>
 
     <div class='form-group'>
-        {{ Form::label('email', 'Email') }}
+        {{ Form::label('email', 'Email *') }}
         {{ Form::email('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
     </div>
 

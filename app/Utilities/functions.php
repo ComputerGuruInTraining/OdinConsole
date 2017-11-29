@@ -362,7 +362,7 @@ if (!function_exists('geoRange')) {
 
         $goodRange = 0.2;
         $okRange = 0.5;
-        
+
         if($distance <= $goodRange){
 
             $result = 'yes';
@@ -392,6 +392,16 @@ if (!function_exists('substrImg')) {
         return $substrImg;
     }
 }
+
+
+//if (!function_exists('substrImg')) {
+//
+//    function substrImg($stringImg)
+//    {
+//        setName()
+//    }
+//
+//}
 
 //TODO: WIP
 //if (!function_exists('navTo')) {

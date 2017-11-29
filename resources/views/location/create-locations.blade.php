@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        {{ Form::open(['role' => 'form', 'url' => '/location-created']) }}
+        {{ Form::open(['role' => 'form', 'url' => '/location-create-confirm']) }}
         @include('map')
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias *') }}
@@ -29,12 +29,12 @@
         </div>
 
         <div class='form-group'>
-            {{ Form::label('info', 'Additional Address Details') }}
+            {{ Form::label('info', 'Location Notes') }}
             {{ Form::text('info', null, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+            {{ Form::submit('Next', ['class' => 'btn btn-primary', 'onkeypress'=>'return noenter()']) }}
             <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}
