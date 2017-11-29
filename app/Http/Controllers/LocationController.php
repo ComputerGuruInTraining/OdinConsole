@@ -143,20 +143,6 @@ class LocationController extends Controller
 
                 $compId = session('compId');
 
-//            validate data
-//                $this->validate($request, [
-//                    'name' => 'required|max:255',
-//                    'address' => 'required|max:255',
-//                ]);
-//
-////            //gather data from input fields
-//                $name = ucfirst(Input::get('name'));
-//                $address = Input::get('address');
-//                $geoCoords = $this->geoCode($address);
-//                $latitude = $geoCoords->results[0]->geometry->location->lat;
-//                $longitude = $geoCoords->results[0]->geometry->location->lng;
-//                $notes = ucfirst(Input::get('info'));
-
                 $alias = session('alias');
                 $address = session('address');
                 $latitude = session('latitude');
@@ -285,6 +271,7 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
+            dd($err);
             $e = 'Error displaying edit location';
             return view('error-msg')->with('msg', $e);
 
@@ -307,36 +294,18 @@ class LocationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
-                $address = Input::get('address');
-
-                //api put route will make no changes when these values are found in put request
-                if ($address == "") {
-                    $address = '';
-                    $latitude = 0.0;
-                    $longitude = 0.0;
-                } else {
-                    //get the geoCoords for the address
-                    $geoCoords = $this->geoCode($address);
-                    $latitude = $geoCoords->results[0]->geometry->location->lat;
-                    $longitude = $geoCoords->results[0]->geometry->location->lng;
-                }
-
-                //validate data
-                $this->validate($request, [
-                    'name' => 'required|max:255',
-                    'address' => 'max:255',//not required for edit page, will presume same if not input
-                ]);
-
-                //get the data from the form
-                $name = ucfirst(Input::get('name'));
-                $notes = ucfirst(Input::get('notes'));
+                $aliasEdit = session('aliasEdit');
+                $addressEdit = session('addressEdit');
+                $latitudeEdit = session('latitudeEdit');
+                $longitudeEdit = session('longitudeEdit');
+                $notesEdit = session('notesEdit');
 
                 $client = new GuzzleHttp\Client;
 
@@ -346,9 +315,9 @@ class LocationController extends Controller
                             'Content-Type' => 'application/json',
                             'X-HTTP-Method-Override' => 'PUT'
                         ),
-                        'json' => array('name' => $name, 'address' => $address,
-                            'latitude' => $latitude, 'longitude' => $longitude,
-                            'notes' => $notes
+                        'json' => array('name' => $aliasEdit, 'address' => $addressEdit,
+                            'latitude' => $latitudeEdit, 'longitude' => $longitudeEdit,
+                            'notes' => $notesEdit
                         )
                     )
                 );
@@ -528,5 +497,129 @@ class LocationController extends Controller
                 ->withInput()
                 ->withErrors('Session expired. Please login.');
         }
+    }
+
+    public function confirmEdit(Request $request, $id)
+    {
+        try {
+            if (session()->has('token')) {
+
+                //validate data
+                $this->validate($request, [
+                    'name' => 'required|max:255',
+                    'address' => 'max:255',//not required for edit page, will presume same if not input
+                ]);
+
+                //get the data from the form
+                $name = ucfirst(Input::get('name'));
+                $notes = ucfirst(Input::get('notes'));
+                $address = Input::get('address');
+
+                //api put route will make no changes to address and geoCoords when these values are found in put request
+                if ($address == "") {
+                    //values for update
+                    $address = '';
+                    $latitude = 0.0;
+                    $longitude = 0.0;
+
+                    //values for map confirm page, pushed to view
+                    $location = $this->getLocation($id);
+                    $sameAddress = $location->address;
+                    $sameLatitude = $location->latitude;
+                    $sameLongitude = $location->longitude;
+
+                    //save in session for use by update().
+                    session([
+                        'aliasEdit' => $name,
+                        'addressEdit' => $address,
+                        'latitudeEdit' => $latitude,
+                        'longitudeEdit' => $longitude,
+                        'notesEdit' => $notes
+                    ]);
+
+                    return view('location/confirm-edit-locations')->with(array(
+                        'alias' => $name,
+                        'address' => $sameAddress,
+                        'notes' => $notes,
+                        'lat' => $sameLatitude,
+                        'long' => $sameLongitude,
+                        'id' => $id
+                    ));
+
+                } else {
+                    //get the geoCoords for the address
+                    $geoCoords = $this->geoCode($address);
+                    $latitude = $geoCoords->results[0]->geometry->location->lat;
+                    $longitude = $geoCoords->results[0]->geometry->location->lng;
+
+                    //save in session for use by update().
+                    session([
+                        'aliasEdit' => $name,
+                        'addressEdit' => $address,
+                        'latitudeEdit' => $latitude,
+                        'longitudeEdit' => $longitude,
+                        'notesEdit' => $notes
+                    ]);
+
+                    return view('location/confirm-edit-locations')->with(array(
+                        'alias' => $name,
+                        'address' => $address,
+                        'notes' => $notes,
+                        'lat' => $latitude,
+                        'long' => $longitude,
+                        'id' => $id
+
+                    ));
+                }
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('location-edit-' . $id)
+                ->withInput()
+                ->withErrors('Unable to update the location. Probably due to an invalid address 
+                or the address is already stored in the database.');
+
+        } catch (\ErrorException $error) {
+            //catches for such things as address not able to be converted to geocoords
+            // and update fails due to db integrity constraints
+            if ($error->getMessage() == 'Undefined offset: 0') {
+                $e = 'Please provide a valid address';
+                $errors = collect($e);
+                return view('location/edit-locations')->with('errors', $errors);
+            } else {
+                return Redirect::to('/location-edit-' . $id)
+                    ->withInput()
+                    ->withErrors('Unable to update the location. Probably due to invalid input.');
+            }
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/location-edit-' . $id)
+                ->withInput()
+                ->withErrors('Error updating location. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        }
+    }
+
+    function getLocation($id){
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
+        'headers' => [
+        'Authorization' => 'Bearer ' . $token,
+        ]
+        ]);
+
+        $location = json_decode((string)$response->getBody());
+
+        return $location;
+
     }
 }

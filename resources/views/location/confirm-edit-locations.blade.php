@@ -2,7 +2,7 @@
 @extends('sidebar')
 
 @section('title-item')
-    Confirm Location
+    Confirm Location for Update
 @stop
 
 @section('page-content')
@@ -23,9 +23,12 @@
         <strong>Important!</strong> Please confirm the location data is correct
         </div>
 
-        {{ Form::open(['role' => 'form', 'url' => '/location-created']) }}
+        {{--{{ Form::open(['role' => 'form', 'url' => '/location-updated-' . $id]) }}--}}
+        {{--{{ Form::model($location, ['url' => '/location-updated-' . $id, 'method' => 'put']) }}--}}
 
-        @include('map-location-confirm')
+            {{ Form::open(['role' => 'form', 'url' => '/location-updated-' . $id, 'method' => 'put']) }}
+
+            @include('map-location-confirm')
 
         {{--@section('input')--}}
             {{--<input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>--}}
@@ -43,8 +46,8 @@
 
         <div class='form-group form-buttons'>
             {{--todo: with input for the back btn--}}
-            {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-            <a href="/location-create" class="btn btn-info" style="margin-right: 3px;">Back</a>
+            {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
+            <a href="/location-edit-{{$id}}" class="btn btn-info" style="margin-right: 3px;">Back</a>
         </div>
         {{ Form::close() }}
     </div>

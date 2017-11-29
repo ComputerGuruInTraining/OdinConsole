@@ -131,6 +131,8 @@ Route::post('/location-create-confirm', 'LocationController@confirmCreate');
 
 Route::put('location-updated-{id}', 'LocationController@update');
 
+Route::put('/location-edit-confirm-{id}', 'LocationController@confirmEdit');
+
 Route::get('location-edit-{id}', 'LocationController@edit');
 
 Route::get('location-show', 'LocationController@show')->name('location-show');

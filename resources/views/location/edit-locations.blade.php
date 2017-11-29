@@ -8,7 +8,7 @@
 
 @section('page-content')
     <div class="form-pages">
-        @if (count($errors) > 0)
+        @if (count($errors) > 0)web
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        {{ Form::model($location, ['url' => '/location-updated-' . $location->id, 'method' => 'put']) }}
+        {{ Form::model($location, ['url' => '/location-edit-confirm-' . $location->id, 'method' => 'put']) }}
 
         <div class='form-group padding-top'>
             {{ Form::label('address', 'Address:') }}
@@ -38,7 +38,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
+            {{ Form::submit('Next', ['class' => 'btn btn-primary']) }}
             <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 

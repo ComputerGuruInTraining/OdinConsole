@@ -34,7 +34,7 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Submit', ['class' => 'btn btn-primary', 'onkeypress'=>'return noenter()']) }}
+            {{ Form::submit('Next', ['class' => 'btn btn-primary', 'onkeypress'=>'return noenter()']) }}
             <a href="/location" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
         {{ Form::close() }}

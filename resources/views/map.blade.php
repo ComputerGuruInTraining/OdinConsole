@@ -17,9 +17,23 @@
     <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
 
     <script>
+
+                @if(isset($location->latitude))
+                    var lat = "<?php echo $location->latitude;?>";
+                    var long = "<?php echo $location->longitude;?>";
+                    var address = "<?php echo $location->address;?>";
+                    var zoom = 14;
+                @else
+                    var lat = 37.7831;
+                    var long = -122.4039;
+                    var zoom = 3;
+                @endif
+
+        var locationCenter = new google.maps.LatLng(lat, long);
+
         var mapOptions = {
-            center: new google.maps.LatLng(37.7831,-122.4039),
-            zoom: 12,
+            center: locationCenter,
+            zoom: zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -62,6 +76,7 @@
 
         });
 
-//        google.maps.event.addListener(marker, 'click')
+       
+
     </script>
 </section>
