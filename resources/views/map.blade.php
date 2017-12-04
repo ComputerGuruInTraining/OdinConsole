@@ -13,7 +13,23 @@
         {{ Form::label('address', 'Address *') }}
 
         {{--FIXME: pressing enter still causes submit btn event to fire, and error msg is displayed to user on create page thankfully input saved --}}
-        <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
+
+        @if(isset($location->address))
+            {{--edit locations page--}}
+
+            <input type="text" id="autocomplete" name="address" value="{{ old('address') ? old('address') : $location->address}}" onkeypress="return noenter()"/>
+
+        @elseif(isset($addressConfirm))
+            {{--create locations page routed to via back button on Confirm Location Page, therefore, with values in the fields--}}
+
+            <input type="text" id="autocomplete" name="address" value="{{$addressConfirm}}" onkeypress="return noenter()"/>
+
+        @else
+            {{--create locations page--}}
+
+            <input type="text" id="autocomplete" name="address" value="{{ old('address')}}" onkeypress="return noenter()"/>
+        @endif
+
     @endif
     <script>
 

@@ -20,11 +20,6 @@
 
         {{ Form::model($location, ['url' => '/location-edit-confirm-' . $location->id, 'method' => 'put']) }}
 
-        <div class='form-group padding-top'>
-            {{ Form::label('address', 'Address') }}
-            <p>{{$location->address}}</p>
-        </div>
-
             @include('map')
 
         <div class='form-group padding-top'>

@@ -647,6 +647,49 @@ class LocationController extends Controller
         }
     }
 
+    public function confirmCreateCancel()
+    {
+        try {
+            if (session()->has('token')) {
+
+//                get the values from the session
+                $address = session('address');
+                $alias = session('alias');
+                $notes = session('notes');
+
+                //pass to the view
+                return view('location/create-locations')->with(array(
+                    'addressConfirm' => $address,
+                    'aliasConfirm' => $alias,
+                    'notesConfirm'=> $notes
+                ));
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add location page';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add location form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying add location';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add location page';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
     function getLocation($id){
 
         $token = session('token');
@@ -664,4 +707,6 @@ class LocationController extends Controller
         return $location;
 
     }
+
+
 }

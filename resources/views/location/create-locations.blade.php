@@ -25,12 +25,24 @@
         @include('map')
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias *') }}
-            {{ Form::text('name', null, ['placeholder' => 'eg UC Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{--if routing to page via back btn on Confirm Location page, display the input that was originally entered--}}
+        @if(isset($aliasConfirm))
+                 {{ Form::text('name', $aliasConfirm, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @else
+                {{ Form::text('name', null, ['placeholder' => 'eg UC Building 25', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+
+            @endif
         </div>
 
         <div class='form-group'>
             {{ Form::label('info', 'Location Notes') }}
-            {{ Form::text('info', null, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{--if routing to page via back btn on Confirm Location page, display the input that was originally entered--}}
+            @if(isset($notesConfirm))
+                 {{ Form::text('info', $notesConfirm, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @else
+                {{ Form::text('info', null, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.',
+                             'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @endif
         </div>
 
         <div class='form-group form-buttons'>

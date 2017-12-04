@@ -27,10 +27,6 @@
 
         @include('map-location-confirm')
 
-        {{--@section('input')--}}
-            {{--<input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>--}}
-        {{--@stop--}}
-
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address Alias') }}
             {{ Form::text('name', $alias, ['class' => 'form-control', 'disabled' => 'disabled']) }}
@@ -44,7 +40,9 @@
         <div class='form-group form-buttons'>
             {{--todo: with input for the back btn--}}
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-            <a href="/location-create" class="btn btn-info" style="margin-right: 3px;">Back</a>
+{{--            {{ Form::cancel('Back', ['class' => 'btn btn-primary', 'onkeypress'=>'return noenter()']) }}--}}
+
+            <a href="/location-back" class="btn btn-info" style="margin-right: 3px;">Back</a>
         </div>
         {{ Form::close() }}
     </div>

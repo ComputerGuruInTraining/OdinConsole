@@ -154,12 +154,20 @@
 
                          }
                         }else{
-                             foreach($locList as $loc){
-                              echo
-                                        " <label for='".$loc->id."'>
-                                        <input type='checkbox' name='locations[]' value='".$loc->id."'
-                                               id='".$loc->id."'/>".$loc->name."</label>";
-                             }
+                        /*check if there are locations to display*/
+                            if(count($locList) > 0){
+                                 foreach($locList as $loc){
+                                  echo
+                                            " <label for='".$loc->id."'>
+                                            <input type='checkbox' name='locations[]' value='".$loc->id."'
+                                                   id='".$loc->id."'/>".$loc->name."</label>";
+                                 }
+                            }else{
+                            /*no locations to show so advise user to add locations*/
+                                echo
+                                " <label for='1'>Add items via Locations Feature</label>";
+
+                            }
                         }
                     @endphp
                 </div>
@@ -212,12 +220,22 @@
 
                          }
                         }else{
-                             foreach($empList as $emp){
-                              echo
-                                        " <label for='".$emp->user_id."'>
-                                        <input type='checkbox' name='employees[]' value='".$emp->user_id."'
-                                               id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
-                             }
+                        /*check if there are employees to display in the select list*/
+                            if(count($empList) > 0){
+
+                                 foreach($empList as $emp){
+                                  echo
+                                            " <label for='".$emp->user_id."'>
+                                            <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                                   id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
+                                 }
+
+                             }else{
+                            /*no employees to show so advise user to add locations*/
+                                echo
+                                " <label for='1'>Add items via Employees Feature</label>";
+
+                            }
                         }
                     @endphp
 
