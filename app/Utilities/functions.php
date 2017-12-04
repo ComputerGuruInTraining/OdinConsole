@@ -388,3 +388,28 @@ if (!function_exists('substrImg')) {
     }
 }
 
+if (!function_exists('getUsers')) {
+
+    function getUsers()
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $compId = session('compId');
+
+            $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $users = json_decode((string)$response->getBody());
+
+            return $users;
+
+        }
+    }
+}
+

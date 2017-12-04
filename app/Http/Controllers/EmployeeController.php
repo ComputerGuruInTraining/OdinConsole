@@ -86,8 +86,45 @@ class EmployeeController extends Controller
         }
     }
 
+
+    public function selectUser(){
+
+        //get the users from the api
+        $users = getUsers();
+
+        //return the view with a select box of users
+        return view('employee/option')->with('users', $users);
+    }
+
+
+    //view with a next button (radio fn then create fn) and a radio option
+
+
+    //radio function from next button
+
+    //route = '/employees/option-existing'
+
+    //if value == false ie no
+    //create fn
+    //if value == true
+    //createExisting fn
+
+
+    //check value in radio input
+    //if true and using existing user ->
+    //get user values from api
+
+    //return view with user values auto-populated
+    //and isset($user) submit btn takes to one route & storeExisting() with an id sent through
+
+
+
+
+
+
     /**
      * Show the form for creating a new resource.
+     * just return view with no auto-populated values
      *
      * @return \Illuminate\Http\Response
      */
@@ -123,17 +160,59 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Show the form for creating a new employee using existing user.
+     * return view with auto-populated values
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createExisting(Request $request)
+    {
+        try {
+            if (session()->has('token')) {
+
+                //get user from the input
+
+                return view('employee/add-employee');
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add employee page';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add employee form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add employee page';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-
-    //error catching has been tested
     public function store(Request $request)
     {
         try {
             if (session()->has('token')) {
+
+                //if
+
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 

@@ -2,7 +2,7 @@
 @extends('sidebar')
 
 @section('title-item')
-    Confirm Location
+    Confirm Add Location
 @stop
 
 @section('page-content')

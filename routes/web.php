@@ -66,6 +66,10 @@ Route::resource('/rosters', 'RosterController');
 
 Route::resource('/employees', 'EmployeeController');
 
+Route::get('employee/create-existing', 'EmployeeController@selectUser');
+
+Route::post('/employees/create-existing-user', 'EmployeeController@createExisting');
+
 //global confirm-delete view
 Route::get('confirm-delete/{id}/{url}', function($id, $url){
     if (session()->has('token')) {

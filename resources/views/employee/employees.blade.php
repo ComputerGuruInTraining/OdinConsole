@@ -20,6 +20,10 @@
             <button type="button" class="btn btn-success menu" onclick="window.location.href='employees/create'">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Employee
             </button>
+
+            <button type="button" class="btn btn-success menu" onclick="window.location.href='employee/create-existing'">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Existing User as Employee
+            </button>
         </div>
 
         <div class='table-responsive'>
