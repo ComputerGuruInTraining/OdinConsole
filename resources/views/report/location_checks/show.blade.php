@@ -9,6 +9,11 @@
     <div class="col-md-12">
         <div>
             <div class='table-responsive'>
+
+                <div style="padding:15px 0px 10px 0px;">
+                    <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary">Download PDF</a>
+                </div>
+
                 <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
                 <table class="col-md-12 margin-bottom">
                     <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>

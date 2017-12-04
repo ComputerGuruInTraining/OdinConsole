@@ -7,20 +7,42 @@
 
     <div id="map"></div>
 
-    <br>
+    <br />
 
     @if(!isset($show))
         {{ Form::label('address', 'Address *') }}
 
         {{--FIXME: pressing enter still causes submit btn event to fire, and error msg is displayed to user on create page thankfully input saved --}}
-        <input type="text" id="autocomplete" name="address" onkeypress="return noenter()"/>
+
+        @if((isset($location->address))&&(!isset($addressEdit)))
+            {{--edit locations page routing from Locations Index or Confirm Edit Locations if no change made to field--}}
+            <input type="text" id="autocomplete" name="address" value="{{ old('address') ? old('address') : $location->address}}" onkeypress="return noenter()"/>
+
+        @elseif(isset($addressEdit))
+            {{--edit locations page routing from Locations Edit Confirm page if a change has been made to the address field--}}
+            <input type="text" id="autocomplete" name="address" value="{{$addressEdit}}" onkeypress="return noenter()"/>
+
+        @elseif(isset($addressConfirm))
+            {{--create locations page routed to via back button on Confirm Location Page, therefore, with values in the fields--}}
+            <input type="text" id="autocomplete" name="address" value="{{$addressConfirm}}" onkeypress="return noenter()"/>
+
+        @else
+            {{--create locations page--}}
+            <input type="text" id="autocomplete" name="address" value="{{ old('address')}}" onkeypress="return noenter()"/>
+        @endif
+
     @endif
     <script>
 
-                @if(isset($location->latitude))
+                @if((isset($location->latitude))&&(!isset($latitudeEdit)))
                     var lat = "<?php echo $location->latitude;?>";
                     var long = "<?php echo $location->longitude;?>";
                     var address = "<?php echo $location->address;?>";
+                    var zoom = 17;
+                @elseif(isset($latitudeEdit))
+                    var lat = "<?php echo $latitudeEdit;?>";
+                    var long = "<?php echo $longitudeEdit;?>";
+                    var address = "<?php echo $addressEdit;?>";
                     var zoom = 17;
                 @else
                     var lat = 37.7831;

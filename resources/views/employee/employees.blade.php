@@ -31,7 +31,7 @@
                     <th>Gender</th>
                     <th>Mobile</th>
                     <th>Email</th>
-                    <th>Manage</th>
+                    <th class="col-min-width-sm">Manage</th>
                 </tr>
 
                 @foreach($employees as $employee)

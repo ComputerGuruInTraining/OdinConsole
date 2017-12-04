@@ -265,7 +265,6 @@ if (!function_exists('oauth2')) {
                 }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo "<script>console.log( 'Error during login' );</script>";
             return false;
         }
     }
@@ -356,10 +355,6 @@ if (!function_exists('geoRange')) {
     function geoRange($distance){
 
         //200m
-//            define("OUR_GOOD_RANGE", 0.2);
-//
-//            define("OUR_OK_RANGE", 0.5);
-
         $goodRange = 0.2;
         $okRange = 0.5;
 
@@ -393,24 +388,3 @@ if (!function_exists('substrImg')) {
     }
 }
 
-
-//if (!function_exists('substrImg')) {
-//
-//    function substrImg($stringImg)
-//    {
-//        setName()
-//    }
-//
-//}
-
-//TODO: WIP
-//if (!function_exists('navTo')) {
-//    function navTo($id, $url){
-//        if($id == 0){
-//            return Redirect::to('/'.$url);
-//
-//        }else{
-//            return Redirect::to('/'.$url.'-'.$id);
-//        }
-//    }
-//}

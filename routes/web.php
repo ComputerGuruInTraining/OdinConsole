@@ -139,6 +139,10 @@ Route::get('location-show-{id}', 'LocationController@show')->name('location-show
 
 Route::delete("location-deleted-{id}", 'LocationController@destroy');
 
+Route::get("/location-back", 'LocationController@confirmCreateCancel');
+
+Route::get('location-back-{id}', 'LocationController@confirmEditCancel');
+
 //global confirm-delete view
 Route::get('confirmdel-{id}-{url}', function($id, $url){
     if (session()->has('token')) {

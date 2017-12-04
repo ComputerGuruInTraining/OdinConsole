@@ -62,18 +62,15 @@ class UserController extends Controller
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying users';
-            return view('error-msg')->with('msg',
-$err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying user page';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display users';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -82,8 +79,7 @@ $e);
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading users';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
         } catch(\handleViewException $handle){
             $error = 'Error displaying page';
             return view('error-msg')->with('msg',
@@ -452,7 +448,6 @@ $error);
 
             $company = json_decode((string)$response->getBody());
 
-//            dd($company->checkEmail->email);
             if ($company->success == true) {
 
                 $msgLine1 = 'The company account has been created and an email has been sent to ' . $emailUser . ' to 

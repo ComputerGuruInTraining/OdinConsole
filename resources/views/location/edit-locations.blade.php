@@ -20,21 +20,33 @@
 
         {{ Form::model($location, ['url' => '/location-edit-confirm-' . $location->id, 'method' => 'put']) }}
 
-        <div class='form-group padding-top'>
-            {{ Form::label('address', 'Address') }}
-            <p>{{$location->address}}</p>
-        </div>
-
             @include('map')
 
         <div class='form-group padding-top'>
             {{ Form::label('name', 'Address alias') }}
-            {{ Form::text('name', $location->name, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            {{--if routing to page via back btn on Confirm Location page, display the input that was originally entered--}}
+            @if(isset($aliasEdit))
+                {{ Form::text('name', $aliasEdit, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @else
+                {{ Form::text('name', $location->name, ['class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @endif
         </div>
 
         <div class='form-group padding-top'>
             {{ Form::label('notes', 'Location Notes') }}
-            {{ Form::text('notes', $location->notes, ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.', 'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @if(isset($notesEdit))
+                {{ Form::text(
+                'notes',
+                $notesEdit,
+                ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.',
+                'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @else
+                {{ Form::text(
+                'notes',
+                $location->notes,
+                ['placeholder' => 'ie instructions that always apply to the location, or building name, company name, etc.',
+                'class' => 'form-control', 'onkeypress'=>'return noenter()']) }}
+            @endif
         </div>
 
         <div class='form-group form-buttons'>
