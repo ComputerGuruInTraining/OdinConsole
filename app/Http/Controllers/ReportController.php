@@ -195,7 +195,7 @@ class ReportController extends Controller
                     $id = $result->reportId;
                     $url = 'report-'.$id;
 
-                    return view('confirm-create-view')
+                    return view('report/confirm-create-view')
                         ->with(array(
                             'theMsg' => 'The report has been successfully generated',
                             'btnText' => 'View Report',
