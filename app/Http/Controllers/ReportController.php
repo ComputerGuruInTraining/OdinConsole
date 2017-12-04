@@ -191,11 +191,16 @@ class ReportController extends Controller
                 }
 
                 if ($result->success == true) {
-                    return view('confirm-create-general')
+
+                    $id = $result->reportId;
+                    $url = 'report-'.$id;
+
+                    return view('confirm-create-view')
                         ->with(array(
                             'theMsg' => 'The report has been successfully generated',
-                            'btnText' => 'Generate Report',
-                            'url' => 'reports'
+                            'btnText' => 'View Report',
+                            'url' => $url,
+                            'reportId' => $id
                         ));
                 }
 // else if ($result->success == false) {

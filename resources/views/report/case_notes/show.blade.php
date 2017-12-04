@@ -11,9 +11,10 @@
             <div class='table-responsive'>
                 {{--| <a href= class="edit-links">Edit or Delete Case Notes</a>--}}
                 <div style="padding:15px 0px 10px 0px;">
-                    <button type="button" class="btn btn-success" onclick="window.location.href='/reports-{{$report->id}}-edit'">
+                    <button type="button" class="btn btn-info" onclick="window.location.href='/reports-{{$report->id}}-edit'">
                        Manage Report
                     </button>
+                        <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary">Download PDF</a>
                 </div>
 
                 <div id="inline">
