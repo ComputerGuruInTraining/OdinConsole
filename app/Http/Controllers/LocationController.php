@@ -485,6 +485,13 @@ class LocationController extends Controller
                 $longitude = $geoCoords->results[0]->geometry->location->lng;
                 $notes = ucfirst(Input::get('info'));
 
+                //flush old values from session that were present due to previous creates
+                session()->forget('alias');
+                session()->forget('address');
+                session()->forget('latitude');
+                session()->forget('longitude');
+                session()->forget('notes');
+
                 //save in session for use by store()
                 session([
                     'alias' => $name,
@@ -569,6 +576,13 @@ class LocationController extends Controller
                     $sameLatitude = $location->latitude;
                     $sameLongitude = $location->longitude;
 
+                    //flush old values from session that were present due to previous edits
+                    session()->forget('aliasEdit');
+                    session()->forget('addressEdit');
+                    session()->forget('latitudeEdit');
+                    session()->forget('longitudeEdit');
+                    session()->forget('notesEdit');
+
                     //save in session for use by update().
                     session([
                         'aliasEdit' => $name,
@@ -609,7 +623,6 @@ class LocationController extends Controller
                         'lat' => $latitude,
                         'long' => $longitude,
                         'id' => $id
-
                     ));
                 }
 
@@ -688,6 +701,67 @@ class LocationController extends Controller
             $error = 'Error loading add location page';
             return view('error-msg')->with('msg', $error);
         }
+    }
+
+    function confirmEditCancel($id){
+        try {
+            if (session()->has('token')) {
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                //the original details
+                $location = json_decode((string)$response->getBody());
+
+                //any edited details
+                $address = session('addressEdit');
+                $name = session('aliasEdit');
+                $notes = session('notesEdit');
+                $latitude = session('latitudeEdit');
+                $longitude = session('longitudeEdit');
+
+                return view('location/edit-locations')->with(array(
+                    'location' => $location,
+                    'addressEdit' => $address,
+                    'aliasEdit' => $name,
+                    'notesEdit' => $notes,
+                    'latitudeEdit' => $latitude,
+                    'longitudeEdit' => $longitude
+                ));
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying edit location page';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying edit location form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            dd($err);
+            $e = 'Error displaying edit location';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading edit location page';
+            return view('error-msg')->with('msg', $error);
+        }
+
     }
 
     function getLocation($id){

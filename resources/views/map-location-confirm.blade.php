@@ -7,7 +7,9 @@
 
     <div id="map"></div>
 
-    {{ Form::label('address', 'Address') }}
+    <br />
+
+    {{ Form::label('address', 'Address *') }}
 
     <input type="text" id="autocomplete" name="address" disabled value="{{$address}}"/>
 
