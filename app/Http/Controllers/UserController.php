@@ -232,18 +232,15 @@ $error);
             }
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying user details';
-            return view('error-msg')->with('msg',
-$err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying user details for editing';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Error displaying user details for update';
-            return view('error-msg')->with('msg',
-$e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
             return Redirect::to('login')
@@ -252,8 +249,7 @@ $e);
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit user page';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
         }
 	}
 

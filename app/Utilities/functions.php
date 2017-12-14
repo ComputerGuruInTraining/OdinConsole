@@ -399,17 +399,49 @@ if (!function_exists('getUsers')) {
 
             $compId = session('compId');
 
-            $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
+//            $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
+//                'headers' => [
+//                    'Authorization' => 'Bearer ' . $token,
+//                ]
+//            ]);
+//
+//            $users = json_decode((string)$response->getBody());
+
+            $response = $client->get(Config::get('constants.API_URL').'user/add-emp/' . $compId, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
             ]);
 
             $users = json_decode((string)$response->getBody());
-
+            
             return $users;
 
         }
     }
 }
+
+if (!function_exists('getUser')) {
+
+    function getUser($id)
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL').'user/'.$id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $user = json_decode((string)$response->getBody());
+
+            return $user;
+        }
+    }
+}
+
+
 
