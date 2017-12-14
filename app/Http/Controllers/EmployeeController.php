@@ -86,8 +86,54 @@ class EmployeeController extends Controller
         }
     }
 
+
+    public function selectUser(){
+
+        //get the users from the api
+        $users = getUsers();
+
+        if(count($users) > 0){
+            //return the view with a select box of users
+            return view('employee/option')->with('users', $users);
+        }else{
+            $error = 'All users have previously been added as employees. 
+            <br> <br> 
+            Please either add a new user or add a new employee from scratch.';
+            return view('error-msg')->with('msg', $error);
+        }
+
+
+    }
+
+
+    //view with a next button (radio fn then create fn) and a radio option
+
+
+    //radio function from next button
+
+    //route = '/employees/option-existing'
+
+    //if value == false ie no
+    //create fn
+    //if value == true
+    //createExisting fn
+
+
+    //check value in radio input
+    //if true and using existing user ->
+    //get user values from api
+
+    //return view with user values auto-populated
+    //and isset($user) submit btn takes to one route & storeExisting() with an id sent through
+
+
+
+
+
+
     /**
      * Show the form for creating a new resource.
+     * just return view with no auto-populated values
      *
      * @return \Illuminate\Http\Response
      */
@@ -123,17 +169,61 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Show the form for creating a new employee using existing user.
+     * return view with auto-populated values
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createExisting(Request $request)
+    {
+        try {
+            if (session()->has('token')) {
+
+                //get userId from the input
+                $userId = Input::get('user');
+
+                //get user details from db via api using a function defined in functions.php
+                $user = getUser($userId);
+
+                return view('employee/add-employee-user')->with('user', $user);
+
+            } else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying add employee page';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying add employee form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Error displaying form';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading add employee page';
+            return view('error-msg')->with('msg', $error);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-
-    //error catching has been tested
     public function store(Request $request)
     {
         try {
             if (session()->has('token')) {
+
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
@@ -178,7 +268,100 @@ class EmployeeController extends Controller
                     //display confirmation page
                     $theAction = 'The new employee has been added to the system and an email has been sent to 
                     the supplied email address advising them to download the OdinLite mobile app and create a password for their
-                    account. Please advise the employee to check their junk email folder for the email 
+                    account. 
+                     <br> <br>
+                     Please advise the employee to check their junk email folder for the email 
+                    in case it has not landed in their inbox';
+
+                    return view('confirm')->with(array('theAction' => $theAction));
+
+                } else {
+                    $error = 'Error storing employee';
+                    $errors = collect($error);
+                    return view('/employee/add-employee')->with('errors', $errors);
+                }
+            } //not authenticated
+            else {
+                return Redirect::to('/login');
+            }
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Operation failed. Please ensure input valid and email unique.');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Error storing employee');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('employees/create')
+                ->withInput()
+                ->withErrors('Error storing employee details. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('login')
+                ->withInput()
+                ->withErrors('Session expired. Please login.');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeExisting(Request $request, $userId)
+    {
+        try {
+            if (session()->has('token')) {
+
+                //retrieve token needed for authorized http requests
+                $token = session('token');
+
+                $client = new GuzzleHttp\Client;
+
+                //validate user input
+                $this->validate($request, [
+                    'dateOfBirth' => 'required',
+                    'sex' => 'required|max:255',
+                    'mobile' => 'required|max:25'
+                ]);
+
+                //user-input data
+                $dob = Input::get('dateOfBirth');
+                $gender = Input::get('sex');
+                $mobile = Input::get('mobile');
+
+                //format dob
+                $dob = Carbon::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
+
+                //store in db
+                $response = $client->post(Config::get('constants.API_URL') . 'employees/'.$userId, array(
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $token,
+                            'Content-Type' => 'application/json'
+                        ),
+                        'json' => array(
+                            'dateOfBirth' => $dob, 'sex' => $gender,
+                            'mobile' => $mobile, 'userId' => $userId
+                        )
+                    )
+                );
+
+                $employee = json_decode((string)$response->getBody());
+
+                //direct user based on whether record stored successfully or not
+                if ($employee->success == true) {
+                    //display confirmation page
+                    $theAction = 'The console user has been added as an employee. 
+                    <br><br>
+                    An email has been sent to 
+                    their email address with a link to download the OdinLite mobile app. The employee can
+                    login to the mobile app using their current user password.
+                     <br> <br> 
+                    Please advise the employee to check their junk email folder for the email 
                     in case it has not landed in their inbox';
 
                     return view('confirm')->with(array('theAction' => $theAction));

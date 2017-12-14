@@ -8,5 +8,5 @@
 @stop
 
 @section('page-content')
-    <div class="confirm col-md-8 line-space">{{ $msg }}</div>
+    <div class="confirm col-md-8 line-space">{!! $msg !!}  </div>
 @stop
