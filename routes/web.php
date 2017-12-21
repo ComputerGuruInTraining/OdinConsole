@@ -38,7 +38,7 @@ Route::get('/error-page', function(){
 });
 
 //download case notes image, calls download function in functions.php
-Route::get('/download/{img}', 'CaseNoteController@download');
+Route::get('/download/{foldername}/{filename}', 'CaseNoteController@download');
 
 Route::resource('/user', 'UserController');
 

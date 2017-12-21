@@ -59,7 +59,11 @@
 {{--                                    <td>{{$item->case_time}}</td>--}}
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
-                                    <td>{{$item->hasImg}}</td>
+                                    @if($item->hasImg == "Y")
+                                        <td><a href="/download/{{$item->img}}" target="_blank">Download</a></td>
+                                    @else
+                                        <td>{{$item->hasImg}}</td>
+                                    @endif
                                     <td>{{$item->employee}}</td>
                                     <td>{{$item->case_id}}</td>
                                 </tr>

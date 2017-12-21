@@ -4,7 +4,7 @@
     <!-- Logo -->
     <div class="pull-left image" style="max-width:200px;">
         <div class="logo">
-            <img src="{{ asset("/bower_components/adminlte/dist/img/ODIN-Logo.png") }}" class="odin-logo header-alt" alt="Odin Logo" />
+            <img src="{{ asset("odin_logo_current.png") }}" class="odin-logo header-alt" alt="Odin Logo" />
         </div>
     </div>
 

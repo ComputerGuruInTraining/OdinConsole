@@ -122,24 +122,43 @@
                 var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
-                    icon: iconDir
+                    icon: iconDir,
                 });
+
+//                marker.showInfoWindow();
 
                 //assign values to markers array
                 markers.push(marker);
 
+//                setHoverWindow(marker, positions[i]);
+
                 setInfoWindow(marker,  positions[i], positions[i].latitude, positions[i].longitude);
+
             }
         }
 
+//        function setHoverWindow(marker, position)
+//        {
+//            //info window that hovers on the position and just details the employee's name
+//            infoWindowHover = new google.maps.InfoWindow();
+//
+//            google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+//                infoWindowHover.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + "</h5>");
+//                infoWindowHover.open(map, marker);
+//            });
+//
+//        }
+
         function setInfoWindow(marker, position, lat, long)
         {
+            /*Gathering accurate date and time and formatting*/
             //convert date to current timezone and user-friendly date and time
+
             var timestamp = (ts(position.created_at))/1000;
 
             //use google api to convert the timestamp to the user's timezone using the latitude and location of the geoLocation data
             $.get( 'https://maps.googleapis.com/maps/api/timezone/json?location=' + lat + ',' + long +
-            '&timestamp=' + timestamp + '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', function(result){
+                '&timestamp=' + timestamp + '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', function(result){
 
                 var dateForTZ = timestamp + result.dstOffset + result.rawOffset;
 
@@ -155,17 +174,117 @@
                 //user-friendly string for displaying on view
                 var dtTzString = date + ' ' + time;
 
-                infoWindow = new google.maps.InfoWindow();
 
-                google.maps.event.addListener(marker, 'click', function () {
-                    infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +
-                        position.address + "</p>");
-                    infoWindow.open(map, this);
+            //info window that displays upon map load and when marker clicked (in case user closes the window)
+                infoWindowHover = new google.maps.InfoWindow();
+
+//                var myVar = infoWindowPress(testing);
+
+                infoWindowHover.setContent("<h5>" + position.user_first_name + "</h5>");
+
+
+//                infoWindowHover.setContent("<h5 id='test'>" + position.user_first_name + "</h5>");
+
+
+
+//                onInfoWindowPress(position);
+
+                //display upon map load
+                google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+                    infoWindowHover.open(map, marker);
                 });
+
+                //open upon marker click
+                google.maps.event.addListener(marker, 'click', function () {
+                    infoWindowHover.open(map, this);
+                });
+
+//                document.getElementById("test").addEventListener(function() {
+//                    alert("something");
+//                });
+
+                    {{--//info window with more detail that shows upon simple info window click--}}
+                    {{--infoWindow = new google.maps.InfoWindow();--}}
+
+                    {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                    {{--position.address + "</p>");--}}
+                    {{----}}
+                    {{--infoWindow.open(map, marker);--}}
+
+//                });
+
+                {{--//info window with more detail that shows upon simple info window click--}}
+                {{--infoWindow = new google.maps.InfoWindow();--}}
+
+                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                    {{--position.address + "</p>");--}}
+
+                {{--google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
+{{--//                    infoWindowHover.close();--}}
+                    {{--infoWindow.open(map, this);--}}
+
+                {{--});--}}
+
+                {{--google.maps.event.addListener(infoWindow,'closeclick',function() {--}}
+                    {{--infoWindowHover.open(map, marker);--}}
+
+
+                {{--});--}}
+                {{--//pass the marker to the--}}
+
+//                infowindow.open(map,this);
+
+//                google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+//                    infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + "</h5>");
+//                        infoWindow.open(map, marker);
+//                });
 
             });
 
+
         }
+
+        {{--function infoWindowPress(){--}}
+
+            {{--console.log('function entered infoWindwoPrss' + position);--}}
+
+            {{--//info window with more detail that shows upon simple info window click--}}
+            {{--infoWindow = new google.maps.InfoWindow();--}}
+
+            {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                {{--position.address + "</p>");--}}
+
+{{--//            google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
+{{--//                    infoWindowHover.close();--}}
+                {{--infoWindow.open(map, marker);--}}
+
+{{--//            });--}}
+
+        {{--}--}}
+
+        {{--function onInfoWindowPress(position){--}}
+
+            {{--var myvar=15;--}}
+
+            {{--document.getElementById('test').onclick=function(){--}}
+
+                {{--console.log('function entered infoWindwoPrss' + position + myvar);--}}
+
+                {{--//info window with more detail that shows upon simple info window click--}}
+                {{--infoWindow = new google.maps.InfoWindow();--}}
+
+                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                    {{--position.address + "</p>");--}}
+
+{{--//            google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
+{{--//                    infoWindowHover.close();--}}
+                {{--infoWindow.open(map, marker);--}}
+
+{{--//            });--}}
+
+
+            {{--};--}}
+        {{--}--}}
 
         //pass in a date time string and create a date object in UTC time, then convert to a timestamp
         function ts(dtStr){

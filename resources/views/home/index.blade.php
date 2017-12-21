@@ -20,7 +20,7 @@
 {{--@stop--}}
 
 @section('content')
-    <img src="{{ asset("/bower_components/AdminLTE/dist/img/ODIN-Logo.png") }}" alt="Odin Logo" height="60px"
+    <img src="{{ asset("odin_logo_current.png") }}" alt="Odin Logo" height="60px"
          width="200px"
          style="position: absolute; left:30px; top:30px;"/>
 

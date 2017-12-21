@@ -807,6 +807,22 @@ class ReportController extends Controller
                     //if img, mark Y TODO: link
                     if ($item->img != "") {
                         $cases->reportCaseNotes[$i]->hasImg = 'Y';
+
+                        $img =  $cases->reportCaseNotes[$i]->img;
+
+                        //remove the first and last character from the string ie remove " and " around string
+                        $subImg = stringRemove1stAndLast($img);
+
+                        //remove the double forward slash in the img filepath
+                        $imgFormatted = removeForwardSlash($subImg);
+
+//                        dd($imgFormatted);
+
+                        //overwrite the value in img to be the img without the first and last characters
+                        $cases->reportCaseNotes[$i]->img = $imgFormatted;
+
+//                        dd($cases->reportCaseNotes[$i]->img);
+
                     } else {
                         $cases->reportCaseNotes[$i]->hasImg = '-';
 

@@ -39,11 +39,12 @@ class HomeController extends BaseController
         if (oauth2($username, $password)) {
             return Redirect::intended('/admin');
         }
-        //else, not api authenticated so user credentials not valid
-        return Redirect::back()
-            ->withInput()
-            ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
+            //else, not api authenticated so user credentials not valid
+            return Redirect::back()
+                ->withInput()
+                ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
             Please ensure the account has been activated as this could be the problem.');
+
     }
 
     public function getLogin()
