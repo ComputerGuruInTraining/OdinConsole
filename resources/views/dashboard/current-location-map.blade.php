@@ -17,7 +17,6 @@
 
     <script>
         var map;
-        var infoWindow;
         var markers = [];
         var lat;
         var long;
@@ -125,29 +124,14 @@
                     icon: iconDir,
                 });
 
-//                marker.showInfoWindow();
 
                 //assign values to markers array
                 markers.push(marker);
-
-//                setHoverWindow(marker, positions[i]);
 
                 setInfoWindow(marker,  positions[i], positions[i].latitude, positions[i].longitude);
 
             }
         }
-
-//        function setHoverWindow(marker, position)
-//        {
-//            //info window that hovers on the position and just details the employee's name
-//            infoWindowHover = new google.maps.InfoWindow();
-//
-//            google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-//                infoWindowHover.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + "</h5>");
-//                infoWindowHover.open(map, marker);
-//            });
-//
-//        }
 
         function setInfoWindow(marker, position, lat, long)
         {
@@ -174,119 +158,23 @@
                 //user-friendly string for displaying on view
                 var dtTzString = date + ' ' + time;
 
+                //info window that shows upon marker click
+                var infoWindow = new google.maps.InfoWindow();
 
-            //info window that displays upon map load and when marker clicked (in case user closes the window)
-                infoWindowHover = new google.maps.InfoWindow();
+                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                    {{--position.address + "</p>");--}}
 
-//                var myVar = infoWindowPress(testing);
-
-                infoWindowHover.setContent("<h5>" + position.user_first_name + "</h5>");
-
-
-//                infoWindowHover.setContent("<h5 id='test'>" + position.user_first_name + "</h5>");
-
-
-
-//                onInfoWindowPress(position);
-
-                //display upon map load
-                google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-                    infoWindowHover.open(map, marker);
-                });
+                infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5>");
 
                 //open upon marker click
                 google.maps.event.addListener(marker, 'click', function () {
-                    //if infoWindowHover
-                    //maybe just a personalised marker with an initial = need 26 markers....maybe best option. try with 1 or 2.
-                    infoWindowHover.open(map, this);
+
+                    infoWindow.open(map, marker);
+
                 });
 
-//                document.getElementById("test").addEventListener(function() {
-//                    alert("something");
-//                });
-
-                    {{--//info window with more detail that shows upon simple info window click--}}
-                    {{--infoWindow = new google.maps.InfoWindow();--}}
-
-                    {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
-                    {{--position.address + "</p>");--}}
-                    {{----}}
-                    {{--infoWindow.open(map, marker);--}}
-
-//                });
-
-                {{--//info window with more detail that shows upon simple info window click--}}
-                {{--infoWindow = new google.maps.InfoWindow();--}}
-
-                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
-                    {{--position.address + "</p>");--}}
-
-                {{--google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
-{{--//                    infoWindowHover.close();--}}
-                    {{--infoWindow.open(map, this);--}}
-
-                {{--});--}}
-
-                {{--google.maps.event.addListener(infoWindow,'closeclick',function() {--}}
-                    {{--infoWindowHover.open(map, marker);--}}
-
-
-                {{--});--}}
-                {{--//pass the marker to the--}}
-
-//                infowindow.open(map,this);
-
-//                google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-//                    infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + "</h5>");
-//                        infoWindow.open(map, marker);
-//                });
-
             });
-
-
         }
-
-        {{--function infoWindowPress(){--}}
-
-            {{--console.log('function entered infoWindwoPrss' + position);--}}
-
-            {{--//info window with more detail that shows upon simple info window click--}}
-            {{--infoWindow = new google.maps.InfoWindow();--}}
-
-            {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
-                {{--position.address + "</p>");--}}
-
-{{--//            google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
-{{--//                    infoWindowHover.close();--}}
-                {{--infoWindow.open(map, marker);--}}
-
-{{--//            });--}}
-
-        {{--}--}}
-
-        {{--function onInfoWindowPress(position){--}}
-
-            {{--var myvar=15;--}}
-
-            {{--document.getElementById('test').onclick=function(){--}}
-
-                {{--console.log('function entered infoWindwoPrss' + position + myvar);--}}
-
-                {{--//info window with more detail that shows upon simple info window click--}}
-                {{--infoWindow = new google.maps.InfoWindow();--}}
-
-                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
-                    {{--position.address + "</p>");--}}
-
-{{--//            google.maps.event.addListener(infoWindowHover, 'click', function () {--}}
-{{--//                    infoWindowHover.close();--}}
-                {{--infoWindow.open(map, marker);--}}
-
-{{--//            });--}}
-
-
-            {{--};--}}
-        {{--}--}}
 
         //pass in a date time string and create a date object in UTC time, then convert to a timestamp
         function ts(dtStr){

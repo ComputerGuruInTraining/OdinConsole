@@ -3,8 +3,9 @@
 
     <!-- Logo -->
     <div class="pull-left image" style="max-width:200px;">
+
         <a href='/admin' class="logo">
-            <img src="{{ asset("odinLogoCurr.png") }}" class="odin-logo" alt="Odin Logo" />
+            <img src="{{ asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png") }}" class="odin-logo" alt="Odin Logo" />
         </a>
     </div>
 

@@ -6,7 +6,7 @@
 @stop
 
 @section('content')
-    <img src="{{ asset("odinLogoCurr.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
+    <img src="{{ asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
     <div class="container">
         <div class="row">
