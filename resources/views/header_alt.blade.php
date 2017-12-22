@@ -4,7 +4,7 @@
     <!-- Logo -->
     <div class="pull-left image" style="max-width:200px;">
         <div class="logo">
-            <img src="{{ asset("odin-logo-current.png") }}" class="odin-logo header-alt" alt="Odin Logo" />
+            <img src="{{ asset("odinLogoCurr.png") }}" class="odin-logo header-alt" alt="Odin Logo" />
         </div>
     </div>
 

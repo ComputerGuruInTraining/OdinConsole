@@ -3,7 +3,7 @@
 @section('title') Register @stop
 
 @section('content')
-    <img src="{{ asset("odin-logo-current.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
+    <img src="{{ asset("odinLogoCurr.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
     <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
 

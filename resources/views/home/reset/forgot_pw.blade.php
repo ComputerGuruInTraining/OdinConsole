@@ -3,7 +3,7 @@
 @section('title') Reset Password @stop
 
 @section('content')
-    <img src="{{ asset("odin-logo-current.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
+    <img src="{{ asset("odinLogoCurr.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
     <div class="container" style="padding-top: 150px;">
         <div class="row">

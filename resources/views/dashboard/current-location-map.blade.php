@@ -196,6 +196,8 @@
 
                 //open upon marker click
                 google.maps.event.addListener(marker, 'click', function () {
+                    //if infoWindowHover
+                    //maybe just a personalised marker with an initial = need 26 markers....maybe best option. try with 1 or 2.
                     infoWindowHover.open(map, this);
                 });
 
