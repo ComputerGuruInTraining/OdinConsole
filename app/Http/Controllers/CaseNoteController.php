@@ -357,7 +357,8 @@ class CaseNoteController extends Controller
 
     //todo: work in progress
     //parameter is filename
-    function download($folder, $file)
+
+    function download($file)
     {
         //http request
         if (session()->has('token')) {
@@ -367,7 +368,7 @@ class CaseNoteController extends Controller
             $client = new GuzzleHttp\Client;
 
             //response is a url
-            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
+            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$file, [
 //                'headers' => [
 ////                    'Authorization' => 'Bearer ' . $token,
 ////                    'x-ms-blob-content-type' => 'image/jpeg',
@@ -392,6 +393,42 @@ class CaseNoteController extends Controller
 
             return $url;
         }
+
+//    function download($folder, $file)
+//    {
+//        //http request
+//        if (session()->has('token')) {
+//            //retrieve token needed for authorized http requests
+//            $token = session('token');
+//
+//            $client = new GuzzleHttp\Client;
+//
+//            //response is a url
+//            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
+////                'headers' => [
+//////                    'Authorization' => 'Bearer ' . $token,
+//////                    'x-ms-blob-content-type' => 'image/jpeg',
+////                ]
+//            ]);
+//
+//            $url = json_decode((string)$response->getBody());
+//
+////            $response = $client->get($url, [
+////                'headers' => [
+////////                    'Authorization' => 'Bearer ' . $token,
+///////
+////                    'x-ms-blob-content-type' => 'image/jpeg',
+////                    'X-HTTP-Method-Override' => 'PUT'
+////
+////                ]
+////            ]);
+//
+//            //a file is returned from inthe response which forces the user's browser to download the photo
+//
+////            dd($url);
+//
+//            return $url;
+//        }
 
     }
 }

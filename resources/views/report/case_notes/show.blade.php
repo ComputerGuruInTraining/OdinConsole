@@ -60,7 +60,8 @@
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
                                     @if($item->hasImg == "Y")
-                                        <td><a href="/download/{{$item->img}}" target="_blank">Download</a></td>
+                                        <td><a href="{{$item->url}}" target="_blank">Download {{$item->img}}</a></td>
+                                        {{--<td><a href="/download/{{$item->img}}" target="_blank">Download {{$item->img}}</a></td>--}}
                                     @else
                                         <td>{{$item->hasImg}}</td>
                                     @endif

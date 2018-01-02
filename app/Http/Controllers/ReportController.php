@@ -42,7 +42,6 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-//                dd($reports);
                 if (count($reports) > 0) {
                     foreach ($reports as $i => $item) {
                         //add the extracted date to each of the objects and format date
@@ -821,7 +820,11 @@ class ReportController extends Controller
                         //overwrite the value in img to be the img without the first and last characters
                         $cases->reportCaseNotes[$i]->img = $imgFormatted;
 
-//                        dd($cases->reportCaseNotes[$i]->img);
+                        $url = app('App\Http\Controllers\CaseNoteController')->download($cases->reportCaseNotes[$i]->img);
+
+//                        dd($url);
+
+                        $cases->reportCaseNotes[$i]->url = $url;
 
                     } else {
                         $cases->reportCaseNotes[$i]->hasImg = '-';
