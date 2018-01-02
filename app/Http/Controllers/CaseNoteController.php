@@ -356,28 +356,41 @@ class CaseNoteController extends Controller
     }
 
     //todo: work in progress
-    function download($img)
+    //parameter is filename
+    function download($folder, $file)
     {
         //http request
         if (session()->has('token')) {
             //retrieve token needed for authorized http requests
-//            $token = session('token');
+            $token = session('token');
 
             $client = new GuzzleHttp\Client;
 
-//            $compId = session('compId');
-
-            $response = $client->get(Config::get('constants.STANDARD_URL') . '/download-photo/'.$img, [
-//                'headers' => array(
-//                    'Content-Type' => 'application/json'
-//                ),
+            //response is a url
+            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
+//                'headers' => [
+////                    'Authorization' => 'Bearer ' . $token,
+////                    'x-ms-blob-content-type' => 'image/jpeg',
+//                ]
             ]);
 
-            $data = json_decode((string)$response->getBody());
+            $url = json_decode((string)$response->getBody());
+
+//            $response = $client->get($url, [
+//                'headers' => [
+//////                    'Authorization' => 'Bearer ' . $token,
+/////
+//                    'x-ms-blob-content-type' => 'image/jpeg',
+//                    'X-HTTP-Method-Override' => 'PUT'
+//
+//                ]
+//            ]);
 
             //a file is returned from inthe response which forces the user's browser to download the photo
 
-            dd($data);
+//            dd($url);
+
+            return $url;
         }
 
     }

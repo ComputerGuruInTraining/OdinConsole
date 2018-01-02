@@ -17,7 +17,6 @@
 
     <script>
         var map;
-        var infoWindow;
         var markers = [];
         var lat;
         var long;
@@ -122,24 +121,28 @@
                 var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
-                    icon: iconDir
+                    icon: iconDir,
                 });
+
 
                 //assign values to markers array
                 markers.push(marker);
 
                 setInfoWindow(marker,  positions[i], positions[i].latitude, positions[i].longitude);
+
             }
         }
 
         function setInfoWindow(marker, position, lat, long)
         {
+            /*Gathering accurate date and time and formatting*/
             //convert date to current timezone and user-friendly date and time
+
             var timestamp = (ts(position.created_at))/1000;
 
             //use google api to convert the timestamp to the user's timezone using the latitude and location of the geoLocation data
             $.get( 'https://maps.googleapis.com/maps/api/timezone/json?location=' + lat + ',' + long +
-            '&timestamp=' + timestamp + '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', function(result){
+                '&timestamp=' + timestamp + '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', function(result){
 
                 var dateForTZ = timestamp + result.dstOffset + result.rawOffset;
 
@@ -155,16 +158,22 @@
                 //user-friendly string for displaying on view
                 var dtTzString = date + ' ' + time;
 
-                infoWindow = new google.maps.InfoWindow();
+                //info window that shows upon marker click
+                var infoWindow = new google.maps.InfoWindow();
 
+                {{--infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +--}}
+                    {{--position.address + "</p>");--}}
+
+                infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5>");
+
+                //open upon marker click
                 google.maps.event.addListener(marker, 'click', function () {
-                    infoWindow.setContent("<h5>" + position.user_first_name + " " + position.user_last_name + " @ " + dtTzString + "</h5><p>" +
-                        position.address + "</p>");
-                    infoWindow.open(map, this);
+
+                    infoWindow.open(map, marker);
+
                 });
 
             });
-
         }
 
         //pass in a date time string and create a date object in UTC time, then convert to a timestamp

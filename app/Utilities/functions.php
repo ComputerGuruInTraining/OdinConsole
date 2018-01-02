@@ -265,6 +265,7 @@ if (!function_exists('oauth2')) {
                 }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             return false;
         }
     }
@@ -414,7 +415,7 @@ if (!function_exists('getUsers')) {
             ]);
 
             $users = json_decode((string)$response->getBody());
-            
+
             return $users;
 
         }
@@ -440,6 +441,38 @@ if (!function_exists('getUser')) {
 
             return $user;
         }
+    }
+}
+
+//function to remove the first and last character of a string
+if (!function_exists('stringRemove1stAndLast')) {
+
+    function stringRemove1stAndLast($img)
+    {
+        //remove 1st character
+        $img1stRemoved = substr($img, 1);
+        //remove last character
+        $img1stAndLastRemoved = substr($img1stRemoved, 0, -1);
+
+        return $img1stAndLastRemoved;
+
+    }
+}
+
+//function to remove the first and last character of a string
+if (!function_exists('removeForwardSlash')) {
+
+    function removeForwardSlash($img)
+    {
+        //find the double forward slash ie // in the $img string which always occurs after casenotes/ so the 10th index
+        //and remove the 2nd forward slash
+        $folder = substr($img, 0, 10);//= casenotes/
+        $filename = substr($img, 11);//timestamp
+
+        //concat the two
+        $imgForwardSlashRemoved = $folder.$filename;
+
+        return $imgForwardSlashRemoved;
     }
 }
 
