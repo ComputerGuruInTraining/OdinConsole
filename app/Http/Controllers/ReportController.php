@@ -42,7 +42,6 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-//                dd($reports);
                 if (count($reports) > 0) {
                     foreach ($reports as $i => $item) {
                         //add the extracted date to each of the objects and format date
@@ -814,14 +813,18 @@ class ReportController extends Controller
                         $subImg = stringRemove1stAndLast($img);
 
                         //remove the double forward slash in the img filepath
-                        $imgFormatted = removeForwardSlash($subImg);
+//                        $imgFormatted = removeForwardSlash($subImg);
 
 //                        dd($imgFormatted);
 
                         //overwrite the value in img to be the img without the first and last characters
-                        $cases->reportCaseNotes[$i]->img = $imgFormatted;
+                        $cases->reportCaseNotes[$i]->img = $subImg;
 
-//                        dd($cases->reportCaseNotes[$i]->img);
+                        $url = app('App\Http\Controllers\CaseNoteController')->download($cases->reportCaseNotes[$i]->img);
+
+//                        dd($url);
+
+                        $cases->reportCaseNotes[$i]->url = $url;
 
                     } else {
                         $cases->reportCaseNotes[$i]->hasImg = '-';
@@ -910,16 +913,32 @@ class ReportController extends Controller
 
                             $cases->reportCaseNotes[$i]->case_date = $date;
 
-                            //if img, mark Y TODO: link
                             if ($item->img != "") {
                                 $cases->reportCaseNotes[$i]->hasImg = 'Y';
+
+                                $img =  $cases->reportCaseNotes[$i]->img;
+
+                                //remove the first and last character from the string ie remove " and " around string
+                                $subImg = stringRemove1stAndLast($img);
+
+                                $cases->reportCaseNotes[$i]->img = $subImg;
+
+
+                                //following works for images in casenotes folder
+//                                remove the double forward slash in the img filepath
+//                                $imgFormatted = removeForwardSlash($subImg);
+
+//                                overwrite the value in img to be the img without the first and last characters
+//                                $cases->reportCaseNotes[$i]->img = $imgFormatted;
+
+                                $url = app('App\Http\Controllers\CaseNoteController')->download($cases->reportCaseNotes[$i]->img);
+
+                                $cases->reportCaseNotes[$i]->url = $url;
+
                             } else {
                                 $cases->reportCaseNotes[$i]->hasImg = '-';
 
                             }
-
-//                            $cases->reportCaseNotes[$i]->case_time = $time;
-
                             //change to collection datatype from array for using groupBy fn
                             $caseNotes = collect($cases->reportCaseNotes);
                             $groupCases = $caseNotes->groupBy('case_date');

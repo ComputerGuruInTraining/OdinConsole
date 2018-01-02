@@ -107,21 +107,49 @@ class CaseNoteController extends Controller
                         $data[$i]->date = $date;
 //                        $data[$i]->time = $time;
 
+                    if ($case->img != "") {
+                        $case->hasImg = 'Y';
+
+                        $img =  $case->img;
+
+                        //remove the first and last character from the string ie remove " and " around string
+                        $subImg = stringRemove1stAndLast($img);
+
+                        $case->img = $subImg;
+
+
+                        //remove the double forward slash in the img filepath
+//                        $imgFormatted = removeForwardSlash($subImg);
+
+//                        $imgFolder = checkFolder($subImg);
+
+
+                        //overwrite the value in img to be the img without the first and last characters
+//                        $case->img = $imgFormatted;
+
+                        $url = app('App\Http\Controllers\CaseNoteController')->download($case->img);
+
+                        $data[$i]->url = $url;
+
+                    } else {
+                        $data[$i]->hasImg = '-';
+
+                    }
 
                         //convert to substring the filepath to be used to download the file, if there is an image
-                        $stringImg = $case->img;
-
-                        if($stringImg != ""){
-//                            $substrImg = substrImg($stringImg);
-//                            $data[$i]->img = $substrImg;
-                              $data[$i]->hasImg = "Y";
-
-//                            dd($data[$i]->img, $substrImg);
-                        }else{
-
-                            $data[$i]->hasImg = "-";
-
-                        }
+//                        $stringImg = $case->img;
+//
+//                        if($stringImg != ""){
+////                            $substrImg = substrImg($stringImg);
+////                            $data[$i]->img = $substrImg;
+//                              $data[$i]->hasImg = "Y";
+//
+////                            dd($data[$i]->img, $substrImg);
+//                        }else{
+//
+//                            $data[$i]->hasImg = "-";
+//
+//                        }
             }
             return $data;
     }
@@ -357,7 +385,8 @@ class CaseNoteController extends Controller
 
     //todo: work in progress
     //parameter is filename
-    function download($folder, $file)
+
+    function download($file)
     {
         //http request
         if (session()->has('token')) {
@@ -367,7 +396,7 @@ class CaseNoteController extends Controller
             $client = new GuzzleHttp\Client;
 
             //response is a url
-            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
+            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$file, [
 //                'headers' => [
 ////                    'Authorization' => 'Bearer ' . $token,
 ////                    'x-ms-blob-content-type' => 'image/jpeg',
@@ -392,6 +421,42 @@ class CaseNoteController extends Controller
 
             return $url;
         }
+
+//    function download($folder, $file)
+//    {
+//        //http request
+//        if (session()->has('token')) {
+//            //retrieve token needed for authorized http requests
+//            $token = session('token');
+//
+//            $client = new GuzzleHttp\Client;
+//
+//            //response is a url
+//            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
+////                'headers' => [
+//////                    'Authorization' => 'Bearer ' . $token,
+//////                    'x-ms-blob-content-type' => 'image/jpeg',
+////                ]
+//            ]);
+//
+//            $url = json_decode((string)$response->getBody());
+//
+////            $response = $client->get($url, [
+////                'headers' => [
+////////                    'Authorization' => 'Bearer ' . $token,
+///////
+////                    'x-ms-blob-content-type' => 'image/jpeg',
+////                    'X-HTTP-Method-Override' => 'PUT'
+////
+////                ]
+////            ]);
+//
+//            //a file is returned from inthe response which forces the user's browser to download the photo
+//
+////            dd($url);
+//
+//            return $url;
+//        }
 
     }
 }
