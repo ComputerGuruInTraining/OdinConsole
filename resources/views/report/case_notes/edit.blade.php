@@ -53,7 +53,13 @@
                                     {{--                                    <td>{{$item->case_time}}</td>--}}
                                     <td>{{$item->title}}</td>
                                     <td>{{$item->description}}</td>
-                                    <td>{{$item->hasImg}}</td>
+                                    @if($item->hasImg == "Y")
+
+                                        <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                                    @else
+                                        <td>{{$item->hasImg}}</td>
+
+                                    @endif
                                     <td>{{$item->employee}}</td>
                                     @if($item->title != "Nothing to Report")
 

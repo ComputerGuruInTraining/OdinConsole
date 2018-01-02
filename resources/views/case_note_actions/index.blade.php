@@ -61,11 +61,15 @@
                             {{--                                <td class="min-width">{{$item->time}}</td>--}}
                             <td>{{$item->title}}</td>
                             <td class="desc-max-width">{{$item->description}}</td>
-                            {{--<td>{{$item->img}}</td>--}}
-                            <td class="max-width">
-                                <div>{{$item->hasImg}}</div>
+                            {{--<td class="max-width">--}}
+                                {{--<div>{{$item->hasImg}}</div>--}}
                                 {{--<a href="/download/{$item->img}">{{$item->img}}</a>--}}
-                            </td>
+                            {{--</td>--}}
+                            @if($item->hasImg == "Y")
+                                <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                            @else
+                                <td>{{$item->hasImg}}</td>
+                            @endif
 
                             <td>{{$item->first_name}} {{$item->last_name}}</td>
 
