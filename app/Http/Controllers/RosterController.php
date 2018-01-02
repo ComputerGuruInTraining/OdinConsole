@@ -560,17 +560,9 @@ class RosterController extends Controller
                 ->withInput()
                 ->withErrors('Error updating shift. Please check input is valid.');
 
-        }
-//        catch(\Exception $exception) {
-//            return Redirect::to('/rosters/'.$id.'/edit')
-//                ->withInput()
-//                ->withErrors('Operation failed. Please ensure input valid.');
-//
-//        }
-        catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('/');
+//                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
         }
     }
 

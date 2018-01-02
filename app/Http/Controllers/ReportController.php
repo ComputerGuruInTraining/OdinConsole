@@ -809,7 +809,7 @@ class ReportController extends Controller
                         $cases->reportCaseNotes[$i]->hasImg = 'Y';
 
                         $img =  $cases->reportCaseNotes[$i]->img;
-
+                        
                         //remove the first and last character from the string ie remove " and " around string
                         $subImg = stringRemove1stAndLast($img);
 

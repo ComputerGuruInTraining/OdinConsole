@@ -65,11 +65,11 @@ class EmployeeController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying employees';
-            return view('error_msg')->with('error_msg', $err);
+            return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
             $e = 'Error displaying employee page';
-            return view('error_msg')->with('error_msg', $e);
+            return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
             $e = 'Unable to display employees';
