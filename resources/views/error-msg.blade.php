@@ -4,7 +4,8 @@
 @extends('sidebar')
 
 @section('title-item')
-    Error Page
+    {{$errorTitle or "Error Page"}}
+{{--    {!!$errorTitle  || "Error Page"!!}--}}
 @stop
 
 @section('page-content')

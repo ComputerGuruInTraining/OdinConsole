@@ -2,11 +2,11 @@
 @extends('sidebar')
 
 @section('custom-menu-title')
-    Roster
+    Shifts
 @stop
 
 @section('title-item')
-    Rosters
+    Shifts
 @stop
 
 @section('page-content')
