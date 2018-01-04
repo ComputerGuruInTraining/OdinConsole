@@ -265,7 +265,6 @@ if (!function_exists('oauth2')) {
                 }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             return false;
         }
     }

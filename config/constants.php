@@ -15,6 +15,7 @@ return [
     'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',//works
     'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',//works even with https
     'ERROR_GENERIC' => 'Failed to load webpage.',
-    'ERROR_SERVER' => 'Failed to load resource.'
+    'ERROR_SERVER' => 'Failed to load resource.',
+    'COMPANY_EMAIL' => 'admin@odinlite.net',
 
 ];

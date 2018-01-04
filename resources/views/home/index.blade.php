@@ -64,25 +64,30 @@
                             </div>
 
                             <div class='form-group'>
-                                <a href="/register" class="btn" style="margin-right: 3px;
-                                        color: white;
-                                background-color:#4d2970;
-                                font-size: large;">Register Company</a>
 
                                 {{ Form::submit('Login', [
                                     'class' => 'btn login-btns',
                                      'style' => 'color: white;
                                      background-color: #4d2970;
-                                     position: absolute;
-                                     right: 30px;
                                      font-size: large;'
                                  ])
                                  }}
                             </div>
 
-                            <div style="text-align: center;">
-                                <a href='/reset/link' style="color: #4d2970; text-align: center;" target="_blank">Forgot Password?</a>
+                            <div>
+                                <a href='/reset/link' style="color: #4d2970;" target="_blank">Forgot Password?</a>
                             </div>
+                            {{--class="btn" style="margin-right: 3px;--}}
+                            {{--color: white;--}}
+                            {{--background-color:#4d2970; font-size: large;"--}}
+                            <div>
+                                <br/>
+                                New to ODIN?
+                                <a href="/register" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
+                                to get started
+                            </div>
+
+
                         </div>
                         {{ Form::close() }}
 

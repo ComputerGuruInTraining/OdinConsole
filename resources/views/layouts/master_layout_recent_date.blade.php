@@ -24,14 +24,17 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
 
+    <link rel="stylesheet" href="{{asset('css/main.css')}}">
+
+    <script type="text/javascript"
+            src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
+
     {{--Clock Picker Stylesheet and Scripts--}}
     {{--see source https://weareoutman.github.io/clockpicker/jquery.html--}}
     <link rel="stylesheet"
           href="{{ asset('/bower_components/adminlte/plugins/clockpicker/css/jquery-clockpicker.min.css')}}"
           type="text/css">
-    <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    <script type="text/javascript"
-            src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
+
     <script type="text/javascript"
             src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
 
@@ -103,14 +106,14 @@
     <script src="bower_components/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- AdminLTE App --><!-- This file controls sidebar toggle functionality-->
-    <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
+    {{--<script src="bower_components/AdminLTE/dist/js/app.min.js"></script>--}}
 
     <script>
         $(function () {
             $(".datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                yearRange: "2017:2027"
+                yearRange: "+0:+10"
             });
         });
     </script>
@@ -120,12 +123,14 @@
     <script type="text/javascript">
         var input = $('.input-a');
         input.clockpicker({
-            autoclose: true
+//            autoclose: true,
+            twelvehour: true,
         });
 
         var input = $('.input-b');
         input.clockpicker({
-            autoclose: true
+//            autoclose: true,
+            twelvehour: true,
         });
     </script>
 

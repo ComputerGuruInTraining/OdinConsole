@@ -24,17 +24,9 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
 
-    {{--Clock Picker Stylesheet and Scripts--}}
-    {{--see source https://weareoutman.github.io/clockpicker/jquery.html--}}
-    <link rel="stylesheet"
-          href="{{ asset('/bower_components/adminlte/plugins/clockpicker/css/jquery-clockpicker.min.css')}}"
-          type="text/css">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <script type="text/javascript"
             src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
-    <script type="text/javascript"
-            src="{{asset('/bower_components/adminlte/plugins/clockpicker/js/jquery-clockpicker.min.js')}}"></script>
-
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -103,30 +95,16 @@
     <!-- AdminLTE App --><!-- This file controls sidebar toggle functionality-->
     <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
 
+    {{--fixme: anomoly whereby year will be current year if not changed in datepicker. --}}
     <script>
         $(function () {
             $(".datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                yearRange: "1945:2005"
+                yearRange: "-100:-15"
             });
         });
     </script>
-
-    {{--Clock Picker--}}
-    {{--to include the clock picker on a page, use a html input field. See rosters/create for eg--}}
-    <script type="text/javascript">
-        var input = $('.input-a');
-        input.clockpicker({
-            autoclose: true
-        });
-
-        var input = $('.input-b');
-        input.clockpicker({
-            autoclose: true
-        });
-    </script>
-
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
         Both of these plugins are recommended to enhance the
