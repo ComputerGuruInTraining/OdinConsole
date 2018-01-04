@@ -6,7 +6,9 @@
     <div style="padding:15px 0px 10px 0px;" class='form-group form-buttons'>
         <button type="button" class="btn btn-primary padding-bottom" data-container="body" data-toggle="popover" data-placement="top"
                 data-content="Change GeoLocation Gather Rate from every 5 min to every 30 seconds" onclick="adjFreq()">
-            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate <br/>
+            <div style="font-size: smaller;">currently: <span id="freq"></span></div>
+
         </button>
         <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover" data-placement="top"
                 data-content="Change from every 5m to every 30s" onclick="info()"
@@ -30,6 +32,7 @@
             //used for the initial rendering of the map including the center of the map
             currentPositions();
             mapCenter();
+            displayFreq();
             initMap(zoom);
 
             if (positions.length > 0){
@@ -283,6 +286,8 @@
                 updateMarkers();
 
             }, frequency);
+
+            displayFreq();
         }
 
         //retrieve values from api
@@ -304,6 +309,21 @@
         function info(){
             $('#info').popover('toggle')
 
+        }
+
+        function displayFreq(){
+
+            var formattedFreq = '';
+
+            if(frequency == 30000){
+
+                formattedFreq = '30sec';
+            }else if(frequency == 300000){
+
+                formattedFreq = '5min';
+            }
+
+            document.getElementById('freq').innerHTML = formattedFreq;
         }
 
     </script>

@@ -38,7 +38,7 @@
             <li class="active"><a href="/map-geolocation" class="menu"><span>Who's on Duty</span></a></li>
             <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
             <li class="active"><a href="/location" class="menu"><span>Locations</span></a></li>
-            <li class="active"><a href="/rosters" class="menu"><span>Roster</span></a></li>
+            <li class="active"><a href="/rosters" class="menu"><span>Shifts</span></a></li>
             <li class="active"><a href="/case-notes" class="menu">Case Notes</a></li>
             <li class="active"><a href="/reports" class="menu"><span>Reports</span></a></li>
 

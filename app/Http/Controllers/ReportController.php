@@ -201,15 +201,12 @@ class ReportController extends Controller
                             'url' => $url,
                             'reportId' => $id
                         ));
-                }
-// else if ($result->success == false) {
-////                    dd("false :)");//yep, echoes that
-//                    $msg = 'A report was not generated as there is no shift data at this location for the specified period.';
-//                    return view('error-msg')->with('msg', $msg);
-//                }
-                else {
+                } else {
                     $msg = 'A report was not generated for the location as there is no report data for the period.';
-                    return view('error-msg')->with('msg', $msg);
+                    return view('error-msg')->with(array(
+                        'msg' => $msg,
+                        'errorTitle' => 'No Data Found'
+                    ));
                 }
 
             } else {
@@ -397,8 +394,10 @@ class ReportController extends Controller
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying report';
-            return view('error-msg')->with('msg', $err);
-
+            return view('error-msg')->with(array(
+                'msg' => $err,
+                'errorTitle' => 'Server down'
+            ));
         } catch (\ErrorException $error) {
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
@@ -416,15 +415,6 @@ class ReportController extends Controller
             $error = 'Error loading report details';
             return view('error-msg')->with('msg', $error);
         }
-
-//        catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
-//            $msg = 'Error exception displaying report';
-//            return view('error-msg')->with('msg', $msg);
-//        } catch (\ErrorException $error) {
-//            $msg = 'Error exception displaying report on webpage';
-//            return view('error-msg')->with('msg', $msg);
-//        }
 
     }
 
