@@ -399,14 +399,6 @@ if (!function_exists('getUsers')) {
 
             $compId = session('compId');
 
-//            $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
-//                'headers' => [
-//                    'Authorization' => 'Bearer ' . $token,
-//                ]
-//            ]);
-//
-//            $users = json_decode((string)$response->getBody());
-
             $response = $client->get(Config::get('constants.API_URL').'user/add-emp/' . $compId, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
@@ -474,6 +466,17 @@ if (!function_exists('removeForwardSlash')) {
         return $imgForwardSlashRemoved;
     }
 }
+
+if (!function_exists('currentYear')) {
+
+    function currentYear()
+    {
+        $year = date("Y");
+        return $year;
+    }
+}
+
+
 
 
 
