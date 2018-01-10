@@ -66,9 +66,9 @@
                             {{--</td>--}}
                             {{--todo: remove once not using v2 mobile anymore--}}
                             @if($item->hasImg == "Y")
-                                @if($item->imgs != null)
-                                    <td><a href="#" target="_blank">Download</a></td>
-
+                                @if(sizeof($item->files) > 0)
+                                    {{--first photo in array--}}
+                                    <td><a href="{{$item->urls[0]}}" target="_blank">Download {{$item->files[0]}}</a></td>
                                 @else
                                     {{--v2 uploads--}}
                                     <td><a href="{{$item->url}}" target="_blank">Download</a></td>
@@ -77,9 +77,7 @@
                             @else
                                 <td>{{$item->hasImg}}</td>
                             @endif
-                            @if(sizeof($item->files) > 0)
-                                <td>Download Image</td>
-                            @endif
+
 
                             <td>{{$item->first_name}} {{$item->last_name}}</td>
 
@@ -104,8 +102,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td>Download Image {{$i + 1}}</td>
+                                    <td><a href="{{$item->urls[$i]}}" target="_blank">Download Image {{$i + 1}}</a></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
