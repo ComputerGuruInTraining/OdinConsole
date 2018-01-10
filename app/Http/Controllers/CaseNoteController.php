@@ -27,7 +27,7 @@ class CaseNoteController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL') . '/casenotes/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'casenotes/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -36,6 +36,8 @@ class CaseNoteController extends Controller
                 $data = json_decode((string)$response->getBody());
 
                 $dataFormat = $this->formatCaseNotes($data);
+
+//                dd($dataFormat);
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
@@ -50,6 +52,7 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             $err = 'Error displaying case notes';
             return view('error-msg')->with('msg', $err);
 
@@ -106,8 +109,8 @@ class CaseNoteController extends Controller
 //
                         $data[$i]->date = $date;
 //                        $data[$i]->time = $time;
-
-                    if ($case->img != "") {
+//for v2 case note uploads
+                    if (($case->img != "")&&($case->img != null)) {
                         $case->hasImg = 'Y';
 
                         $img =  $case->img;
@@ -117,39 +120,34 @@ class CaseNoteController extends Controller
 
                         $case->img = $subImg;
 
-
-                        //remove the double forward slash in the img filepath
-//                        $imgFormatted = removeForwardSlash($subImg);
-
-//                        $imgFolder = checkFolder($subImg);
-
-
-                        //overwrite the value in img to be the img without the first and last characters
-//                        $case->img = $imgFormatted;
-
-                        $url = app('App\Http\Controllers\CaseNoteController')->download($case->img);
-
+                        $url = $this->download($case->img);
                         $data[$i]->url = $url;
+//for v3 uploads
+                    } else if(count($case->files)>0){
 
-                    } else {
+                        $case->hasImg = 'Y';
+
+                        $imgs = [];
+                        $urls = [];
+
+                        for($index=0; $index < sizeof($case->files); $index++) {
+
+                            //remove the first and last character from the string ie remove " and " around string
+                            $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
+
+                            $urls[$index] = $this->download($imgs[$index]);
+                        }
+
+                        $data[$i]->imgs = $imgs;
+
+                        $data[$i]->urls = $urls;
+
+                    }
+                    //no image
+                    else {
                         $data[$i]->hasImg = '-';
 
                     }
-
-                        //convert to substring the filepath to be used to download the file, if there is an image
-//                        $stringImg = $case->img;
-//
-//                        if($stringImg != ""){
-////                            $substrImg = substrImg($stringImg);
-////                            $data[$i]->img = $substrImg;
-//                              $data[$i]->hasImg = "Y";
-//
-////                            dd($data[$i]->img, $substrImg);
-//                        }else{
-//
-//                            $data[$i]->hasImg = "-";
-//
-//                        }
             }
             return $data;
     }

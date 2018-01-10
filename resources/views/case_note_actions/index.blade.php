@@ -51,24 +51,34 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        {{--<td></td>--}}
                     </tr>
                     @foreach ($cases->get($index) as $item)
                         <tr>
                             {{--<td></td>--}}
                             <td class="padding-left max-width">{{$item->case_id}}</td>
                             <td>{{$item->date}}</td>
-                            {{--                                <td class="min-width">{{$item->time}}</td>--}}
+                                                            {{--<td class="min-width">{{$item->time}}</td>--}}
                             <td>{{$item->title}}</td>
                             <td class="desc-max-width">{{$item->description}}</td>
                             {{--<td class="max-width">--}}
                                 {{--<div>{{$item->hasImg}}</div>--}}
                                 {{--<a href="/download/{$item->img}">{{$item->img}}</a>--}}
                             {{--</td>--}}
+                            {{--todo: remove once not using v2 mobile anymore--}}
                             @if($item->hasImg == "Y")
-                                <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                                @if($item->imgs != null)
+                                    <td><a href="#" target="_blank">Download</a></td>
+
+                                @else
+                                    {{--v2 uploads--}}
+                                    <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+
+                                @endif
                             @else
                                 <td>{{$item->hasImg}}</td>
+                            @endif
+                            @if(sizeof($item->files) > 0)
+                                <td>Download Image</td>
                             @endif
 
                             <td>{{$item->first_name}} {{$item->last_name}}</td>
@@ -86,6 +96,22 @@
                                 </td>
                             @endif
                         </tr>
+
+                        {{--another row for case notes which have more than 1 photo--}}
+                        @if(sizeof($item->files) > 1)
+                            @for($i=1; $i < sizeof($item->files); $i++)
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Download Image {{$i + 1}}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            @endfor
+                        @endif
+
                     @endforeach
                     </tbody>
                     {{--@endforeach--}}

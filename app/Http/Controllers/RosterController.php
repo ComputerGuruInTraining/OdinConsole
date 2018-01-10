@@ -192,7 +192,7 @@ class RosterController extends Controller
 
             $this->validate($request, [
                 'title' => 'required|max:255',
-                'desc' => 'required|max:255',
+                'desc' => 'max:255',
                 'employees' => 'required',
                 'locations' => 'required',
                 'startDateTxt' => 'required',
@@ -487,7 +487,7 @@ class RosterController extends Controller
                     //TODO: v1 after MPV or v2. atm, if nothing is selected by the user, the default item is added to db.?? true still??
                     // Should be no change if nothing selected for that field. same for locations.
                     'title' => 'required|max:255',
-                    'desc' => 'required|max:255',
+                    'desc' => 'max:255',
                     'employees' => 'required',
                     'locations' => 'required',
                     'startDateTxt' => 'required',
@@ -513,6 +513,13 @@ class RosterController extends Controller
                 if ($checks == null) {
 
                     $checks = 1;
+                }
+
+                if($desc == null){
+                    //sending through null doesn't successfully update the record.
+                    $desc = "none";
+//                    dd($desc);
+
                 }
 
                 //process start date and time before adding to db
