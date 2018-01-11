@@ -17,5 +17,6 @@ return [
     'ERROR_GENERIC' => 'Failed to load webpage.',
     'ERROR_SERVER' => 'Failed to load resource.',
     'COMPANY_EMAIL' => 'admin@odinlite.net',
+    'COMPANY_NAME' => 'Odin Case Management'
 
 ];

@@ -82,7 +82,7 @@
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('desc', 'Shift Description *') !!}
+            {!! Form::Label('desc', 'Shift Description') !!}
             {{ Form::text('desc', null, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
         </div>
 

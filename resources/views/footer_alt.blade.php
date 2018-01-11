@@ -4,8 +4,8 @@
     <!-- To the right -->
     <div style="background-color:#ffffff; font-size: small; margin-bottom: 15px;">
         {{--<div class="login-pgs-footer">--}}
-            <strong>Copyright © 2018
-                <a href="http://www.odincasemanagement.com/" style="color:#4d2970;" target="_blank">Odin Case Management Pty Ltd </a>
+            <strong>Copyright © {{currentYear()}}
+                <a href="http://www.odincasemanagement.com/" style="color:#4d2970;" target="_blank">{{Config::get('constants.COMPANY_NAME')}}</a>
             </strong>  All rights reserved.
             <a href="/privacy" style="color:#4d2970;" target="_blank">  Privacy Policy</a>
         {{--</div>--}}

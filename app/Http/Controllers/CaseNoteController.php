@@ -27,7 +27,7 @@ class CaseNoteController extends Controller
 
                 $compId = session('compId');
 
-                $response = $client->get(Config::get('constants.API_URL') . '/casenotes/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'casenotes/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -73,7 +73,10 @@ class CaseNoteController extends Controller
     }
 
     /*
-     * Format: date, time and add to each object
+     * Format: date, time and img url and add to each object
+     * All objects will have regardless of v2 or v3 or img store location: hasImg
+     * All >v3 mobile objects will have (but for the moment might not): case->files (array), geoLatitude, geoLongitude, time, date
+     * Object might have: imgs (array), urls (array),
      * */
     public function formatCaseNotes($data){
       //  ensure there are $locations before adding the location names onto the end of case object
@@ -84,30 +87,36 @@ class CaseNoteController extends Controller
         //and the case_note created_at timestamp
         //to convert to a timezone date and time
             foreach ($data as $i => $case) {
-                        //calculate the date and time based on the location and any of the case notes created_at timestamp
-                        $collection = timezone($data[$i]->locLat, $data[$i]->locLong, $case->created_at);
-//
-//                        //format dates to be mm/dd/yyyy for case notes
-//                            //add the extracted date to each of the objects and format date to be mm/dd/yyyy
-                            $t = $case->created_at;
-//
-//                            //friendly dates
-                            $dateForTS = date_create($t);
-                            $dateInTS = date_timestamp_get($dateForTS);
-//
-//                            //google timezone api returns the time in seconds from utc time (rawOffset)
-//                            //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
-                            $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
-//
-//                            //convert timestamp to a datetime string
-                            $date = date('m/d/Y', $tsUsingResult);
-//
-//                            $time = date('g.i a', $tsUsingResult);
-//
-                        $data[$i]->date = $date;
-//                        $data[$i]->time = $time;
+                //check to ensure the case note object has geoLocation data
+                    if(isset($case->geoLatitude)) {
 
-                    if ($case->img != "") {
+                        //calculate the date and time based on the location and any of the case notes created_at timestamp
+                        $collection = timezone($case->geoLatitude, $case->geoLongitude, $case->created_at);
+
+                       //format dates to be mm/dd/yyyy for case notes
+                        //add the extracted date to each of the objects and format date to be mm/dd/yyyy
+                        $t = $case->created_at;
+
+                       //friendly dates
+                        $dateForTS = date_create($t);
+                        $dateInTS = date_timestamp_get($dateForTS);
+
+                            //google timezone api returns the time in seconds from utc time (rawOffset)
+                        //                        //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                        $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
+
+                        //convert timestamp to a datetime string
+                        $date = date('m/d/Y', $tsUsingResult);
+
+                        $time = date('g.i a', $tsUsingResult);
+
+                        $data[$i]->date = $date;
+                        $data[$i]->time = $time;
+                    }
+
+//for v2 case note uploads
+                    if (($case->img != "")&&($case->img != null)) {
+
                         $case->hasImg = 'Y';
 
                         $img =  $case->img;
@@ -117,39 +126,34 @@ class CaseNoteController extends Controller
 
                         $case->img = $subImg;
 
-
-                        //remove the double forward slash in the img filepath
-//                        $imgFormatted = removeForwardSlash($subImg);
-
-//                        $imgFolder = checkFolder($subImg);
-
-
-                        //overwrite the value in img to be the img without the first and last characters
-//                        $case->img = $imgFormatted;
-
-                        $url = app('App\Http\Controllers\CaseNoteController')->download($case->img);
-
+                        $url = $this->download($case->img);
                         $data[$i]->url = $url;
+//for v3 uploads
+                    } else if(isset($case->files)){
 
-                    } else {
+                            if((count($case->files)>0)) {
+
+                                $case->hasImg = 'Y';
+
+                                $imgs = [];
+                                $urls = [];
+
+                                for ($index = 0; $index < sizeof($case->files); $index++) {
+
+                                    //remove the first and last character from the string ie remove " and " around string
+                                    $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
+
+                                    $urls[$index] = $this->download($imgs[$index]);
+                                }
+
+                                $data[$i]->imgs = $imgs;
+
+                                $data[$i]->urls = $urls;
+                            }
+                    } else { //no image
                         $data[$i]->hasImg = '-';
 
                     }
-
-                        //convert to substring the filepath to be used to download the file, if there is an image
-//                        $stringImg = $case->img;
-//
-//                        if($stringImg != ""){
-////                            $substrImg = substrImg($stringImg);
-////                            $data[$i]->img = $substrImg;
-//                              $data[$i]->hasImg = "Y";
-//
-////                            dd($data[$i]->img, $substrImg);
-//                        }else{
-//
-//                            $data[$i]->hasImg = "-";
-//
-//                        }
             }
             return $data;
     }
@@ -417,7 +421,6 @@ class CaseNoteController extends Controller
 
             //a file is returned from inthe response which forces the user's browser to download the photo
 
-//            dd($url);
 
             return $url;
         }

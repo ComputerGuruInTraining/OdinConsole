@@ -7,8 +7,8 @@
     </div>
     <!-- Default to the left -->
     <center>
-        <strong>Copyright © 2018
-            <a href="http://www.odincasemanagement.com/" style="color:#4d2970;" target="_blank">Odin Case Management Pty Ltd </a>
+        <strong>Copyright © {{currentYear()}}
+            <a href="http://www.odincasemanagement.com/" style="color:#4d2970;" target="_blank">{{Config::get('constants.COMPANY_NAME')}}</a>
         </strong>  All rights reserved.
         <a href="/privacy" style="color:#4d2970;" target="_blank">  Privacy Policy</a>
     </center>
