@@ -7,12 +7,8 @@
     <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
     <!-- Font Awesome -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
-    {{--Font Family by Google--}}
-    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
-
     {{--Bootstrap stylesheet--}}
-    <link rel="stylesheet" href="{{ asset("/bower_components/AdminLTE/bootstrap/css/bootstrap.min.css") }}"
+    <link rel="stylesheet" href="{{ asset("/bower_components/adminlte/bootstrap/css/bootstrap.min.css") }}"
           type="text/css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css">
@@ -25,14 +21,12 @@
     {{--<link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">--}}
 
     {{--necessary at least for date picker, if not other features--}}
-    {{--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">--}}
-    {{--<link rel="stylesheet" href="/resources/demos/style.css">--}}
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
 
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    {{--<script type="text/javascript"--}}
-            {{--src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>--}}
-
+    <script type="text/javascript"
+            src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,53 +35,37 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script type="text/javascript">
-        function noenter() {
-            return !(window.event && window.event.keyCode == 13);
-        }
-    </script>
-
-    {{--Company Settings Page & logged in support page ie --}}
-    @yield('custom-scripts')
-
-    @yield('custom-styles')
+    @include('layouts.tabs.tab_js_css')
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition">
 <div class='container-fluid'>
     <div class="wrapper">
-    {{--FIXME: scroll-bar change height as a bit buggy--}}
-    <!-- Main Header
-            <header class="main-header">  -->
-    @include('header')
-
-    <!-- Sidebar -->
-    {{--@include('sidebar')--}}
+        <!-- Main Header
+                <header class="main-header">  -->
+    @include('header_alt')
 
     <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper content-wrapper-alt">
 
             <section class="content-header">
-                <h1>
-                @yield('title-item')
-                <!--<small> {{$page_description or null}} </small>-->
+                <h1 class="master-alt">
+                    @yield('title-item')
                 </h1>
-                <!-- You can dynamically generate bread crumb here -->
-                <!--<ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol>-->
             </section>
-            @yield('page-content')
+
+            {{--Main support content for logged out users--}}
+            @include('layouts.tabs.tab_content')
+
         </div>
         <!-- /.content-wrapper -->
     </div>
     <!-- ./wrapper -->
     <!-- Footer -->
-    @include('footer')
+@include('footer_alt')
 
-    <!-- REQUIRED JS SCRIPTS -->
+<!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery-->
     <script src="bower_components/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
 

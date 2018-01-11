@@ -31,10 +31,10 @@
 
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     {{--<script type="text/javascript"--}}
-            {{--src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>--}}
+    {{--src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>--}}
 
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -47,10 +47,7 @@
         }
     </script>
 
-    {{--Company Settings Page & logged in support page ie --}}
-    @yield('custom-scripts')
-
-    @yield('custom-styles')
+    @include('layouts.tabs.tab_js_css')
 
 </head>
 
@@ -63,7 +60,7 @@
     @include('header')
 
     <!-- Sidebar -->
-    {{--@include('sidebar')--}}
+    @include('sidebar')
 
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -79,15 +76,34 @@
                     <li class="active">Here</li>
                 </ol>-->
             </section>
-            @yield('page-content')
+
+            {{--Main support content for logged out users--}}
+
+            @include('layouts.tabs.tab_content')
+
+            {{--<div class="tab">--}}
+                {{--<button class="tablinks" onclick="openTab(event, 'contact')">Contact</button>--}}
+                {{--<button class="tablinks" onclick="openTab(event, 'overview')">Overview</button>--}}
+
+                {{--@if(isset($loggedIn))--}}
+                {{--<button class="tablinks" onclick="openTab(event, 'setup')">Set Up</button>--}}
+                {{--<button class="tablinks" onclick="openTab(event, 'usage')">Usage</button>--}}
+                {{--@endif--}}
+            {{--</div>--}}
+            {{--<div id="setup" class="tabcontent padding-top">--}}
+            {{--</div>--}}
+            {{--<div id="usage" class="tabcontent padding-top">--}}
+            {{--</div>--}}
+
+
         </div>
         <!-- /.content-wrapper -->
     </div>
     <!-- ./wrapper -->
     <!-- Footer -->
-    @include('footer')
+@include('footer')
 
-    <!-- REQUIRED JS SCRIPTS -->
+<!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery-->
     <script src="bower_components/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
 

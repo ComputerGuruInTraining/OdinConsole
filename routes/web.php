@@ -176,6 +176,8 @@ Route::get('cancel-delete', function(){
     }
 });
 
+Route::get('/support/users', 'HomeController@support');
+
 
 
 //global route to different pages TODO: WIP

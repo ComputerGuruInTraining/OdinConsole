@@ -35,7 +35,11 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
+//                dd($data);
+
                 $dataFormat = $this->formatCaseNotes($data);
+
+//                dd($dataFormat);
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
@@ -50,6 +54,13 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            if(http_response_code(404)){
+
+                dd("not found: " + $e);
+            }else{
+
+                dd("error is: " + $e);
+            }
             $err = 'Error displaying case notes';
             return view('error-msg')->with('msg', $err);
 
@@ -402,14 +413,18 @@ class CaseNoteController extends Controller
             $client = new GuzzleHttp\Client;
 
             //response is a url
-            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$file, [
+//            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$file, [
+
+        $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.'1515638198829.jpeg/2e4dca1c24076df03586a19c48e2e6c7.jpeg', [
 //                'headers' => [
 ////                    'Authorization' => 'Bearer ' . $token,
 ////                    'x-ms-blob-content-type' => 'image/jpeg',
 //                ]
-            ]);
+        ]);
 
             $url = json_decode((string)$response->getBody());
+
+//            dd($url);
 
 //            $response = $client->get($url, [
 //                'headers' => [
