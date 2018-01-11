@@ -37,8 +37,6 @@ class CaseNoteController extends Controller
 
                 $dataFormat = $this->formatCaseNotes($data);
 
-//                dd($dataFormat);
-
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
                 $groupedData = $cases->groupBy('location');
@@ -52,7 +50,6 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             $err = 'Error displaying case notes';
             return view('error-msg')->with('msg', $err);
 
@@ -76,7 +73,10 @@ class CaseNoteController extends Controller
     }
 
     /*
-     * Format: date, time and add to each object
+     * Format: date, time and img url and add to each object
+     * All objects will have regardless of v2 or v3 or img store location: hasImg
+     * All >v3 mobile objects will have (but for the moment might not): case->files (array), geoLatitude, geoLongitude, time, date
+     * Object might have: imgs (array), urls (array),
      * */
     public function formatCaseNotes($data){
       //  ensure there are $locations before adding the location names onto the end of case object
@@ -87,30 +87,36 @@ class CaseNoteController extends Controller
         //and the case_note created_at timestamp
         //to convert to a timezone date and time
             foreach ($data as $i => $case) {
+                //check to ensure the case note object has geoLocation data
+                    if(isset($case->geoLatitude)) {
+
                         //calculate the date and time based on the location and any of the case notes created_at timestamp
-                        $collection = timezone($data[$i]->locLat, $data[$i]->locLong, $case->created_at);
-//
-//                        //format dates to be mm/dd/yyyy for case notes
-//                            //add the extracted date to each of the objects and format date to be mm/dd/yyyy
-                            $t = $case->created_at;
-//
-//                            //friendly dates
-                            $dateForTS = date_create($t);
-                            $dateInTS = date_timestamp_get($dateForTS);
-//
-//                            //google timezone api returns the time in seconds from utc time (rawOffset)
-//                            //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
-                            $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
-//
-//                            //convert timestamp to a datetime string
-                            $date = date('m/d/Y', $tsUsingResult);
-//
-//                            $time = date('g.i a', $tsUsingResult);
-//
+                        $collection = timezone($case->geoLatitude, $case->geoLongitude, $case->created_at);
+
+                       //format dates to be mm/dd/yyyy for case notes
+                        //add the extracted date to each of the objects and format date to be mm/dd/yyyy
+                        $t = $case->created_at;
+
+                       //friendly dates
+                        $dateForTS = date_create($t);
+                        $dateInTS = date_timestamp_get($dateForTS);
+
+                            //google timezone api returns the time in seconds from utc time (rawOffset)
+                        //                        //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
+                        $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
+
+                        //convert timestamp to a datetime string
+                        $date = date('m/d/Y', $tsUsingResult);
+
+                        $time = date('g.i a', $tsUsingResult);
+
                         $data[$i]->date = $date;
-//                        $data[$i]->time = $time;
+                        $data[$i]->time = $time;
+                    }
+
 //for v2 case note uploads
                     if (($case->img != "")&&($case->img != null)) {
+
                         $case->hasImg = 'Y';
 
                         $img =  $case->img;
@@ -123,28 +129,28 @@ class CaseNoteController extends Controller
                         $url = $this->download($case->img);
                         $data[$i]->url = $url;
 //for v3 uploads
-                    } else if(count($case->files)>0){
+                    } else if(isset($case->files)){
 
-                        $case->hasImg = 'Y';
+                            if((count($case->files)>0)) {
 
-                        $imgs = [];
-                        $urls = [];
+                                $case->hasImg = 'Y';
 
-                        for($index=0; $index < sizeof($case->files); $index++) {
+                                $imgs = [];
+                                $urls = [];
 
-                            //remove the first and last character from the string ie remove " and " around string
-                            $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
+                                for ($index = 0; $index < sizeof($case->files); $index++) {
 
-                            $urls[$index] = $this->download($imgs[$index]);
-                        }
+                                    //remove the first and last character from the string ie remove " and " around string
+                                    $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
 
-                        $data[$i]->imgs = $imgs;
+                                    $urls[$index] = $this->download($imgs[$index]);
+                                }
 
-                        $data[$i]->urls = $urls;
+                                $data[$i]->imgs = $imgs;
 
-                    }
-                    //no image
-                    else {
+                                $data[$i]->urls = $urls;
+                            }
+                    } else { //no image
                         $data[$i]->hasImg = '-';
 
                     }
@@ -415,7 +421,6 @@ class CaseNoteController extends Controller
 
             //a file is returned from inthe response which forces the user's browser to download the photo
 
-//            dd($url);
 
             return $url;
         }
