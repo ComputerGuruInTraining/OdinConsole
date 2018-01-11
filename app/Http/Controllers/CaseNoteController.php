@@ -149,6 +149,8 @@ class CaseNoteController extends Controller
                                 $data[$i]->imgs = $imgs;
 
                                 $data[$i]->urls = $urls;
+                            }else{
+                                $data[$i]->hasImg = '-';
                             }
                     } else { //no image
                         $data[$i]->hasImg = '-';
