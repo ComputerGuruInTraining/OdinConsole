@@ -101,7 +101,7 @@
     </div>
     <!-- ./wrapper -->
     <!-- Footer -->
-@include('footer')
+@include('footer_alt')
 
 <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery-->
