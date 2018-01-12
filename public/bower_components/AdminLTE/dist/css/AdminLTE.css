@@ -10,7 +10,49 @@
 Odin theming
 */
 
+/*
+Colours:
+Blue
+#00f0cc
+hover blue
+#367fa9
+
+
+Green
+#b3ff66
+
+
+Purple
+#4d2970
+
+
+*/
+
 /*Styles to be shared across app*/
+.heading-app{
+
+
+}
+
+.padding-side-lg{
+    padding-left: 30px !important;
+    padding-right: 60px !important;
+}
+
+.padding{
+    padding: 15px;
+}
+
+
+.padding-top{
+    padding-top: 15px !important;
+}
+
+
+.dark-blue-font{
+    color: #367fa9;
+}
+
 .margin-top{
 
     margin-top: 20px;
@@ -149,7 +191,7 @@ div.tab button.active {
     background-color: #ccc;
 }
 
-/* Style the tab content */
+/* Style the tab content. class also used in js */
 .tabcontent {
     display: none;
     padding: 6px 12px;
@@ -310,15 +352,6 @@ section.content-header{
 .form-buttons{
     position: absolute;
     right: 15px;
-}
-
-.padding{
-    padding: 15px;
-}
-
-
-.padding-top{
-    padding-top: 15px !important;
 }
 
 /*.padding-left{*/

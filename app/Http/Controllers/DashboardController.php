@@ -133,7 +133,7 @@ class DashboardController extends Controller
 
     public function support()
     {
-        return view('home.support');
+        return view('layouts.tabs.master_tabs_public');
     }
 
 }

@@ -48,6 +48,7 @@
 
             {{--FIXME: sidebar - SOLUTION: routes need to be in the form "employees-create" not "employees/create"--}}
             <li class="treeview">
+                <a href="/support/users"><span>Support</span></a>
                 <a href="/settings"><span>Settings</span></a>
                 <a href="/logout"><span>Sign Out</span></a>
             </li>

@@ -61,4 +61,40 @@ class HomeController extends BaseController
         return Redirect::to('/');
     }
 
+    public function support(){
+
+        try {
+                if (session()->has('token')) {
+
+                    $loggedIn = true;
+
+                    return view('layouts.tabs.master_tabs_private')->with('loggedIn', $loggedIn);
+
+                }else{
+
+                    return Redirect::to('/');
+                }
+            }catch (GuzzleHttp\Exception\BadResponseException $e) {
+                $err = 'Error displaying case notes';
+                return view('error-msg')->with('msg', $err);
+
+            } catch (\ErrorException $error) {
+                $e = 'Error displaying case notes page';
+                return view('error-msg')->with('msg', $e);
+
+            } catch (\Exception $err) {
+                $e = 'Unable to display case notes';
+                return view('error-msg')->with('msg', $e);
+
+            } catch (\TokenMismatchException $mismatch) {
+                return Redirect::to('login')
+                    ->withInput()
+                    ->withErrors('Session expired. Please login.');
+
+            } catch (\InvalidArgumentException $invalid) {
+                $error = 'Error loading case notes';
+                return view('error-msg')->with('msg', $error);
+            }
+    }
+
 }
