@@ -64,6 +64,10 @@
                                     @if(sizeof($item->files) > 0)
                                         {{--first photo in array--}}
                                         <td><a href="{{$item->urls[0]}}" target="_blank">Download {{$item->files[0]}}</a></td>
+                                    @else
+                                        {{--v2 uploads--}}
+                                        {{--todo: remove once not using v2 mobile anymore--}}
+                                        <td><a href="{{$item->url}}" target="_blank">Download</a></td>
                                     @endif
                                 @else
                                     {{--v2 uploads--}}

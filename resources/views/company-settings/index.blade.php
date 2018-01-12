@@ -5,6 +5,15 @@
 
 @section('custom-scripts')
     <script>
+
+        //open contact tab upon page load and show the tab as active
+        window.addEventListener("load", function(){
+            openCity(event, 'Users');
+
+            document.getElementById('loadPgTab').className += " active";
+
+        }, false);
+
         function openCity(evt, cityName) {
             // Declare all variables
             var i, tabcontent, tablinks;
@@ -79,7 +88,7 @@
 @stop
 @section('page-content')
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Users')">Users</button>
+        <button class="tablinks" onclick="openCity(event, 'Users')" id="loadPgTab">Users</button>
         <button class="tablinks" onclick="openCity(event, 'Company')">Company Info</button>
         {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
     </div>

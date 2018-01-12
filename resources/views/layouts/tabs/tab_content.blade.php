@@ -1,6 +1,6 @@
 <section>
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'contact')">Contact</button>
+        <button class="tablinks" onclick="openTab(event, 'contact')" id="loadPageTab">Contact</button>
         <button class="tablinks" onclick="openTab(event, 'overview-owners')">Overview - Owners and Operators</button>
         <button class="tablinks" onclick="openTab(event, 'overview-guards')">Overview - Security Guards</button>
 

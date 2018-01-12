@@ -12,5 +12,5 @@
             <p class="email-footer">Contact: {{Config::get('constants.COMPANY_EMAIL')}}</p>
         </div>
     </div>
-    
+
 </footer>
