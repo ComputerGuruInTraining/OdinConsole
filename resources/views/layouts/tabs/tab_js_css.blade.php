@@ -1,4 +1,13 @@
 <script>
+
+    //open contact tab upon page load and show the tab as active
+    window.addEventListener("load", function(){
+        openTab(event, 'contact');
+
+        document.getElementById('loadPageTab').className += " active";
+
+    }, false);
+
     function openTab(evt, cityName) {
         // Declare all variables
         var i, tabcontent, tablinks;
