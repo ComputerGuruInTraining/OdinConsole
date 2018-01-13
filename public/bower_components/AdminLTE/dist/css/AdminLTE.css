@@ -29,10 +29,6 @@ Purple
 */
 
 /*Styles to be shared across app*/
-.heading-app{
-
-
-}
 
 .padding-side-lg{
     padding-left: 30px !important;
@@ -48,6 +44,10 @@ Purple
     padding-top: 15px !important;
 }
 
+.bottom-border{
+    border-bottom: 2px solid #ddd;
+}
+
 
 .dark-blue-font{
     color: #367fa9;
@@ -57,6 +57,7 @@ Purple
 
     margin-top: 20px;
 }
+
 
 /*select lists on add shift page*/
 
@@ -485,6 +486,17 @@ h1.master-alt{
 
     line-height: 1.5;
     vertical-align: top;
+}
+
+.details-heading{
+
+    text-decoration: underline;
+
+}
+
+.details-content{
+
+
 }
 
 .max-width{
