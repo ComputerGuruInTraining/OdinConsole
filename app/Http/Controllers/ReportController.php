@@ -187,14 +187,14 @@ class ReportController extends Controller
                     $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
                 } else if ($type == 'Location Checks') {
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
-                } else if($type == 'Client'){
+                } else if ($type == 'Client') {
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 }
 
                 if ($result->success == true) {
 
                     $id = $result->reportId;
-                    $url = 'report-'.$id;
+                    $url = 'report-' . $id;
 
                     return view('report/confirm-create-view')
                         ->with(array(
@@ -382,58 +382,68 @@ class ReportController extends Controller
                         return view('report/location_checks/show');
 
                     }
-                }else if ($report->type == 'Client') {
+                } else if ($report->type == 'Client') {
 
-                        $clientData = $this->getClientReportData($id, $token);
+                    $clientData = $this->getClientReportData($id, $token);
 
 //                        dd($clientData);
 
-                        if ($clientData != 'errorInResult') {
+                    if ($clientData != 'errorInResult') {
 
-//                        $groupShiftChecks = $this->formatLocationChecksData($clientData);
-//                            $collectChecks = $this->formatLocationChecksData($clientData);
 
-                            $clientDataWithGeoData = geoRangeDateTime($clientData);
+                        $clientDataWithGeoData = geoRangeDateTime($clientData->clientData, $clientData->location);
 
-                            dd($clientDataWithGeoData);
+                        $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
 
-                            $fmtClientData = checkOutDateTime($clientDataWithGeoData);
+//                        dd($fmtClientData);
+                        foreach ($fmtClientData as $case) {
 
-                        dd($fmtClientData);
+                            //append img urls and hasImg value to $case
+                            $case = imgToUrl($case);
 
-                            //number of check ins at premise
-                            $checkIns = $fmtClientData->pluck('check_ins');
+                            //append a value for caseReported ie Nothing to Report or Report Case Note submitted by guard
+//                            $case = caseReported($case);
 
-                            $total = $checkIns->count();
-
-                            //group by date for better view
-                            $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
-
-                            view()->share(array(
-                                'shiftChecks' => $groupClientData,
-                                'location' => $clientData->location,
-                                'report' => $report,
-                                'start' => $sdate,
-                                'end' => $edate,
-                                'total' => $total
-                            ));
-
-                            return view('report/client/show');
-
-                        } else {
-                            //TODO: test me else change me if never see it work (or haven't by 15th jan)
-                            $err = 'There were no location checks during the period that the selected report covers.';
-                            $errors = collect($err);
-                            return Redirect::to('/reports')->with('errors', $errors);
                         }
-                    }
 
-            }else {
+//                            dd($fmtClientData);
+
+                        //number of check ins at premise
+                        $checkIns = $fmtClientData->pluck('check_ins');
+
+                        $total = $checkIns->count();
+
+                        //group by date for better view
+                        $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
+
+//                            dd($groupClientData);
+
+                        view()->share(array(
+                            'data' => $groupClientData,
+                            'location' => $clientData->location,
+                            'report' => $report,
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $total
+                        ));
+
+                        return view('report/client/show');
+
+                    } else {
+                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                        $err = 'There were no location checks during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+                }
+
+            } else {
                 //ie no session token exists and therefore the user is not authenticated
 
                 return Redirect::to('/login');
-                }
+            }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             $err = 'Error displaying report';
             return view('error-msg')->with(array(
                 'msg' => $err,
@@ -711,7 +721,8 @@ class ReportController extends Controller
         }
     }
 
-    public function getClientReportData($id, $token){
+    public function getClientReportData($id, $token)
+    {
         try {
             $client = new GuzzleHttp\Client;
 
@@ -847,8 +858,8 @@ class ReportController extends Controller
                     if ($item->img != "") {
                         $cases->reportCaseNotes[$i]->hasImg = 'Y';
 
-                        $img =  $cases->reportCaseNotes[$i]->img;
-                        
+                        $img = $cases->reportCaseNotes[$i]->img;
+
                         //remove the first and last character from the string ie remove " and " around string
                         $subImg = stringRemove1stAndLast($img);
 
@@ -956,7 +967,7 @@ class ReportController extends Controller
                             if ($item->img != "") {
                                 $cases->reportCaseNotes[$i]->hasImg = 'Y';
 
-                                $img =  $cases->reportCaseNotes[$i]->img;
+                                $img = $cases->reportCaseNotes[$i]->img;
 
                                 //remove the first and last character from the string ie remove " and " around string
                                 $subImg = stringRemove1stAndLast($img);

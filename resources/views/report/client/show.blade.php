@@ -34,14 +34,15 @@
                         <th>Date</th>
                         <th>Check In</th>
                         <th>Check Out</th>
+                        <th>Action</th>
                         <th>Case Id</th>
-                        <th>Case Title</th>
-                        <th>Security Guard</th>
-                        <th class="max-width">Geo - Located Within 200m</th>
+                        <th>Case Note Title</th>
+                        <th>Description</th>
+                        <th>Images</th>
                     </tr>
                     {{--Check to ensure there are case notes or else an error will be thrown--}}
-                    @if(count($shiftChecks) != 0)
-                        @foreach($shiftChecks as $index => $shiftCheck)
+                    @if(count($data) != 0)
+                        @foreach($data as $index => $shiftCheck)
 
                             <tbody class="group-list">
 
@@ -53,29 +54,72 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
 
                             </tr>
 
-                            @foreach ($shiftChecks->get($index) as $item)
+                            @foreach ($data->get($index) as $item)
 
                                 <tr>
                                     <td></td>
                                     <td>{{$item->timeTzCheckIn}}</td>
                                     <td>{{$item->timeTzCheckOut}}</td>
-                                    <td>{{$item->case_id}}</td>
-                                    <td>{{$item->title}}</td>
-                                    <td>{{$item->user}}</td>
 
-                                    @if($item->withinRange == 'yes')
-                                        <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
-                                    @elseif($item->withinRange == 'ok')
-                                        <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
-                                    @elseif($item->withinRange == 'no')
-                                        <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                                    {{--action--}}
+                                    @if($item->title == "Nothing to Report")
+                                        <td>Nothing to Report</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     @else
-                                        <td><i class="fa fa-minus" aria-hidden="true"></i></td>
+                                        <td>Case Note Reported</td>
+                                        <td>{{$item->case_id}}</td>
+                                        <td>{{$item->title}}</td>
+                                        <td>{{$item->description}}</td>
+                                    @endif
+
+                                    {{--Image--}}
+
+                                    @if($item->hasImg == "Y")
+                                        @if(isset($item->files))
+
+                                            @if(sizeof($item->files) > 0)
+                                                {{--first photo in array--}}
+                                                <td><a href="{{$item->urls[0]}}" target="_blank">Download Image</a></td>
+                                            @else
+                                                {{--v2 uploads--}}
+                                                {{--todo: remove once not using v2 mobile anymore--}}
+                                                <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                                            @endif
+                                        @else
+                                            {{--v2 uploads--}}
+                                            {{--todo: remove once not using v2 mobile anymore--}}
+                                            <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+
+                                        @endif
+                                    @else
+                                        <td>{{$item->hasImg}}</td>
                                     @endif
                                 </tr>
+
+                                {{--another row for case notes which have more than 1 photo--}}
+                                @if(isset($item->files))
+                                    @if(sizeof($item->files) > 1)
+                                        @for($i=1; $i < sizeof($item->files); $i++)
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><a href="{{$item->urls[$i]}}" target="_blank">Download Image {{$i + 1}}</a></td>
+                                            </tr>
+                                        @endfor
+                                    @endif
+                                @endif
+
                             @endforeach
                             </tbody>
                         @endforeach
@@ -86,6 +130,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     @endif
                 </table>
             </div>
