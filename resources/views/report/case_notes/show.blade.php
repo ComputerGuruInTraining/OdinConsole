@@ -18,7 +18,7 @@
                 </div>
 
                 <div id="inline">
-                <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
+                    <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
                 </div>
                 <table class="col-md-12 margin-bottom">
                     <tr class="grey-larger"><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>

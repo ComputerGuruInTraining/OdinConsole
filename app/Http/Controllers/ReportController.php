@@ -381,6 +381,11 @@ class ReportController extends Controller
 
                         return view('report/location_checks/show');
 
+                    } else {
+                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                        $err = 'There were no location checks during the period that the selected report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
                     }
                 } else if ($report->type == 'Client') {
 
@@ -450,7 +455,7 @@ class ReportController extends Controller
 
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
-                        $err = 'There were no location checks during the period that the selected report covers.';
+                        $err = 'There is insufficient data for the period that the report covers.';
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
@@ -710,12 +715,92 @@ class ReportController extends Controller
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
 
-                }
+                }else if ($report->type == 'Client') {
 
-            } else {
-                //ie no session token exists and therefore the user is not authenticated
+                        $clientData = $this->getClientReportData($id, $token);
 
-                return Redirect::to('/login');
+
+                        if ($clientData != 'errorInResult') {
+
+
+                            $clientDataWithGeoData = geoRangeDateTime($clientData->clientData, $clientData->location);
+
+                            $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
+
+//                        $totalMins = 0;
+
+                            foreach ($fmtClientData as $case) {
+                                //append img urls and hasImg value to $case
+                                $case = imgToUrl($case);
+
+                                $case->shortDesc = first100Chars($case->description);
+
+                                //calculate the duration
+//                                $case->timeTzCheckIn;
+//                                $case -> timeTzCheckOut;
+//todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
+                                if ((isset($case->check_ins)) && (isset($case->check_outs)))
+
+                                    $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+
+//                            if($case->checkDuration)
+//                                $totalMins = $totalMins + $case->checkDuration;
+
+                                //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
+                                //and then total the amount.
+                                //
+
+
+//                            $hours = locationDuration();
+                            }
+
+                            $totalMins = 0;
+                            $totalMins = $fmtClientData->sum('checkDuration');
+                            $report->totalHours = totalMinsInHours($totalMins);
+
+
+//                            dd($fmtClientData);
+
+                            //number of check ins at premise
+                            $checkIns = $fmtClientData->pluck('check_ins');
+
+                            $total = $checkIns->count();
+
+                            //group by date for better view
+                            $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
+
+                            view()->share(array(
+                                'data' => $groupClientData,
+                                'location' => $clientData->location,
+                                'report' => $report,
+                                'start' => $sdate,
+                                'end' => $edate,
+                                'total' => $total
+                            ));
+
+                            if ($request->has('download')) {
+                                // pass view file
+                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+                                // download pdf w current date in the name
+                                $dateTime = Carbon::now();
+                                $date = substr($dateTime, 0, 10);
+                                return $pdf->download('Client Report ' . $date . '.pdf');
+                            }
+
+                            return view('report/client/pdf');
+
+                        }else {
+                            //ie case notes have been deleted after the report was generated perhaps falls into this scenario
+                            $err = 'There is insufficient data for the period that the report covers.';
+                            $errors = collect($err);
+                            return Redirect::to('/reports')->with('errors', $errors);
+                        }
+
+                    } else {
+                        //ie no session token exists and therefore the user is not authenticated
+
+                        return Redirect::to('/login');
+                    }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying report';
