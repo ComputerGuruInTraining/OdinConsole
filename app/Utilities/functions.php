@@ -180,6 +180,7 @@ if (!function_exists('timeMidnight')) {
     }
 }
 
+//jobDuration in hours
 if (!function_exists('jobDuration')) {
     function jobDuration($carbonStart, $carbonEnd)
     {
@@ -189,6 +190,19 @@ if (!function_exists('jobDuration')) {
         return $lengthH;
     }
 }
+
+//an individual check in time in minutes
+if (!function_exists('locationCheckDuration')) {
+    function locationCheckDuration($start, $end)
+    {
+        $carbonStart = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $start);
+        $carbonEnd = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $end);
+        //calculate duration based on start date and time and end date and time
+        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
+        return $lengthM;
+    }
+}
+
 
 //global oauth fn
 if (!function_exists('oauth2')) {
@@ -475,117 +489,6 @@ if (!function_exists('currentYear')) {
         return $year;
     }
 }
-//
-////parameter is a ??stdclass
-////returns same datatype with values added for geoRange from a location computed and date and time computed based on geoLocation timezone
-//if (!function_exists('geoRangeDateTime4Original')) {
-//
-//    function geoRangeDateTime4Original($checks)
-//    {
-//        //format check in timestamp to be a user friendly date and time which accounts for the timezone
-//        foreach ($checks->clientData as $i => $item) {
-////TODO: consider adding an endnote to report advising of this info
-//
-//            $no_data = '';
-//            //constant
-////            define("$no_data", 0);
-////          check ins
-////         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
-//            //(because of check_ins datetime is a default value for the field)
-//            if ($item->check_ins != null) {
-//
-//                $tzDT = viaTimezone($item->checkin_latitude,
-//                    $item->checkin_longitude,
-//                    $checks->location->latitude,
-//                    $checks->location->longitude, $item->check_ins);
-//
-//                $checks->clientData[$i]->dateTzCheckIn = $tzDT->get('date');
-//                $checks->clientData[$i]->timeTzCheckIn = $tzDT->get('time');
-//
-//                //if there is geoLocation data for the location check
-//                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
-//
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
-//                        $checks->location->latitude, $checks->location->longitude);
-////                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
-//
-//                    $result = geoRange($distance);
-//
-//                    //return $result;//yes, ok, no
-//
-//                    $checks->clientData[$i]->withinRange = $result;
-//
-//                    if ($item->withinRange == 'yes') {
-//
-//                        $checks->clientData[$i]->geoImg = 'if_checkmark-g_86134';
-//                    } elseif ($item->withinRange == 'ok') {
-//                        $checks->clientData[$i]->geoImg = 'if_checkmark-o_86136';
-//                    } elseif ($item->withinRange == 'no') {
-//                        $checks->clientData[$i]->geoImg = 'if_cross_5233';
-//                    }
-//
-//                    //for testing purposes only: 1
-//
-////                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
-//
-//
-//                } else {
-//                  //  $result = "no geoData";
-//                    //for testing purposes only: 1
-////                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
-//                    $checks->clientData[$i]->withinRange = "-";
-//
-//                    $checks->clientData[$i]->geoImg = 'if_minus_216340';
-//
-//                    //for testing purposes only: 2
-//
-////                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
-//
-//                    //
-//                    //Latitude -35.381536
-////                    longitude: 149.058894
-//
-//
-////                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
-////                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
-//
-//                }
-//
-//
-//            } else {
-//
-//                //$result = $no_data;
-//                //loop
-//                $checks->clientData[$i]->dateTzCheckIn = $no_data;
-//                $checks->clientData[$i]->timeTzCheckIn = $no_data;
-//
-//            }
-//
-////           check outs
-//            //if there is a value for the check_out datetime (ie check_outs property)
-//
-//
-//        }
-//
-////        //number of check ins at premise
-////        //change to collection datatype from array for using groupBy fn and count
-//
-////
-////        $checkIns = $collectChecks->pluck('check_ins');
-////
-////        $total = $checkIns->count();
-////
-//////        $checksCollection = collect($checks->clientData);
-////
-////        //group by date for better view
-////        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
-//
-//        //return $result;
-//        return $checks;//yes, ok, no, "", "no geoData"
-////        return $groupclientData;
-//    }
-//}
-
 
 if (!function_exists('geoRangeDateTime')) {
 
@@ -755,47 +658,53 @@ if (!function_exists('imgToUrl')) {
 
     function imgToUrl($item){
 
+        if($item->title != "Nothing to Report") {
+
 //for v2 case note uploads
-        if(isset($item->img)){
-            if (($item->img != "") && ($item->img != null)) {
+            if (isset($item->img)) {
+                if (($item->img != "") && ($item->img != null)) {
 
-                $item->hasImg = 'Y';
-
-                //remove the first and last character from the string ie remove " and " around string
-                $subImg = stringRemove1stAndLast($item->img);
-
-                //replace $item->img with formatted string
-                $item->img = $subImg;
-
-                //get from api the url for the img??
-                $url = downloadImg($item->img);
-                $item->url = $url;
-            }
-//for v3 uploads
-        } else if (isset($item->files)) {
-
-            if ((count($item->files) > 0)) {
-
-                $item->hasImg = 'Y';
-
-                $imgs = [];
-                $urls = [];
-
-                for ($index = 0; $index < sizeof($item->files); $index++) {
+                    $item->hasImg = 'Y';
 
                     //remove the first and last character from the string ie remove " and " around string
-                    $imgs[$index] = stringRemove1stAndLast($item->files[$index]);
+                    $subImg = stringRemove1stAndLast($item->img);
 
-                    $urls[$index] = downloadImg($imgs[$index]);
+                    //replace $item->img with formatted string
+                    $item->img = $subImg;
+
+                    //get from api the url for the img??
+                    $url = downloadImg($item->img);
+                    $item->url = $url;
                 }
+//for v3 uploads
+            } else if (isset($item->files)) {
 
-                $item->imgs = $imgs;
+                if ((count($item->files) > 0)) {
 
-                $item->urls = $urls;
-            } else {
+                    $item->hasImg = 'Y';
+
+                    $imgs = [];
+                    $urls = [];
+
+                    for ($index = 0; $index < sizeof($item->files); $index++) {
+
+                        //remove the first and last character from the string ie remove " and " around string
+                        $imgs[$index] = stringRemove1stAndLast($item->files[$index]);
+
+                        $urls[$index] = downloadImg($imgs[$index]);
+                    }
+
+                    $item->imgs = $imgs;
+
+                    $item->urls = $urls;
+                } else {
+                    $item->hasImg = '-';
+                }
+            } else { //no image
                 $item->hasImg = '-';
+
             }
-        } else { //no image
+        }else { //no image
             $item->hasImg = '-';
 
         }
@@ -823,17 +732,134 @@ if (!function_exists('downloadImg')) {
         return $url;
     }
 }
+
+//if text has more than 100 characters, retrieve the first 100 chars in a substring and add an elipsis to the end.
+if (!function_exists('first100Chars')) {
+
+    function first100Chars($text){
+
+        if(strlen($text) > 100){
+
+            $shortText = substr($text, 0, 100) . "...";
+
+            return $shortText;
+
+        }
+    }
+}
+
+
+
+
+
+//ARCHIVED
+////parameter is a ??stdclass
+////returns same datatype with values added for geoRange from a location computed and date and time computed based on geoLocation timezone
+//if (!function_exists('geoRangeDateTime4Original')) {
 //
-//if (!function_exists('caseReported')) {
+//    function geoRangeDateTime4Original($checks)
+//    {
+//        //format check in timestamp to be a user friendly date and time which accounts for the timezone
+//        foreach ($checks->clientData as $i => $item) {
+////TODO: consider adding an endnote to report advising of this info
 //
-//    function caseReported($item){
+//            $no_data = '';
+//            //constant
+////            define("$no_data", 0);
+////          check ins
+////         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
+//            //(because of check_ins datetime is a default value for the field)
+//            if ($item->check_ins != null) {
 //
-//        if($item->title == "Nothing to Report"){
+//                $tzDT = viaTimezone($item->checkin_latitude,
+//                    $item->checkin_longitude,
+//                    $checks->location->latitude,
+//                    $checks->location->longitude, $item->check_ins);
 //
-//            $caseReported
+//                $checks->clientData[$i]->dateTzCheckIn = $tzDT->get('date');
+//                $checks->clientData[$i]->timeTzCheckIn = $tzDT->get('time');
+//
+//                //if there is geoLocation data for the location check
+//                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+//
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+//                        $checks->location->latitude, $checks->location->longitude);
+////                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+//
+//                    $result = geoRange($distance);
+//
+//                    //return $result;//yes, ok, no
+//
+//                    $checks->clientData[$i]->withinRange = $result;
+//
+//                    if ($item->withinRange == 'yes') {
+//
+//                        $checks->clientData[$i]->geoImg = 'if_checkmark-g_86134';
+//                    } elseif ($item->withinRange == 'ok') {
+//                        $checks->clientData[$i]->geoImg = 'if_checkmark-o_86136';
+//                    } elseif ($item->withinRange == 'no') {
+//                        $checks->clientData[$i]->geoImg = 'if_cross_5233';
+//                    }
+//
+//                    //for testing purposes only: 1
+//
+////                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+//
+//
+//                } else {
+//                  //  $result = "no geoData";
+//                    //for testing purposes only: 1
+////                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+//                    $checks->clientData[$i]->withinRange = "-";
+//
+//                    $checks->clientData[$i]->geoImg = 'if_minus_216340';
+//
+//                    //for testing purposes only: 2
+//
+////                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+//
+//                    //
+//                    //Latitude -35.381536
+////                    longitude: 149.058894
+//
+//
+////                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
+////                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
+//
+//                }
+//
+//
+//            } else {
+//
+//                //$result = $no_data;
+//                //loop
+//                $checks->clientData[$i]->dateTzCheckIn = $no_data;
+//                $checks->clientData[$i]->timeTzCheckIn = $no_data;
+//
+//            }
+//
+////           check outs
+//            //if there is a value for the check_out datetime (ie check_outs property)
+//
+//
 //        }
 //
-//        return $item;
+////        //number of check ins at premise
+////        //change to collection datatype from array for using groupBy fn and count
+//
+////
+////        $checkIns = $collectChecks->pluck('check_ins');
+////
+////        $total = $checkIns->count();
+////
+//////        $checksCollection = collect($checks->clientData);
+////
+////        //group by date for better view
+////        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
+//
+//        //return $result;
+//        return $checks;//yes, ok, no, "", "no geoData"
+////        return $groupclientData;
 //    }
 //}
 

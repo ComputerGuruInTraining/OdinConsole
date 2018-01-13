@@ -386,7 +386,6 @@ class ReportController extends Controller
 
                     $clientData = $this->getClientReportData($id, $token);
 
-//                        dd($clientData);
 
                     if ($clientData != 'errorInResult') {
 
@@ -401,9 +400,16 @@ class ReportController extends Controller
                             //append img urls and hasImg value to $case
                             $case = imgToUrl($case);
 
-                            //append a value for caseReported ie Nothing to Report or Report Case Note submitted by guard
-//                            $case = caseReported($case);
+                            $case->shortDesc = first100Chars($case->description);
 
+                            //calculate the duration
+//                                $case->timeTzCheckIn;
+//                                $case -> timeTzCheckOut;
+//todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
+                            if((isset($case->check_ins))&&(isset($case->check_outs)))
+                            $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+
+//                            dd($case->checkDuration);
                         }
 
 //                            dd($fmtClientData);
@@ -416,7 +422,6 @@ class ReportController extends Controller
                         //group by date for better view
                         $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
 
-//                            dd($groupClientData);
 
                         view()->share(array(
                             'data' => $groupClientData,
