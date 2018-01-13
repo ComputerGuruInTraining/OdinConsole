@@ -191,6 +191,29 @@ if (!function_exists('jobDuration')) {
     }
 }
 
+if (!function_exists('totalMinsInHours')) {
+    function totalMinsInHours($mins)
+    {
+//fixme?? decimal $lengthH if not fix
+        $lengthH = ($mins / 60);//convert to hours
+        $hours = floor($lengthH * 100) / 100;//hours to 2 decimal places
+        return $hours;
+    }
+}
+
+//if (!function_exists('locationDuration')) {
+//    function locationDuration($start, $end)
+//    {
+//        $carbonStart = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $start);
+//        $carbonEnd = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $end);
+//        //calculate duration based on start date and time and end date and time
+//        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
+//        $lengthH = ($lengthM / 60);//convert to hours
+//        $hours = floor($lengthH * 100) / 100;//hours to 2 decimal places
+//        return $hours;
+//    }
+//}
+
 //an individual check in time in minutes
 if (!function_exists('locationCheckDuration')) {
     function locationCheckDuration($start, $end)

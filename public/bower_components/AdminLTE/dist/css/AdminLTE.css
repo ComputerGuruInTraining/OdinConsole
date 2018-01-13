@@ -44,6 +44,10 @@ Purple
     padding-top: 15px !important;
 }
 
+.bottom-border{
+    border-bottom: 2px solid #ddd;
+}
+
 
 .dark-blue-font{
     color: #367fa9;
@@ -487,6 +491,11 @@ h1.master-alt{
 .details-heading{
 
     text-decoration: underline;
+
+}
+
+.details-content{
+
 
 }
 

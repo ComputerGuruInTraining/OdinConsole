@@ -23,13 +23,13 @@
                     <td class="report-header grey-larger">{{$location->address}}</td>
                 </tr>
                 <tr class="report-header-row grey-larger">
-                    <td>Number of Check Ins:</td>
+                    <td>Number of Checks at Premise:</td>
                     <td class="report-header grey-larger"> {{$total}}</td>
                 </tr>
-                {{--<tr class="report-header-row"><td>Guard Presence at Location:</td><td class="report-header">{{$cases->reportCases->total_guards}}</td></tr>--}}
+                <tr class="report-header-row"><td>Total Hours Monitoring Premise:</td><td class="report-header">{{$report->totalHours}}</td></tr>
             </table>
 
-            <table class="table table-hover">
+            <table class="table table-hover bottom-border">
                 <tr>
                     <th>Date</th>
                     <th>Check In</th>
@@ -109,50 +109,77 @@
                 @endif
             </table>
         </div>
-        <br/>
-        <br/>
-        <p class="details-heading">Full Details</p>
-
-        {{--<div class='col-md-6'>--}}
-
-
+    </div>
+    <br/>
+    <br/>
+    <p class="details-heading">Full Details</p>
                 @if(count($data) != 0)
-                    <div>
                         @foreach($data as $index => $shiftCheck)
-
                             @foreach ($data->get($index) as $item)
                                 @if($item->title != "Nothing to Report")
-
-                                    <p><span class="col-md-3">Case Id:</span><span class="col-md-3"># {{$item->case_id}}</span></p>
-                                    <br/>
-
-                                    Case Id:# {{$item->case_id}}</span></p>
-                                    <br/>
-                                    <p><span class="col-md-3">
-                                        Total Check In Time:
-
-
-                                    {{--todo: minutes and seconds--}}
-                                    @if(isset($item->checkDuration))
-                                        @if($item->checkDuration < 1)
-                                            </span>< 1 min<span class="col-md-3">
-                                            {{--<td> </td>--}}
-                                        @else
+                                    <div class="padding-top bottom-border content-app">
+                                        <p>
+                                            <span class="col-md-3">Case ID:</span>
+                                            <span class="col-md-3"># {{$item->case_id}}</span>
+                                        </p>
+                                        <br/>
+                                        <p>
+                                            <span class="col-md-3">
+                                            Total Check In Time:
                                             </span>
-                                        {{$item->checkDuration}} min/s
-                                        <span class="col-md-3">
+                                        {{--todo: minutes and seconds--}}
+                                            <span class="col-md-3">
+                                            @if(isset($item->checkDuration))
+                                                @if($item->checkDuration < 1)
+                                                    {{--<span class="col-md-3">--}}
+                                                        < 1 min
+                                                    {{--</span>--}}
+                                                @else
+                                                {{--<span class="col-md-3">--}}
+                                                    {{$item->checkDuration}} min/s
+                                               {{--</span>--}}
+                                                @endif
+                                            @else
+                                                    Insufficient Data
+                                            @endif
+                                            </span>
+                                        </p>
+                                        <br/>
+                                        <p>
+                                            <span class="col-md-3">Case Note Title:</span>
+                                            <span class="col-md-3">{{$item->title}}</span>
+                                        </p>
+                                        <br/>
+{{--description--}}
+                                    {{--todo : loop through once add the ability to add more case notes for a case id/title--}}
+                                        @if($item->description != null)
+                                            <p>
+                                                <span class="col-md-3">Case Notes:</span>
+                                                <span class="col-md-3">{{$item->description}}</span>
+                                            </p>
                                         @endif
-                                    @else
-                                        </span>Insufficient Data<span class="col-md-3">
-                                    @endif
-                                    <p><span class="col-md-3">Case Id:</span><span class="col-md-3"># {{$item->case_id}}</span></p>
-                                    <br/>
+{{--Images--}}
+                                        @if(isset($item->files))
+                                            @if(sizeof($item->files) > 0)
 
-                                    <p><span class="col-md-3">Case Id:</span><span class="col-md-3"># {{$item->case_id}}</span></p>
+                                                <span class="col-md-3">Images: (WIP)</span>
+                                                <br />
+                                            @for($i=0; $i < sizeof($item->files); $i++)
 
-                                    <br/>
+                                                            <a class="col-lg-offset-3" href="{{$item->urls[$i]}}" target="_blank">
+                                                                Download Image {{$i + 1}}
+                                                            </a>
+                                                       <br />
+                                                @endfor
+                                            @endif
+                                        @endif
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endforeach
+                @endif
+@stop
 
-                                <br/>
 
 
                                     {{--<table class="table">--}}
@@ -222,14 +249,4 @@
                                     {{--@endif--}}
                                     {{--</table>--}}
 
-                                @endif
 
-                            @endforeach
-                    </div>
-
-                    @endforeach
-                @endif
-
-        </div>
-    {{--</div>--}}
-@stop

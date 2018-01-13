@@ -394,9 +394,9 @@ class ReportController extends Controller
 
                         $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
 
-//                        dd($fmtClientData);
-                        foreach ($fmtClientData as $case) {
+//                        $totalMins = 0;
 
+                        foreach ($fmtClientData as $case) {
                             //append img urls and hasImg value to $case
                             $case = imgToUrl($case);
 
@@ -407,10 +407,24 @@ class ReportController extends Controller
 //                                $case -> timeTzCheckOut;
 //todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
                             if((isset($case->check_ins))&&(isset($case->check_outs)))
-                            $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
 
-//                            dd($case->checkDuration);
+                                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+
+//                            if($case->checkDuration)
+//                                $totalMins = $totalMins + $case->checkDuration;
+
+                            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
+                            //and then total the amount.
+                            //
+
+
+//                            $hours = locationDuration();
                         }
+
+                        $totalMins = 0;
+                        $totalMins = $fmtClientData->sum('checkDuration');
+                        $report->totalHours = totalMinsInHours($totalMins);
+
 
 //                            dd($fmtClientData);
 
