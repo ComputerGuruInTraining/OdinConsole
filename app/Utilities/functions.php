@@ -476,6 +476,391 @@ if (!function_exists('currentYear')) {
     }
 }
 
+//parameter is a ??stdclass
+//returns same datatype with values added for geoRange from a location computed and date and time computed based on geoLocation timezone
+if (!function_exists('geoRangeDateTime')) {
+
+    function geoRangeDateTime($checks)
+    {
+        //format check in timestamp to be a user friendly date and time which accounts for the timezone
+        foreach ($checks->clientData as $i => $item) {
+//TODO: consider adding an endnote to report advising of this info
+
+            $no_data = '';
+            //constant
+//            define("$no_data", 0);
+//          check ins
+//         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
+            //(because of check_ins datetime is a default value for the field)
+            if ($item->check_ins != null) {
+
+                $tzDT = viaTimezone($item->checkin_latitude,
+                    $item->checkin_longitude,
+                    $checks->location->latitude,
+                    $checks->location->longitude, $item->check_ins);
+
+                $checks->clientData[$i]->dateTzCheckIn = $tzDT->get('date');
+                $checks->clientData[$i]->timeTzCheckIn = $tzDT->get('time');
+
+                //if there is geoLocation data for the location check
+                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+
+                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+                        $checks->location->latitude, $checks->location->longitude);
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+                    $result = geoRange($distance);
+
+                    //return $result;//yes, ok, no
+
+                    $checks->clientData[$i]->withinRange = $result;
+
+                    if ($item->withinRange == 'yes') {
+
+                        $checks->clientData[$i]->img = 'if_checkmark-g_86134';
+                    } elseif ($item->withinRange == 'ok') {
+                        $checks->clientData[$i]->img = 'if_checkmark-o_86136';
+                    } elseif ($item->withinRange == 'no') {
+                        $checks->clientData[$i]->img = 'if_cross_5233';
+                    }
+
+                    //for testing purposes only: 1
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+
+                } else {
+                  //  $result = "no geoData";
+                    //for testing purposes only: 1
+//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+                    $checks->clientData[$i]->withinRange = "-";
+
+                    $checks->clientData[$i]->img = 'if_minus_216340';
+
+                    //for testing purposes only: 2
+
+//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+
+                    //
+                    //Latitude -35.381536
+//                    longitude: 149.058894
+
+
+//                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
+//                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
+
+                }
+
+
+            } else {
+
+                //$result = $no_data;
+                //loop
+                $checks->clientData[$i]->dateTzCheckIn = $no_data;
+                $checks->clientData[$i]->timeTzCheckIn = $no_data;
+
+            }
+
+//           check outs
+            //if there is a value for the check_out datetime (ie check_outs property)
+
+
+        }
+
+//        //number of check ins at premise
+//        //change to collection datatype from array for using groupBy fn and count
+
+//
+//        $checkIns = $collectChecks->pluck('check_ins');
+//
+//        $total = $checkIns->count();
+//
+////        $checksCollection = collect($checks->clientData);
+//
+//        //group by date for better view
+//        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
+
+        //return $result;
+        return $checks;//yes, ok, no, "", "no geoData"
+//        return $groupclientData;
+    }
+}
+
+
+if (!function_exists('geoRangeDateTime3')) {
+
+    function geoRangeDateTime3($data, $location)
+    {
+        //format check in timestamp to be a user friendly date and time which accounts for the timezone
+        foreach ($data as $i => $item) {
+//TODO: consider adding an endnote to report advising of this info
+
+            $no_data = '';
+            //constant
+//            define("$no_data", 0);
+//          check ins
+//         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
+            //(because of check_ins datetime is a default value for the field)
+            if ($item->check_ins != null) {
+
+                $tzDT = viaTimezone($item->checkin_latitude,
+                    $item->checkin_longitude,
+                    $location->latitude,
+                    $location->longitude, $item->check_ins);
+//need to append these later perhaps????
+                $data[$i]->dateTzCheckIn = $tzDT->get('date');
+                $data[$i]->timeTzCheckIn = $tzDT->get('time');
+
+                //if there is geoLocation data for the location check
+                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+
+                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+                        $location->latitude, $location->longitude);
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+                    $result = geoRange($distance);
+
+                    //return $result;//yes, ok, no
+
+                    $data[$i]->withinRange = $result;
+
+                    if ($item->withinRange == 'yes') {
+
+                        $data[$i]->img = 'if_checkmark-g_86134';
+                    } elseif ($item->withinRange == 'ok') {
+                        $data[$i]->img = 'if_checkmark-o_86136';
+                    } elseif ($item->withinRange == 'no') {
+                        $data[$i]->img = 'if_cross_5233';
+                    }
+
+                    //for testing purposes only: 1
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+
+                } else {
+                    //  $result = "no geoData";
+                    //for testing purposes only: 1
+//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+                    $data[$i]->withinRange = "-";
+
+                    $data[$i]->img = 'if_minus_216340';
+
+                    //for testing purposes only: 2
+
+//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+
+                    //
+                    //Latitude -35.381536
+//                    longitude: 149.058894
+
+
+//                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
+//                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
+
+                }
+
+
+            } else {
+
+                //$result = $no_data;
+                //loop
+                $data[$i]->dateTzCheckIn = $no_data;
+                $data[$i]->timeTzCheckIn = $no_data;
+
+            }
+
+//           check outs
+            //if there is a value for the check_out datetime (ie check_outs property)
+
+
+        }
+
+//        //number of check ins at premise
+//        //change to collection datatype from array for using groupBy fn and count
+
+//
+//        $checkIns = $collectChecks->pluck('check_ins');
+//
+//        $total = $checkIns->count();
+//
+////        $checksCollection = collect($checks->clientData);
+//
+//        //group by date for better view
+//        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
+
+        //return $result;
+        return $data;//yes, ok, no, "", "no geoData"
+//        return $groupclientData;
+    }
+}
+
+if (!function_exists('geoRangeDateTime2')) {
+
+    function geoRangeDateTime2($checks)
+    {
+        //format check in timestamp to be a user friendly date and time which accounts for the timezone
+        foreach ($checks->clientData as $i => $item) {
+//TODO: consider adding an endnote to report advising of this info
+
+            $no_data = '';
+            //constant
+//            define("$no_data", 0);
+//          check ins
+//         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
+            //(because of check_ins datetime is a default value for the field)
+            if ($item->check_ins != null) {
+
+                $tzDT = viaTimezone($item->checkin_latitude,
+                    $item->checkin_longitude,
+                    $checks->location->latitude,
+                    $checks->location->longitude, $item->check_ins);
+
+                $checks->clientData[$i]->dateTzCheckIn = $tzDT->get('date');
+                $checks->clientData[$i]->timeTzCheckIn = $tzDT->get('time');
+
+                //if there is geoLocation data for the location check
+                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+
+                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+                        $checks->location->latitude, $checks->location->longitude);
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+                    $result = geoRange($distance);
+
+                    //return $result;//yes, ok, no
+
+                    $checks->clientData[$i]->withinRange = $result;
+
+                    if ($item->withinRange == 'yes') {
+
+                        $checks->clientData[$i]->img = 'if_checkmark-g_86134';
+                    } elseif ($item->withinRange == 'ok') {
+                        $checks->clientData[$i]->img = 'if_checkmark-o_86136';
+                    } elseif ($item->withinRange == 'no') {
+                        $checks->clientData[$i]->img = 'if_cross_5233';
+                    }
+
+                    //for testing purposes only: 1
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+
+                } else {
+                    //  $result = "no geoData";
+                    //for testing purposes only: 1
+//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+                    $checks->clientData[$i]->withinRange = "-";
+
+                    $checks->clientData[$i]->img = 'if_minus_216340';
+
+                    //for testing purposes only: 2
+
+//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+
+                    //
+                    //Latitude -35.381536
+//                    longitude: 149.058894
+
+
+//                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
+//                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
+
+                }
+
+
+            } else {
+
+                //$result = $no_data;
+                //loop
+                $checks->clientData[$i]->dateTzCheckIn = $no_data;
+                $checks->clientData[$i]->timeTzCheckIn = $no_data;
+
+            }
+
+//           check outs
+            //if there is a value for the check_out datetime (ie check_outs property)
+
+
+        }
+
+//        //number of check ins at premise
+//        //change to collection datatype from array for using groupBy fn and count
+
+//
+//        $checkIns = $collectChecks->pluck('check_ins');
+//
+//        $total = $checkIns->count();
+//
+////        $checksCollection = collect($checks->clientData);
+//
+//        //group by date for better view
+//        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
+
+        //return $result;
+        return $checks;//yes, ok, no, "", "no geoData"
+//        return $groupclientData;
+    }
+}
+
+//parameter is a ??stdclass, is then converted to collection
+//returns a collection with values added for the check_out date and time computed based on the geoLocation timezone
+    if (!function_exists('checkOutDateTime')) {
+
+        function checkOutDateTime($checks)
+        {
+
+            $no_data = '';
+
+            foreach ($checks->clientData as $i => $item) {
+
+                if ($item->check_outs != null) {
+                    $tz = $this->viaTimezone($item->checkout_latitude,
+                        $item->checkout_longitude,
+                        $checks->location->latitude,
+                        $checks->location->longitude, $item->check_outs);
+
+                    $checks->clientData[$i]->dateTzCheckOut = $tz->get('date');
+                    $checks->clientData[$i]->timeTzCheckOut = $tz->get('time');
+
+                } else {
+                    $checks->clientData[$i]->dateTzCheckOut = $no_data;
+                    $checks->clientData[$i]->timeTzCheckOut = $no_data;
+                }
+            }
+
+            $collectChecks = collect($checks->clientData);
+
+            return $collectChecks;
+        }
+    }
+
+if (!function_exists('viaTimezone')) {
+
+    function viaTimezone($geoLatitude, $geoLongitude, $locLatitude, $locLongitude, $dateTime)
+    {
+        //if there is geoLocation data for the location check
+        if (($geoLatitude != "") && ($geoLongitude != "")) {
+
+            $lat = $geoLatitude;
+            $long = $geoLongitude;
+
+        } else {
+            //else use the location for the location check
+            //TODO: consider adding an endnote to report advising of this info
+            $lat = $locLatitude;
+            $long = $locLongitude;
+        }
+
+        $tzDT = timezoneDT($lat, $long, $dateTime);
+
+        return $tzDT;
+
+
+    }
+}
+
+
 
 
 

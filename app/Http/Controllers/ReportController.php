@@ -187,6 +187,8 @@ class ReportController extends Controller
                     $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
                 } else if ($type == 'Location Checks') {
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+                } else if($type == 'Client'){
+                    $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 }
 
                 if ($result->success == true) {
@@ -379,19 +381,58 @@ class ReportController extends Controller
 
                         return view('report/location_checks/show');
 
-                    } else {
-                        //TODO: test me
-                        $err = 'There were no location checks during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
                     }
-                }
+                }else if ($report->type == 'Client') {
 
-            } else {
+                        $clientData = $this->getClientReportData($id, $token);
+
+//                        dd($clientData);
+
+                        if ($clientData != 'errorInResult') {
+
+//                        $groupShiftChecks = $this->formatLocationChecksData($clientData);
+//                            $collectChecks = $this->formatLocationChecksData($clientData);
+
+                            $clientDataWithGeoData = geoRangeDateTime($clientData);
+
+                            dd($clientDataWithGeoData);
+
+                            $fmtClientData = checkOutDateTime($clientDataWithGeoData);
+
+                        dd($fmtClientData);
+
+                            //number of check ins at premise
+                            $checkIns = $fmtClientData->pluck('check_ins');
+
+                            $total = $checkIns->count();
+
+                            //group by date for better view
+                            $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
+
+                            view()->share(array(
+                                'shiftChecks' => $groupClientData,
+                                'location' => $clientData->location,
+                                'report' => $report,
+                                'start' => $sdate,
+                                'end' => $edate,
+                                'total' => $total
+                            ));
+
+                            return view('report/client/show');
+
+                        } else {
+                            //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                            $err = 'There were no location checks during the period that the selected report covers.';
+                            $errors = collect($err);
+                            return Redirect::to('/reports')->with('errors', $errors);
+                        }
+                    }
+
+            }else {
                 //ie no session token exists and therefore the user is not authenticated
 
                 return Redirect::to('/login');
-            }
+                }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying report';
             return view('error-msg')->with(array(
@@ -399,10 +440,12 @@ class ReportController extends Controller
                 'errorTitle' => 'Server down'
             ));
         } catch (\ErrorException $error) {
+            dd($error);
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
+            dd($err);
             $e = 'Error loading report';
             return view('error-msg')->with('msg', $e);
 
@@ -417,6 +460,7 @@ class ReportController extends Controller
         }
 
     }
+
 
     //returns a collection
     public function formatLocationChecksData($checks)
@@ -433,7 +477,7 @@ class ReportController extends Controller
             //(because of check_ins datetime is a default value for the field)
             if ($item->check_ins != null) {
 
-                $tzDT = $this->viaTimezone($item->checkin_latitude,
+                $tzDT = viaTimezone($item->checkin_latitude,
                     $item->checkin_longitude,
                     $checks->location->latitude,
                     $checks->location->longitude, $item->check_ins);
@@ -492,14 +536,13 @@ class ReportController extends Controller
 
                 $checks->shiftChecks[$i]->dateTzCheckIn = $no_data;
                 $checks->shiftChecks[$i]->timeTzCheckIn = $no_data;
-
             }
 
 //           check outs
             //if there is a value for the check_out datetime (ie check_outs property)
 
             if ($item->check_outs != null) {
-                $tz = $this->viaTimezone($item->checkout_latitude,
+                $tz = viaTimezone($item->checkout_latitude,
                     $item->checkout_longitude,
                     $checks->location->latitude,
                     $checks->location->longitude, $item->check_outs);
@@ -530,28 +573,6 @@ class ReportController extends Controller
 
         return $collectChecks;
 //        return $groupShiftChecks;
-    }
-
-    function viaTimezone($geoLatitude, $geoLongitude, $locLatitude, $locLongitude, $dateTime)
-    {
-        //if there is geoLocation data for the location check
-        if (($geoLatitude != "") && ($geoLongitude != "")) {
-
-            $lat = $geoLatitude;
-            $long = $geoLongitude;
-
-        } else {
-            //else use the location for the location check
-            //TODO: consider adding an endnote to report advising of this info
-            $lat = $locLatitude;
-            $long = $locLongitude;
-        }
-
-        $tzDT = timezoneDT($lat, $long, $dateTime);
-
-        return $tzDT;
-
-
     }
 
     /**
@@ -688,6 +709,35 @@ class ReportController extends Controller
             $error = 'Error loading report details';
             return view('error-msg')->with('msg', $error);
         }
+    }
+
+    public function getClientReportData($id, $token){
+        try {
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL') . 'clientreport/' . $id, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $clientData = json_decode((string)$response->getBody());
+
+            if ($clientData->success == false) {
+                return 'errorInResult';
+            } else {
+                return $clientData;
+            }
+
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+            $msg = 'Error exception displaying report';
+            return view('error-msg')->with('msg', $msg);
+        } catch (\ErrorException $error) {
+            $msg = 'Error exception displaying report on webpage';
+            return view('error-msg')->with('msg', $msg);
+        }
+
     }
 
     public function getLocationChecks($id, $token)
