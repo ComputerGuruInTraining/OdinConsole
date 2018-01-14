@@ -1,4 +1,7 @@
+{{--File used by both view and pdf--}}
+
 {{--Check to ensure there are case notes or else an error will be thrown--}}
+
 @if(count($data) != 0)
     @foreach($data as $index => $shiftCheck)
 

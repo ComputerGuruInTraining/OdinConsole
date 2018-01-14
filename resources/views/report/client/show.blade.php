@@ -1,10 +1,6 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
 
-{{--@section('title-item')--}}
-
-{{--@stop--}}
-
 @section('page-content')
     <div class="col-md-12">
         <div class='table-responsive'>
@@ -117,7 +113,7 @@
     </div>
     <br/>
     <br/>
-    @include('report.client.shared_details')
+    @include('layouts.report.case_details')
 
 
     {{--<div class="col-md-12">

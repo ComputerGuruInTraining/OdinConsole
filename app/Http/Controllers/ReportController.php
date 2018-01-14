@@ -459,6 +459,10 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
+                }else if($report->type == 'Management'){
+
+                    return view('report/mgmt/show');
+
                 }
 
             } else {

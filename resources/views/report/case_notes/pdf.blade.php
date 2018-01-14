@@ -1,4 +1,4 @@
-@extends('layouts.pdf_layout')
+@extends('layouts.report.pdf_layout')
 
 @section('report-address-bar')
     Case Notes Report

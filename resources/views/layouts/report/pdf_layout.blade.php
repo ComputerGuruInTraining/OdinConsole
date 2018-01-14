@@ -4,6 +4,17 @@
 
     {{--internal stylesheet being used as external stylesheet takes much longer to load, even if only contains the same styles--}}
     <style>
+
+        /*.pdf-bold{*/
+            /*font-weight: 700;*/
+
+        /*}*/
+
+        .details-heading{
+
+            text-decoration: underline;
+        }
+
         .report-title {
             /*color: #4d2970;*/
             margin-left: 5px;
@@ -175,7 +186,7 @@
                 <th>@yield('colHeading2')</th>
                 <th>@yield('colHeading3')</th>
                 <th>@yield('colHeading4')</th>
-                <th>@yield('colHeading4')</th>
+                <th>@yield('colHeading5')</th>
                 <th>@yield('colHeading6')</th>
                 <th>@yield('colHeading7')</th>
                 <th>@yield('colHeading8')</th>

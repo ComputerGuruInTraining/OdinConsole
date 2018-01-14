@@ -1,4 +1,4 @@
-@extends('layouts.pdf_layout')
+@extends('layouts.report.pdf_layout')
 
 @section('report-address-bar')
     Case Notes Report
@@ -57,5 +57,5 @@
 @stop
 
 @section('additional-report-content')
-    @include('report.client.shared_details')
+    @include('layouts.report.case_details')
 @stop

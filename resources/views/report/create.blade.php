@@ -79,12 +79,20 @@
                     @else
                         <option value="Client">Client</option>
                     @endif
+                    @if(old('type') == 'Management')
+                        <option value="Management" selected>Management</option>
+                    @else
+                        <option value="Management">Management</option>
+                    @endif
 
                 @else
                     {{--Case Notes for a Location over a period--}}
                     <option value="Case Notes">Case Notes</option>
                     <option value="Location Checks">Location Checks</option>
                     <option value="Client">Client</option>
+                    <option value="Management">Management</option>
+
+
                     {{--TODO: Exact Times the premise was visited by a guard over a period--}}
                     {{--<option value="caseNotes">Guard Patrols</option>--}}
                 @endif

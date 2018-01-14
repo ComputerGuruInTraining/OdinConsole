@@ -18,13 +18,9 @@
                             <span class="col-md-9">
                                             @if(isset($item->checkDuration))
                                     @if($item->checkDuration < 1)
-                                        {{--<span class="col-md-6">--}}
                                         < 1 min
-                                        {{--</span>--}}
                                     @else
-                                        {{--<span class="col-md-6">--}}
                                         {{$item->checkDuration}} min/s
-                                        {{--</span>--}}
                                     @endif
                                 @else
                                     Insufficient Data
