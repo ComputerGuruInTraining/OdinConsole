@@ -1,6 +1,12 @@
 {{--@extends('layouts.master_layout')--}}
 @extends('layouts.report.master_report_data')
 
+@section('button')
+    <button type="button" class="btn btn-info" onclick="window.location.href='/reports-{{$report->id}}-edit'">
+        Manage Report
+    </button>
+@stop
+
 @section('entity-show')
     Premise:
 @stop
