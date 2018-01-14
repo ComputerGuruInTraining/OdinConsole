@@ -184,10 +184,16 @@ class ReportController extends Controller
 
                 //post to api via function which calls a different route based on report type
                 if ($type == 'Case Notes') {
+
                     $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
                 } else if ($type == 'Location Checks') {
+
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 } else if ($type == 'Client') {
+
+                    $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+                }else if ($type == 'Management') {
+
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
                 }
 
@@ -294,6 +300,64 @@ class ReportController extends Controller
         return $result;
     }
 
+
+    public function formatLocationReportData($data, $report){
+
+        //todo: change $data->reportData to be reportData in api
+        $dataWithGeoData = geoRangeDateTime($data->reportData, $data->location);
+
+        $fmtData = checkOutDateTime($dataWithGeoData, $data->location);
+
+        foreach ($fmtData as $case) {
+
+            if($report->type == "Management") {
+                //case will have values appended for withinRange and geoImg
+                $case = withinRange($case, $data->location);
+            }else if($report->type == "Client"){
+                $case->shortDesc = first100Chars($case->description);
+            }
+
+            //append img urls and hasImg value to $case
+            $case = imgToUrl($case);
+
+            //calculate the duration
+            //                                $case->timeTzCheckIn;
+            //                                $case -> timeTzCheckOut;
+            //todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
+            if ((isset($case->check_ins)) && (isset($case->check_outs)))
+
+                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+
+            //                            if($case->checkDuration)
+            //                                $totalMins = $totalMins + $case->checkDuration;
+
+            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
+            //and then total the amount.
+            //
+
+
+            //                            $hours = locationDuration();
+        }
+
+//        $totalMins = 0;
+        $totalMins = $fmtData->sum('checkDuration');
+        $report->totalHours = totalMinsInHours($totalMins);
+
+        //                            dd($fmtData);
+
+        //number of check ins at premise
+        //fixme needs to be changed to be the number of completed check_ins (ie that have a check out)
+        $checkIns = $fmtData->pluck('check_ins');
+
+        $total = $checkIns->count();
+
+        //group by date for better view
+        $groupData = $fmtData->groupBy('dateTzCheckIn');
+
+       return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report]);
+
+    }
+
     /**
      * Display the specified resource.
      *
@@ -365,6 +429,8 @@ class ReportController extends Controller
                         //number of check ins at premise
                         $checkIns = $collectChecks->pluck('check_ins');
 
+                        //fixme: change to only be when also check_outs
+
                         $total = $checkIns->count();
 
                         //group by date for better view
@@ -381,80 +447,108 @@ class ReportController extends Controller
 
                         return view('report/location_checks/show');
 
-                    }
-                } else if ($report->type == 'Client') {
-
-                    $clientData = $this->getClientReportData($id, $token);
-
-
-                    if ($clientData != 'errorInResult') {
-
-
-                        $clientDataWithGeoData = geoRangeDateTime($clientData->clientData, $clientData->location);
-
-                        $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
-
-//                        $totalMins = 0;
-
-                        foreach ($fmtClientData as $case) {
-                            //append img urls and hasImg value to $case
-                            $case = imgToUrl($case);
-
-                            $case->shortDesc = first100Chars($case->description);
-
-                            //calculate the duration
-//                                $case->timeTzCheckIn;
-//                                $case -> timeTzCheckOut;
-//todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
-                            if((isset($case->check_ins))&&(isset($case->check_outs)))
-
-                                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
-
-//                            if($case->checkDuration)
-//                                $totalMins = $totalMins + $case->checkDuration;
-
-                            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
-                            //and then total the amount.
-                            //
-
-
-//                            $hours = locationDuration();
-                        }
-
-                        $totalMins = 0;
-                        $totalMins = $fmtClientData->sum('checkDuration');
-                        $report->totalHours = totalMinsInHours($totalMins);
-
-
-//                            dd($fmtClientData);
-
-                        //number of check ins at premise
-                        $checkIns = $fmtClientData->pluck('check_ins');
-
-                        $total = $checkIns->count();
-
-                        //group by date for better view
-                        $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
-
-
-                        view()->share(array(
-                            'data' => $groupClientData,
-                            'location' => $clientData->location,
-                            'report' => $report,
-                            'start' => $sdate,
-                            'end' => $edate,
-                            'total' => $total
-                        ));
-
-                        return view('report/client/show');
-
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
                         $err = 'There were no location checks during the period that the selected report covers.';
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
+                } else if (($report->type == 'Client')||($report->type == 'Management')) {
+
+                    $data = $this->getLocationReportData($id, $token);
+
+                    if ($data != 'errorInResult') {
+
+                        $formatData = $this->formatLocationReportData($data, $report);
+
+                         view()->share(array(
+                            'data' => $formatData->get('groupData'),
+                            'location' => $data->location,
+                            'report' => $formatData->get('report'),
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $formatData->get('total')
+                        ));
+
+                        if($report->type == 'Client'){
+
+                            return view('report/client/show');
+
+                        }else if($report->type == 'Management'){
+//                            dd($formatData);
+
+                            return view('report/management/show');
+
+                        }
+                    }
+
+                } else {
+                    //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                    $err = 'There is insufficient data for the period that the report covers.';
+                    $errors = collect($err);
+                    return Redirect::to('/reports')->with('errors', $errors);
                 }
+
+
+//                    if ($reportData != 'errorInResult') {
+//
+//
+//                        $reportDataWithGeoData = geoRangeDateTime($clientData->clientData, $clientData->location);
+//
+//                        $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
+//
+////                        $totalMins = 0;
+//
+//                        foreach ($fmtClientData as $case) {
+//                            //append img urls and hasImg value to $case
+//                            $case = imgToUrl($case);
+//
+//                            $case->shortDesc = first100Chars($case->description);
+//
+//                            //calculate the duration
+////                                $case->timeTzCheckIn;
+////                                $case -> timeTzCheckOut;
+////todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
+//                            if((isset($case->check_ins))&&(isset($case->check_outs)))
+//
+//                                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+//
+////                            if($case->checkDuration)
+////                                $totalMins = $totalMins + $case->checkDuration;
+//
+//                            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
+//                            //and then total the amount.
+//                            //
+//
+//
+////                            $hours = locationDuration();
+//                        }
+//
+//                        $totalMins = 0;
+//                        $totalMins = $fmtClientData->sum('checkDuration');
+//                        $report->totalHours = totalMinsInHours($totalMins);
+//
+//
+////                            dd($fmtClientData);
+//
+//                        //number of check ins at premise
+//                        $checkIns = $fmtClientData->pluck('check_ins');
+//
+//                        $total = $checkIns->count();
+//
+//                        //group by date for better view
+//                        $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
+
+
+
+//                } else if ($report->type == 'Management') {
+//
+////                    $mgmtData = $this->getLocationReportData($id, $token);
+//
+//
+//                    return view('report/management/show');
+//
+//                }
 
             } else {
                 //ie no session token exists and therefore the user is not authenticated
@@ -678,6 +772,7 @@ class ReportController extends Controller
                         //number of check ins at premise
                         $checkIns = $collectChecks->pluck('check_ins');
 
+                        //fixme: change to only be when also check_outs
                         $total = $checkIns->count();
 
                         //group by date for better view
@@ -710,12 +805,46 @@ class ReportController extends Controller
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
 
-                }
+                }else if ($report->type == 'Client') {
 
-            } else {
-                //ie no session token exists and therefore the user is not authenticated
+                        $data = $this->getLocationReportData($id, $token);
 
-                return Redirect::to('/login');
+                        if ($data != 'errorInResult') {
+
+                        $data = $this->formatLocationReportData($data, $report);
+
+                            view()->share(array(
+                                'data' => $groupdata,
+                                'location' => $data->location,
+                                'report' => $report,
+                                'start' => $sdate,
+                                'end' => $edate,
+                                'total' => $total
+                            ));
+
+                            if ($request->has('download')) {
+                                // pass view file
+                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+                                // download pdf w current date in the name
+                                $dateTime = Carbon::now();
+                                $date = substr($dateTime, 0, 10);
+                                return $pdf->download('Client Report ' . $date . '.pdf');
+                            }
+
+                            return view('report/client/pdf');
+
+                        }else {
+                            //ie case notes have been deleted after the report was generated perhaps falls into this scenario
+                            $err = 'There is insufficient data for the period that the report covers.';
+                            $errors = collect($err);
+                            return Redirect::to('/reports')->with('errors', $errors);
+                        }
+
+                    } else {
+                        //ie no session token exists and therefore the user is not authenticated
+
+                        return Redirect::to('/login');
+                    }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying report';
@@ -740,23 +869,26 @@ class ReportController extends Controller
         }
     }
 
-    public function getClientReportData($id, $token)
+
+    public function getLocationReportData($id, $token)
     {
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get(Config::get('constants.API_URL') . 'clientreport/' . $id, [
+            $response = $client->get(Config::get('constants.API_URL') . 'locationreport/' . $id, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
             ]);
 
-            $clientData = json_decode((string)$response->getBody());
+            $data = json_decode((string)$response->getBody());
 
-            if ($clientData->success == false) {
+//            dd($data);
+
+            if ($data->success == false) {
                 return 'errorInResult';
             } else {
-                return $clientData;
+                return $data;
             }
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {

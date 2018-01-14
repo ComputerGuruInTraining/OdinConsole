@@ -515,10 +515,11 @@ if (!function_exists('currentYear')) {
 
 if (!function_exists('geoRangeDateTime')) {
 
-    function geoRangeDateTime($data, $location)
+    function geoRangeDateTime($collection, $location)
     {
+//        dd($collection);
         //format check in timestamp to be a user friendly date and time which accounts for the timezone
-        foreach ($data as $i => $item) {
+        foreach ($collection as $i => $item) {
 //TODO: consider adding an endnote to report advising of this info
 
             $no_data = '';
@@ -532,66 +533,15 @@ if (!function_exists('geoRangeDateTime')) {
                     $item->checkin_longitude,
                     $location->latitude,
                     $location->longitude, $item->check_ins);
-//need to append these later perhaps????
-                $data[$i]->dateTzCheckIn = $tzDT->get('date');
-                $data[$i]->timeTzCheckIn = $tzDT->get('time');
 
-                //if there is geoLocation data for the location check
-                if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
-
-                    $distance = distance($item->checkin_latitude, $item->checkin_longitude,
-                        $location->latitude, $location->longitude);
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
-
-                    $result = geoRange($distance);
-
-                    //return $result;//yes, ok, no
-
-                    $data[$i]->withinRange = $result;
-
-                    if ($item->withinRange == 'yes') {
-
-                        $data[$i]->geoImg = 'if_checkmark-g_86134';
-                    } elseif ($item->withinRange == 'ok') {
-                        $data[$i]->geoImg = 'if_checkmark-o_86136';
-                    } elseif ($item->withinRange == 'no') {
-                        $data[$i]->geoImg = 'if_cross_5233';
-                    }
-
-                    //for testing purposes only: 1
-
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
-
-
-                } else {
-                    //  $result = "no geoData";
-                    //for testing purposes only: 1
-//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
-                    $data[$i]->withinRange = "-";
-
-                    $data[$i]->geoImg = 'if_minus_216340';
-
-                    //for testing purposes only: 2
-
-//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
-
-                    //
-                    //Latitude -35.381536
-//                    longitude: 149.058894
-
-
-//                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
-//                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
-
-                }
-
+                $collection[$i]->dateTzCheckIn = $tzDT->get('date');
+                $collection[$i]->timeTzCheckIn = $tzDT->get('time');
 
             } else {
 
-                //$result = $no_data;
                 //loop
-                $data[$i]->dateTzCheckIn = $no_data;
-                $data[$i]->timeTzCheckIn = $no_data;
+                $collection[$i]->dateTzCheckIn = $no_data;
+                $collection[$i]->timeTzCheckIn = $no_data;
 
             }
 
@@ -615,13 +565,72 @@ if (!function_exists('geoRangeDateTime')) {
 //        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
 
         //return $result;
-        return $data;//yes, ok, no, "", "no geoData"
+        return $collection;//yes, ok, no, "", "no geoData"
 //        return $groupclientData;
     }
 }
 
-//parameter is a ??stdclass, is then converted to collection
-//returns a collection with values added for the check_out date and time computed based on the geoLocation timezone
+if (!function_exists('withinRange')) {
+
+    function withinRange($item, $location)
+    {
+        //if there is geoLocation data for the location check
+        if (($item->checkin_latitude != "") && ($item->checkin_longitude != "")) {
+
+            $distance = distance($item->checkin_latitude, $item->checkin_longitude,
+                $location->latitude, $location->longitude);
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+            $result = geoRange($distance);
+
+            //return $result;//yes, ok, no
+
+            $item->withinRange = $result;
+
+            if ($item->withinRange == 'yes') {
+
+                $item->geoImg = 'if_checkmark-g_86134';
+            } elseif ($item->withinRange == 'ok') {
+                $item->geoImg = 'if_checkmark-o_86136';
+            } elseif ($item->withinRange == 'no') {
+                $item->geoImg = 'if_cross_5233';
+            }
+
+            //for testing purposes only: 1
+
+//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
+
+
+        } else {
+            //  $result = "no geoData";
+            //for testing purposes only: 1
+//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+            $item->withinRange = "-";
+
+            $item->geoImg = 'if_minus_216340';
+
+            //for testing purposes only: 2
+
+//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
+
+            //
+            //Latitude -35.381536
+//                    longitude: 149.058894
+
+
+//                    $checks->clientData[$i]->withinRange = $distance + " should equal 0 as same location";
+//                    $checks->clientData[$i]->withinRange = $distance2 + " not gathered";
+
+        }
+
+        return $item;
+
+
+    }
+}
+
+//parameter is a ??stdclass, is then converted to collection & location used for workings
+//returns the data collection with values added for the check_out date and time computed based on the geoLocation timezone
     if (!function_exists('checkOutDateTime')) {
 
         function checkOutDateTime($data, $location)

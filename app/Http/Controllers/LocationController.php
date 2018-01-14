@@ -401,9 +401,9 @@ class LocationController extends Controller
                 ->withErrors('Error updating location. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('login');
+//                ->withInput()
+//                ->withErrors('Session expired. Please login.');
         }
     }
 
