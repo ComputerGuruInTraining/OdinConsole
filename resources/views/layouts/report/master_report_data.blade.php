@@ -83,17 +83,17 @@
                 <tr class="report-header-row grey-larger">
 
 
-                    <td>@yield('entity-show')Premise:</td>
+                    <td>@yield('entity-show')</td>
                     </td>
-                    <td class="report-header grey-larger">@yield('entity-value-show'){{$location->address}}</td>
+                    <td class="report-header grey-larger">@yield('entity-value-show')</td>
                 </tr>
                 <tr class="report-header-row grey-larger">
-                    <td>@yield('total1-show')Number of Checks at Premise:</td>
-                    <td class="report-header grey-larger">@yield('total1-val-show') {{$total}}</td>
+                    <td>@yield('total1-show')</td>
+                    <td class="report-header grey-larger">@yield('total1-val-show')</td>
                 </tr>
                 <tr class="report-header-row">
-                    <td>@yield('total2-show')Total Hours Monitoring Premise:</td>
-                    <td class="report-header">@yield('total2-val-show'){{$report->totalHours}}</td>
+                    <td>@yield('total2-show')</td>
+                    <td class="report-header">@yield('total2-val-show')</td>
                 </tr>
             </table>
 

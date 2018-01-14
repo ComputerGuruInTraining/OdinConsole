@@ -1,44 +1,44 @@
-@extends('layouts.master_layout')
-@extends('sidebar')
+{{--@extends('layouts.master_layout')--}}
+{{--@extends('sidebar')--}}
 
-@section('page-content')
-    <div class="col-md-12">
-        <div class='table-responsive'>
+{{--@section('page-content')--}}
+    {{--<div class="col-md-12">--}}
+        {{--<div class='table-responsive'>--}}
 
-            <div style="padding:15px 0px 10px 0px;">
-                <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary">Download
-                    PDF</a>
-            </div>
+            {{--<div style="padding:15px 0px 10px 0px;">--}}
+                {{--<a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary">Download--}}
+                    {{--PDF</a>--}}
+            {{--</div>--}}
 
-            <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-            <table class="col-md-12 margin-bottom">
-                <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
-                <tr class="report-header-row grey-larger">
-                    <td>Premise:</td>
-                    </td>
-                    <td class="report-header grey-larger">{{$location->address}}</td>
-                </tr>
-                <tr class="report-header-row grey-larger">
-                    <td>Number of Checks at Premise:</td>
-                    <td class="report-header grey-larger"> {{$total}}</td>
-                </tr>
-                <tr class="report-header-row">
-                    <td>Total Hours Monitoring Premise:</td>
-                    <td class="report-header">{{$report->totalHours}}</td>
-                </tr>
-            </table>
+            {{--<h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>--}}
+            {{--<table class="col-md-12 margin-bottom">--}}
+                {{--<tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>--}}
+                {{--<tr class="report-header-row grey-larger">--}}
+                    {{--<td>Premise:</td>--}}
+                    {{--</td>--}}
+                    {{--<td class="report-header grey-larger">{{$location->address}}</td>--}}
+                {{--</tr>--}}
+                {{--<tr class="report-header-row grey-larger">--}}
+                    {{--<td>Number of Checks at Premise:</td>--}}
+                    {{--<td class="report-header grey-larger"> {{$total}}</td>--}}
+                {{--</tr>--}}
+                {{--<tr class="report-header-row">--}}
+                    {{--<td>Total Hours Monitoring Premise:</td>--}}
+                    {{--<td class="report-header">{{$report->totalHours}}</td>--}}
+                {{--</tr>--}}
+            {{--</table>--}}
 
-            <table class="table table-hover bottom-border">
-                <tr>
-                    <th>Date</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Action</th>
-                    <th>Case ID</th>
-                    <th>Case Note Title</th>
-                    <th>Description</th>
-                    <th>Images</th>
-                </tr>
+            {{--<table class="table table-hover bottom-border">--}}
+                {{--<tr>--}}
+                    {{--<th>Date</th>--}}
+                    {{--<th>Check In</th>--}}
+                    {{--<th>Check Out</th>--}}
+                    {{--<th>Action</th>--}}
+                    {{--<th>Case ID</th>--}}
+                    {{--<th>Case Note Title</th>--}}
+                    {{--<th>Description</th>--}}
+                    {{--<th>Images</th>--}}
+                {{--</tr>--}}
 {{--
                 --}}{{--Check to ensure there are case notes or else an error will be thrown--}}{{--
                 @if(count($data) != 0)
@@ -107,14 +107,78 @@
                         <td></td>
                     </tr>
                 @endif--}}
-                    @include('report.client.shared')
-            </table>
-        </div>
-    </div>
-    <br/>
-    <br/>
-    @include('layouts.report.case_details')
 
+@extends('layouts.report.master_report_data')
+
+@section('entity-show')
+    Premise:
+@stop
+
+@section('entity-value-show')
+    {{$location->address}}
+@stop
+
+@section('total1-show')
+    Number of Checks at Premise:
+@stop
+
+@section('total1-val-show')
+    {{$total}}
+@stop
+
+@section('total2-show')
+    Total Hours Monitoring Premise:
+@stop
+
+@section('total2-val-show')
+    {{$report->totalHours}}
+@stop
+
+@section('colHeading1-show')
+    Date
+@stop
+
+@section('colHeading2-show')
+    Check In
+@stop
+
+@section('colHeading3-show')
+    Check Out
+@stop
+
+@section('colHeading4-show')
+    Action
+@stop
+
+@section('colHeading5-show')
+    Case ID
+@stop
+
+@section('colHeading6-show')
+    Case Note Title
+@stop
+
+@section('colHeading7-show')
+    Description
+@stop
+
+@section('colHeading8-show')
+    Images
+@stop
+
+@section('report-content-show')
+    @include('report.client.shared')
+@stop
+
+        {{----}}
+            {{--</table>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+    {{--<br/>--}}
+    {{--<br/>--}}
+@section('add1-report-content-show')
+    @include('layouts.report.case_details')
+@stop
 
     {{--<div class="col-md-12">
         <p class="details-heading">Full Details</p>
@@ -185,5 +249,5 @@
             @endforeach
         @endif
     </div>--}}
-@stop
+{{--@stop--}}
 

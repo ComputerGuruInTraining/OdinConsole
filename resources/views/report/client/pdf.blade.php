@@ -1,7 +1,7 @@
 @extends('layouts.report.pdf_layout')
 
 @section('report-address-bar')
-    Case Notes Report
+    Client Report
 @stop
 
 @section('entity')

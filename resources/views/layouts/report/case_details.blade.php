@@ -16,7 +16,7 @@
                                 </span>
                             {{--todo: minutes and seconds--}}
                             <span class="col-md-9">
-                                            @if(isset($item->checkDuration))
+                                @if(isset($item->checkDuration))
                                     @if($item->checkDuration < 1)
                                         < 1 min
                                     @else
