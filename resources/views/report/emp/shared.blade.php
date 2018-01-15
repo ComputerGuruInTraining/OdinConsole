@@ -25,6 +25,9 @@
                 <td>{{$item->timeTzCheckIn}}</td>
                 <td>{{$item->timeTzCheckOut}}</td>
 
+                {{--location--}}
+                <td></td>
+
                 {{--action--}}
                 @if($item->title == "Nothing to Report")
                     <td>Nothing to Report</td>
@@ -33,9 +36,6 @@
                     <td>Case Note Reported</td>
                     <td># {{$item->case_id}}</td>
                 @endif
-
-                {{--Guard ID--}}
-                <td>{{$item->user}}</td>
 
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))

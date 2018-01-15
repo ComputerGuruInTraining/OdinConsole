@@ -35,30 +35,6 @@
         </div>
 
         <div class='form-group'>
-            {!! Form::Label('locations', 'Select Location *') !!}
-            <select class="form-control" name="location" onkeypress="return noenter()">
-                {{--if there is old input--}}
-                @if(count(old('location')) > 0)
-                    @foreach($locations as $loc)
-                        @if(old('location') == $loc->id)
-                            {{--mark the old input as selected--}}
-                            <option value="{{$loc->id}}" selected>{{$loc->name}}</option>
-                        @else
-                            {{--other values in list--}}
-                            <option value="{{$loc->id}}">{{$loc->name}}</option>
-                        @endif
-                    @endforeach
-
-                @else
-
-                    @foreach($locations as $loc)
-                        <option value="{{$loc->id}}">{{$loc->name}}</option>
-                    @endforeach
-
-                @endif
-            </select>
-        </div>
-        <div class='form-group'>
             {!! Form::Label('type', 'Select Activity *') !!}
             <select class="form-control" name="type" onkeypress="return noenter()">
                 {{--report types that our app supports generating--}}
@@ -84,6 +60,11 @@
                     @else
                         <option value="Management">Management</option>
                     @endif
+                    @if(old('type') == 'Individual')
+                        <option value="Individual" selected>Individual</option>
+                    @else
+                        <option value="Individual">Individual</option>
+                    @endif
 
                 @else
                     {{--Case Notes for a Location over a period--}}
@@ -91,13 +72,64 @@
                     <option value="Location Checks">Location Checks</option>
                     <option value="Client">Client</option>
                     <option value="Management">Management</option>
-
+                    <option value="Individual">Individual</option>
 
                     {{--TODO: Exact Times the premise was visited by a guard over a period--}}
                     {{--<option value="caseNotes">Guard Patrols</option>--}}
                 @endif
             </select>
         </div>
+
+        <div class='form-group'>
+            {!! Form::Label('locations', 'Select Location *') !!}
+            <select class="form-control" name="location" onkeypress="return noenter()">
+                {{--if there is old input--}}
+                @if(count(old('location')) > 0)
+                    @foreach($locations as $loc)
+                        @if(old('location') == $loc->id)
+                            {{--mark the old input as selected--}}
+                            <option value="{{$loc->id}}" selected>{{$loc->name}}</option>
+                        @else
+                            {{--other values in list--}}
+                            <option value="{{$loc->id}}">{{$loc->name}}</option>
+                        @endif
+                    @endforeach
+
+                @else
+
+                    @foreach($locations as $loc)
+                        <option value="{{$loc->id}}">{{$loc->name}}</option>
+                    @endforeach
+
+                @endif
+            </select>
+        </div>
+
+        <div class='form-group'>
+            {!! Form::Label('employees', 'Select Employee *') !!}
+            <select class="form-control" name="employee" onkeypress="return noenter()">
+                {{--if there is old input--}}
+                @if(count(old('employee')) > 0)
+                    @foreach($employees as $emp)
+                        @if(old('employee') == $emp->id)
+                            {{--mark the old input as selected--}}
+                            <option value="{{$emp->id}}" selected>{{$emp->first_name}} {{$emp->last_name}}</option>
+                        @else
+                            {{--other values in list--}}
+                            <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                        @endif
+                    @endforeach
+
+                @else
+
+                    @foreach($employees as $emp)
+                        <option value="{{$emp->id}}">{{$emp->first_name}} {{$emp->last_name}}</option>
+                    @endforeach
+
+                @endif
+            </select>
+        </div>
+
 
         <div class='form-group form-buttons'>
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
