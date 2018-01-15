@@ -425,6 +425,63 @@ if (!function_exists('substrImg')) {
     }
 }
 
+//get a list of employees
+if (!function_exists('getEmployees')) {
+
+    function getEmployees()
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $compId = session('compId');
+
+            $response = $client->get(Config::get('constants.API_URL').'employees/list/' . $compId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $emps = json_decode((string)$response->getBody());
+
+            return $emps;
+
+        }
+    }
+}
+
+
+
+
+//get a list of locations
+if (!function_exists('getLocations')) {
+
+    function getLocations()
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $compId = session('compId');
+
+            $response = $client->get(Config::get('constants.API_URL') . 'locations/list/' . $compId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $locations = json_decode((string)$response->getBody());
+
+            return $locations;
+
+        }
+    }
+}
+
+
+//get a list of users that are not already added as employees
 if (!function_exists('getUsers')) {
 
     function getUsers()
@@ -449,6 +506,7 @@ if (!function_exists('getUsers')) {
         }
     }
 }
+
 
 if (!function_exists('getUser')) {
 
@@ -780,6 +838,20 @@ if (!function_exists('first100Chars')) {
     }
 }
 
+
+if (!function_exists('loadPdf')) {
+
+    function loadPdf($viewName, $type){
+
+        // pass view file
+        $pdf = PDF::loadView($viewName)->setPaper('a4', 'landscape');
+        // download pdf w current date in the name
+        $dateTime = Carbon\Carbon::now();
+        $date = substr($dateTime, 0, 10);
+
+        return $pdf->download('Activity Report:'. $type . $date . '.pdf');
+    }
+}
 
 
 

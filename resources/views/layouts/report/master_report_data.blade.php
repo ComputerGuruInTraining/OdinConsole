@@ -9,7 +9,7 @@
 
             <div style="padding:15px 0px 10px 0px;">
                 @yield('button')
-                <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary">Download
+                <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary" target="_blank">Download
                     PDF</a>
             </div>
 

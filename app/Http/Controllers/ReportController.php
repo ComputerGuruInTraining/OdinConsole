@@ -105,25 +105,19 @@ class ReportController extends Controller
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
 
-                $token = session('token');
+                $locations = getLocations();
 
-                $client = new GuzzleHttp\Client;
+                $employees = getEmployees();
 
-                $compId = session('compId');
-
-                $response = $client->get(Config::get('constants.API_URL') . 'locations/list/' . $compId, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
-
-                $locations = json_decode((string)$response->getBody());
-
-                return view('report/create')->with('locations', $locations);
+                return view('report/create')->with(array(
+                    'locations' => $locations,
+                    'employees' => $employees
+                ));
 
             } else {
                 return Redirect::to('/login');
             }
+
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying add report page';
             return view('error-msg')->with('msg', $err);
@@ -164,16 +158,22 @@ class ReportController extends Controller
                 $this->validate($request, [
                     'dateFrom' => 'required',
                     'dateTo' => 'required',
-                    'location' => 'required',
                     'type' => 'required',
+//                    'location' => 'required',
+
                 ]);
 
+                //TODO: validate if type==
+
                 //get data from form
-                $location = $request->input('location');
                 $type = $request->input('type');
 
                 $dateFromStr = Input::get('dateFrom');
                 $dateToStr = Input::get('dateTo');
+
+
+                $location = $request->input('location');
+                $empUserId = $request->input('employee');
 
                 //convert date strings from mm/dd/yyyy to dd-mm-yyyy, retain string format
                 $dateFrom = jobDateTime($dateFromStr, "00:00");//start of the day
@@ -192,9 +192,14 @@ class ReportController extends Controller
                 } else if ($type == 'Client') {
 
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
-                }else if ($type == 'Management') {
+                } else if ($type == 'Management') {
 
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+                } else if ($type == 'Individual') {
+
+                    $result = $this->postIndividual($empUserId, $type, $dateFrom, $dateTo, $token, $compId);
+
+                    dd($result);
                 }
 
                 if ($result->success == true) {
@@ -221,6 +226,7 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Operation failed.');
@@ -229,6 +235,8 @@ class ReportController extends Controller
                 ->withInput()
                 ->withErrors('Error generating report');
         } catch (\InvalidArgumentException $err) {
+            dd($err);
+            //tested: works :)
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Error generating report. Please check input is valid.');
@@ -272,7 +280,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Store a report of type/activity = Case Notes and Location Checks
+     * Store a report of type/activity = Client, Management, Location Checks
      *
      * @param  request variables gathered from input
      * @return \Illuminate\Http\Response
@@ -300,8 +308,37 @@ class ReportController extends Controller
         return $result;
     }
 
+    /**
+     * Store a report of type/activity = Individual
+     *
+     * @param  request variables gathered from input
+     * @return \Illuminate\Http\Response
+     */
+    public function postIndividual($userId, $type, $dateFrom, $dateTo, $token, $compId)
+    {
 
-    public function formatLocationReportData($data, $report){
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post(Config::get('constants.API_URL') . 'reports/individual/' . $userId, array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'type' => $type,
+                    'dateFrom' => $dateFrom, 'dateTo' => $dateTo,
+                    'compId' => $compId
+                )
+            )
+        );
+
+        $result = GuzzleHttp\json_decode((string)$response->getBody());
+
+        return $result;
+    }
+
+    public function formatLocationReportData($data, $report)
+    {
 
         //todo: change $data->reportData to be reportData in api
         $dataWithGeoData = geoRangeDateTime($data->reportData, $data->location);
@@ -310,10 +347,10 @@ class ReportController extends Controller
 
         foreach ($fmtData as $case) {
 
-            if($report->type == "Management") {
+            if (($report->type == "Management") || ($report->type == "Individual")) {
                 //case will have values appended for withinRange and geoImg
                 $case = withinRange($case, $data->location);
-            }else if($report->type == "Client"){
+            } else if ($report->type == "Client") {
                 $case->shortDesc = first100Chars($case->description);
             }
 
@@ -354,7 +391,7 @@ class ReportController extends Controller
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
 
-       return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report]);
+        return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report]);
 
     }
 
@@ -453,7 +490,7 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
-                } else if (($report->type == 'Client')||($report->type == 'Management')) {
+                } else if (($report->type == 'Client') || ($report->type == 'Management')) {
 
                     $data = $this->getLocationReportData($id, $token);
 
@@ -461,7 +498,7 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
-                         view()->share(array(
+                        view()->share(array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,
                             'report' => $formatData->get('report'),
@@ -470,85 +507,59 @@ class ReportController extends Controller
                             'total' => $formatData->get('total')
                         ));
 
-                        if($report->type == 'Client'){
+                        if ($report->type == 'Client') {
 
                             return view('report/client/show');
 
-                        }else if($report->type == 'Management'){
+                        } else if ($report->type == 'Management') {
 //                            dd($formatData);
 
                             return view('report/management/show');
 
                         }
+                    } else {
+                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                        $err = 'There is insufficient data for the period that the report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
                     }
 
-                } else {
-                    //TODO: test me else change me if never see it work (or haven't by 15th jan)
-                    $err = 'There is insufficient data for the period that the report covers.';
-                    $errors = collect($err);
-                    return Redirect::to('/reports')->with('errors', $errors);
+                } else if ($report->type == 'Individual') {
+
+                    $data = $this->getLocationReportData($id, $token);
+
+                    if ($data != 'errorInResult') {
+
+                        $formatData = $this->formatLocationReportData($data, $report);
+
+                        view()->share(array(
+                            'data' => $formatData->get('groupData'),
+                            'location' => $data->location,
+                            'report' => $formatData->get('report'),
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $formatData->get('total')
+                        ));
+
+                        if ($report->type == 'Client') {
+
+                            return view('report/client/show');
+
+                        } else if ($report->type == 'Management') {
+//                            dd($formatData);
+
+                            return view('report/management/show');
+
+                        }
+                    } else {
+                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                        $err = 'There is insufficient data for the period that the report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+
                 }
 
-
-//                    if ($reportData != 'errorInResult') {
-//
-//
-//                        $reportDataWithGeoData = geoRangeDateTime($clientData->clientData, $clientData->location);
-//
-//                        $fmtClientData = checkOutDateTime($clientDataWithGeoData, $clientData->location);
-//
-////                        $totalMins = 0;
-//
-//                        foreach ($fmtClientData as $case) {
-//                            //append img urls and hasImg value to $case
-//                            $case = imgToUrl($case);
-//
-//                            $case->shortDesc = first100Chars($case->description);
-//
-//                            //calculate the duration
-////                                $case->timeTzCheckIn;
-////                                $case -> timeTzCheckOut;
-////todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
-//                            if((isset($case->check_ins))&&(isset($case->check_outs)))
-//
-//                                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
-//
-////                            if($case->checkDuration)
-////                                $totalMins = $totalMins + $case->checkDuration;
-//
-//                            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
-//                            //and then total the amount.
-//                            //
-//
-//
-////                            $hours = locationDuration();
-//                        }
-//
-//                        $totalMins = 0;
-//                        $totalMins = $fmtClientData->sum('checkDuration');
-//                        $report->totalHours = totalMinsInHours($totalMins);
-//
-//
-////                            dd($fmtClientData);
-//
-//                        //number of check ins at premise
-//                        $checkIns = $fmtClientData->pluck('check_ins');
-//
-//                        $total = $checkIns->count();
-//
-//                        //group by date for better view
-//                        $groupClientData = $fmtClientData->groupBy('dateTzCheckIn');
-
-
-
-//                } else if ($report->type == 'Management') {
-//
-////                    $mgmtData = $this->getLocationReportData($id, $token);
-//
-//
-//                    return view('report/management/show');
-//
-//                }
 
             } else {
                 //ie no session token exists and therefore the user is not authenticated
@@ -583,7 +594,6 @@ class ReportController extends Controller
         }
 
     }
-
 
     //returns a collection
     public function formatLocationChecksData($checks)
@@ -804,48 +814,96 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
+                } else if (($report->type == 'Client') || ($report->type == 'Management')) {
 
-                }else if ($report->type == 'Client') {
+                    $data = $this->getLocationReportData($id, $token);
 
-                        $data = $this->getLocationReportData($id, $token);
+                    if ($data != 'errorInResult') {
 
-                        if ($data != 'errorInResult') {
+                        $formatData = $this->formatLocationReportData($data, $report);
 
-                        $data = $this->formatLocationReportData($data, $report);
+                        view()->share(array(
+                            'data' => $formatData->get('groupData'),
+                            'location' => $data->location,
+                            'report' => $formatData->get('report'),
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $formatData->get('total')
+                        ));
 
-                            view()->share(array(
-                                'data' => $groupdata,
-                                'location' => $data->location,
-                                'report' => $report,
-                                'start' => $sdate,
-                                'end' => $edate,
-                                'total' => $total
-                            ));
+                        if ($report->type == 'Client') {
 
-                            if ($request->has('download')) {
-                                // pass view file
-                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
-                                // download pdf w current date in the name
-                                $dateTime = Carbon::now();
-                                $date = substr($dateTime, 0, 10);
-                                return $pdf->download('Client Report ' . $date . '.pdf');
-                            }
+                            $viewName = 'report/client/pdf';
 
-                            return view('report/client/pdf');
+                        } else if ($report->type == 'Management') {
+//                            dd($formatData);
 
-                        }else {
-                            //ie case notes have been deleted after the report was generated perhaps falls into this scenario
-                            $err = 'There is insufficient data for the period that the report covers.';
-                            $errors = collect($err);
-                            return Redirect::to('/reports')->with('errors', $errors);
+                            $viewName = 'report/management/pdf';
                         }
 
-                    } else {
-                        //ie no session token exists and therefore the user is not authenticated
+                        if ($request->has('download')) {
 
-                        return Redirect::to('/login');
+                            $pdfDownload = loadPdf($viewName, $report->type);
+//                                // pass view file
+//                                $pdf = PDF::loadView($viewName)->setPaper('a4', 'landscape');
+//                                // download pdf w current date in the name
+//                                $dateTime = Carbon::now();
+//                                $date = substr($dateTime, 0, 10);
+//                                return $pdf->download('Activity Report:'. $report->type . $date . '.pdf');
+                        }
+
+//                        if($report->type == 'Client'){
+
+                        return view($viewName);
+
+//                        }else if($report->type == 'Management'){
+////                            dd($formatData);
+//
+//                            return view('report/management/pdf');
+//
+                    } else {
+                        //ie case notes have been deleted after the report was generated perhaps falls into this scenario
+                        $err = 'There is insufficient data for the period that the report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
                     }
+                }
+
+//                }else if ($report->type == 'Client') {
+//
+//                        $data = $this->getLocationReportData($id, $token);
+//
+//                        if ($data != 'errorInResult') {
+//
+//                        $data = $this->formatLocationReportData($data, $report);
+//
+//                            view()->share(array(
+//                                'data' => $groupdata,
+//                                'location' => $data->location,
+//                                'report' => $report,
+//                                'start' => $sdate,
+//                                'end' => $edate,
+//                                'total' => $total
+//                            ));
+//
+//                            if ($request->has('download')) {
+//                                // pass view file
+//                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+//                                // download pdf w current date in the name
+//                                $dateTime = Carbon::now();
+//                                $date = substr($dateTime, 0, 10);
+//                                return $pdf->download('Client Report ' . $date . '.pdf');
+//                            }
+//
+//                            return view('report/client/pdf');
+//
+
+            } else {
+                //ie no session token exists and therefore the user is not authenticated
+
+                return Redirect::to('/login');
             }
+
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying report';
             return view('error-msg')->with('msg', $err);
@@ -869,13 +927,44 @@ class ReportController extends Controller
         }
     }
 
-
-    public function getLocationReportData($id, $token)
+    public function getLocationReportData($reportId, $token)
     {
         try {
             $client = new GuzzleHttp\Client;
 
-            $response = $client->get(Config::get('constants.API_URL') . 'locationreport/' . $id, [
+            $response = $client->get(Config::get('constants.API_URL') . 'locationreport/' . $reportId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            $data = json_decode((string)$response->getBody());
+
+//            dd($data);
+
+            if ($data->success == false) {
+                return 'errorInResult';
+            } else {
+                return $data;
+            }
+
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            //get request resulted in an error ie no report_case_id for the report_id ie no shifts during the period at the location
+            $msg = 'Error exception displaying report';
+            return view('error-msg')->with('msg', $msg);
+        } catch (\ErrorException $error) {
+            $msg = 'Error exception displaying report on webpage';
+            return view('error-msg')->with('msg', $msg);
+        }
+
+    }
+
+    public function getIndividualReportData($reportId, $token)
+    {
+        try {
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL') . 'individualreport/' . $reportId, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                 ]
@@ -1049,7 +1138,6 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $msg);
         }
     }
-
 
     /**
      * Show the form for editing the specified resource.
