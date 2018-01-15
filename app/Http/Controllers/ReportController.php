@@ -199,9 +199,9 @@ class ReportController extends Controller
 
                     $result = $this->postIndividual($empUserId, $type, $dateFrom, $dateTo, $token, $compId);
 
-                    dd($result);
                 }
-
+//todo: individual report error msg meaningful now, so use in $msg.
+                
                 if ($result->success == true) {
 
                     $id = $result->reportId;
