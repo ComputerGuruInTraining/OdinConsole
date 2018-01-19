@@ -191,6 +191,7 @@ if (!function_exists('jobDuration')) {
     }
 }
 
+//convert minutes to hours
 if (!function_exists('totalMinsInHours')) {
     function totalMinsInHours($mins)
     {
@@ -225,7 +226,6 @@ if (!function_exists('locationCheckDuration')) {
         return $lengthM;
     }
 }
-
 
 //global oauth fn
 if (!function_exists('oauth2')) {
@@ -451,9 +451,6 @@ if (!function_exists('getEmployees')) {
     }
 }
 
-
-
-
 //get a list of locations
 if (!function_exists('getLocations')) {
 
@@ -480,7 +477,6 @@ if (!function_exists('getLocations')) {
     }
 }
 
-
 //get a list of users that are not already added as employees
 if (!function_exists('getUsers')) {
 
@@ -506,7 +502,6 @@ if (!function_exists('getUsers')) {
         }
     }
 }
-
 
 if (!function_exists('getUser')) {
 
@@ -689,35 +684,35 @@ if (!function_exists('withinRange')) {
 
 //parameter is a ??stdclass, is then converted to collection & location used for workings
 //returns the data collection with values added for the check_out date and time computed based on the geoLocation timezone
-    if (!function_exists('checkOutDateTime')) {
+if (!function_exists('checkOutDateTime')) {
 
-        function checkOutDateTime($data, $location)
-        {
+    function checkOutDateTime($data, $location)
+    {
 
-            $no_data = '';
+        $no_data = '';
 
-            foreach ($data as $i => $item) {
+        foreach ($data as $i => $item) {
 
-                if ($item->check_outs != null) {
-                    $tz = viaTimezone($item->checkout_latitude,
-                        $item->checkout_longitude,
-                        $location->latitude,
-                        $location->longitude, $item->check_outs);
+            if ($item->check_outs != null) {
+                $tz = viaTimezone($item->checkout_latitude,
+                    $item->checkout_longitude,
+                    $location->latitude,
+                    $location->longitude, $item->check_outs);
 
-                    $data[$i]->dateTzCheckOut = $tz->get('date');
-                    $data[$i]->timeTzCheckOut = $tz->get('time');
+                $data[$i]->dateTzCheckOut = $tz->get('date');
+                $data[$i]->timeTzCheckOut = $tz->get('time');
 
-                } else {
-                    $data[$i]->dateTzCheckOut = $no_data;
-                    $data[$i]->timeTzCheckOut = $no_data;
-                }
+            } else {
+                $data[$i]->dateTzCheckOut = $no_data;
+                $data[$i]->timeTzCheckOut = $no_data;
             }
-
-            $collectChecks = collect($data);
-
-            return $collectChecks;
         }
+
+        $collectChecks = collect($data);
+
+        return $collectChecks;
     }
+}
 
 if (!function_exists('viaTimezone')) {
 
@@ -837,7 +832,6 @@ if (!function_exists('first100Chars')) {
         }
     }
 }
-
 
 if (!function_exists('loadPdf')) {
 
