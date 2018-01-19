@@ -201,7 +201,7 @@ class ReportController extends Controller
 
                 }
 //todo: individual report error msg meaningful now, so use in $msg.
-                
+
                 if ($result->success == true) {
 
                     $id = $result->reportId;
@@ -526,31 +526,32 @@ class ReportController extends Controller
 
                 } else if ($report->type == 'Individual') {
 
-                    $data = $this->getLocationReportData($id, $token);
+                    $data = $this->getIndividualReportData($id, $token);
+
+                    dd($data);
 
                     if ($data != 'errorInResult') {
 
-                        $formatData = $this->formatLocationReportData($data, $report);
+//                        $formatData = $this->formatLocationReportData($data, $report);
 
                         view()->share(array(
-                            'data' => $formatData->get('groupData'),
-                            'location' => $data->location,
-                            'report' => $formatData->get('report'),
+                            'data' => $data->get('reportData'),
+                            'report' => $data->get('report'),
                             'start' => $sdate,
                             'end' => $edate,
-                            'total' => $formatData->get('total')
                         ));
+//
+//                        if ($report->type == 'Client') {
+//
+//                            return view('report/client/show');
+//
+//                        } else if ($report->type == 'Management') {
+////                            dd($formatData);
+//
+                            return view('report/emp/show');
 
-                        if ($report->type == 'Client') {
+//                        }
 
-                            return view('report/client/show');
-
-                        } else if ($report->type == 'Management') {
-//                            dd($formatData);
-
-                            return view('report/management/show');
-
-                        }
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
                         $err = 'There is insufficient data for the period that the report covers.';
@@ -972,7 +973,7 @@ class ReportController extends Controller
 
             $data = json_decode((string)$response->getBody());
 
-//            dd($data);
+            dd($data);
 
             if ($data->success == false) {
                 return 'errorInResult';
