@@ -315,6 +315,15 @@ if (!function_exists('formatDates')) {
         return $fdate;
     }
 }
+
+if (!function_exists('formatDatesShort')) {
+    function formatDatesShort($date)
+    {
+        $dt = new DateTime($date);
+        $fdate = $dt->format('j M y');
+        return $fdate;
+    }
+}
 //calculate time and date based on geoCoords using Google API
 //return the values to be used to calculate the date and time
 if (!function_exists('timezone')) {

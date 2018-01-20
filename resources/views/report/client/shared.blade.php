@@ -8,10 +8,10 @@
         <tbody class="group-list">
 
         <tr>
-            <td class="report-title">{{$index}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
+            {{--<td></td>--}}
+            {{--<td></td>--}}
+            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>

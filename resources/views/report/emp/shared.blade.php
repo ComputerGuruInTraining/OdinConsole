@@ -8,10 +8,10 @@
         <tbody class="group-list">
 
         <tr>
-            <td class="report-title">{{$index}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
+            {{--<td></td>--}}
+            {{--<td></td>--}}
+            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>
@@ -30,7 +30,7 @@
 
                 {{--action--}}
                 @if($item->title == "Nothing to Report")
-                    <td>Nothing to Report</td>
+                    <td class="min-width-lg">Nothing to Report</td>
                     <td></td>
                 @else
                     <td>Case Note Reported</td>
@@ -40,12 +40,12 @@
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
                         @if($item->checkDuration < 1)
-                           <td> < 1 min</td>
+                           <td> < 1</td>
                         @else
-                            <td>{{$item->checkDuration}} min/s</td>
+                            <td>{{$item->checkDuration}}</td>
                         @endif
                     @else
-                            <td>Insufficient Data</td>
+                            <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
 
                 {{--GeoLocation uses check in geoLocation--}}

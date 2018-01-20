@@ -42,7 +42,7 @@
 @stop
 
 @section('colHeading7-show')
-    Total Time
+    Total Time (min/s)
 @stop
 
 @section('colHeading8-show')

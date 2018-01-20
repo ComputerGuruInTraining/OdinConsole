@@ -39,7 +39,6 @@ Purple
     padding: 15px;
 }
 
-
 .padding-top{
     padding-top: 15px !important;
 }
@@ -52,7 +51,6 @@ Purple
     border-bottom: 2px solid #ddd;
 }
 
-
 .dark-blue-font{
     color: #367fa9;
 }
@@ -62,6 +60,15 @@ Purple
     margin-top: 20px;
 }
 
+@media (min-width: 768px) {
+    .min-width-lg {
+        min-width: 150px;
+    }
+
+    .min-width {
+        min-width: 100px;
+    }
+}
 
 /*select lists on add shift page*/
 
@@ -486,6 +493,12 @@ h1.master-alt{
     font-size: 18px;
 }
 
+.report-table{
+    line-height: 1.8;
+    color: #777;
+    font-size: 20px;
+}
+
 .report-header-row{
 
     line-height: 1.5;
@@ -497,10 +510,6 @@ h1.master-alt{
     text-decoration: underline;
 }
 
-.details-content{
-
-
-}
 
 .max-width{
     max-width: 72px;
@@ -547,10 +556,6 @@ textarea#desc.form-control.case-desc{
 
 .word-wrap{
     word-wrap: break-word;
-}
-
-.min-width{
-    min-width: 100px;
 }
 
 .desc-max-width{
