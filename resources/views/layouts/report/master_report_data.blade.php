@@ -5,24 +5,23 @@
     <div class="col-md-12">
         <div class='table-responsive'>
 
-
-
             <div style="padding:15px 0px 10px 0px;">
                 @yield('button')
                 <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}" class="btn btn-primary" target="_blank">Download
                     PDF</a>
             </div>
 
-            <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-
             <table class="col-md-12 margin-bottom">
-
-                <tr><h4 id="report-date">{{$start}} - {{$end}}</h4></tr>
-
-                <tr class="report-header-row grey-larger">
-                    <td>@yield('entity-show')</td>
+                <tr class="col-md-12"><td class="report-title" id="report-heading">Activity Report:</td>
                     <td class="report-header grey-larger">@yield('entity-value-show')</td>
                 </tr>
+
+                <tr><td id="report-date">{{$start}} - {{$end}}</td></tr>
+
+                {{--<tr class="report-header-row grey-larger">--}}
+{{--                    <td>@yield('entity-show')</td>--}}
+
+                {{--</tr>--}}
                 <tr class="report-header-row grey-larger">
                     <td>@yield('total1-show')</td>
                     <td class="report-header grey-larger">@yield('total1-val-show')</td>

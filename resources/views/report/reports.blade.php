@@ -30,7 +30,7 @@
                     <th>Activity</th>
                     {{--Subject, Regarding, Reporting About, RE, --}}
                     <th>Entity</th>
-                    <th>Manage</th>
+                    <th style="text-align: center">Manage</th>
                 </tr>
                 {{--check to ensure at least one report exists first, otherwise view error thrown--}}
                 @if(count($reports) > 0)

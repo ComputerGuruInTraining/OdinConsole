@@ -1,4 +1,4 @@
-{{--File used by both view and pdf--}}
+{{--File used by both client view and pdf--}}
 
 {{--Check to ensure there are case notes or else an error will be thrown--}}
 

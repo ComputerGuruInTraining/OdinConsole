@@ -7,10 +7,6 @@
     </button>
 @stop
 
-@section('entity-show')
-    Premise:
-@stop
-
 @section('entity-value-show')
     {{$location->address}}
 @stop

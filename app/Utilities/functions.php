@@ -566,12 +566,12 @@ if (!function_exists('currentYear')) {
     }
 }
 
+//format timestamp to be a user friendly date and time which accounts for the timezone
 if (!function_exists('geoRangeDateTime')) {
 
-    function geoRangeDateTime($collection, $location)
+    function geoRangeDateTime($collection, $location = null)
     {
 //        dd($collection);
-        //format check in timestamp to be a user friendly date and time which accounts for the timezone
         foreach ($collection as $i => $item) {
 //TODO: consider adding an endnote to report advising of this info
 
@@ -582,10 +582,21 @@ if (!function_exists('geoRangeDateTime')) {
             //(because of check_ins datetime is a default value for the field)
             if ($item->check_ins != null) {
 
+                //for instances where location object is passed through as 2nd pm
+                if($location != null){
+                    $locLat = $location->latitude;
+                    $locLong = $location->longitude;
+
+                }else{
+                    //for instances where location data is a part of each collection object
+                    $locLat = $item->latitude;
+                    $locLong = $item->longitude;
+                }
+
                 $tzDT = viaTimezone($item->checkin_latitude,
                     $item->checkin_longitude,
-                    $location->latitude,
-                    $location->longitude, $item->check_ins);
+                    $locLat,
+                    $locLong, $item->check_ins);
 
                 $collection[$i]->dateTzCheckIn = $tzDT->get('date');
                 $collection[$i]->timeTzCheckIn = $tzDT->get('time');
@@ -595,28 +606,11 @@ if (!function_exists('geoRangeDateTime')) {
                 //loop
                 $collection[$i]->dateTzCheckIn = $no_data;
                 $collection[$i]->timeTzCheckIn = $no_data;
-
             }
 
 //           check outs
             //if there is a value for the check_out datetime (ie check_outs property)
-
-
         }
-
-//        //number of check ins at premise
-//        //change to collection datatype from array for using groupBy fn and count
-
-//
-//        $checkIns = $collectChecks->pluck('check_ins');
-//
-//        $total = $checkIns->count();
-//
-////        $checksCollection = collect($checks->clientData);
-//
-//        //group by date for better view
-//        $groupclientData = $collectChecks->groupBy('dateTzCheckIn');
-
         //return $result;
         return $collection;//yes, ok, no, "", "no geoData"
 //        return $groupclientData;
@@ -686,18 +680,29 @@ if (!function_exists('withinRange')) {
 //returns the data collection with values added for the check_out date and time computed based on the geoLocation timezone
 if (!function_exists('checkOutDateTime')) {
 
-    function checkOutDateTime($data, $location)
+    function checkOutDateTime($data, $location = null)
     {
-
         $no_data = '';
 
         foreach ($data as $i => $item) {
 
             if ($item->check_outs != null) {
+
+                //for instances where location object is passed through as 2nd pm
+                if($location != null){
+                    $locLat = $location->latitude;
+                    $locLong = $location->longitude;
+
+                }else{
+                    //for instances where location data is a part of each collection object
+                    $locLat = $item->latitude;
+                    $locLong = $item->longitude;
+                }
+
                 $tz = viaTimezone($item->checkout_latitude,
                     $item->checkout_longitude,
-                    $location->latitude,
-                    $location->longitude, $item->check_outs);
+                    $locLat,
+                    $locLong, $item->check_outs);
 
                 $data[$i]->dateTzCheckOut = $tz->get('date');
                 $data[$i]->timeTzCheckOut = $tz->get('time');

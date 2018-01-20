@@ -26,7 +26,7 @@
                 <td>{{$item->timeTzCheckOut}}</td>
 
                 {{--location--}}
-                <td></td>
+                <td>{{$item->address}}</td>
 
                 {{--action--}}
                 @if($item->title == "Nothing to Report")
@@ -48,13 +48,15 @@
                             <td>Insufficient Data</td>
                     @endif
 
-                {{--GeoLocation--}}
-                @if($item->withinRange == 'yes')
-                    <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'ok')
-                    <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'no')
-                    <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                {{--GeoLocation uses check in geoLocation--}}
+                @if($item->distance_check_in != null)
+                    @if($item->distance_check_in <= 0.2)
+                        <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
+                    @elseif($item->distance_check_in <= 0.5)
+                        <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
+                    @else
+                        <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                    @endif
                 @else
                     <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                 @endif
