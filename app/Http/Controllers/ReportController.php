@@ -338,10 +338,28 @@ class ReportController extends Controller
 
         return $result;
     }
+    
+    public function formatIndividualReport($reportData)
+    {
+        $dataWithGeoData = geoRangeDateTime($reportData);
+
+        $fmtData = checkOutDateTime($dataWithGeoData);
+
+        foreach ($fmtData as $case) {
+
+            if ((isset($case->check_ins)) && (isset($case->check_outs))){
+                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+            }
+        }
+
+        //group by date for better view
+        $groupData = $fmtData->groupBy('dateTzCheckIn');
+
+        return $groupData;
+    }
 
     public function formatLocationReportData($data, $report)
     {
-
         //todo: change $data->reportData to be reportData in api
         $dataWithGeoData = geoRangeDateTime($data->reportData, $data->location);
 
@@ -349,7 +367,7 @@ class ReportController extends Controller
 
         foreach ($fmtData as $case) {
 
-            if (($report->type == "Management") || ($report->type == "Individual")) {
+            if ($report->type == "Management") {
                 //case will have values appended for withinRange and geoImg
                 $case = withinRange($case, $data->location);
             } else if ($report->type == "Client") {
@@ -359,26 +377,13 @@ class ReportController extends Controller
             //append img urls and hasImg value to $case
             $case = imgToUrl($case);
 
-            //calculate the duration
-            //                                $case->timeTzCheckIn;
-            //                                $case -> timeTzCheckOut;
             //todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
-            if ((isset($case->check_ins)) && (isset($case->check_outs)))
-
+            if ((isset($case->check_ins)) && (isset($case->check_outs))){
                 $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+            }
 
-            //                            if($case->checkDuration)
-            //                                $totalMins = $totalMins + $case->checkDuration;
-
-            //need to find the items that have both a check in and a check out and send each through to the lcoationDuration
-            //and then total the amount.
-            //
-
-
-            //                            $hours = locationDuration();
         }
 
-//        $totalMins = 0;
         $totalMins = $fmtData->sum('checkDuration');
         $report->totalHours = totalMinsInHours($totalMins);
 
@@ -411,7 +416,6 @@ class ReportController extends Controller
                 $token = session('token');
 
                 $client = new GuzzleHttp\Client;
-//                $id = 24;
 
                 $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
                     'headers' => [
@@ -495,6 +499,8 @@ class ReportController extends Controller
                 } else if (($report->type == 'Client') || ($report->type == 'Management')) {
 
                     $data = $this->getLocationReportData($id, $token);
+                    
+//                    dd($data);
 
                     if ($data != 'errorInResult') {
 
@@ -530,29 +536,23 @@ class ReportController extends Controller
 
                     $data = $this->getIndividualReportData($id, $token);
 
-                    dd($data);
+//                    dd($data);
 
                     if ($data != 'errorInResult') {
 
-//                        $formatData = $this->formatLocationReportData($data, $report);
+                        $formatData = $this->formatIndividualReport($data->reportData);
+
+//                        dd($formatData, $data->report, $report);
 
                         view()->share(array(
-                            'data' => $data->get('reportData'),
-                            'report' => $data->get('report'),
+                            'data' => $formatData,
+                            'report' => $report,
+                            'reportInd' => $data->report,
                             'start' => $sdate,
                             'end' => $edate,
                         ));
-//
-//                        if ($report->type == 'Client') {
-//
-//                            return view('report/client/show');
-//
-//                        } else if ($report->type == 'Management') {
-////                            dd($formatData);
-//
-                            return view('report/emp/show');
 
-//                        }
+                            return view('report/emp/show');
 
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
@@ -975,7 +975,7 @@ class ReportController extends Controller
 
             $data = json_decode((string)$response->getBody());
 
-            dd($data);
+//            dd($data);
 
             if ($data->success == false) {
                 return 'errorInResult';

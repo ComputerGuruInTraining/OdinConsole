@@ -1,4 +1,4 @@
-{{--File used by both view and pdf--}}
+{{--File used by both client view and pdf--}}
 
 {{--Check to ensure there are case notes or else an error will be thrown--}}
 
@@ -8,10 +8,10 @@
         <tbody class="group-list">
 
         <tr>
-            <td class="report-title">{{$index}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
+            {{--<td></td>--}}
+            {{--<td></td>--}}
+            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>

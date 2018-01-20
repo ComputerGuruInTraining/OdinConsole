@@ -8,10 +8,10 @@
         <tbody class="group-list">
 
         <tr>
-            <td class="report-title">{{$index}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
+            {{--<td></td>--}}
+            {{--<td></td>--}}
+            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>
@@ -26,11 +26,11 @@
                 <td>{{$item->timeTzCheckOut}}</td>
 
                 {{--location--}}
-                <td></td>
+                <td>{{$item->address}}</td>
 
                 {{--action--}}
                 @if($item->title == "Nothing to Report")
-                    <td>Nothing to Report</td>
+                    <td class="min-width-lg">Nothing to Report</td>
                     <td></td>
                 @else
                     <td>Case Note Reported</td>
@@ -40,21 +40,23 @@
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
                         @if($item->checkDuration < 1)
-                           <td> < 1 min</td>
+                           <td> < 1</td>
                         @else
-                            <td>{{$item->checkDuration}} min/s</td>
+                            <td>{{$item->checkDuration}}</td>
                         @endif
                     @else
-                            <td>Insufficient Data</td>
+                            <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
 
-                {{--GeoLocation--}}
-                @if($item->withinRange == 'yes')
-                    <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'ok')
-                    <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'no')
-                    <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                {{--GeoLocation uses check in geoLocation--}}
+                @if($item->distance_check_in != null)
+                    @if($item->distance_check_in <= 0.2)
+                        <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
+                    @elseif($item->distance_check_in <= 0.5)
+                        <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
+                    @else
+                        <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                    @endif
                 @else
                     <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                 @endif

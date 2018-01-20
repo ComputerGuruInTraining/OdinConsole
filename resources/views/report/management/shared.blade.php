@@ -8,10 +8,10 @@
         <tbody class="group-list">
 
         <tr>
-            <td class="report-title">{{$index}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
+            {{--<td></td>--}}
+            {{--<td></td>--}}
+            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>
@@ -35,17 +35,20 @@
                 @endif
 
                 {{--Guard ID--}}
-                <td>{{$item->user}}</td>
-
+                @if(isset($item->user))
+                    <td>{{$item->user}}</td>
+                @else
+                    <td></td>
+                @endif
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
                         @if($item->checkDuration < 1)
-                           <td> < 1 min</td>
+                           <td> < 1</td>
                         @else
-                            <td>{{$item->checkDuration}} min/s</td>
+                            <td>{{$item->checkDuration}}</td>
                         @endif
                     @else
-                            <td>Insufficient Data</td>
+                        <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
 
                 {{--GeoLocation--}}

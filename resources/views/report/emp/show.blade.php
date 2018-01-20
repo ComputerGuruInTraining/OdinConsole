@@ -6,6 +6,7 @@
 {{--@stop--}}
 
 @section('entity-value-show')
+    {{$reportInd[0]->first_name}} {{$reportInd[0]->last_name}}
 @stop
 
 @section('total1-show')
@@ -13,6 +14,7 @@
 @stop
 
 @section('total1-val-show')
+    {{$reportInd[0]->total_hours_worked}} hours
 @stop
 
 @section('colHeading1-show')
@@ -40,7 +42,7 @@
 @stop
 
 @section('colHeading7-show')
-    Total Time
+    Total Time (min/s)
 @stop
 
 @section('colHeading8-show')
