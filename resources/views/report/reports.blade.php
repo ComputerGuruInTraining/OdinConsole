@@ -27,8 +27,9 @@
             <table class="table table-hover">
                 <tr>
                     <th>Date Range</th>
-                    <th>Location</th>
-                    <th>Report Type</th>
+                    <th>Activity</th>
+                    {{--Subject, Regarding, Reporting About, RE, --}}
+                    <th>Entity</th>
                     <th>Manage</th>
                 </tr>
                 {{--check to ensure at least one report exists first, otherwise view error thrown--}}
@@ -39,8 +40,19 @@
                             <tbody class='group-list'>
                             <tr>
                                 <td>{{$report->form_start}} - {{$report->form_end}}</td>
-                                <td>{{$report->location}}</td>
+
                                 <td>{{$report->type}}</td>
+
+                                {{--Report Entity--}}
+                                @if($report->location != "")
+                                    <td>{{$report->location}}</td>
+                                @elseif($report->individual != "")
+                                    <td>{{$report->individual}}</td>
+                                @else
+                                    <td></td>
+                                @endif
+
+
                                 <td><a href="report-{{$report->id}}">View Report</a> |
                                     <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}"
                                        class="edit-links" target="_blank">Download PDF</a>
