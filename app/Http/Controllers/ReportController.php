@@ -42,6 +42,8 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
+//                dd($reports);
+
                 if (count($reports) > 0) {
                     foreach ($reports as $i => $item) {
                         //add the extracted date to each of the objects and format date
