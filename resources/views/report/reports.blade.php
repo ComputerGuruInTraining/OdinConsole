@@ -36,7 +36,7 @@
                 @if(count($reports) > 0)
                     {{--check to ensure have more than just a bit of info and relevant report data was generated--}}
                     @foreach($reports as $report)
-                        @if($report->location != "")
+                        @if(($report->location != "")||($report->individual != ""))
                             <tbody class='group-list'>
                             <tr>
                                 <td>{{$report->form_start}} - {{$report->form_end}}</td>

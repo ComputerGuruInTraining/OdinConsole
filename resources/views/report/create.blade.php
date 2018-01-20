@@ -12,6 +12,10 @@
 @section('custom-scripts-body')
     <script>
 
+        window.onload = function (){
+            enableEntity()
+        };
+
     function enableEntity() {
         var selectObj = document.getElementById("type");
 
@@ -23,18 +27,24 @@
                 (strType == "Location Checks")||(strType == "Case Notes")) {
 
                 var selectLocs = document.getElementById("selectLocations");
-                selectLocs.removeAttribute('disabled', 'disabled');
+                selectLocs.style.display = "block";
+//                selectLocs.removeAttribute('disabled', 'disabled');
 
                 var selectEmps = document.getElementById("selectEmployees");
-                selectEmps.setAttribute('disabled', 'disabled');
+                selectEmps.style.display = "none";
+
+//                selectEmps.setAttribute('disabled', 'disabled');
 
             }else if(strType == "Individual"){
 
                 var selectEmps = document.getElementById("selectEmployees");
-                selectEmps.removeAttribute('disabled', 'disabled');
+                selectEmps.style.display = "block";
+
+//                selectEmps.removeAttribute('disabled', 'disabled');
 
                 var selectLocs = document.getElementById("selectLocations");
-                selectLocs.setAttribute('disabled', 'disabled');
+                selectLocs.style.display = "none";
+//                selectLocs.setAttribute('disabled', 'disabled');
             }
     }
 
@@ -114,12 +124,12 @@
         </div>
 
         <div class="alert alert-warning alert-custom">
-            <strong>Tip:</strong> Select Location/Employee will become enabled based on the Activity selected
+            <strong>Tip:</strong> Select Activity, and then, based on your selection you will be prompted to select a Location or Employee
         </div>
 
-        <div class='form-group'>
-            {!! Form::Label('locations', 'Select Location') !!}
-            <select id="selectLocations" class="form-control" name="location" onkeypress="return noenter()" disabled>
+        <div class='form-group' id="selectLocations" style="display: none;">
+            {!! Form::Label('locations', 'Select Location *') !!}
+            <select class="form-control" name="location" onkeypress="return noenter()">
                 {{--if there is old input--}}
                 @if(count(old('location')) > 0)
                     @foreach($locations as $loc)
@@ -142,9 +152,9 @@
             </select>
         </div>
 
-        <div class='form-group'>
-            {!! Form::Label('employees', 'Select Employee') !!}
-            <select id="selectEmployees" class="form-control" name="employee" onkeypress="return noenter()" disabled>
+        <div class='form-group' id="selectEmployees" style="display: none;">
+            {!! Form::Label('employees', 'Select Employee *') !!}
+            <select class="form-control" name="employee" onkeypress="return noenter()">
                 {{--if there is old input--}}
                 @if(count(old('employee')) > 0)
                     @foreach($employees as $emp)
