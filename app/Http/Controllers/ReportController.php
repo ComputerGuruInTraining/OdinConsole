@@ -551,17 +551,8 @@ class ReportController extends Controller
                             'start' => $sdate,
                             'end' => $edate,
                         ));
-//
-//                        if ($report->type == 'Client') {
-//
-//                            return view('report/client/show');
-//
-//                        } else if ($report->type == 'Management') {
-////                            dd($formatData);
-//
-                            return view('report/emp/show');
 
-//                        }
+                            return view('report/emp/show');
 
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)

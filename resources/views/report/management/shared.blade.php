@@ -35,8 +35,11 @@
                 @endif
 
                 {{--Guard ID--}}
-                <td>{{$item->user}}</td>
-
+                @if(isset($item->user))
+                    <td>{{$item->user}}</td>
+                @else
+                    <td></td>
+                @endif
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
                         @if($item->checkDuration < 1)
