@@ -105,7 +105,6 @@
 
     <div id="Users" class="tabcontent col-md-12">
 
-
             <div style="padding:15px 0px 10px 0px;">
                 <a href="/user/create" class="btn btn-success" style="margin-right: 3px;">Add User</a>
             </div>
