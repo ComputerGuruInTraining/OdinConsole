@@ -15,9 +15,6 @@
             openStep(event, 'One');
             document.getElementById('loadPgTab').className += " active";
 
-            //initialise value of $myArray so error not thrown
-<?php $myPhpArray = [];?>
-
             //default show location & employee list
             showLocCheckboxes();
             showCheckboxes();
@@ -43,6 +40,55 @@
             // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(stepNum).style.display = "block";
             evt.currentTarget.className += " active";
+
+            if(stepNum == "Four"){
+                //ie locationsChecks has been tapped or navigated to
+                createInputChecks();
+
+            }
+        }
+
+        function createInputChecks(){
+            var locationChecks = document.getElementById("locationChecks");
+//            var locationsArray = [];
+
+
+            for(var i=0; i < myArray.length; i++) {
+                console.log("checkAmt called in for loop of myArray");
+
+                //get elements by id? by value?
+                var text = document.getElementsByClassName('locationNames')[i].innerHTML;
+                    
+                var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
+                var locationName = text.substr(subStringIndex);
+//                locationsArray.push(locationName);
+                console.log(myArray, locationName, text);
+
+
+                //create a div element for the location name
+                locationDiv = document.createElement("div");
+//                this.imgAdd.setAttribute("class", "flags");
+
+                //add it to the parent div
+                locationChecks.appendChild(locationDiv);
+
+                //add text to the created div
+                locationDiv.innerHTML += locationName;
+
+                //create an input text field for the number of checks for the location
+                locationInput = document.createElement("input");
+//                locationInput.setAttribute("value", myArray[i]);
+                locationInput.setAttribute("name", "checks[]");
+                locationInput.setAttribute("class", "form-control");
+//                locationInput.setAttribute("default", 1);
+                locationInput.setAttribute("type", "text");
+
+                //add it to the parent div
+                locationChecks.appendChild(locationInput);
+
+                console.log(locationInput);
+            }
+
         }
     </script>
 @stop
@@ -103,8 +149,10 @@
 
         var expanded = false;
         var locExpanded = false;
-//        var locationsArray = [];
+        var myArray;//myArray holds location ids
+//        var locationsArray;//locationsArray holds location names
 
+        //        var locationsArray = [];
 
         function showCheckboxes() {
             var checkboxes = document.getElementById("checkboxes");
@@ -141,32 +189,22 @@
 
         function checkAmt() {
 
-            var myArray = [];
-            var locationsArray = [];
+            myArray = [];
 
             $("#checkboxesLoc input:checkbox:checked").each(function () {
                 myArray.push($(this).val());
+                console.log(myArray);
 
             })
 
-            for(var i=0; i < myArray.length; i++) {
-                var text = document.getElementsByClassName('locationNames')[i].innerHTML;
-                var locationName = text.substr(text.indexOf('>' + 1));
-                locationsArray.push(locationName);
 
-
-            }
-
-
-console.log(myArray, locationsArray);
-
-            if (myArray.length > 1) {
+          /*  if (myArray.length > 1) {
                 document.getElementById("checks_amt").removeAttribute("disabled");
 
             } else if (myArray.length == 1) {
 
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
-            }
+            }*/
         }
 
     </script>
@@ -333,7 +371,7 @@ console.log(myArray, locationsArray);
                                             if($locOldItem == $loc->id)  {
 
                                                 echo
-                                                " <label for='".$locOldItem."'>
+                                                " <label for='".$locOldItem."' class='locationNames'>
                                                 <input type='checkbox' name='locations[]' value='".$locOldItem."'
                                                 checked id='".$locOldItem."'/>".$loc->name."</label>";
 
@@ -355,7 +393,7 @@ console.log(myArray, locationsArray);
 
                                     if(!$sameSame){
                                         echo
-                                                " <label for='".$loc->id."'>
+                                                " <label for='".$loc->id."' class='locationNames'>
                                                 <input type='checkbox' name='locations[]' value='".$loc->id."'
                                                        id='".$loc->id."'/>".$loc->name."</label>";
                                    }
@@ -401,49 +439,17 @@ console.log(myArray, locationsArray);
             <div class='form-group'>
                 {!! Form::Label('checks', 'Location Checks *') !!}
                 <br />
-            @if(count(old('locations')) > 0)
+
+                <div id="locationChecks"></div>
+         {{--   @if(count(old('locations')) > 0)
                     @if(count(old('locations')) > 1)
                         {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt')) }}
                     @else
                         {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
                     @endif
-                @else
-                    @php
-
-                        if(isset($myPhpArray)){
-                            if(sizeof($myPhpArray) > 0){
-
-                                for($i = 0; $i <= sizeof($myPhpArray); $i++){
-                                    echo Form::Label('checks', $myPhpArray);
-
-                                    echo Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt'));
-
-                                }
-
-                            }
-                        }
-
-
-
-
-
-
-                    @endphp
-
-                {{--loop--need the locations.length and the locations.names--}}
-                {{--@if(isset($abc = "<script>document.write(jvalue)</script>"))--}}
-                {{--                        @foreach($myPhpArray as $arrayItem)--}}
-                {{--                            <p>testing {{$arrayItem}}</p>--}}
-                {{--                    {!! Form::Label('checks', $loc1) !!}--}}
-                {{--                    {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}--}}
-                {{--@endforeach--}}
-                {{--@else--}}
-                {{--{{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}--}}
-
+                @else--}}
+{{--                    {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}--}}
                 {{--@endif--}}
-
-
-                @endif
             </div>
 
             <div class='form-group form-buttons'>

@@ -199,7 +199,7 @@ class RosterController extends Controller
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required',
-                'checks' => 'digits_between:1,9'
+//                'checks' => 'digits_between:1,9'
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db
@@ -234,6 +234,7 @@ class RosterController extends Controller
                 ->withErrors('Operation failed');
 
         } catch (\ErrorException $error) {
+            dd($error);//array to string conversion
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Error storing shift details');
@@ -263,7 +264,19 @@ class RosterController extends Controller
         //data for validation
         $locationArray = $request->input('locations');
         $employeeArray = $request->input('employees');
-        $checks = Input::get('checks');
+        $checksArray = $request->input('checks');
+
+        //once associate the locations with the checks,
+        //send them through to api (will stay in same order)
+        //loop through there etc.
+//        for($i = 0; $i < count($locationArray); $i++){
+//
+//
+////            $checkNum = 'checks.'.$i;//ie checks.0, checks.1, etc.
+////
+//        }
+//dd($checksArray.0);
+
         $title = $request->input('title');
         $desc = $request->input('desc');
 
@@ -275,10 +288,10 @@ class RosterController extends Controller
 
         //account for situation where checks is disabled and value is null
         //but value should be 1 as only disabled when 1 location and therefore 1 check
-        if ($checks == null) {
-
-            $checks = 1;
-        }
+//        if ($checks == null) {
+//
+//            $checks = 1;
+//        }
 
         //process start date and time before adding to db
         //function in functions.php
@@ -293,7 +306,7 @@ class RosterController extends Controller
                     'Content-Type' => 'application/json'
                 ),
                 'json' => array(
-                    'checks' => $checks, 'start' => $strStart,
+                    'checksArray' => $checksArray, 'start' => $strStart,
                     'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
                     'comp_id' => $compId, 'employees' => $employeeArray, 'locations' => $locationArray
                 )
