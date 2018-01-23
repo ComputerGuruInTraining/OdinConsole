@@ -23,20 +23,20 @@
                     <th>Start Date</th>
                     <th>Time</th>
                     <th>Locations</th>
+                    <th>Location Checks</th>
                     <th>Assigned to</th>
                     <th>Manage</th>
                 </tr>
 
-
-
                 @php
                     foreach($assigned as $index => $formattedShift){
                         //display the first record with values in all the columns
-                       echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title.", Location checks: ".$formattedShift[0]->checks."</td></tr>
+                       echo "<tr><td class='group-data' colspan='3'>".$formattedShift[0]->shift_title."</td></tr>
                              <tbody class='group-list'>
                                 <tr><td>".$formattedShift[0]->unique_date."</td>
                                 <td class='col-min-width'>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
                                 <td class='col-min-width-med'>".$formattedShift[0]->unique_locations."</td>
+                                <td>".$formattedShift[0]->checks."</td>
                                 <td>".$formattedShift[0]->unique_employees."</td>
                                 <td class='col-min-width-sm'>
                                     <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'>Edit</a>
@@ -49,11 +49,13 @@
                         $j = 0;
                         $locations = [];
                         $employees = [];
+                        $checks = [];
 
                           foreach($assigned->get($index) as $shift){
                             if($formattedShift[0]->unique_locations != $shift->unique_locations){
                                 if($shift->unique_locations != null){
                                      $locations[$i] = $shift->unique_locations;
+                                     $checks[$i] = $shift->checks;
                                      $i++;
 
                                 }
@@ -80,6 +82,7 @@
                             <td></td>
                             <td></td>
                             <td>".$locations[$index]."</td>
+                            <td>".$checks[$index]."</td>
                             <td>".$employees[$index]."</td>
                             <td></td>
                             </tr>";
@@ -95,6 +98,7 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td>".$employees[$r]."</td>
                                         <td></td>
                                         </tr>";
@@ -106,6 +110,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>".$locations[$r]."</td>
+                                            <td>".$checks[$r]."</td>
                                             <td></td>
                                             <td></td>
                                             </tr>";

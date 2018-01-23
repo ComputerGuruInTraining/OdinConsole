@@ -8,11 +8,13 @@
 @section('custom-scripts')
     <script>
 
+//        var oldChecks;
+
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function () {
 
             //default tab to open
-            openStep(event, 'One');
+            openStep(event, 1);
             document.getElementById('loadPgTab').className += " active";
 
             //default show location & employee list
@@ -27,6 +29,7 @@
 
             // Get all elements with class="tabcontent" and hide them
             tabcontent = document.getElementsByClassName("tabcontent");
+
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
             }
@@ -35,34 +38,83 @@
             tablinks = document.getElementsByClassName("tablinks");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
+
             }
 
             // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(stepNum).style.display = "block";
             evt.currentTarget.className += " active";
 
-            if(stepNum == "Four"){
+            if (stepNum == 4) {
                 //ie locationsChecks has been tapped or navigated to
-                createInputChecks();
+
+                //the input checks is refreshing each time (at page load, at tab click)
+                //we need it to refresh when locations selected/changed, but at the end of the change.
+                //when next is pressed or when tab selected is ok, so long as the function doesn't remove all necessarily.
+                //so this function will use the values in myArray which are set onchange. a page reload/old input clears myArray and thus location checks are cleared.
+                //we could disable the tab and only have next which takes care of
+
+                //just clears the input.
+                //we need th einput saved when nav back
+
+
+                //old input
+                checksInput();
 
             }
         }
 
-        function createInputChecks(){
+        function activeTab(stepNum){
+            // Declare all variables
+            var i, tablinks, active = stepNum - 1;
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+
+            //return all tabs to inactive
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+            }
+                tablinks[active].className += " active";
+
+        }
+
+        function checksInput(){
+
+            //ensure myArray will hold the values even upon page reload and tab nav
+            checkAmt();
+
+            var oldChecks = [];
+            var x = 0;
+
+            //only implement if there is more than one location, hence more than 1 check input
+            @if(count(old('checks')) > 1)
+
+                @foreach (old('checks') as $oldCheck)
+                
+                    oldChecks[x]  = "<?php echo $oldCheck;?>";
+
+                    console.log(oldChecks[x]);
+
+                    x++;
+
+                @endforeach
+            @endif
 
             var locationChecks = document.getElementById("locationChecks");
             //before adding elements, clear all elements to ensure not added twice
             while (locationChecks.hasChildNodes()) {
                 locationChecks.removeChild(locationChecks.firstChild);
             }
+            if (myArray.length == 1) {
 
-            for(var i=0; i < myArray.length; i++) {
-                if (myArray.length == 1) {
+                var tip = document.getElementById("checks-tip");
+                tip.style.display = "block";
 
-                    var tip = document.getElementById("checks-tip");
-                    tip.style.display = "block";
+            }else if (myArray.length > 1){
 
-                } else if (myArray.length > 1){
+                for(var i=0; i < myArray.length; i++) {
 
                     var text = document.getElementById(myArray[i]).parentElement.innerHTML;
 
@@ -70,7 +122,7 @@
                     var locationName = text.substr(subStringIndex);
 
                     //create a div element for the location name
-                    locationDiv = document.createElement("div");
+                    var locationDiv = document.createElement("div");
 
                     //add it to the parent div
                     locationChecks.appendChild(locationDiv);
@@ -82,21 +134,24 @@
                     locationInput = document.createElement("input");
                     locationInput.setAttribute("name", "checks[]");
                     locationInput.setAttribute("class", "form-control");
-                    locationInput.setAttribute("default", 1);
-                    locationInput.setAttribute("placeholder", "1-9");
+//                    locationInput.setAttribute("default", 1);
+//                    locationInput.setAttribute("placeholder", "1-9");
                     locationInput.setAttribute("type", "text");
+
+                    @if(count(old('checks')) > 0)
+
+                        console.log("oldchecks in myArray loop" + oldChecks[i] ,  i, oldChecks);
+
+                        locationInput.setAttribute("value", oldChecks[i]);
+                    @endif
 
                     //add it to the parent div
                     locationChecks.appendChild(locationInput);
 
-                    console.log(locationInput);
-                }else{
-                    //no locations selected
-
-
                 }
             }
         }
+
     </script>
 @stop
 @section('custom-styles')
@@ -157,9 +212,6 @@
         var expanded = false;
         var locExpanded = false;
         var myArray;//myArray holds location ids
-//        var locationsArray;//locationsArray holds location names
-
-        //        var locationsArray = [];
 
         function showCheckboxes() {
             var checkboxes = document.getElementById("checkboxes");
@@ -220,10 +272,10 @@
 @section('page-content')
 
     <div class="tab">
-        <button class="tablinks" onclick="openStep(event, 'One')" id="loadPgTab">Date & Time</button>
-        <button class="tablinks" onclick="openStep(event, 'Two')">Employees</button>
-        <button class="tablinks" onclick="openStep(event, 'Three')">Location</button>
-        <button class="tablinks" onclick="openStep(event, 'Four')">Location Checks</button>
+        <button class="tablinks" onclick="openStep(event, '1')" id="loadPgTab">Date & Time</button>
+        <button class="tablinks" onclick="openStep(event, '2')">Employees</button>
+        <button class="tablinks" onclick="openStep(event, '3')">Location</button>
+        <button class="tablinks" onclick="openStep(event, '4')">Location Checks</button>
     </div>
 
     @if (count($errors) > 0)
@@ -239,7 +291,7 @@
     {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
     {{--<div class='form-pages col-md-8'>--}}
 
-        <div id="One" class="tabcontent col-md-12">
+        <div id="1" class="tabcontent col-md-12">
                 <div class='form-group'>
                     {!! Form::Label('title', 'Shift Title *') !!}
                     {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security',
@@ -273,12 +325,12 @@
                 </div>
 
                 <div class='form-group form-buttons'>
-                    <button onclick="openStep(event, 'Two')" type="button" class="btn btn-primary">Next</button>
+                    <button onclick="openStep(event, 2); activeTab(2);" type="button" class="btn btn-primary">Next</button>
                     <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
                 </div>
         </div>
 
-        <div id="Two" class="tabcontent col-md-8">
+        <div id="2" class="tabcontent col-md-8">
 
             <div class='form-group'>
                 <div class="multiselect" width="100%">
@@ -348,9 +400,9 @@
                     </div>
                 </div>
                 <div class='form-group form-buttons'>
-                    <button onclick="openStep(event, 'One')" type="button" class="btn btn-primary">Previous</button>
+                    <button onclick="openStep(event, 1); activeTab(1);" type="button" class="btn btn-primary">Previous</button>
 
-                    <button onclick="openStep(event, 'Three')" type="button" class="btn btn-primary">Next</button>
+                    <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-primary">Next</button>
 
                     <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
 
@@ -358,7 +410,7 @@
             </div>
         </div>
 
-        <div id="Three" class="tabcontent col-md-8">
+        <div id="3" class="tabcontent col-md-8">
 
             <div class='form-group'>
 
@@ -426,9 +478,9 @@
                     </div>
                 </div>
                 <div class='form-group form-buttons'>
-                    <button onclick="openStep(event, 'Two')" type="button" class="btn btn-primary">Previous</button>
+                    <button onclick="openStep(event, 2); activeTab(2);" type="button" class="btn btn-primary">Previous</button>
 
-                    <button onclick="openStep(event, 'Four')" type="button" class="btn btn-primary">Next</button>
+                    <button onclick="openStep(event, 4); activeTab(4);" type="button" class="btn btn-primary">Next</button>
 
                     <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
 
@@ -437,7 +489,7 @@
 
         </div>
 
-        <div id="Four" class="tabcontent col-md-8">
+        <div id="4" class="tabcontent col-md-8">
 
             <div class="alert alert-warning alert-custom" id="checks-tip" style="display:none;">
                 <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
@@ -448,27 +500,17 @@
                 <br />
 
                 <div id="locationChecks"></div>
-         {{--   @if(count(old('locations')) > 0)
-                    @if(count(old('locations')) > 1)
-                        {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt')) }}
-                    @else
-                        {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}
-                    @endif
-                @else--}}
-{{--                    {{ Form::text('checks', 1, array('class' => 'form-control', 'id' => 'checks_amt', 'disabled' => 'disabled')) }}--}}
-                {{--@endif--}}
-            </div>
 
-            <div class='form-group form-buttons'>
-                <button onclick="openStep(event, 'Two')" type="button" class="btn btn-primary">Previous</button>
+                <div class='form-group form-buttons'>
+                   <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-primary">Previous</button>
 
-                {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-                <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                   {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+                   <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                </div>
             </div>
         </div>
-    {{--</div>--}}
 
-    {{ Form::close() }}
+{{ Form::close() }}
 
 @stop
 

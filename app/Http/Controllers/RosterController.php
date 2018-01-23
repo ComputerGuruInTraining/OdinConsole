@@ -84,6 +84,8 @@ class RosterController extends Controller
 
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
+//                dd($assigned);//grouped by assigned_shift_id
+
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             } else {
