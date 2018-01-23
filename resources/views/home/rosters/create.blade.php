@@ -8,8 +8,6 @@
 @section('custom-scripts')
     <script>
 
-//        var oldChecks;
-
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function () {
 
@@ -23,33 +21,35 @@
 
         }, false);
 
-        //called when tab pressed or next/previous btn pressed
-        function openStep(evt, stepNum) {
-            // Declare all variables
-            var i, tabcontent, tablinks;
+//called when tab pressed or next/previous btn pressed
+function openStep(evt, stepNum) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
 
-            // Get all elements with class="tabcontent" and hide them
-            tabcontent = document.getElementsByClassName("tabcontent");
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
 
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
 
-            // Get all elements with class="tablinks" and remove the class "active"
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
 
-            }
+    }
 
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(stepNum).style.display = "block";
-            evt.currentTarget.className += " active";
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(stepNum).style.display = "block";
+    evt.currentTarget.className += " active";
 
-            if (stepNum == 4) {
-                checksInput();
-            }
-        }
+    if (stepNum == 4) {
+        checksInput();
+    }
+}
+
+
 
         function createLocInputDiv(){
             //create an input text field for the number of checks for the location
@@ -107,23 +107,13 @@
 
 
             //before clearing elements, get any values input by the user
-//            for(var v=0; v < myArray.length; v++) {
             @if(count(old('checks')) > 1)
 
                 @foreach (old('checks') as $oldCheck)
 
-                    {{--oldChecks[x]  = "<?php echo $oldCheck;?>";--}}
                     var jsOldChecks = "<?php echo $oldCheck;?>";
 
-                //            console.log("oldChecks " + oldChecks[x]);
-
-
-                            //should be blank or have a value if user has input a value
-                            // Usage: user has naved away to tab and back again
-                            //                valueChecks[v] = ;
-
                     checksObj.push({
-        //                valueChecks: document.getElementsByClassName("checksValue")[x].value,
                         myArrayLocName: document.getElementById(myArray[x]).parentElement.innerHTML,
                         oldCheckValue: jsOldChecks
                     });
@@ -138,47 +128,29 @@
 
                 for(var v=0; v < myArray.length; v++) {
 
-//                     var locInput = createLocInputDiv();
-//                     console.log(locInput);
 //fixme: perhaps no value ever as element not appended yet.
                     var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
-//if(checksInputElem != undefined){
-//
-//    console.log(checksInputElem, checksInputElem.value, myArray.length, myArray[v]);
-//
-//}else{
-//    console.log(checksInputElem, myArray.length, myArray[v]);
-//
-//
-//}
 
+                    if(checksInputElem === undefined){
+                        checksObj.push({
+                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
+                        });
+                        console.log("checksInputElem  equals undefined" + checksInputElem);
 
-
-                    if(checksInputElem !== undefined) {
+                    }else{
+                        //yep, enters condition
+                        console.log("checksInputElem  not equal to undefined" + checksInputElem);
 
                         checksObj.push({
                             myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML,
                             valueChecks: checksInputElem.value
                         });
-
-//                    }else if(checksInputElem === undefined){
-//
-//                        console.log("checksInputElem   undefined");
-//                    }
-
-
-                    }else{
-                        checksObj.push({
-                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
-//                            valueChecks: checksInputElem.value
-                        });
-
+console.log(checksObj[v].valueChecks);
 
                     }
                 }
             @endif
 
-//            }
 
             //before adding elements, clear all elements to ensure not added twice
             while (locationChecks.hasChildNodes()) {
@@ -210,10 +182,9 @@
 
                     @if(count(old('checks')) > 0)
 
-//                        console.log("oldchecks in myArray loop" + oldChecks[i] ,  i, oldChecks);
 
                         locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
-                    @else if(checksObj[i].valueCheck != null)
+                    @else if(checksObj[i].valueChecks !== undefined)
                         //if there are values that the user has input
                         locationInput[i].setAttribute("value",  checksObj[i].valueChecks);
                     @endif
@@ -285,7 +256,6 @@
         var expanded = false;
         var locExpanded = false;
         var myArray;//myArray holds location ids
-//        var oldChecks = [];
 
         function showCheckboxes() {
             var checkboxes = document.getElementById("checkboxes");
@@ -340,6 +310,8 @@
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
             }*/
         }
+
+
 
     </script>
 @stop
