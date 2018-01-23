@@ -169,8 +169,8 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
+            dd($mismatch);
             return Redirect::to('login')
-                ->withInput()
                 ->withErrors('Session expired. Please login.');
 
         } catch (\InvalidArgumentException $invalid) {

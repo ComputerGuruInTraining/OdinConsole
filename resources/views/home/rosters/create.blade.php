@@ -23,6 +23,7 @@
 
         }, false);
 
+        //called when tab pressed or next/previous btn pressed
         function openStep(evt, stepNum) {
             // Declare all variables
             var i, tabcontent, tablinks;
@@ -46,22 +47,23 @@
             evt.currentTarget.className += " active";
 
             if (stepNum == 4) {
-                //ie locationsChecks has been tapped or navigated to
-
-                //the input checks is refreshing each time (at page load, at tab click)
-                //we need it to refresh when locations selected/changed, but at the end of the change.
-                //when next is pressed or when tab selected is ok, so long as the function doesn't remove all necessarily.
-                //so this function will use the values in myArray which are set onchange. a page reload/old input clears myArray and thus location checks are cleared.
-                //we could disable the tab and only have next which takes care of
-
-                //just clears the input.
-                //we need th einput saved when nav back
-
-
-                //old input
                 checksInput();
-
             }
+        }
+
+        function createLocInputDiv(){
+            //create an input text field for the number of checks for the location
+            var locationInput = document.createElement("input");
+            locationInput.setAttribute("name", "checks[]");
+            locationInput.setAttribute("class", "form-control checksValue");
+//            locationInput.setAttribute("class", " checksValue");
+//                    locationInput.setAttribute("default", 1);
+//            locationInput.setAttribute("placeholder", "1-9");
+            locationInput.setAttribute("type", "text");
+                        locationInput.setAttribute("value", "");
+
+            return locationInput;
+
         }
 
         function activeTab(stepNum){
@@ -80,33 +82,109 @@
 
         }
 
-        function checksInput(){
+        function checksInput() {
 
             //ensure myArray will hold the values even upon page reload and tab nav
             checkAmt();
 
-            var oldChecks = [];
-            var x = 0;
 
-            //only implement if there is more than one location, hence more than 1 check input
+            //only implement if there is more than one location, hence more than 1 check old input
+
+
+            var checksObj = [];
+            var locationChecks = document.getElementById("locationChecks");
+//            var valueChecks = [];
+            var x = 0;
+            var locationInput = [];
+
+            //create location input fields for the length of the myArray
+            for(var y=0; y < myArray.length; y++) {
+
+                locationInput[y] = createLocInputDiv();
+
+            }
+
+
+
+            //before clearing elements, get any values input by the user
+//            for(var v=0; v < myArray.length; v++) {
             @if(count(old('checks')) > 1)
 
                 @foreach (old('checks') as $oldCheck)
-                
-                    oldChecks[x]  = "<?php echo $oldCheck;?>";
 
-                    console.log(oldChecks[x]);
+                    {{--oldChecks[x]  = "<?php echo $oldCheck;?>";--}}
+                    var jsOldChecks = "<?php echo $oldCheck;?>";
+
+                //            console.log("oldChecks " + oldChecks[x]);
+
+
+                            //should be blank or have a value if user has input a value
+                            // Usage: user has naved away to tab and back again
+                            //                valueChecks[v] = ;
+
+                    checksObj.push({
+        //                valueChecks: document.getElementsByClassName("checksValue")[x].value,
+                        myArrayLocName: document.getElementById(myArray[x]).parentElement.innerHTML,
+                        oldCheckValue: jsOldChecks
+                    });
 
                     x++;
 
                 @endforeach
+            @else
+                //have at least 1 value in the valueCheck
+            //just loop through ordinary myArray without oldInput being added to object
+            //conditions met: 2nd time naved to in the app, there is a value in the class tag, the input tag has been defined
+
+                for(var v=0; v < myArray.length; v++) {
+
+//                     var locInput = createLocInputDiv();
+//                     console.log(locInput);
+//fixme: perhaps no value ever as element not appended yet.
+                    var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
+//if(checksInputElem != undefined){
+//
+//    console.log(checksInputElem, checksInputElem.value, myArray.length, myArray[v]);
+//
+//}else{
+//    console.log(checksInputElem, myArray.length, myArray[v]);
+//
+//
+//}
+
+
+
+                    if(checksInputElem !== undefined) {
+
+                        checksObj.push({
+                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML,
+                            valueChecks: checksInputElem.value
+                        });
+
+//                    }else if(checksInputElem === undefined){
+//
+//                        console.log("checksInputElem   undefined");
+//                    }
+
+
+                    }else{
+                        checksObj.push({
+                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
+//                            valueChecks: checksInputElem.value
+                        });
+
+
+                    }
+                }
             @endif
 
-            var locationChecks = document.getElementById("locationChecks");
+//            }
+
             //before adding elements, clear all elements to ensure not added twice
             while (locationChecks.hasChildNodes()) {
                 locationChecks.removeChild(locationChecks.firstChild);
             }
+
             if (myArray.length == 1) {
 
                 var tip = document.getElementById("checks-tip");
@@ -116,7 +194,7 @@
 
                 for(var i=0; i < myArray.length; i++) {
 
-                    var text = document.getElementById(myArray[i]).parentElement.innerHTML;
+                    var text = checksObj[i].myArrayLocName;
 
                     var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
                     var locationName = text.substr(subStringIndex);
@@ -130,23 +208,18 @@
                     //add text to the created div
                     locationDiv.innerHTML += locationName;
 
-                    //create an input text field for the number of checks for the location
-                    locationInput = document.createElement("input");
-                    locationInput.setAttribute("name", "checks[]");
-                    locationInput.setAttribute("class", "form-control");
-//                    locationInput.setAttribute("default", 1);
-//                    locationInput.setAttribute("placeholder", "1-9");
-                    locationInput.setAttribute("type", "text");
-
                     @if(count(old('checks')) > 0)
 
-                        console.log("oldchecks in myArray loop" + oldChecks[i] ,  i, oldChecks);
+//                        console.log("oldchecks in myArray loop" + oldChecks[i] ,  i, oldChecks);
 
-                        locationInput.setAttribute("value", oldChecks[i]);
+                        locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                    @else if(checksObj[i].valueCheck != null)
+                        //if there are values that the user has input
+                        locationInput[i].setAttribute("value",  checksObj[i].valueChecks);
                     @endif
 
                     //add it to the parent div
-                    locationChecks.appendChild(locationInput);
+                    locationChecks.appendChild(locationInput[i]);
 
                 }
             }
@@ -212,6 +285,7 @@
         var expanded = false;
         var locExpanded = false;
         var myArray;//myArray holds location ids
+//        var oldChecks = [];
 
         function showCheckboxes() {
             var checkboxes = document.getElementById("checkboxes");
@@ -246,6 +320,7 @@
             }
         }
 
+        //gather input from the select locations field
         function checkAmt() {
 
             myArray = [];
