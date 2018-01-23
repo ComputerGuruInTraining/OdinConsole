@@ -49,39 +49,53 @@
         }
 
         function createInputChecks(){
+
             var locationChecks = document.getElementById("locationChecks");
-
-            for(var i=0; i < myArray.length; i++) {
-
-                var text = document.getElementById(myArray[i]).parentElement.innerHTML;
-
-                var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
-                var locationName = text.substr(subStringIndex);
-
-                //create a div element for the location name
-                locationDiv = document.createElement("div");
-//                this.imgAdd.setAttribute("class", "flags");
-
-                //add it to the parent div
-                locationChecks.appendChild(locationDiv);
-
-                //add text to the created div
-                locationDiv.innerHTML += locationName;
-
-                //create an input text field for the number of checks for the location
-                locationInput = document.createElement("input");
-//                locationInput.setAttribute("value", myArray[i]);
-                locationInput.setAttribute("name", "checks[]");
-                locationInput.setAttribute("class", "form-control");
-//                locationInput.setAttribute("default", 1);
-                locationInput.setAttribute("type", "text");
-
-                //add it to the parent div
-                locationChecks.appendChild(locationInput);
-
-                console.log(locationInput);
+            //before adding elements, clear all elements to ensure not added twice
+            while (locationChecks.hasChildNodes()) {
+                locationChecks.removeChild(locationChecks.firstChild);
             }
 
+            for(var i=0; i < myArray.length; i++) {
+                if (myArray.length == 1) {
+
+                    var tip = document.getElementById("checks-tip");
+                    tip.style.display = "block";
+
+                } else if (myArray.length > 1){
+
+                    var text = document.getElementById(myArray[i]).parentElement.innerHTML;
+
+                    var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
+                    var locationName = text.substr(subStringIndex);
+
+                    //create a div element for the location name
+                    locationDiv = document.createElement("div");
+
+                    //add it to the parent div
+                    locationChecks.appendChild(locationDiv);
+
+                    //add text to the created div
+                    locationDiv.innerHTML += locationName;
+
+                    //create an input text field for the number of checks for the location
+                    locationInput = document.createElement("input");
+                    locationInput.setAttribute("name", "checks[]");
+                    locationInput.setAttribute("class", "form-control");
+                    locationInput.setAttribute("default", 1);
+                    locationInput.setAttribute("placeholder", "1-9");
+                    locationInput.setAttribute("type", "text");
+
+                    //add it to the parent div
+                    locationChecks.appendChild(locationInput);
+
+                    console.log(locationInput);
+                }else{
+                    //no locations selected
+
+
+                }
+            }
         }
     </script>
 @stop
@@ -425,7 +439,7 @@
 
         <div id="Four" class="tabcontent col-md-8">
 
-            <div class="alert alert-warning alert-custom">
+            <div class="alert alert-warning alert-custom" id="checks-tip" style="display:none;">
                 <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
             </div>
 
