@@ -50,20 +50,13 @@
 
         function createInputChecks(){
             var locationChecks = document.getElementById("locationChecks");
-//            var locationsArray = [];
-
 
             for(var i=0; i < myArray.length; i++) {
-                console.log("checkAmt called in for loop of myArray");
 
-                //get elements by id? by value?
-                var text = document.getElementsByClassName('locationNames')[i].innerHTML;
-                    
+                var text = document.getElementById(myArray[i]).parentElement.innerHTML;
+
                 var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
                 var locationName = text.substr(subStringIndex);
-//                locationsArray.push(locationName);
-                console.log(myArray, locationName, text);
-
 
                 //create a div element for the location name
                 locationDiv = document.createElement("div");
