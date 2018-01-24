@@ -42,7 +42,6 @@ Route::get('/download/{foldername}/{filename}', 'CaseNoteController@download');
 
 Route::resource('/user', 'UserController');
 
-
 Route::resource('/case-notes', 'CaseNoteController');
 
 Route::get('/map-geolocation', 'DashboardController@index');
@@ -131,7 +130,18 @@ Route::get('location', 'LocationController@index');
 
 Route::get('location-create', 'LocationController@create');
 
-Route::post('location-created', 'LocationController@store');
+Route::post('location-created', function(Request $request){
+
+    try {
+       $reply = app('App\Http\Controllers\LocationController')->store($request);
+
+       dd($reply);
+
+    }catch(\TokenMismatchException $mismatch){
+
+        Redirect::to('login');
+    }
+});
 
 Route::post('/location-create-confirm', 'LocationController@confirmCreate');
 

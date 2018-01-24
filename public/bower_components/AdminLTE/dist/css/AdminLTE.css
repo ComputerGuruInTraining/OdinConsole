@@ -70,6 +70,19 @@ Purple
     }
 }
 
+
+/*Create button w dropdown*/
+.main-header .dropdown-toggle{
+    margin-top: 25px;
+    margin-left: 15px;
+    padding: 2px 9px;
+}
+
+div.tabcontent{
+
+    border: none;
+}
+
 /*select lists on add shift page*/
 
 .selectBox, .selectBoxLoc {
@@ -96,19 +109,19 @@ Purple
     display: none;
     border: 1px #dadada solid;
     margin-bottom: 20px;
-    height: 100px;
+    height: 200px;
     overflow: scroll;
     border-radius: 5px;
     margin-top: -5px;
     margin-left: 2px;
     margin-right: 2px;
-    padding-top: 5px;
+    padding-top: 15px;
 }
 
 #checkboxes label, #checkboxesLoc label {
     display: block;
     font-weight: 100;
-    font-size: 14px;
+    font-size: 18px;
     margin-left: 10px;
 }
 
@@ -119,6 +132,18 @@ Purple
 div#checkboxes>label, div#checkboxes, div.overSelect, div.selectBox, div.selectBoxLoc, div#checkboxesLoc, div#checkboxesLoc>label{
 
     min-width: 400px;
+}
+
+#checkboxes input, #checkboxesLoc input{
+    margin-right: 8px;
+}
+
+.selectBox select, .selectBoxLoc select{
+    height: 40px;
+}
+
+div.tab{
+    margin-bottom: 16px;
 }
 
 /*.select-option{*/
@@ -832,6 +857,7 @@ a {
     padding: 30px 0px 0px 5px;
     font-family: fontAwesome;
 }
+
 .main-header .sidebar-toggle:before {
     content: "\f0c9";
 }

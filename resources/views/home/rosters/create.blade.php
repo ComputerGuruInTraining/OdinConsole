@@ -338,7 +338,7 @@ console.log(checksObj[v].valueChecks);
     {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
     {{--<div class='form-pages col-md-8'>--}}
 
-        <div id="1" class="tabcontent col-md-12">
+        <div id="1" class="tabcontent col-md-8">
                 <div class='form-group'>
                     {!! Form::Label('title', 'Shift Title *') !!}
                     {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security',
@@ -446,13 +446,13 @@ console.log(checksObj[v].valueChecks);
 
                     </div>
                 </div>
-                <div class='form-group form-buttons'>
-                    <button onclick="openStep(event, 1); activeTab(1);" type="button" class="btn btn-primary">Previous</button>
+                <div class='form-group'>
+                    <button onclick="openStep(event, 1); activeTab(1);" type="button" class="btn btn-info">Back</button>
+                    <span class="form-buttons">
+                        <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-primary">Next</button>
 
-                    <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-primary">Next</button>
-
-                    <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
-
+                        <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                    </span>
                 </div>
             </div>
         </div>
@@ -524,18 +524,17 @@ console.log(checksObj[v].valueChecks);
                         @endphp
                     </div>
                 </div>
-                <div class='form-group form-buttons'>
-                    <button onclick="openStep(event, 2); activeTab(2);" type="button" class="btn btn-primary">Previous</button>
 
-                    <button onclick="openStep(event, 4); activeTab(4);" type="button" class="btn btn-primary">Next</button>
-
-                    <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
-
+                <div class='form-group'>
+                    <button onclick="openStep(event, 2); activeTab(2);" type="button" class="btn btn-info">Back</button>
+                    <span class="form-buttons">
+                        <button onclick="openStep(event, 4); activeTab(4);" type="button" class="btn btn-primary">Next</button>
+                        <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                    </span>
                 </div>
+
             </div>
-
         </div>
-
         <div id="4" class="tabcontent col-md-8">
 
             <div class="alert alert-warning alert-custom" id="checks-tip" style="display:none;">
@@ -548,11 +547,12 @@ console.log(checksObj[v].valueChecks);
 
                 <div id="locationChecks"></div>
 
-                <div class='form-group form-buttons'>
-                   <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-primary">Previous</button>
-
-                   {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-                   <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                <div>
+                   <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-info">Back</button>
+                    <span class="form-buttons">
+                       {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+                       <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+                    </span>
                 </div>
             </div>
         </div>

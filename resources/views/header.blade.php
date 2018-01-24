@@ -17,6 +17,28 @@
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
+
+        <!-- Add Dropdown-->
+        {{--menu dropdown doesn't work when on the add-employees page--}}
+        {{--menu dropdown doesn't work when on the add-shift page--}}
+        {{--menu dropdown doesn't work when on the generate report page--}}
+        <div class="dropdown">
+            {{--<button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Dropdown Example--}}
+            {{--</button>--}}
+            <button class="w3-button w3-circle btn-primary dropdown-toggle"
+                    id="menu1" type="button" data-toggle="dropdown"><span>+</span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" style="font-weight: bold;">Create</a></li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/employees/create">Employee</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/employee/create-existing">Existing User as Employee</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/location-create">Location</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/rosters/create">Shift</a></li>
+                {{--<li role="presentation"><a role="menuitem" tabindex="-1" href="/case-notes/create">Case Note</a></li>--}}
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="/reports/create">Report</a></li>
+            </ul>
+        </div>
+
         <!-- Navbar Right Menu -->
         {{--<div class="navbar-custom-menu">--}}
             {{--<ul class="nav navbar-nav">--}}

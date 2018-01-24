@@ -31,9 +31,23 @@
         {{--</form>--}}
         <!-- /.search form -->
 
+        {{--stlyesheet used for the add button--}}
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <script>
+
+            function createOptions(){
+
+
+
+            }
+
+        </script>
+
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><p class="menu-heading">Quick Links</p></li>
+            <li class="header">
+                <p class="menu-heading">Quick Links</p>
+            </li>
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="/map-geolocation" class="menu"><span>Who's on Duty</span></a></li>
             <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
@@ -44,9 +58,7 @@
 
             <div class="list-divider"></div>
 
-            {{--<li class="active"><a href="/settings" class="menu"><span>Settings</span></a></li>--}}
-
-            {{--FIXME: sidebar - SOLUTION: routes need to be in the form "employees-create" not "employees/create"--}}
+            {{--FIXME: sidebar toggle operation - SOLUTION: routes need to be in the form "employees-create" not "employees/create" except this causes a problem elsewhere --}}
             <li class="treeview">
                 <a href="/support/users"><span>Support</span></a>
                 <a href="/settings"><span>Settings</span></a>
