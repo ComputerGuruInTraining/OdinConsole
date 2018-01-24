@@ -21,49 +21,43 @@
 
         }, false);
 
-//called when tab pressed or next/previous btn pressed
-function openStep(evt, stepNum) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
+        //called when tab pressed or next/previous btn pressed
+        function openStep(evt, stepNum) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
 
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
 
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
 
-    }
+            }
 
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(stepNum).style.display = "block";
-    evt.currentTarget.className += " active";
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(stepNum).style.display = "block";
+            evt.currentTarget.className += " active";
 
-    if (stepNum == 4) {
-        checksInput();
-    }
-}
-
-
+            if (stepNum == 4) {
+                checksInput();
+            }
+        }
 
         function createLocInputDiv(){
             //create an input text field for the number of checks for the location
             var locationInput = document.createElement("input");
             locationInput.setAttribute("name", "checks[]");
             locationInput.setAttribute("class", "form-control checksValue");
-//            locationInput.setAttribute("class", " checksValue");
-//                    locationInput.setAttribute("default", 1);
-//            locationInput.setAttribute("placeholder", "1-9");
             locationInput.setAttribute("type", "text");
-                        locationInput.setAttribute("value", "");
+            locationInput.setAttribute("value", "");
 
             return locationInput;
-
         }
 
         function activeTab(stepNum){
@@ -87,13 +81,9 @@ function openStep(evt, stepNum) {
             //ensure myArray will hold the values even upon page reload and tab nav
             checkAmt();
 
-
-            //only implement if there is more than one location, hence more than 1 check old input
-
-
             var checksObj = [];
             var locationChecks = document.getElementById("locationChecks");
-//            var valueChecks = [];
+            var locCheckLbl =  document.getElementById("loc-checks-label");
             var x = 0;
             var locationInput = [];
 
@@ -101,10 +91,7 @@ function openStep(evt, stepNum) {
             for(var y=0; y < myArray.length; y++) {
 
                 locationInput[y] = createLocInputDiv();
-
             }
-
-
 
             //before clearing elements, get any values input by the user
             @if(count(old('checks')) > 1)
@@ -125,30 +112,31 @@ function openStep(evt, stepNum) {
                 //have at least 1 value in the valueCheck
             //just loop through ordinary myArray without oldInput being added to object
             //conditions met: 2nd time naved to in the app, there is a value in the class tag, the input tag has been defined
+//                if(myArray.length > 1) {
+                    for (var v = 0; v < myArray.length; v++) {
 
-                for(var v=0; v < myArray.length; v++) {
+                        var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
 
-//fixme: perhaps no value ever as element not appended yet.
-                    var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
+                        if (checksInputElem === undefined) {
+                            checksObj.push({
+                                myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
+                            });
+                            console.log("checksInputElem  equals undefined" + checksInputElem);
 
-                    if(checksInputElem === undefined){
-                        checksObj.push({
-                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
-                        });
-                        console.log("checksInputElem  equals undefined" + checksInputElem);
+                        } else {
+                            //yep, enters condition
+                            console.log("checksInputElem  not equal to undefined" + checksInputElem);
 
-                    }else{
-                        //yep, enters condition
-                        console.log("checksInputElem  not equal to undefined" + checksInputElem);
-
-                        checksObj.push({
-                            myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML,
-                            valueChecks: checksInputElem.value
-                        });
-console.log(checksObj[v].valueChecks);
-
+                            checksObj.push({
+                                myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML,
+                                valueChecks: checksInputElem.value
+                            });
+                        }
                     }
-                }
+//                }else{
+//
+//
+//                }
             @endif
 
 
@@ -157,14 +145,11 @@ console.log(checksObj[v].valueChecks);
                 locationChecks.removeChild(locationChecks.firstChild);
             }
 
-            if (myArray.length == 1) {
+            if(myArray.length > 0) {
+                //display the label and div for the children to be appended to
+                locCheckLbl.style.display = "block";
 
-                var tip = document.getElementById("checks-tip");
-                tip.style.display = "block";
-
-            }else if (myArray.length > 1){
-
-                for(var i=0; i < myArray.length; i++) {
+                for (var i = 0; i < myArray.length; i++) {
 
                     var text = checksObj[i].myArrayLocName;
 
@@ -180,22 +165,32 @@ console.log(checksObj[v].valueChecks);
                     //add text to the created div
                     locationDiv.innerHTML += locationName;
 
-                    @if(count(old('checks')) > 0)
-
-
-                        locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
-                    @else if(checksObj[i].valueChecks !== undefined)
-                        //if there are values that the user has input
-                        locationInput[i].setAttribute("value",  checksObj[i].valueChecks);
-                    @endif
-
                     //add it to the parent div
                     locationChecks.appendChild(locationInput[i]);
 
+                    //if only 1 location, default value of 1 in location checks input
+                    if (myArray.length == 1) {
+
+                        var tip = document.getElementById("checks-tip");
+                        tip.style.display = "block";
+
+                        locationInput[i].setAttribute("placeholder", 1);
+                        locationInput[i].setAttribute("disabled", "disabled");
+
+                    } else if (myArray.length > 1) {
+
+                        //if more than 1 location, grab the value for location checks input from user input
+                        @if(count(old('checks')) > 0)
+                            locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                        @else if (checksObj[i].valueChecks !== undefined)
+                        //if there are values that the user has input
+                            locationInput[i].setAttribute("value", checksObj[i].valueChecks);
+
+                        @endif
+                    }
                 }
             }
         }
-
     </script>
 @stop
 @section('custom-styles')
@@ -310,9 +305,6 @@ console.log(checksObj[v].valueChecks);
                 document.getElementById("checks_amt").setAttribute("disabled", "disabled");
             }*/
         }
-
-
-
     </script>
 @stop
 
@@ -336,7 +328,6 @@ console.log(checksObj[v].valueChecks);
     @endif
 
     {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
-    {{--<div class='form-pages col-md-8'>--}}
 
         <div id="1" class="tabcontent col-md-8">
                 <div class='form-group'>
@@ -460,7 +451,6 @@ console.log(checksObj[v].valueChecks);
         <div id="3" class="tabcontent col-md-8">
 
             <div class='form-group'>
-
                 <div class="multiselect" width="100%">
                     <div class="selectBoxLoc">
                         <select>
@@ -537,13 +527,17 @@ console.log(checksObj[v].valueChecks);
         </div>
         <div id="4" class="tabcontent col-md-8">
 
+            <div class="alert alert-danger alert-custom">
+                <strong>Important:</strong> Location Checks will show on the mobile as progress flags and employees will be
+                required to check the location the nominated number of times in order to complete the shift requirements.
+            </div>
+
             <div class="alert alert-warning alert-custom" id="checks-tip" style="display:none;">
-                <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected
+                <strong>Tip:</strong> As only 1 location is selected, Location Checks is disabled and the default value of 1 will be applied.
             </div>
 
             <div class='form-group'>
-                {!! Form::Label('checks', 'Location Checks *') !!}
-                <br />
+                {!! Form::Label('checks', 'Location Checks *', array('id' => 'loc-checks-label', 'style' => 'display:none;')) !!}
 
                 <div id="locationChecks"></div>
 
