@@ -78,6 +78,22 @@ Purple
     padding: 2px 9px;
 }
 
+button.dropdown-toggle{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+ul.dropdown-menu{
+
+    background-color: #4d2970;
+}
+
+div.dropdown ul.dropdown-menu li a {
+    font-size: 18px;
+    color: white;
+}
+
 div.tabcontent{
 
     border: none;
@@ -344,6 +360,7 @@ body{
     text-transform: UPPERCASE;
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     margin-top: 20px;
+    padding-left: 10px;
 }
 
 aside.main-sidebar.header-custom{

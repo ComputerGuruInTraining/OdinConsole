@@ -11,6 +11,14 @@
 |
 */
 
+/* Dead links
+ *
+ * Add Dropdown:
+ * Add Dropdown breaks menu-toggle and odin logo link when placed next to them in header
+menu dropdown doesn't work when on the add-employees page
+menu dropdown doesn't work when on the add-shift page
+menu dropdown doesn't work when on the generate report page*/
+
 Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
