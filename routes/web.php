@@ -11,6 +11,14 @@
 |
 */
 
+/* Dead links
+ *
+ * Add Dropdown:
+ * Add Dropdown breaks menu-toggle and odin logo link when placed next to them in header
+menu dropdown doesn't work when on the add-employees page
+menu dropdown doesn't work when on the add-shift page
+menu dropdown doesn't work when on the generate report page*/
+
 Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
@@ -41,7 +49,6 @@ Route::get('/error-page', function(){
 Route::get('/download/{foldername}/{filename}', 'CaseNoteController@download');
 
 Route::resource('/user', 'UserController');
-
 
 Route::resource('/case-notes', 'CaseNoteController');
 
@@ -131,7 +138,18 @@ Route::get('location', 'LocationController@index');
 
 Route::get('location-create', 'LocationController@create');
 
-Route::post('location-created', 'LocationController@store');
+Route::post('location-created', function(Request $request){
+
+    try {
+       $reply = app('App\Http\Controllers\LocationController')->store($request);
+
+       dd($reply);
+
+    }catch(\TokenMismatchException $mismatch){
+
+        Redirect::to('login');
+    }
+});
 
 Route::post('/location-create-confirm', 'LocationController@confirmCreate');
 

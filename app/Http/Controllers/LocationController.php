@@ -204,16 +204,18 @@ class LocationController extends Controller
 
                 $reply = json_decode((string)$response->getBody());
 
-                if ($reply->success == true) {
-                    //display confirmation page
-                    return view('confirm-create-manual')->with(array(
-                        'theData' => $address,
-                        'url' => 'location-create',
-                        'entity' => 'Location')
-                    );
-                } else {
-                    return Redirect::to('/location-create');
-                }
+                return $reply;
+
+//                if ($reply->success == true) {
+//                    //display confirmation page
+//                    return view('confirm-create-manual')->with(array(
+//                        'theData' => $address,
+//                        'url' => 'location-create',
+//                        'entity' => 'Location')
+//                    );
+//                } else {
+//                    return Redirect::to('/location-create');
+//                }
 
             } else {
                 return Redirect::to('/login');

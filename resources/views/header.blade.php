@@ -7,7 +7,9 @@
         <a href='/admin' class="logo">
             <img src="{{ asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png") }}" class="odin-logo" alt="Odin Logo" />
         </a>
+
     </div>
+
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 10px;">
@@ -17,6 +19,7 @@
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
+
         <!-- Navbar Right Menu -->
         {{--<div class="navbar-custom-menu">--}}
             {{--<ul class="nav navbar-nav">--}}

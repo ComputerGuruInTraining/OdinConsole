@@ -267,18 +267,6 @@ class RosterController extends Controller
         $locationArray = $request->input('locations');
         $employeeArray = $request->input('employees');
         $checksArray = $request->input('checks');
-
-        //once associate the locations with the checks,
-        //send them through to api (will stay in same order)
-        //loop through there etc.
-//        for($i = 0; $i < count($locationArray); $i++){
-//
-//
-////            $checkNum = 'checks.'.$i;//ie checks.0, checks.1, etc.
-////
-//        }
-//dd($checksArray.0);
-
         $title = $request->input('title');
         $desc = $request->input('desc');
 
@@ -290,10 +278,16 @@ class RosterController extends Controller
 
         //account for situation where checks is disabled and value is null
         //but value should be 1 as only disabled when 1 location and therefore 1 check
-//        if ($checks == null) {
-//
-//            $checks = 1;
-//        }
+        if(sizeof($locationArray) == 1){
+            if ($checksArray == null) {
+
+                $checksArray[0] = 1;
+
+//                dd($checksArray, $checksArray[0]);
+
+            }
+        }
+
 
         //process start date and time before adding to db
         //function in functions.php

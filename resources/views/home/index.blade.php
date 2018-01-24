@@ -2,23 +2,6 @@
 
 @section('title') Login @stop
 
-{{--@section('my-styles')--}}
-
-{{--<style>--}}
-{{--.top-text {--}}
-{{--position: absolute;--}}
-{{--right: 50px;--}}
-{{--top: 50px;--}}
-{{--}--}}
-
-{{--#grey-color {--}}
-{{--color: #555;--}}
-{{--}--}}
-
-{{--</style>--}}
-
-{{--@stop--}}
-
 @section('content')
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png") }}" alt="Odin Logo" height="60px"
          width="200px"
@@ -81,7 +64,6 @@
                             {{--color: white;--}}
                             {{--background-color:#4d2970; font-size: large;"--}}
                             <div>
-                                <br/>
                                 New to ODIN?
                                 <a href="/register" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
                                 to get started
