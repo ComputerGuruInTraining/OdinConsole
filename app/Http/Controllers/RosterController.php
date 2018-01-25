@@ -290,29 +290,19 @@ class RosterController extends Controller
 
                 $checksArray[0] = 1;
 
-//                dd($checksArray, $checksArray[0]);
-
             }
         }else{
-//            dd($checksArray);
 
             foreach($checksArray as $checkArray) {
 
                 //if there are more than 1 location, ensure no checks have been left blank
                 if ($checkArray == null) {
-//                    dd($checkArray);
                     $collection = collect(['shiftError' => 'error creating shift', 'shiftField' => 'location checks']);
 
                     return $collection;
-                    //provide an error message to user that they must provide a value
-//                    return Redirect::to('rosters/create')
-//                        ->withInput()
-//                        ->withErrors('You must provide a Location Check value for every location');
                 }
-
             }
         }
-
 
         //process start date and time before adding to db
         //function in functions.php

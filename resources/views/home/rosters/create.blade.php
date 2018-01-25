@@ -8,6 +8,8 @@
 @section('custom-scripts')
     <script>
 
+        var checksObj;
+
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function () {
 
@@ -18,6 +20,14 @@
             //default show location & employee list
             showLocCheckboxes();
             showCheckboxes();
+
+            //fill the locations array with the locations selected by user
+//            checkAmt();
+            //if checksObj has not already been defined, else
+            @if (count($errors) > 0)
+            //we have reentered page due to an input error, so check for oldInput for location checks field
+                oldInput();
+            @endif
 
         }, false);
 
@@ -77,15 +87,324 @@
 
         }
 
-        function checksInput() {
+        //if checksObj is not defined, initialise object the entire length of myArray
+        //else if it has already been defined, shorten the array or lengthen based upon whether objects selected still in location list
+        function initialiseOrReinitialiseChecksObj(){
 
-            //ensure myArray will hold the values even upon page reload and tab nav
+
+            if(checksObj === undefined) {
+                console.log("checksObj undefined");
+                //first call is when checkAmt() is called and checksObj is not defined, so intialise and assign values
+                initialiseEmptyChecksObject();
+            }else{
+                console.log("checksObj is defined");
+
+//                if(checksObj[0].myArrayLocName === undefined){
+//                    initialAssignChecksObject();
+//                }else{
+
+                    reinitialiseChecksObject();
+//                }
+
+            }
+            console.log(checksObj);
+
+        }
+
+        function initialiseEmptyChecksObject(){
+
+            //initiliase upon page load,
+            //then when myArray has new values (ie changes to selected locations)
+            //we need to reassign checksObject with the number of lcoations and assign the values/old input we had to the new objects
+
+
+
+            //order needs to be
+
+
+
+
+            //first checksObj initialise & assign values from myArray
+            if(checksObj === undefined) {
+                checksObj = [];
+                console.log(myArray.length);
+
+                //initialise values in checksObj for each array item (ie location)
+                for (var a = 0; a < myArray.length; a++) {
+                    checksObj.push({
+                        myArrayLocName: null,
+                        oldCheckValue: 0,
+                        valueChecks: 0,//initialise value here for assignment later when current input values checked
+                    });
+                }
+
+                initialAssignChecksObject();//todo: change to not a loop in this function too
+
+
+
+            }
+            console.log(checksObj);
+
+        }
+
+        /*
+         * initialise empty every page load
+         * initialise myArray
+         * check current checksObject to see if location item already in there,
+         * if so keep, (values in there still)
+         * if not, delete
+         * for all new location items, add
+         * */
+        //note: checksObj values
+        //reorders the checksObj
+        function reinitialiseChecksObject(){
+            console.log("reinitialiseChecksObject called");
+
+            //if checks obj = 2 and my array = 1, ok
+            //if checks obj = 4, and my array = 5, ok
+
+            //check that checksObj has values in it
+            if(checksObj !== undefined) {
+                for (var object1 = 0; object1 < checksObj.length; object1++) {
+
+                    var stillSelected = false;
+//                    var addObject = false;
+
+
+                    for (var array2 = 0; array2 < myArray.length; array2++) {
+
+                        var myArrayElem = document.getElementById(myArray[array2]).parentElement.innerHTML;//uses the element id to get the location text
+                        //compare the location name in checksObj to the document element location name for myArray
+
+                        //check that there is a checkObj for the myArray index else error if don't deal with it.
+                        if (checksObj[array2] !== undefined) {
+                            if (checksObj[object1].myArrayLocName != myArrayElem) {
+                                //as it won't for some of the items, we say no
+
+//                                notSelected = true;
+console.log("!=", checksObj[object1].myArrayLocName, myArrayElem);
+                            } else if (checksObj[object1].myArrayLocName == myArrayElem) {
+                                //keep the object as is
+                                stillSelected = true;
+                            }
+                        } else {
+                            console.log("object added");
+                            //more locations in myArray than in checksObj (ie more selected this time than before)
+//                           //add a new checks object for the location and assign the locationName
+                            checksObj.push({
+                                myArrayLocName: myArrayElem,
+                                oldCheckValue: 0,
+                                valueChecks: 0,//initialise value here for assignment later when current input values checked
+                            });
+
+                            //and assign the properties
+//                            initialAssignChecksObject();
+//                            stillSelected = "add";
+
+
+                        }
+
+                    }
+
+//                    if (stillSelected == "add") {
+//                        //more locations in myArray than in checksObj (ie more selected this time than before)
+//                        //add a new checks object for the location
+//                        checksObj.push({
+//                            myArrayLocName: null,
+//                            oldCheckValue: 0,
+//                            valueChecks: 0,//initialise value here for assignment later when current input values checked
+//                        });
+
+//                    } else
+                    if (stillSelected == false) {
+                        console.log("spliced object");
+                        //needs to be deleted
+                        checksObj.splice(object1,1);
+                    }
+
+
+                }
+            }
+            console.log("reinitialiseChecksObject object");
+
+
+
+
+
+
+            //initiliase upon page load,
+            //then when myArray has new values (ie changes to selected locations)
+            //we need to reassign checksObject with the number of lcoations and assign the values/old input we had to the new objects
+
+
+
+            //order needs to be
+
+
+            /*
+             * initialise empty every page load
+             * initialise myArray
+             * check current checksObject to see if location item already in there,
+             * if so keep, (values in there still)
+             * if not, delete
+             * for all new location items, add
+             * */
+
+
+
+//            checksObj = [];
+//
+//            //initialise values in checksObj for each array item (ie location)
+//            for (var a = 0; a < myArray.length; a++) {
+//                checksObj.push({
+//                    myArrayLocName: null,
+//                    oldCheckValue: 0,
+//                    valueChecks: 0,//initialise value here for assignment later when current input values checked
+//                });
+//            }
+        }
+
+        /*order of: ideally:
+        we are going to have the first page load
+
+        no need to do anything
+
+
+        *select onchange
+            #checkAmt() called
+            #and myArray() defined
+
+        *nav to location check
+        *   #check if there is a value in oldChecks at all
+            #check if there is a value in input current at all (before checkAmt())
+            #checkAmt() called
+            #and myArray() defined
+            #checksObj needs to be have myArray values correctly placed in it
+
+            #render in input field current value priority
+            #locationInputs are appended to document
+
+
+
+         2nd page load || check if there is a value in oldChecks at all
+
+
+
+
+        oldInput which needs to be assigned to the location checks tab with the loc name
+
+
+
+        before reinitalising my array or checks obj
+        //maybe checksObj not availalbe to us, could initialise and then
+
+
+        */
+
+
+
+//presuming if 4 fields, 4 old inputs
+        function oldInput(){
             checkAmt();
 
-            var checksObj = [];
+            initialiseOrReinitialiseChecksObj();
+            console.log("old input entered", checksObj[0]);
+
+//            //fill the locations array with the locations selected by user
+//            checkAmt();
+
+            //we have some old input
+            //if we only have 2 of the inputs
+//            if(myArray !== undefined) {
+
+                var x = 0;
+
+                @if(count(old('checks')) > 0)
+
+                    @foreach (old('checks') as $oldCheck)
+
+                        var jsOldChecks = "<?php echo $oldCheck;?>";
+
+                        //fixme: check location name first before appending the div with the value
+                        //            checks object will only be as longa s the input ie if 2/5 had a value only 2 objects
+
+                        //may need to assign the value, we'll see FIxme
+                        if (checksObj[x].myArrayLocName = document.getElementById(myArray[x]).parentElement.innerHTML) {
+                            checksObj[x].oldCheckValue = jsOldChecks;
+                        }
+
+                        x++;
+
+                        console.log(checksObj, jsOldChecks);
+
+                    @endforeach
+
+                @endif
+//            }
+        }
+
+        function initialAssignChecksObject() {
+            for (var index = 0; index < myArray.length; index++) {
+
+                checksObj[index].myArrayLocName = document.getElementById(myArray[index]).parentElement.innerHTML;
+
+            }
+        }
+
+        //before change the myArray, need to get values and add to them to the object
+        function checksValues(){
+            /*values*/
+            if((myArray !== undefined)&&(checksObj !== undefined)) {
+
+                for (var v = 0; v < myArray.length; v++) {
+
+                    /*Check input values by user (not including old input)*/
+                    var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
+
+//                    checksObj[v].myArrayLocName = document.getElementById(myArray[v]).parentElement.innerHTML;
+
+
+                    //no values input by user
+                    if (checksInputElem !== undefined) {
+
+                        //we need to check the
+
+                        //first we check for input already
+                        //then
+
+//             checksObj[v].myArrayLocName = document.getElementById(myArray[v]).parentElement.innerHTML
+
+//             console.log("checksInputElem  equals undefined" + checksInputElem);
+//
+//             } else {
+                        //yep there are values, enters condition
+                        console.log("checksInputElem  is defined" + checksInputElem);
+
+                        //                            checksObj.push({
+                        checksObj[v].valueChecks = checksInputElem.value;
+                        //
+                        //
+                        console.log("checks values" + checksObj[v].valueChecks);
+                    }
+
+                }
+            }
+        }
+
+        //for each location selected, create a div for the location checks input with a location name label
+        //called every time the locations tab is navigated to
+        function checksInput() {
+
+            //ensure myArray with the locations selected will hold the values even upon page reload and tab nav
+//            checksValues();
+            checkAmt();
+            initialiseOrReinitialiseChecksObj();
+
+
+//            checksObj = [];
+//            initialiseChecksObject();
             var locationChecks = document.getElementById("locationChecks");
             var locCheckLbl =  document.getElementById("loc-checks-label");
-            var x = 0;
             var locationInput = [];
 
 //            locationChecks.style.display = "inline-block";
@@ -97,50 +416,46 @@
             }
 
             //before clearing elements, get any values input by the user
-            @if(count(old('checks')) > 1)
+            //if there is old input in the case of Create btn being tapped but form not filled out correctly
 
-                @foreach (old('checks') as $oldCheck)
+            //else there is no old input
 
-                    var jsOldChecks = "<?php echo $oldCheck;?>";
+            //if there are values in the checksInputElem
 
-                    checksObj.push({
-                        myArrayLocName: document.getElementById(myArray[x]).parentElement.innerHTML,
-                        oldCheckValue: jsOldChecks
-                    });
 
-                    x++;
+            //scenario 1: values, old input, then no change
+            //scenario 2: old input, then values as well or replacing
+            //scenario 3: values, and then no old input
 
-                @endforeach
-            @else
+            //plan = upon page load, check myArray & check oldInput, if so create an object with oldChecks and valueChecks
+
+            //later, when check input values & selected locations (upon every nav to), if there is oldChecks and valueChecks,
+//            if therefore
+//assign values to object
+            //if there is a value, then use valueChecks (initialised upon page load) , if not, use oldChecks if there is one
+
                 //have at least 1 value in the valueCheck
             //just loop through ordinary myArray without oldInput being added to object
             //conditions met: 2nd time naved to in the app, there is a value in the class tag, the input tag has been defined
 //                if(myArray.length > 1) {
-                    for (var v = 0; v < myArray.length; v++) {
 
-                        var checksInputElem = document.getElementsByClassName("checksValue")[v];//error here? fixme
 
-                        if (checksInputElem === undefined) {
-                            checksObj.push({
-                                myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML
-                            });
-                            console.log("checksInputElem  equals undefined" + checksInputElem);
+//assign the values
+            //the first time we need to assign myArray to all the checksObj initialised objects
+            //the subsequent times we need to check if the object is already in there before assigning an object
+            //same as we do when reinitialising,
+            //so just keep in reinitialise
+            //but also, for the first time
+            //we do initialAssign, first page load, first tab press:::
 
-                        } else {
-                            //yep, enters condition
-                            console.log("checksInputElem  not equal to undefined" + checksInputElem);
 
-                            checksObj.push({
-                                myArrayLocName: document.getElementById(myArray[v]).parentElement.innerHTML,
-                                valueChecks: checksInputElem.value
-                            });
-                        }
-                    }
-//                }else{
-//
-//
-//                }
-            @endif
+
+
+            //when we press the tab the second time, we need to reinitialise the correct amount and the item will already be in the array
+            //and we just keep it.
+
+
+
 
 
             //before adding elements, clear all elements to ensure not added twice
@@ -181,16 +496,31 @@
                         locationInput[i].setAttribute("disabled", "disabled");
 
                     } else if (myArray.length > 1) {
-                        //if more than 1 location, grab the value for location checks input from user input
-                        @if(count(old('checks')) > 0)
-                            locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
-                        @else if (checksObj[i].valueChecks !== undefined)
-                        //if there are values that the user has input
-                            locationInput[i].setAttribute("value", checksObj[i].valueChecks);
 
-                        @endif
+
+
+
                     }
+
+                    //todo: consider default of 1
+                    if(checksObj[i].valueChecks != 0){
+
+                        locationInput[i].setAttribute("value", checksObj[i].valueChecks);
+                    }else {
+                        //no value from current inputs, check if we have oldInput
+                        if(checksObj[i].oldCheckValue != 0){
+                            locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+
+
+                        }
+                    }
+
+
+
                 }
+            }else{
+                //hide the location checks label
+                locCheckLbl.style.display = "none";
             }
         }
     </script>
@@ -290,13 +620,21 @@
         //gather input from the select locations field
         function checkAmt() {
 
+            //before updating the value of myArray, check for current input values and old input and assign to checksObj
+            checksValues();
+//            oldInput();
+
+
             myArray = [];
 
             $("#checkboxesLoc input:checkbox:checked").each(function () {
                 myArray.push($(this).val());
-                console.log(myArray);
+                console.log("checkAmt()" + myArray);
 
             })
+
+
+
 
 
           /*  if (myArray.length > 1) {
