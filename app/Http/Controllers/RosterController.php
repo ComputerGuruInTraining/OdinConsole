@@ -201,7 +201,7 @@ class RosterController extends Controller
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required',
-                'checks.*' => 'integer|between:1,9'//important: custom validation messages, so must specify or will not show up
+                'checks.*' => 'integer|between:1,9|nullable'//important: custom validation messages, so must specify or will not show up
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db
@@ -210,7 +210,14 @@ class RosterController extends Controller
                 try {
                     $dateStart = $this->formData($request);
 
-                    if ($dateStart == 'error') {
+                    if ($dateStart->get('shiftError') == 'error creating shift') {
+                        $e = 'Error storing shift details';
+//                        $errors = collect($e);
+                        return Redirect::to('rosters/create')
+                            ->withInput()
+                            ->withErrors('You must provide a Location Check value for every location');
+
+                    }else if ($dateStart->get('shiftError') == 'error storing shift') {
 
                         $e = 'Error storing shift details';
 //                        $errors = collect($e);
@@ -286,6 +293,24 @@ class RosterController extends Controller
 //                dd($checksArray, $checksArray[0]);
 
             }
+        }else{
+//            dd($checksArray);
+
+            foreach($checksArray as $checkArray) {
+
+                //if there are more than 1 location, ensure no checks have been left blank
+                if ($checkArray == null) {
+//                    dd($checkArray);
+                    $collection = collect(['shiftError' => 'error creating shift', 'shiftField' => 'location checks']);
+
+                    return $collection;
+                    //provide an error message to user that they must provide a value
+//                    return Redirect::to('rosters/create')
+//                        ->withInput()
+//                        ->withErrors('You must provide a Location Check value for every location');
+                }
+
+            }
         }
 
 
@@ -314,7 +339,9 @@ class RosterController extends Controller
         if ($assigned->success == true) {
             return $dateStart;
         } else {
-            return 'error';
+            $collection = collect(['shiftError' => 'error storing shift', 'shiftField' => 'unknown']);
+
+            return $collection;
         }
     }
 
