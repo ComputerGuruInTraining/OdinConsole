@@ -201,7 +201,7 @@ class RosterController extends Controller
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required',
-//                'checks' => 'digits_between:1,9'
+                'checks.*' => 'integer|between:1,9'//important: custom validation messages, so must specify or will not show up
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db

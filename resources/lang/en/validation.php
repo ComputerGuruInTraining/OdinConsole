@@ -101,6 +101,10 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'checks.*' => [
+            'integer' => 'The value for Location Checks must be a number',
+            'between' => 'The value for Location Checks must be between 1 and 9',
+        ],
     ],
 
     /*
@@ -113,7 +117,11 @@ return [
     | of "email". This simply helps us make messages a little cleaner.
     |
     */
+//    The location checks for each location must be 1 digits.
 
-    'attributes' => [],
+    'attributes' => [
+//        'checks.*' => 'location checks for each location',
+
+    ],
 
 ];

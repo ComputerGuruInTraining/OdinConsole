@@ -56,6 +56,7 @@
             locationInput.setAttribute("class", "form-control checksValue");
             locationInput.setAttribute("type", "text");
             locationInput.setAttribute("value", "");
+//            locationInput.setAttribute("style", "")
 
             return locationInput;
         }
@@ -86,6 +87,8 @@
             var locCheckLbl =  document.getElementById("loc-checks-label");
             var x = 0;
             var locationInput = [];
+
+//            locationChecks.style.display = "inline-block";
 
             //create location input fields for the length of the myArray
             for(var y=0; y < myArray.length; y++) {
@@ -178,7 +181,6 @@
                         locationInput[i].setAttribute("disabled", "disabled");
 
                     } else if (myArray.length > 1) {
-
                         //if more than 1 location, grab the value for location checks input from user input
                         @if(count(old('checks')) > 0)
                             locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
@@ -528,7 +530,7 @@
         <div id="4" class="tabcontent col-md-8">
 
             <div class="alert alert-danger alert-custom">
-                <strong>Important:</strong> Location Checks will show on the mobile as progress flags and employees will be
+                <strong>Important:</strong> Location Checks will show on the mobile as progress flags. Employees will be
                 required to check the location the nominated number of times in order to complete the shift requirements.
             </div>
 

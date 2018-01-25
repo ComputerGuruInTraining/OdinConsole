@@ -59,6 +59,7 @@
 
                             <div>
                                 <a href='/reset/link' style="color: #4d2970;" target="_blank">Forgot Password?</a>
+                                <br/>
                             </div>
                             {{--class="btn" style="margin-right: 3px;--}}
                             {{--color: white;--}}
