@@ -164,7 +164,7 @@
             if (checksObj !== undefined) {
                 console.log("checksObj length" + checksObj.length);
 
-
+//fixme: was working better before this, but the length is at least one of the causes of error
                 var originalObjectLength = checksObj.length;
                 var newObjectLength = checksObj.length;
 

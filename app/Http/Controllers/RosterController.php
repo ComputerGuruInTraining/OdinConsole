@@ -208,24 +208,26 @@ class RosterController extends Controller
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
                 try {
-                    $dateStart = $this->formData($request);
+                    $collectResults = $this->formData($request);
 
-                    if ($dateStart->get('shiftError') == 'error creating shift') {
-                        $e = 'Error storing shift details';
+//                    dd($dateStart);
+
+                    if ($collectResults->get('shiftError') == 'error creating shift') {
+//                        $e = 'Error storing shift details';
 //                        $errors = collect($e);
                         return Redirect::to('rosters/create')
                             ->withInput()
                             ->withErrors('You must provide a Location Check value for every location');
 
-                    }else if ($dateStart->get('shiftError') == 'error storing shift') {
+                    }else if ($collectResults->get('shiftError') == 'error storing shift') {
 
                         $e = 'Error storing shift details';
 //                        $errors = collect($e);
                         return Redirect::to('rosters/create')
                             ->withInput()
                             ->withErrors($e);
-                    } else {
-                        return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                    } else if($collectResults->get('shiftError') == 'none'){
+                        return view('confirm-create')->with(array('theData' => $collectResults->get('dateStart'), 'entity' => 'Shift', 'url' => 'rosters'));
                     }
 
                 } catch (\Exception $exception) {
@@ -327,7 +329,9 @@ class RosterController extends Controller
         $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
         if ($assigned->success == true) {
-            return $dateStart;
+            $collection = collect(['shiftError' => 'none', 'shiftField' => 'unknown', 'dateStart' => $dateStart]);
+
+            return $collection;
         } else {
             $collection = collect(['shiftError' => 'error storing shift', 'shiftField' => 'unknown']);
 
