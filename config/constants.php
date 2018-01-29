@@ -17,6 +17,9 @@ return [
     'ERROR_GENERIC' => 'Failed to load webpage.',
     'ERROR_SERVER' => 'Failed to load resource.',
     'COMPANY_EMAIL' => 'admin@odinlite.net',
-    'COMPANY_NAME' => 'Odin Case Management'
+    'COMPANY_NAME' => 'Odin Case Management',
+    'ERROR_UPDATE' => 'Unexpected error updating details',
+    'INTERNET_ERROR' => 'Internet Connection Error',
+    'CONN_SERVER_ERROR' => 'Experiencing error when connecting to server',
 
 ];

@@ -10,6 +10,12 @@
 
         /*}*/
 
+        .table-report{
+            line-height: 1.8;
+            color: #777;
+            font-size: 20px;
+        }
+
         .details-heading{
 
             text-decoration: underline;
@@ -158,27 +164,61 @@
 <body>
 <div class="col-md-12">
     <div class="table-responsive">
-        <div>
-            <h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>
-        </div>
-        <div class="col-md-12 margin-table">
-            <table>
-                <tr>
-                    <td class="table-report grey-larger"><h4 id="report-date grey-larger">{{$start}} - {{$end}}</h4>
-                    </td>
-                </tr>
-                <tr class="table-report">
-                    <td class="report-header-row table-report grey-larger"><p>@yield('entity')</p></td>
-                    <td class="table-report"><p
-                                class="report-header table-report grey-larger">@yield('entity-value')</p></td>
-                </tr>
-                <tr class="table-report">
-                    <td class="report-header-row table-report grey-larger"><p>@yield('total1-desc')</p></td>
-                    <td class="table-report grey-larger"><p class="report-header table-report">@yield('total1-val')</p>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        {{--<div>--}}
+            {{--<h3 class="report-title" id="report-heading">{{$report->type}} Report</h3>--}}
+        {{--</div>--}}
+
+
+        <table class="col-md-12 margin-bottom table-report">
+            <tr><td class="col-md-3">{{$start}} - {{$end}}</td><td></td></tr>
+            <tr><td class="col-md-3">Activity Report:</td>
+                <td class="col-md-3">@yield('entity-value')</td>
+            </tr>
+            <tr>
+                <td class="col-md-3">@yield('total1-desc')</td>
+                <td class="col-md-3">@yield('total1-val')</td>
+            </tr>
+            <tr>
+                <td class="col-md-3">@yield('total2-desc')</td>
+                <td class="col-md-3">@yield('total2-val')</td>
+            </tr>
+
+        </table>
+
+        {{--<div class="col-md-12 margin-table">--}}
+            {{--<table class="col-md-12 margin-bottom report-table">--}}
+                {{--<tr><td class="report-date grey-larger">{{$start}} - {{$end}}</td><td></td></tr>--}}
+                {{--<tr><td class="col-md-3">Activity Report:</td>--}}
+                    {{--<td class="col-md-3 report-header table-report grey-larger">@yield('entity-value')</td>--}}
+                {{--</tr>--}}
+                {{--<tr>--}}
+                    {{--<td class="col-md-3 report-header-row table-report grey-larger">@yield('total1-desc')</td>--}}
+                    {{--<td class="col-md-3 report-header table-report grey-larger">@yield('total1-val')</td>--}}
+                {{--</tr>--}}
+                {{--<tr>--}}
+                    {{--<td class="col-md-3">@yield('total2-show')</td>--}}
+                    {{--<td class="col-md-3">@yield('total2-val-show')</td>--}}
+                {{--</tr>--}}
+
+            {{--</table>--}}
+
+            {{--<table>--}}
+                {{--<tr>--}}
+                    {{--<td class="table-report grey-larger"><h4 id="report-date grey-larger">{{$start}} - {{$end}}</h4>--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+                {{--<tr class="table-report">--}}
+                    {{--<td class="report-header-row table-report grey-larger"><p>@yield('entity')</p></td>--}}
+                    {{--<td class="table-report"><p--}}
+                                {{--class="report-header table-report grey-larger">@yield('entity-value')</p></td>--}}
+                {{--</tr>--}}
+                {{--<tr class="table-report">--}}
+                    {{--<td class="report-header-row table-report grey-larger"><p>@yield('total1-desc')</p></td>--}}
+                    {{--<td class="table-report grey-larger"><p class="report-header table-report">@yield('total1-val')</p>--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+            {{--</table>--}}
+        {{--</div>--}}
 
         <table class="table">
             <tr>

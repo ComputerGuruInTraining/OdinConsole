@@ -49,16 +49,38 @@
                     @endif
 
                 {{--GeoLocation uses check in geoLocation--}}
-                @if($item->distance_check_in != null)
-                    @if($item->distance_check_in <= 0.2)
-                        <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
-                    @elseif($item->distance_check_in <= 0.5)
-                        <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
+                @if(isset($show))
+                    @if($item->distance_check_in != null)
+                        @if($item->distance_check_in <= 0.2)
+                            <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
+                        @elseif($item->distance_check_in <= 0.5)
+                            <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
+                        @else
+                            <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                        @endif
                     @else
-                        <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                        <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
                 @else
-                    <td><i class="fa fa-minus" aria-hidden="true"></i></td>
+                    @if($item->distance_check_in != null)
+                        @if($item->distance_check_in <= 0.2)
+                            <td>
+                                <img src="{{base_path("public/icons/if_checkmark-g_86134.png")}}"/>
+                            </td>
+                        @elseif($item->distance_check_in <= 0.5)
+                            <td>
+                                <img src="{{base_path("public/icons/if_checkmark-o_86136.png")}}"/>
+                            </td>
+                        @else
+                            <td>
+                                <img src="{{base_path("public/icons/if_cross_5233.png")}}"/>
+                            </td>
+                        @endif
+                    @else
+                            <td>
+                                <img src="{{base_path("public/icons/if_minus_216340.png")}}"/>
+                            </td>
+                    @endif
                 @endif
             </tr>
         @endforeach

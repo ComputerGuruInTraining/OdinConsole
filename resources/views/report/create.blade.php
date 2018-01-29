@@ -23,8 +23,7 @@
 
 //todo: on change and onselect/onload for when old input.1st test if input wrong this occurs, or
 // just if report fails and back btn pressed in browser
-            if ((strType == "Client")||(strType == "Management")||
-                (strType == "Location Checks")||(strType == "Case Notes")) {
+            if ((strType == "Client")||(strType == "Management")) {
 
                 var selectLocs = document.getElementById("selectLocations");
                 selectLocs.style.display = "block";
@@ -82,17 +81,6 @@
             <select id="type" class="form-control" name="type" onkeypress="return noenter()" onchange="enableEntity()" >
                 {{--report types that our app supports generating--}}
                 @if(count( old('type')) > 0 )
-
-                    @if(old('type') == 'Case Notes')
-                        <option value="Case Notes" selected>Case Notes</option>
-                    @else
-                        <option value="Case Notes">Case Notes</option>
-                    @endif
-                    @if(old('type') == 'Location Checks')
-                        <option value="Location Checks" selected>Location Checks</option>
-                    @else
-                        <option value="Location Checks">Location Checks</option>
-                    @endif
                     @if(old('type') == 'Client')
                         <option value="Client" selected>Client</option>
                     @else
@@ -110,15 +98,9 @@
                     @endif
 
                 @else
-                    {{--Case Notes for a Location over a period--}}
-                    <option value="Case Notes">Case Notes</option>
-                    <option value="Location Checks">Location Checks</option>
                     <option value="Client">Client</option>
                     <option value="Management">Management</option>
                     <option value="Individual">Individual</option>
-
-                    {{--TODO: Exact Times the premise was visited by a guard over a period--}}
-                    {{--<option value="caseNotes">Guard Patrols</option>--}}
                 @endif
             </select>
         </div>

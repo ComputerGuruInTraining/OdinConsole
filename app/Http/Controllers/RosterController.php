@@ -201,24 +201,33 @@ class RosterController extends Controller
                 'startTime' => 'required',
                 'endDateTxt' => 'required',
                 'endTime' => 'required',
-//                'checks' => 'digits_between:1,9'
+                'checks.*' => 'integer|between:1,9|nullable'//important: custom validation messages, so must specify or will not show up
             ]);
 
             //get the data from the form and perform necessary calculations prior to inserting into db
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
                 try {
-                    $dateStart = $this->formData($request);
+                    $collectResults = $this->formData($request);
 
-                    if ($dateStart == 'error') {
+//                    dd($dateStart);
+
+                    if ($collectResults->get('shiftError') == 'error creating shift') {
+//                        $e = 'Error storing shift details';
+//                        $errors = collect($e);
+                        return Redirect::to('rosters/create')
+                            ->withInput()
+                            ->withErrors('You must provide a Location Check value for every location');
+
+                    }else if ($collectResults->get('shiftError') == 'error storing shift') {
 
                         $e = 'Error storing shift details';
 //                        $errors = collect($e);
                         return Redirect::to('rosters/create')
                             ->withInput()
                             ->withErrors($e);
-                    } else {
-                        return view('confirm-create')->with(array('theData' => $dateStart, 'entity' => 'Shift', 'url' => 'rosters'));
+                    } else if($collectResults->get('shiftError') == 'none'){
+                        return view('confirm-create')->with(array('theData' => $collectResults->get('dateStart'), 'entity' => 'Shift', 'url' => 'rosters'));
                     }
 
                 } catch (\Exception $exception) {
@@ -283,11 +292,19 @@ class RosterController extends Controller
 
                 $checksArray[0] = 1;
 
-//                dd($checksArray, $checksArray[0]);
+            }
+        }else{
 
+            foreach($checksArray as $checkArray) {
+
+                //if there are more than 1 location, ensure no checks have been left blank
+                if ($checkArray == null) {
+                    $collection = collect(['shiftError' => 'error creating shift', 'shiftField' => 'location checks']);
+
+                    return $collection;
+                }
             }
         }
-
 
         //process start date and time before adding to db
         //function in functions.php
@@ -312,9 +329,13 @@ class RosterController extends Controller
         $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
         if ($assigned->success == true) {
-            return $dateStart;
+            $collection = collect(['shiftError' => 'none', 'shiftField' => 'unknown', 'dateStart' => $dateStart]);
+
+            return $collection;
         } else {
-            return 'error';
+            $collection = collect(['shiftError' => 'error storing shift', 'shiftField' => 'unknown']);
+
+            return $collection;
         }
     }
 
@@ -561,25 +582,41 @@ class RosterController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Operation failed');
+        } catch(\Exception $exception){
+            dd($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));
 
-        } catch (\ErrorException $error) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Error updating shift details');
+            $errMsg = $exception->getMessage();
 
-        } catch (\InvalidArgumentException $err) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Error updating shift. Please check input is valid.');
+            if((strpos($errMsg, 'Could not resolve host') !== false)){
 
-        } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('/');
-//                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
+                $e = Config::get('constants.INTERNET_ERROR');
+                return view('error-msg')->with('msg', $e);
+
+            } else{
+                $e = Config::get('constants.ERROR_UPDATE');
+                return view('error-msg')->with('msg', $e);
+            }
         }
+
+//        catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Operation failed');
+//
+//        } catch (\ErrorException $error) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Error updating shift details');
+//
+//        } catch (\InvalidArgumentException $err) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Error updating shift. Please check input is valid.');
+//
+//        } catch (\TokenMismatchException $mismatch) {
+//            return Redirect::to('/');
+////                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
+//        }
     }
 
     /**

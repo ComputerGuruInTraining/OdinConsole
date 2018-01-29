@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    <p class="details-heading">Full Details</p>
+    <p class="report-table details-heading">Case Details</p>
     @if(count($data) != 0)
         @foreach($data as $index => $shiftCheck)
             @foreach ($data->get($index) as $item)
@@ -23,7 +23,7 @@
                                         {{$item->checkDuration}} min/s
                                     @endif
                                 @else
-                                    Insufficient Data
+                                    -
                                 @endif
                                             </span>
                         </p>
@@ -50,7 +50,7 @@
                                 <br/>
                                 @for($i=0; $i < sizeof($item->files); $i++)
 
-                                    <a class="col-md-offset-9" href="{{$item->urls[$i]}}" target="_blank">
+                                    <a class="col-md-offset-3 align-cols" href="{{$item->urls[$i]}}" target="_blank">
                                         Download Image {{$i + 1}}
                                     </a>
                                     <br/>
