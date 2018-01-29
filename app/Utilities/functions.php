@@ -191,14 +191,29 @@ if (!function_exists('jobDuration')) {
     }
 }
 
-//convert minutes to hours
+//parameter is in seconds, convert to minutes and hours if applicable
 if (!function_exists('totalMinsInHours')) {
-    function totalMinsInHours($mins)
+    function totalMinsInHours($time)
     {
-//fixme?? decimal $lengthH if not fix
-        $lengthH = ($mins / 60);//convert to hours
-        $hours = floor($lengthH * 100) / 100;//hours to 2 decimal places
-        return $hours;
+            if ($time < 60) {
+                return $time .' seconds';
+            }
+
+            $mins = $time/60;
+
+            $hours = floor($mins / 60);
+
+            $minutes = ($mins % 60);
+
+            if($hours != 0){
+
+                return sprintf('%d hour/s %d minute/s', $hours, $minutes);
+
+            }else{
+                return sprintf('%d minute/s', $minutes);
+
+            }
+
     }
 }
 
@@ -222,8 +237,8 @@ if (!function_exists('locationCheckDuration')) {
         $carbonStart = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $start);
         $carbonEnd = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $end);
         //calculate duration based on start date and time and end date and time
-        $lengthM = $carbonStart->diffInMinutes($carbonEnd);//calculate in minutes
-        return $lengthM;
+        $lengthS = $carbonStart->diffInSeconds($carbonEnd);//calculate in minutes
+        return $lengthS;
     }
 }
 
