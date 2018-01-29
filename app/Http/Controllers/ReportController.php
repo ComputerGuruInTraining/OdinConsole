@@ -842,36 +842,27 @@ class ReportController extends Controller
                         if ($report->type == 'Client') {
 
 //                            $viewName = 'report/client/pdf';
+                            if ($request->has('download')) {
 
-                            $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
-                            // download pdf w current date in the name
-                            $dateTime = Carbon::now();
-                            $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Client Report ' . $date . '.pdf');
+                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+                                // download pdf w current date in the name
+                                $dateTime = Carbon::now();
+                                $date = substr($dateTime, 0, 10);
+                                return $pdf->download('Client Report ' . $date . '.pdf');
+                            }
 
                         } else if ($report->type == 'Management') {
 //                            dd($formatData);
+                            if ($request->has('download')) {
 
-                            $pdf = PDF::loadView('report/management/pdf')->setPaper('a4', 'landscape');
-                            // download pdf w current date in the name
-                            $dateTime = Carbon::now();
-                            $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Management Report ' . $date . '.pdf');
+                                $pdf = PDF::loadView('report/management/pdf')->setPaper('a4', 'landscape');
+                                // download pdf w current date in the name
+                                $dateTime = Carbon::now();
+                                $date = substr($dateTime, 0, 10);
+                                return $pdf->download('Management Report ' . $date . '.pdf');
+                            }
 
                         }
-
-//                        if ($request->has('download')) {
-//
-//                            $pdfDownload = loadPdf($viewName, $report->type);
-////                                // pass view file
-////                                $pdf = PDF::loadView($viewName)->setPaper('a4', 'landscape');
-////                                // download pdf w current date in the name
-////                                $dateTime = Carbon::now();
-////                                $date = substr($dateTime, 0, 10);
-////                                return $pdf->download('Activity Report:'. $report->type . $date . '.pdf');
-//                        }
-
-//                        return view($viewName);
 
                     } else {
                         //ie case notes have been deleted after the report was generated perhaps falls into this scenario
@@ -879,36 +870,44 @@ class ReportController extends Controller
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
-                }
+                } else if ($report->type == 'Individual') {
 
-//                }else if ($report->type == 'Client') {
-//
-//                        $data = $this->getLocationReportData($id, $token);
-//
-//                        if ($data != 'errorInResult') {
-//
-//                        $data = $this->formatLocationReportData($data, $report);
-//
-//                            view()->share(array(
-//                                'data' => $groupdata,
-//                                'location' => $data->location,
-//                                'report' => $report,
-//                                'start' => $sdate,
-//                                'end' => $edate,
-//                                'total' => $total
-//                            ));
-//
-//                            if ($request->has('download')) {
-//                                // pass view file
-//                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
-//                                // download pdf w current date in the name
-//                                $dateTime = Carbon::now();
-//                                $date = substr($dateTime, 0, 10);
-//                                return $pdf->download('Client Report ' . $date . '.pdf');
-//                            }
-//
-//                            return view('report/client/pdf');
-//
+                    $data = $this->getIndividualReportData($id, $token);
+
+//                    dd($data);
+
+                    if ($data != 'errorInResult') {
+
+                        $formatData = $this->formatIndividualReport($data->reportData);
+
+                        view()->share(array(
+                            'data' => $formatData,
+                            'report' => $report,
+                            'reportInd' => $data->report,
+                            'start' => $sdate,
+                            'end' => $edate,
+                        ));
+
+                        if ($request->has('download')) {
+
+                            $pdf = PDF::loadView('report/emp/pdf')->setPaper('a4', 'landscape');
+                            // download pdf w current date in the name
+                            $dateTime = Carbon::now();
+                            $date = substr($dateTime, 0, 10);
+                            return $pdf->download('Individual Report ' . $date . '.pdf');
+
+                        }
+
+//                        return view('report/emp/pdf');
+
+                    } else {
+                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+                        $err = 'There is insufficient data for the period that the report covers.';
+                        $errors = collect($err);
+                        return Redirect::to('/reports')->with('errors', $errors);
+                    }
+
+                }
 
             } else {
                 //ie no session token exists and therefore the user is not authenticated

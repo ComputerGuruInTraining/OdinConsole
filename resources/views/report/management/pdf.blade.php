@@ -46,7 +46,7 @@
 @stop
 
 @section('colHeading7')
-    Total Time
+    Total Time (min/s)
 @stop
 
 @section('colHeading8')

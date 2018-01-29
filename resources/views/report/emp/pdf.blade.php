@@ -1,24 +1,19 @@
 @extends('layouts.report.pdf_layout')
 
 @section('report-address-bar')
-    Management Report
-@stop
-
-@section('entity')
-    Premise:
+    Individual Report
 @stop
 
 @section('entity-value')
-    {{$location->address}}
+    {{$reportInd[0]->first_name}} {{$reportInd[0]->last_name}}
 @stop
 
 @section('total1-desc')
-    Total Hours Monitoring Premise:
+    Total Hours Worked:
 @stop
 
 @section('total1-val')
-    WIP
-    {{--{{$report->totalHours}}--}}
+    {{$reportInd[0]->total_hours_worked}} hours
 @stop
 
 @section('colHeading1')
@@ -34,19 +29,19 @@
 @stop
 
 @section('colHeading4')
-    Action
+    Location
 @stop
 
 @section('colHeading5')
-    Case ID
+    Action
 @stop
 
 @section('colHeading6')
-    Guard
+    Case ID
 @stop
 
 @section('colHeading7')
-    Total Time
+    Total Time (min/s)
 @stop
 
 @section('colHeading8')
@@ -54,11 +49,7 @@
 @stop
 
 @section('report-content')
-    @include('report.management.shared')
-@stop
-
-@section('additional-report-content')
-    @include('layouts.report.case_details')
+    @include('report.emp.shared')
 @stop
 
 
