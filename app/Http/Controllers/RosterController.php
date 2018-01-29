@@ -578,25 +578,41 @@ class RosterController extends Controller
             } else {
                 return Redirect::to('/login');
             }
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Operation failed');
+        } catch(\Exception $exception){
+            dd($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));
 
-        } catch (\ErrorException $error) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Error updating shift details');
+            $errMsg = $exception->getMessage();
 
-        } catch (\InvalidArgumentException $err) {
-            return Redirect::to('/rosters/' . $id . '/edit')
-                ->withInput()
-                ->withErrors('Error updating shift. Please check input is valid.');
+            if((strpos($errMsg, 'Could not resolve host') !== false)){
 
-        } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('/');
-//                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
+                $e = Config::get('constants.INTERNET_ERROR');
+                return view('error-msg')->with('msg', $e);
+
+            } else{
+                $e = Config::get('constants.ERROR_UPDATE');
+                return view('error-msg')->with('msg', $e);
+            }
         }
+
+//        catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Operation failed');
+//
+//        } catch (\ErrorException $error) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Error updating shift details');
+//
+//        } catch (\InvalidArgumentException $err) {
+//            return Redirect::to('/rosters/' . $id . '/edit')
+//                ->withInput()
+//                ->withErrors('Error updating shift. Please check input is valid.');
+//
+//        } catch (\TokenMismatchException $mismatch) {
+//            return Redirect::to('/');
+////                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
+//        }
     }
 
     /**

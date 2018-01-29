@@ -165,29 +165,44 @@
 
             //check that checksObj has values in it
             if(checksObj !== undefined) {
+
                 for (var object1 = 0; object1 < checksObj.length; object1++) {
 
-                    var stillSelected = false;
-//                    var addObject = false;
+//console.log("checks object 0:" + checksObj[0]);
 
+                    var stillSelected = false;
+//                    var notAnObject = false;
 
                     for (var array2 = 0; array2 < myArray.length; array2++) {
-
                         var myArrayElem = document.getElementById(myArray[array2]).parentElement.innerHTML;//uses the element id to get the location text
                         //compare the location name in checksObj to the document element location name for myArray
 
+
+
+
+
+
+
+                        
                         //check that there is a checkObj for the myArray index else error if don't deal with it.
                         if (checksObj[array2] !== undefined) {
                             if (checksObj[object1].myArrayLocName != myArrayElem) {
                                 //as it won't for some of the items, we say no
-
-//                                notSelected = true;
-console.log("!=", checksObj[object1].myArrayLocName, myArrayElem);
+//                                notAnObject = true;
+//console.log("compared", checksObj[object1].myArrayLocName, myArrayElem);
                             } else if (checksObj[object1].myArrayLocName == myArrayElem) {
                                 //keep the object as is
                                 stillSelected = true;
                             }
                         } else {
+                            //there are more items in the array than in the object
+
+                            //& there is no object for the array item
+
+                            //What about when the amount is the same??
+                            //picked up in the if.
+                            //no not necessarily. because only picking up the same items. only adding if more arrays than objects.
+
                             console.log("object added");
                             //more locations in myArray than in checksObj (ie more selected this time than before)
 //                           //add a new checks object for the location and assign the locationName
@@ -197,9 +212,6 @@ console.log("!=", checksObj[object1].myArrayLocName, myArrayElem);
                                 valueChecks: 0,//initialise value here for assignment later when current input values checked
                             });
 
-                            //and assign the properties
-//                            initialAssignChecksObject();
-//                            stillSelected = "add";
 
 
                         }
@@ -225,7 +237,8 @@ console.log("!=", checksObj[object1].myArrayLocName, myArrayElem);
 
                 }
             }
-            console.log("reinitialiseChecksObject object");
+//            console.log("reinitialiseChecksObject object");
+            console.log("checksObj:" + checksObj);
 
 
 
