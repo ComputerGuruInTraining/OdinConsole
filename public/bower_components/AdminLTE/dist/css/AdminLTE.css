@@ -520,6 +520,10 @@ h1.master-alt{
     /*color: #4d2970;*/
 /*}*/
 
+.align-cols{
+    padding-left: 14px;
+}
+
 #report-heading{
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
     font-size: xx-large;
@@ -553,7 +557,8 @@ h1.master-alt{
 }
 
 .details-heading{
-
+    margin-left: 14px;
+    margin-top: 40px;
     text-decoration: underline;
 }
 
