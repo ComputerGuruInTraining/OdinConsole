@@ -93,11 +93,11 @@
 
 
             if(checksObj === undefined) {
-                console.log("checksObj undefined");
+//                console.log("checksObj undefined");
                 //first call is when checkAmt() is called and checksObj is not defined, so intialise and assign values
                 initialiseEmptyChecksObject();
             }else{
-                console.log("checksObj is defined");
+//                console.log("checksObj is defined");
 
 //                if(checksObj[0].myArrayLocName === undefined){
 //                    initialAssignChecksObject();
@@ -107,7 +107,7 @@
 //                }
 
             }
-            console.log(checksObj);
+//            console.log(checksObj);
 
         }
 
@@ -127,7 +127,7 @@
             //first checksObj initialise & assign values from myArray
             if(checksObj === undefined) {
                 checksObj = [];
-                console.log(myArray.length);
+//                console.log(myArray.length);
 
                 //initialise values in checksObj for each array item (ie location)
                 for (var a = 0; a < myArray.length; a++) {
@@ -143,7 +143,7 @@
 
 
             }
-            console.log(checksObj);
+//            console.log(checksObj);
 
         }
 
@@ -157,164 +157,89 @@
          * */
         //note: checksObj values
         //reorders the checksObj
-        function reinitialiseChecksObject(){
-            console.log("reinitialiseChecksObject called");
+        function reinitialiseChecksObject() {
 
-            //if checks obj = 2 and my array = 1, ok
-            //if checks obj = 4, and my array = 5, ok
 
             //check that checksObj has values in it
-            if(checksObj !== undefined) {
+            if (checksObj !== undefined) {
+                console.log("checksObj length" + checksObj.length);
 
-                for (var object1 = 0; object1 < checksObj.length; object1++) {
 
-//console.log("checks object 0:" + checksObj[0]);
+                var originalObjectLength = checksObj.length;
+                var newObjectLength = checksObj.length;
 
-                    var stillSelected = false;
-//                    var notAnObject = false;
+                /*Delete objects not selected this time by user*/
+                //compare each location array item to each array objects to see which items are not in array objects
+                // and need to be removed from array objects
+                console.log("checksObj " + checksObj, "myArray " + myArray);
 
-                    for (var array2 = 0; array2 < myArray.length; array2++) {
-                        var myArrayElem = document.getElementById(myArray[array2]).parentElement.innerHTML;//uses the element id to get the location text
+                for (var object1 = 0; object1 < originalObjectLength; object1++) {
+
+                    var deleteObject = true;
+
+                    for (var array1 = 0; array1 < myArray.length; array1++) {
+                        var myArrayElem = document.getElementById(myArray[array1]).parentElement.innerHTML;//uses the element id to get the location text
                         //compare the location name in checksObj to the document element location name for myArray
 
+                        //delete
+                        if (checksObj[object1].myArrayLocName == myArrayElem) {
 
+                            console.log("equal delete object 1 then myArrayElem " + checksObj[object1].myArrayLocName,  myArrayElem)
 
-
-
-
-
-                        
-                        //check that there is a checkObj for the myArray index else error if don't deal with it.
-                        if (checksObj[array2] !== undefined) {
-                            if (checksObj[object1].myArrayLocName != myArrayElem) {
-                                //as it won't for some of the items, we say no
-//                                notAnObject = true;
-//console.log("compared", checksObj[object1].myArrayLocName, myArrayElem);
-                            } else if (checksObj[object1].myArrayLocName == myArrayElem) {
-                                //keep the object as is
-                                stillSelected = true;
-                            }
-                        } else {
-                            //there are more items in the array than in the object
-
-                            //& there is no object for the array item
-
-                            //What about when the amount is the same??
-                            //picked up in the if.
-                            //no not necessarily. because only picking up the same items. only adding if more arrays than objects.
-
-                            console.log("object added");
-                            //more locations in myArray than in checksObj (ie more selected this time than before)
-//                           //add a new checks object for the location and assign the locationName
-                            checksObj.push({
-                                myArrayLocName: myArrayElem,
-                                oldCheckValue: 0,
-                                valueChecks: 0,//initialise value here for assignment later when current input values checked
-                            });
-
-
-
+                            deleteObject = false;
                         }
-
                     }
 
-//                    if (stillSelected == "add") {
-//                        //more locations in myArray than in checksObj (ie more selected this time than before)
-//                        //add a new checks object for the location
-//                        checksObj.push({
-//                            myArrayLocName: null,
-//                            oldCheckValue: 0,
-//                            valueChecks: 0,//initialise value here for assignment later when current input values checked
-//                        });
-
-//                    } else
-                    if (stillSelected == false) {
-                        console.log("spliced object");
+                    //!= means stillSelected = false, which means the checks objects are not equal to the array item, so splice the checks object
+                    if (deleteObject == true) {
+                        console.log("spliced object " + object1);
                         //needs to be deleted
-                        checksObj.splice(object1,1);
+                        checksObj.splice(object1, 1);
+//                        deleteObject = true;
                     }
+                    console.log("checksObj in object for loop" + checksObj);
+
+
 
 
                 }
+                console.log("checksObj outside both for loops" + checksObj);
+
+                /*Add objects selected this time by user, but not previous times*/
+                //compare each location array item to each array objects to see which items are not in array objects
+                // and need to be added to array objects
+                for (var array2 = 0; array2 < myArray.length; array2++) {
+
+                    var addObject = true;
+
+                    var myArrayElement = document.getElementById(myArray[array2]).parentElement.innerHTML;//uses the element id to get the location text
+                    //compare the location name in checksObj to the document element location name for myArray
+                    for (var object2 = 0; object2 < newObjectLength; object2++) {
+
+                        if (checksObj[object2].myArrayLocName == myArrayElement) {
+                            console.log("equal add object 2 then myArrayElem " + checksObj[object2].myArrayLocName,  myArrayElement)
+
+                            addObject = false;
+                        }
+                    }
+
+                    if (addObject == true) {
+
+                        checksObj.push({
+                            myArrayLocName: myArrayElement,
+                            oldCheckValue: 0,
+                            valueChecks: 0,//initialise value here for assignment later when current input values checked
+                        });
+
+                        //increase the length of the object just to be sure we compare every object to the locations array,
+                        // else errors might result
+                        newObjectLength++;
+//                        addObject = true;
+
+                    }
+                }
             }
-//            console.log("reinitialiseChecksObject object");
-            console.log("checksObj:" + checksObj);
-
-
-
-
-
-
-            //initiliase upon page load,
-            //then when myArray has new values (ie changes to selected locations)
-            //we need to reassign checksObject with the number of lcoations and assign the values/old input we had to the new objects
-
-
-
-            //order needs to be
-
-
-            /*
-             * initialise empty every page load
-             * initialise myArray
-             * check current checksObject to see if location item already in there,
-             * if so keep, (values in there still)
-             * if not, delete
-             * for all new location items, add
-             * */
-
-
-
-//            checksObj = [];
-//
-//            //initialise values in checksObj for each array item (ie location)
-//            for (var a = 0; a < myArray.length; a++) {
-//                checksObj.push({
-//                    myArrayLocName: null,
-//                    oldCheckValue: 0,
-//                    valueChecks: 0,//initialise value here for assignment later when current input values checked
-//                });
-//            }
         }
-
-        /*order of: ideally:
-        we are going to have the first page load
-
-        no need to do anything
-
-
-        *select onchange
-            #checkAmt() called
-            #and myArray() defined
-
-        *nav to location check
-        *   #check if there is a value in oldChecks at all
-            #check if there is a value in input current at all (before checkAmt())
-            #checkAmt() called
-            #and myArray() defined
-            #checksObj needs to be have myArray values correctly placed in it
-
-            #render in input field current value priority
-            #locationInputs are appended to document
-
-
-
-         2nd page load || check if there is a value in oldChecks at all
-
-
-
-
-        oldInput which needs to be assigned to the location checks tab with the loc name
-
-
-
-        before reinitalising my array or checks obj
-        //maybe checksObj not availalbe to us, could initialise and then
-
-
-        */
-
-
 
 //presuming if 4 fields, 4 old inputs
         function oldInput(){
@@ -391,13 +316,13 @@
 //
 //             } else {
                         //yep there are values, enters condition
-                        console.log("checksInputElem  is defined" + checksInputElem);
+//                        console.log("checksInputElem  is defined" + checksInputElem);
 
                         //                            checksObj.push({
                         checksObj[v].valueChecks = checksInputElem.value;
                         //
                         //
-                        console.log("checks values" + checksObj[v].valueChecks);
+//                        console.log("checks values" + checksObj[v].valueChecks);
                     }
 
                 }
@@ -642,7 +567,7 @@
 
             $("#checkboxesLoc input:checkbox:checked").each(function () {
                 myArray.push($(this).val());
-                console.log("checkAmt()" + myArray);
+//                console.log("checkAmt()" + myArray);
 
             })
 
