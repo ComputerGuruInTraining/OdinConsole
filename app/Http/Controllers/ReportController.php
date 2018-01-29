@@ -874,8 +874,6 @@ class ReportController extends Controller
 
                     $data = $this->getIndividualReportData($id, $token);
 
-//                    dd($data);
-
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatIndividualReport($data->reportData);
