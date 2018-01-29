@@ -67,3 +67,16 @@
     @include('layouts.report.case_details')
 @stop
 
+{{--GeoLocation--}}
+{{--@section('geo-images')--}}
+    {{--@if($item->withinRange == 'yes')--}}
+        {{--<td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>--}}
+    {{--@elseif($item->withinRange == 'ok')--}}
+        {{--<td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>--}}
+    {{--@elseif($item->withinRange == 'no')--}}
+        {{--<td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>--}}
+    {{--@else--}}
+        {{--<td><i class="fa fa-minus" aria-hidden="true"></i></td>--}}
+    {{--@endif--}}
+{{--@stop--}}
+

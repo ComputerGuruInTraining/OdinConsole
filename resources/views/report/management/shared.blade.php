@@ -52,14 +52,34 @@
                     @endif
 
                 {{--GeoLocation--}}
-                @if($item->withinRange == 'yes')
-                    <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'ok')
-                    <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
-                @elseif($item->withinRange == 'no')
-                    <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                @if(isset($show))
+                    @if($item->withinRange == 'yes')
+                        <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
+                    @elseif($item->withinRange == 'ok')
+                        <td><i class="fa fa-check orange-tick" aria-hidden="true"></i></td>
+                    @elseif($item->withinRange == 'no')
+                        <td><i class="fa fa-times red-cross" aria-hidden="true"></i></td>
+                    @else
+                        <td><i class="fa fa-minus" aria-hidden="true"></i></td>
+                    @endif
                 @else
-                    <td><i class="fa fa-minus" aria-hidden="true"></i></td>
+                    @if($item->withinRange == 'yes')
+                        <td>
+                            <img src="{{base_path("public/icons/if_checkmark-g_86134.png")}}"/>
+                        </td>
+                    @elseif($item->withinRange == 'ok')
+                        <td>
+                            <img src="{{base_path("public/icons/if_checkmark-o_86136.png")}}"/>
+                        </td>
+                    @elseif($item->withinRange == 'no')
+                        <td>
+                            <img src="{{base_path("public/icons/if_cross_5233.png")}}"/>
+                        </td>
+                    @else
+                        <td>
+                            <img src="{{base_path("public/icons/if_minus_216340.png")}}"/>
+                        </td>
+                    @endif
                 @endif
             </tr>
         @endforeach

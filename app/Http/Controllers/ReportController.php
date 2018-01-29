@@ -512,7 +512,9 @@ class ReportController extends Controller
                             'report' => $formatData->get('report'),
                             'start' => $sdate,
                             'end' => $edate,
-                            'total' => $formatData->get('total')
+                            'total' => $formatData->get('total'),
+                            'show' => 'webpage'
+
                         ));
 
                         if ($report->type == 'Client') {
@@ -550,6 +552,7 @@ class ReportController extends Controller
                             'reportInd' => $data->report,
                             'start' => $sdate,
                             'end' => $edate,
+                            'show' => 'webpage'
                         ));
 
                             return view('report/emp/show');
@@ -825,6 +828,8 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
+//                        dd($formatData);
+
                         view()->share(array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,
@@ -836,34 +841,38 @@ class ReportController extends Controller
 
                         if ($report->type == 'Client') {
 
-                            $viewName = 'report/client/pdf';
+//                            $viewName = 'report/client/pdf';
+
+                            $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+                            // download pdf w current date in the name
+                            $dateTime = Carbon::now();
+                            $date = substr($dateTime, 0, 10);
+                            return $pdf->download('Client Report ' . $date . '.pdf');
 
                         } else if ($report->type == 'Management') {
 //                            dd($formatData);
 
-                            $viewName = 'report/management/pdf';
+                            $pdf = PDF::loadView('report/management/pdf')->setPaper('a4', 'landscape');
+                            // download pdf w current date in the name
+                            $dateTime = Carbon::now();
+                            $date = substr($dateTime, 0, 10);
+                            return $pdf->download('Management Report ' . $date . '.pdf');
+
                         }
 
-                        if ($request->has('download')) {
-
-                            $pdfDownload = loadPdf($viewName, $report->type);
-//                                // pass view file
-//                                $pdf = PDF::loadView($viewName)->setPaper('a4', 'landscape');
-//                                // download pdf w current date in the name
-//                                $dateTime = Carbon::now();
-//                                $date = substr($dateTime, 0, 10);
-//                                return $pdf->download('Activity Report:'. $report->type . $date . '.pdf');
-                        }
-
-//                        if($report->type == 'Client'){
-
-                        return view($viewName);
-
-//                        }else if($report->type == 'Management'){
-////                            dd($formatData);
+//                        if ($request->has('download')) {
 //
-//                            return view('report/management/pdf');
-//
+//                            $pdfDownload = loadPdf($viewName, $report->type);
+////                                // pass view file
+////                                $pdf = PDF::loadView($viewName)->setPaper('a4', 'landscape');
+////                                // download pdf w current date in the name
+////                                $dateTime = Carbon::now();
+////                                $date = substr($dateTime, 0, 10);
+////                                return $pdf->download('Activity Report:'. $report->type . $date . '.pdf');
+//                        }
+
+//                        return view($viewName);
+
                     } else {
                         //ie case notes have been deleted after the report was generated perhaps falls into this scenario
                         $err = 'There is insufficient data for the period that the report covers.';
