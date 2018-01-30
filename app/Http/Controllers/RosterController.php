@@ -210,8 +210,6 @@ class RosterController extends Controller
                 try {
                     $collectResults = $this->formData($request);
 
-//                    dd($dateStart);
-
                     if ($collectResults->get('shiftError') == 'error creating shift') {
 //                        $e = 'Error storing shift details';
 //                        $errors = collect($e);
@@ -524,13 +522,13 @@ class RosterController extends Controller
                     'startTime' => 'required',
                     'endDateTxt' => 'required',
                     'endTime' => 'required',
-                    'checks' => 'digits_between:1,9'
+                    'checks.*' => 'integer|between:1,9|nullable'
                 ]);
 
                 //get user input
                 $locations = Input::get('locations');
                 $employees = Input::get('employees');
-                $checks = Input::get('checks');
+                $checksArray = Input::get('checks');
                 $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
                 $timeStart = Input::get('startTime');//hh:mm
                 $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
@@ -540,9 +538,24 @@ class RosterController extends Controller
 
                 //account for situation where checks is disabled and value is null
                 //but value should be 1 as only disabled when 1 location and therefore 1 check
-                if ($checks == null) {
+                if(sizeof($locations) == 1){
+                    if ($checksArray == null) {
 
-                    $checks = 1;
+                        $checksArray[0] = 1;
+
+                    }
+                }else{
+
+                    foreach($checksArray as $checkArray) {
+
+                        //if there are more than 1 location, ensure no checks have been left blank
+                        if ($checkArray == null) {
+
+                            return Redirect::to('rosters/edit')
+                                ->withInput()
+                                ->withErrors('You must provide a Location Check value for every location');
+                        }
+                    }
                 }
 
                 if($desc == null){
@@ -567,7 +580,7 @@ class RosterController extends Controller
                             'Content-Type' => 'application/json',
                             'X-HTTP-Method-Override' => 'PUT'
                         ),
-                        'json' => array('checks' => $checks, 'start' => $strStart,
+                        'json' => array('checks' => $checksArray, 'start' => $strStart,
                             'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
                             'compId' => $compId, 'employees' => $employees, 'locations' => $locations
 
