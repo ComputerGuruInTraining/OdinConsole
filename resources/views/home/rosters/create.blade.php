@@ -133,6 +133,7 @@
                 for (var a = 0; a < myArray.length; a++) {
                     checksObj.push({
                         myArrayLocName: null,
+                        myArrayLocId: 0,
                         oldCheckValue: 0,
                         valueChecks: 0,//initialise value here for assignment later when current input values checked
                     });
@@ -165,18 +166,20 @@
                 console.log("checksObj length" + checksObj.length);
 
 //fixme: was working better before this, but the length is at least one of the causes of error
-                var originalObjectLength = checksObj.length;
-                var newObjectLength = checksObj.length;
+//                var originalObjectLength = checksObj.length;
+//                var newObjectLength = checksObj.length;
 
                 /*Delete objects not selected this time by user*/
                 //compare each location array item to each array objects to see which items are not in array objects
                 // and need to be removed from array objects
                 console.log("checksObj " + checksObj, "myArray " + myArray);
+                var indexDelete = [];//store the indexes of the objects to delete from the array of objects
+                var arrayIndexAdd = [];
 
-                for (var object1 = 0; object1 < originalObjectLength; object1++) {
+                for (var object1 = 0; object1 < checksObj.length; object1++) {
 
                     var deleteObject = true;
-
+console.log("object at index: " + object1, checksObj[object1].myArrayLocName)
                     for (var array1 = 0; array1 < myArray.length; array1++) {
                         var myArrayElem = document.getElementById(myArray[array1]).parentElement.innerHTML;//uses the element id to get the location text
                         //compare the location name in checksObj to the document element location name for myArray
@@ -184,25 +187,31 @@
                         //delete
                         if (checksObj[object1].myArrayLocName == myArrayElem) {
 
-                            console.log("equal delete object 1 then myArrayElem " + checksObj[object1].myArrayLocName,  myArrayElem)
+                            console.log("don't delete " + checksObj[object1].myArrayLocName,  myArrayElem)
 
                             deleteObject = false;
+//                            indexDontDelete.push(object1);
+
                         }
                     }
 
                     //!= means stillSelected = false, which means the checks objects are not equal to the array item, so splice the checks object
                     if (deleteObject == true) {
-                        console.log("spliced object " + object1);
-                        //needs to be deleted
-                        checksObj.splice(object1, 1);
-//                        deleteObject = true;
+                        indexDelete.push(checksObj[object1]);
+
+                        console.log("indexDelete " + checksObj[object1].myArrayLocName);
+//                        //needs to be deleted
+//                        checksObj.splice(object1, 1);
+////                        deleteObject = true;
                     }
-                    console.log("checksObj in object for loop" + checksObj);
+//                    console.log("checksObj in object for loop" + checksObj);
 
 
 
 
                 }
+
+
                 console.log("checksObj outside both for loops" + checksObj);
 
                 /*Add objects selected this time by user, but not previous times*/
@@ -213,30 +222,63 @@
                     var addObject = true;
 
                     var myArrayElement = document.getElementById(myArray[array2]).parentElement.innerHTML;//uses the element id to get the location text
+
+                    console.log("array at index: " + array2, myArrayElement);
+
                     //compare the location name in checksObj to the document element location name for myArray
-                    for (var object2 = 0; object2 < newObjectLength; object2++) {
+                    for (var object2 = 0; object2 < checksObj.length; object2++) {
 
                         if (checksObj[object2].myArrayLocName == myArrayElement) {
-                            console.log("equal add object 2 then myArrayElem " + checksObj[object2].myArrayLocName,  myArrayElement)
+                            console.log("equal so don't add " + checksObj[object2].myArrayLocName,  myArrayElement)
 
                             addObject = false;
                         }
                     }
 
                     if (addObject == true) {
-
-                        checksObj.push({
-                            myArrayLocName: myArrayElement,
-                            oldCheckValue: 0,
-                            valueChecks: 0,//initialise value here for assignment later when current input values checked
-                        });
+console.log("add index " + array2, myArrayElement, myArray[array2]);//correct
+                        arrayIndexAdd.push(myArray[array2]);
 
                         //increase the length of the object just to be sure we compare every object to the locations array,
                         // else errors might result
-                        newObjectLength++;
+//                        newObjectLength++;
 //                        addObject = true;
 
                     }
+                }
+
+                var checksLength = checksObj.length;
+                //delete
+                for(var k= 0; k < indexDelete.length; k++){
+
+                    //indexDelete holds the object
+                    //need to check the indexDelete object against the checksObj to ensure the correct object
+                    for(var d= 0; d < checksLength; d++) {
+                        if(checksObj[d] !== undefined){
+                            if(checksObj[d].myArrayLocId == indexDelete[k].myArrayLocId){
+                                checksObj.splice(d, 1);
+                                console.log('object spliced ' + indexDelete[k].myArrayLocName);
+
+                            }
+                        }
+                    }
+                }
+
+                //add
+                for(var a = 0; a < arrayIndexAdd.length; a++) {
+
+                    var myArrayAdd = document.getElementById(arrayIndexAdd[a]).parentElement.innerHTML;//uses the element id to get the location text
+
+
+                    checksObj.push({
+                        myArrayLocName: myArrayAdd,
+                        myArrayLocId: arrayIndexAdd[a],
+                        oldCheckValue: 0,
+                        valueChecks: 0,
+                        //initialise value here for assignment later when current input values checked
+                    });
+                    console.log('object added' + myArrayAdd, a);
+
                 }
             }
         }
@@ -285,7 +327,7 @@
             for (var index = 0; index < myArray.length; index++) {
 
                 checksObj[index].myArrayLocName = document.getElementById(myArray[index]).parentElement.innerHTML;
-
+                checksObj[index].myArrayLocId = myArray[index];
             }
         }
 
