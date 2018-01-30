@@ -1,5 +1,5 @@
 @extends('resources.views.layouts.master_layout_recent_date')
-@extends('sidebar')
+@extends('resources.views.sidebar')
 
 @section('title-item')
     Edit Shift
@@ -259,6 +259,9 @@
                 </div>
 
             </div>
+
+
+
 
             <div class="alert alert-warning alert-custom">
                 <strong>Important!</strong> Location Checks will default to 1 if only 1 location is selected

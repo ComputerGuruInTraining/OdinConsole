@@ -210,8 +210,6 @@ class RosterController extends Controller
                 try {
                     $collectResults = $this->formData($request);
 
-//                    dd($dateStart);
-
                     if ($collectResults->get('shiftError') == 'error creating shift') {
 //                        $e = 'Error storing shift details';
 //                        $errors = collect($e);
@@ -408,7 +406,6 @@ class RosterController extends Controller
                 $empNotSelected = $this->nonSelectedList($employeesUnique, $employees,
                     'mobile_user_id', 'user_id');
 
-//                dd($locationsUnique, $locations, $employeesUnique, $employees);
                 $locNotSelected = $this->nonSelectedList($locationsUnique, $locations,
                     'location_id', 'id');
 
@@ -524,13 +521,13 @@ class RosterController extends Controller
                     'startTime' => 'required',
                     'endDateTxt' => 'required',
                     'endTime' => 'required',
-                    'checks' => 'digits_between:1,9'
+                    'checks.*' => 'integer|between:1,9|nullable'
                 ]);
 
                 //get user input
                 $locations = Input::get('locations');
                 $employees = Input::get('employees');
-                $checks = Input::get('checks');
+                $checksArray = Input::get('checks');
                 $dateStart = Input::get('startDateTxt');//retrieved format = 05/01/2017
                 $timeStart = Input::get('startTime');//hh:mm
                 $dateEnd = Input::get('endDateTxt');//retrieved format = 05/01/2017
@@ -540,15 +537,29 @@ class RosterController extends Controller
 
                 //account for situation where checks is disabled and value is null
                 //but value should be 1 as only disabled when 1 location and therefore 1 check
-                if ($checks == null) {
+                if(sizeof($locations) == 1){
+                    if ($checksArray == null) {
 
-                    $checks = 1;
+                        $checksArray[0] = 1;
+
+                    }
+                }else{
+
+                    foreach($checksArray as $checkArray) {
+
+                        //if there are more than 1 location, ensure no checks have been left blank
+                        if ($checkArray == null) {
+//todo: test this
+                            return Redirect::to('rosters/'.$id.'/edit')
+                                ->withInput()
+                                ->withErrors('You must provide a Location Check value for every location');
+                        }
+                    }
                 }
 
                 if($desc == null){
                     //sending through null doesn't successfully update the record.
                     $desc = "none";
-//                    dd($desc);
 
                 }
 
@@ -567,7 +578,7 @@ class RosterController extends Controller
                             'Content-Type' => 'application/json',
                             'X-HTTP-Method-Override' => 'PUT'
                         ),
-                        'json' => array('checks' => $checks, 'start' => $strStart,
+                        'json' => array('checks' => $checksArray, 'start' => $strStart,
                             'end' => $strEnd, 'roster_id' => $roster_id, 'title' => $title, 'desc' => $desc,
                             'compId' => $compId, 'employees' => $employees, 'locations' => $locations
 
@@ -577,46 +588,57 @@ class RosterController extends Controller
 
                 $updated = json_decode((string)$response->getBody());
 
-                $theAction = 'You have successfully edited the shift';
-                return view('confirm')->with(array('theAction' => $theAction));
+                if ($updated->success == true) {
+
+                    $theAction = 'You have successfully edited the shift';
+
+                    return view('confirm')->with(array('theAction' => $theAction));
+                }else{
+                    return Redirect::back()
+                        ->withInput()
+                        ->withErrors('Failed to save the changes');
+
+                }
+
+
             } else {
                 return Redirect::to('/login');
             }
-        } catch(\Exception $exception){
-            dd($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));
-
-            $errMsg = $exception->getMessage();
-
-            if((strpos($errMsg, 'Could not resolve host') !== false)){
-
-                $e = Config::get('constants.INTERNET_ERROR');
-                return view('error-msg')->with('msg', $e);
-
-            } else{
-                $e = Config::get('constants.ERROR_UPDATE');
-                return view('error-msg')->with('msg', $e);
-            }
+//        } catch(\Exception $exception){//unfortunately catches for validation errors too......
+//            dd($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));//doesn't work, still went to token mismatch exception in the page open awhile situation, otherwise does work
+//
+//            $errMsg = $exception->getMessage();
+//
+//            if((strpos($errMsg, 'Could not resolve host') !== false)){
+//
+//                $e = Config::get('constants.INTERNET_ERROR');
+//                return view('error-msg')->with('msg', $e);
+//
+//            } else{
+//                $e = Config::get('constants.ERROR_UPDATE');
+//                return view('error-msg')->with('msg', $e);
+//            }
         }
 
-//        catch (GuzzleHttp\Exception\BadResponseException $e) {
-//            return Redirect::to('/rosters/' . $id . '/edit')
-//                ->withInput()
-//                ->withErrors('Operation failed');
-//
-//        } catch (\ErrorException $error) {
-//            return Redirect::to('/rosters/' . $id . '/edit')
-//                ->withInput()
-//                ->withErrors('Error updating shift details');
-//
-//        } catch (\InvalidArgumentException $err) {
-//            return Redirect::to('/rosters/' . $id . '/edit')
-//                ->withInput()
-//                ->withErrors('Error updating shift. Please check input is valid.');
-//
-//        } catch (\TokenMismatchException $mismatch) {
-//            return Redirect::to('/');
-////                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
-//        }
+        catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return Redirect::to('/rosters/' . $id . '/edit')
+                ->withInput()
+                ->withErrors('Operation failed');
+
+        } catch (\ErrorException $error) {
+            return Redirect::to('/rosters/' . $id . '/edit')
+                ->withInput()
+                ->withErrors('Error updating shift details');
+
+        } catch (\InvalidArgumentException $err) {
+            return Redirect::to('/rosters/' . $id . '/edit')
+                ->withInput()
+                ->withErrors('Error updating shift. Please check input is valid.');
+
+        } catch (\TokenMismatchException $mismatch) {
+            return Redirect::to('/');
+//                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
+        }
     }
 
     /**

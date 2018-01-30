@@ -2,7 +2,7 @@
 @include('sidebar')
 
 @section('title-item')
-    Add Shift
+    Edit Shift
 @stop
 
 @section('custom-scripts')
@@ -26,6 +26,8 @@
             //we have reentered page due to an input error, so check for oldInput for location checks field
                 oldInput();
             @endif
+
+            originalValuesForEdit();
 
         }, false);
 
@@ -91,7 +93,7 @@
                 //first call is when checkAmt() is called and checksObj is not defined, so intialise and assign values
                 initialiseEmptyChecksObject();
             }else{
-                    reinitialiseChecksObject();
+                reinitialiseChecksObject();
             }
         }
 
@@ -107,7 +109,8 @@
                         myArrayLocName: null,
                         myArrayLocId: 0,
                         oldCheckValue: 0,
-                        valueChecks: 0,//initialise value here for assignment later when current input values checked
+                        valueChecks: 0,
+                        valueForEdit: 0//initialise value here for assignment later when current input values checked
                     });
                 }
 
@@ -201,9 +204,41 @@
                         myArrayLocId: arrayIndexAdd[a],
                         oldCheckValue: 0,
                         valueChecks: 0,
+                        valueForEdit: 0
                     });
                 }
             }
+        }
+
+        function originalValuesForEdit(){
+            checkAmt();
+
+            initialiseOrReinitialiseChecksObj();
+
+//            var c = 0;
+
+            @if(count($myLocations) > 1)
+
+                @foreach($assigned as $shiftEdit)
+
+                    var valueForEdit = "<?php echo $shiftEdit->checks;?>";
+                    var valueForEditLocation = "<?php echo $shiftEdit->location;?>";
+
+                        for (var b = 0; b < checksObj.length; b++) {
+                            //convert checksObject myArrayLocName to just the location name for comparison
+                            var text = checksObj[b].myArrayLocName;
+
+                            var subStringIndex = text.indexOf('>') + 1;//ie 1 character after the > character in the string
+                            var locationName = text.substr(subStringIndex);
+
+                            if (locationName.trim() == valueForEditLocation) {
+
+                                checksObj[b].valueForEdit = valueForEdit;
+                                break;
+                            }
+                        }
+                @endforeach
+            @endif
         }
 
         function oldInput(){
@@ -219,7 +254,7 @@
 
                     var jsOldChecks = "<?php echo $oldCheck;?>";
 
-                    //may need to assign the value, we'll see FIxme
+                    //just checks that the object for this index is equal to the array for this index
                     if (checksObj[x].myArrayLocName = document.getElementById(myArray[x]).parentElement.innerHTML) {
 
                         checksObj[x].oldCheckValue = jsOldChecks;
@@ -318,11 +353,16 @@
                     if(checksObj[i].valueChecks != 0){
 
                         locationInput[i].setAttribute("value", checksObj[i].valueChecks);
-                    }else {
-                        //no value from current inputs, check if we have oldInput
+                    }else{
+                        //no current user input for the object, so check if old input or use the value coming from the saved item in the db (ie valueForEdit)
                         if(checksObj[i].oldCheckValue != 0){
                             locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                        }else{
+                            locationInput[i].setAttribute("value", checksObj[i].valueForEdit);
+
                         }
+
+
                     }
                 }
 
@@ -421,7 +461,7 @@
         //gather input from the select locations field
         function checkAmt() {
 
-            //before updating the value of myArray, check for current input values and old input and assign to checksObj
+            //before updating the value of myArray, check for current input values and assign to checksObj
             checksValues();
 
             myArray = [];
@@ -453,38 +493,37 @@
         </div>
     @endif
 
-    {{ Form::open(['role' => 'form', 'url' => '/rosters']) }}
+    {{ Form::open(['route' => ['rosters.update', $assigned[0]->assigned_shift_id], 'method'=>'put']) }}
 
         <div id="1" class="tabcontent col-md-8">
                 <div class='form-group'>
                     {!! Form::Label('title', 'Shift Title *') !!}
-                    {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'eg University Grounds Security',
-                    'onkeypress'=>'return noenter()')) }}
+                    {{ Form::text('title', $assigned[0]->shift_title, array('class' => 'form-control',
+                        'placeholder' => 'eg University Grounds Security', 'onkeypress'=>'return noenter()')) }}
                 </div>
 
                 <div class='form-group'>
                     {!! Form::Label('desc', 'Shift Description') !!}
-                    {{ Form::text('desc', null, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
+                    {{ Form::text('desc', $assigned[0]->shift_description, array('class' => 'form-control', 'placeholder' => 'eg Provide security services at the University of Texas at Austin', 'onkeypress'=>'return noenter()')) }}
                 </div>
 
                 <div class='form-group'>
                     {{ Form::label('startDate', 'Start Date *') }}
-                    {{ Form::text('startDateTxt', '', array('class' => 'datepicker', 'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
+                    {{ Form::text('startDateTxt', $startDate, array('class' => 'datepicker')) }}
                     &nbsp;&nbsp;&nbsp;
                     {{ Form::label('startTime', 'Start Time *') }}
-                    <input class="input-a" value="{{ old('startTime') }}" name="startTime" data-default="9:00"
-                           placeholder="10:00">
+                    <input class="input-a" value="{{ old('startTime') ? old('startTime') : $startTime}}" name="startTime"
+                           data-default={{$startTime}} placeholder={{$startTime}}>
                     @include('clock-picker')
                 </div>
 
                 <div class='form-group'>
                     {{ Form::label('endDate', 'End Date *&nbsp;&nbsp;') }}
-                    {{ Form::text('endDateTxt', '', array('class' => 'datepicker',  'onkeypress'=>'return noenter()', 'placeholder' => 'eg 03/20/2018')) }}
+                    {{ Form::text('endDateTxt', $endDate, array('class' => 'datepicker')) }}
                     &nbsp;&nbsp;&nbsp;
                     {{ Form::label('endTime', 'End Time *&nbsp;&nbsp;') }}
-                    <input class="input-b" value="{{ old('endTime') }}" name="endTime" data-default="17:00"
-                           onkeypress="return noenter()"
-                           placeholder="16:00">
+                    <input class="input-b" value={{ old('endTime') ? old('endTime') : $endTime}} name="endTime"
+                           data-default={{$endTime}} placeholder={{$endTime}}>
                     @include('clock-picker')
                 </div>
 
@@ -506,10 +545,11 @@
                     </div>
 
                     <div id="checkboxes">
+
                         @php
                             if(count(old('employees')) > 0){
                                     foreach(old('employees') as $empOldItem){
-                                        foreach($empList as $emp){
+                                        foreach($employeesAll as $emp){
                                             if($empOldItem == $emp->user_id)  {
 
                                                 echo
@@ -522,7 +562,7 @@
                                         }
                                     }
 
-                               foreach($empList as $emp){
+                               foreach($employeesAll as $emp){
 
                                    $sameEmp = false;
 
@@ -540,24 +580,26 @@
                                                        id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
                                    }
 
-                             }
-                            }else{
-                            /*check if there are employees to display in the select list*/
-                                if(count($empList) > 0){
-
-                                     foreach($empList as $emp){
-                                      echo
-                                                " <label for='".$emp->user_id."'>
-                                                <input type='checkbox' name='employees[]' value='".$emp->user_id."'
-                                                       id='".$emp->user_id."'/>".$emp->first_name." ".$emp->last_name."</label>";
-                                     }
-
-                                 }else{
-                                /*no employees to show so advise user to add locations*/
-                                    echo
-                                    " <label for='1'>Add items via Employees Feature</label>";
-
                                 }
+                            }else{
+                                     //if no old input, use values stored in db and other items not stored in db
+
+                                     //Highlight assigned_shift_employees
+                                    foreach($myEmployees as $myEmployee){
+                                        echo "<label for='".$myEmployee->mobile_user_id."'>
+                                        <input type='checkbox' name='employees[]' value='".$myEmployee->mobile_user_id."'
+                                               checked
+                                               id='".$myEmployee->mobile_user_id."'/>    ".$myEmployee->employee."</label>";
+                                    }
+
+                                    //List all the employees besides those that are selected at the top of the list because stored in db
+                                    foreach($empList as $emp){
+                                     echo "<label for='".$emp->user_id."'>
+                                        <input type='checkbox' name='employees[]' value='".$emp->user_id."'
+                                               id='".$emp->user_id."'/>    ".$emp->first_name." ".$emp->last_name."</label>";
+
+
+                                    }
                             }
                         @endphp
 
@@ -589,20 +631,20 @@
                         @php
                             if(count(old('locations')) > 0){
                                     foreach(old('locations') as $locOldItem){
-                                        foreach($locList as $loc){
+                                        foreach($locationsAll as $loc){
                                             if($locOldItem == $loc->id)  {
 
                                                 echo
                                                 " <label for='".$locOldItem."' class='locationNames'>
-                                                <input type='checkbox' name='locations[]' value='".$locOldItem."'
-                                                checked id='".$locOldItem."'/>".$loc->name."</label>";
+                                                <input type='checkbox' name='locations[]' value='".$locOldItem."' checked
+                                                       id='".$locOldItem."'/>".$loc->name."</label>";
 
                                                break;
                                             }
                                         }
                                     }
 
-                               foreach($locList as $loc){
+                               foreach($locationsAll as $loc){
 
                                    $sameSame = false;
 
@@ -621,22 +663,26 @@
                                    }
 
                              }
-                            }else{
-                            /*check if there are locations to display*/
-                                if(count($locList) > 0){
-                                     foreach($locList as $loc){
-                                      echo
-                                                " <label for='".$loc->id."' class='locationNames'>
-                                                <input type='checkbox' name='locations[]' value='".$loc->id."'
-                                                       id='".$loc->id."'/>".$loc->name."</label>";
-                                     }
+                             //if no old input, use values stored in db and other items not stored in db
                                 }else{
-                                /*no locations to show so advise user to add locations*/
-                                    echo
-                                    " <label for='1'>Add items via Locations Feature</label>";
+                                //Highlight assigned_shift_locations
+                                    foreach($myLocations as $myLocation){
+                                        echo "<label for='".$myLocation->location_id."' class='locationNames'>
+                                        <input type='checkbox' name='locations[]' value='".$myLocation->location_id."'
+                                               checked
+                                               id='".$myLocation->location_id."'/>    ".$myLocation->location."</label>";
+                                    }
 
+                                    //List all the locations besides those that are selected at the top of the list
+                                    //because stored in db
+                                    foreach($locList as $loc){
+                                     echo "<label for='".$loc->id."' class='locationNames'>
+                                        <input type='checkbox' name='locations[]' value='".$loc->id."'
+                                               id='".$loc->id."'/>    ".$loc->name."</label>";
+
+
+                                    }
                                 }
-                            }
                         @endphp
                     </div>
                 </div>
@@ -651,6 +697,7 @@
 
             </div>
         </div>
+
         <div id="4" class="tabcontent col-md-8">
 
             <div class="alert alert-danger alert-custom">
