@@ -42,11 +42,11 @@
                 @endif
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
-                        @if($item->checkDuration < 1)
-                           <td> < 1</td>
-                        @else
+                        {{--@if($item->checkDuration < 1)--}}
+                           {{--<td> < 1</td>--}}
+                        {{--@else--}}
                             <td>{{$item->checkDuration}}</td>
-                        @endif
+                        {{--@endif--}}
                     @else
                         <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif

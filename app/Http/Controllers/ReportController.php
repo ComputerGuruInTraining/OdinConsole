@@ -379,15 +379,17 @@ class ReportController extends Controller
 
             //todo: test ensure duration fn doesn't throw error due to no data in check_ins and check_outs
             if ((isset($case->check_ins)) && (isset($case->check_outs))){
-                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+                $case->checkDurationSeconds = locationCheckDuration($case->check_ins, $case->check_outs);
+                //format seconds into hours, minutes
+                $case->checkDuration = totalMinsInHours($case->checkDurationSeconds);
             }
 
         }
 
-        $totalMins = $fmtData->sum('checkDuration');
-        $report->totalHours = totalMinsInHours($totalMins);
+        $totalSecs = $fmtData->sum('checkDurationSeconds');
+        $report->totalHours = totalMinsInHours($totalSecs);
 
-        //                            dd($fmtData);
+//                                    dd($report->totalHours, $fmtData, $totalSecs);
 
         //number of check ins at premise
         //fixme needs to be changed to be the number of completed check_ins (ie that have a check out)

@@ -24,7 +24,7 @@
 @stop
 
 @section('total2-val-show')
-    WIP
+    {{$report->totalHours}}
 @stop
 
 @section('colHeading1-show')

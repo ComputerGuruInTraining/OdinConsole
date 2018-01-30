@@ -17,15 +17,15 @@
                             {{--todo: minutes and seconds--}}
                             <span class="col-md-9">
                                 @if(isset($item->checkDuration))
-                                    @if($item->checkDuration < 1)
-                                        < 1 min
-                                    @else
-                                        {{$item->checkDuration}} min/s
-                                    @endif
+                                    {{--@if($item->checkDuration < 1)--}}
+                                        {{--< 1 min--}}
+                                    {{--@else--}}
+                                        {{$item->checkDuration}}
+                                    {{--@endif--}}
                                 @else
-                                    -
+                                    <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                                 @endif
-                                            </span>
+                            </span>
                         </p>
                         <br/>
                         <p>
