@@ -429,7 +429,7 @@ class RosterController extends Controller
                 $startTime = ((string)$carbonStart->format('H:i'));
                 $endDate = $carbonEnd->format('m/d/Y');
                 $endTime = ((string)$carbonEnd->format('H:i'));
-
+//dd($assigned);
                 return view('home/rosters/edit')->with(array(
                     'empList' => $empNotSelected,
                     'locList' => $locNotSelected,
