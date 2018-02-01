@@ -9,6 +9,17 @@
             /*font-weight: 700;*/
 
         /*}*/
+        /*not working atm:*/
+        /*.group-list:nth-child(even){*/
+            /*background-color: #f9f9f9;*/
+            /*border-top: 1px solid #444 !important;*/
+            /*border-bottom: 1px solid #444 !important;*/
+
+        /*}*/
+
+        /*.table:nth-child(even){*/
+            /*background-color: #f9f9f9;*/
+        /*}*/
 
         .table-report{
             line-height: 1.8;
@@ -16,9 +27,27 @@
             font-size: 20px;
         }
 
-        .details-heading{
+        .top-border{
+            border-bottom: 2px solid #ddd;
+        }
 
+        .content-app{
+            line-height: 1 !important;
+            /*margin: 15px !important;*/
+            text-align: justify;
+        }
+
+        .padding-top{
+            padding-top: 15px !important;
+        }
+
+        .case-details{
+            padding-top: 25px !important;
+        }
+
+        .details-heading{
             text-decoration: underline;
+            padding-left: 5px;
         }
 
         .report-title {
@@ -45,8 +74,8 @@
             color: #777;
         }
 
-        .margin-table {
-            margin-bottom: 25px !important;
+        .margin-bottom {
+            margin-bottom: 15px !important;
         }
 
         /*Fonts Large*/
@@ -97,11 +126,13 @@
             position: relative;
             min-height: 1px;
             padding-right: 15px;
-            padding-left: 15px;
+            padding-left: 10px;
+
         }
 
         .table-responsive {
             overflow: auto;
+            width: 100%;
         }
 
         .table-responsive > .table tr th,
@@ -122,8 +153,8 @@
             .table-responsive {
                 width: 100%;
                 margin-bottom: 15px;
-                overflow-y: hidden;
-                -ms-overflow-style: -ms-autohiding-scrollbar;
+                /*overflow-y: hidden;*/
+                /*-ms-overflow-style: -ms-autohiding-scrollbar;*/
             }
 
             .table-responsive > .table {
@@ -184,41 +215,6 @@
             </tr>
 
         </table>
-
-        {{--<div class="col-md-12 margin-table">--}}
-            {{--<table class="col-md-12 margin-bottom report-table">--}}
-                {{--<tr><td class="report-date grey-larger">{{$start}} - {{$end}}</td><td></td></tr>--}}
-                {{--<tr><td class="col-md-3">Activity Report:</td>--}}
-                    {{--<td class="col-md-3 report-header table-report grey-larger">@yield('entity-value')</td>--}}
-                {{--</tr>--}}
-                {{--<tr>--}}
-                    {{--<td class="col-md-3 report-header-row table-report grey-larger">@yield('total1-desc')</td>--}}
-                    {{--<td class="col-md-3 report-header table-report grey-larger">@yield('total1-val')</td>--}}
-                {{--</tr>--}}
-                {{--<tr>--}}
-                    {{--<td class="col-md-3">@yield('total2-show')</td>--}}
-                    {{--<td class="col-md-3">@yield('total2-val-show')</td>--}}
-                {{--</tr>--}}
-
-            {{--</table>--}}
-
-            {{--<table>--}}
-                {{--<tr>--}}
-                    {{--<td class="table-report grey-larger"><h4 id="report-date grey-larger">{{$start}} - {{$end}}</h4>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-                {{--<tr class="table-report">--}}
-                    {{--<td class="report-header-row table-report grey-larger"><p>@yield('entity')</p></td>--}}
-                    {{--<td class="table-report"><p--}}
-                                {{--class="report-header table-report grey-larger">@yield('entity-value')</p></td>--}}
-                {{--</tr>--}}
-                {{--<tr class="table-report">--}}
-                    {{--<td class="report-header-row table-report grey-larger"><p>@yield('total1-desc')</p></td>--}}
-                    {{--<td class="table-report grey-larger"><p class="report-header table-report">@yield('total1-val')</p>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-            {{--</table>--}}
-        {{--</div>--}}
 
         <table class="table">
             <tr>

@@ -30,7 +30,7 @@
                     <th>Activity</th>
                     {{--Subject, Regarding, Reporting About, RE, --}}
                     <th>Entity</th>
-                    <th style="text-align: center">Manage</th>
+                    <th>Manage</th>
                 </tr>
                 {{--check to ensure at least one report exists first, otherwise view error thrown--}}
                 @if(count($reports) > 0)
@@ -52,12 +52,15 @@
                                     <td></td>
                                 @endif
 
+                                <td>
+                                  <a href="report-{{$report->id}}"><i class="fa fa-file"></i>
+                                    </a>
 
-                                <td><a href="report-{{$report->id}}">View Report</a> |
                                     <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}"
-                                       class="edit-links" target="_blank">Download PDF</a>
-                                    | <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">Delete
-                                        Report</a>
+                                       ><i class="fa fa-download icon-padding"></i></a>
+
+                                    <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">
+                                        <i class="fa fa-trash-o icon-padding"></i></a>
                                     {{--| <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>--}}
                                 </td>
                             </tr>

@@ -16,6 +16,7 @@ return [
     'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',//works even with https
     'ERROR_GENERIC' => 'Failed to load webpage.',
     'ERROR_SERVER' => 'Failed to load resource.',
+//    todo: change company email then.....but first, trademarked? I recall odin.net is taken I believe for email domain
     'COMPANY_EMAIL' => 'admin@odinlite.net',
     'COMPANY_NAME' => 'Odin Case Management',
     'ERROR_UPDATE' => 'Unexpected error updating details',

@@ -82,15 +82,14 @@
                             <td>{{$item->first_name}} {{$item->last_name}}</td>
 
                             @if($item->title != "Nothing to Report")
-                                <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links">Edit</a>
-                                    |
+                                <td><a href="/case-notes/{{$item->id}}/edit" class="edit-links"><i class="fa fa-edit"></i></a>
                                     <a href="/confirm-delete/{{$item->id}}/{{$url}}"
-                                       style="color: #990000;">Delete</a>
+                                       style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
                                 </td>
                             @else
                                 <td>
                                     <a href="/confirm-delete/{{$item->id}}/{{$url}}"
-                                       style="color: #990000;">Delete</a>
+                                       style="color: #990000;"><i class="fa fa-trash-o"></i></a>
                                 </td>
                             @endif
                         </tr>

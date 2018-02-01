@@ -348,7 +348,9 @@ class ReportController extends Controller
         foreach ($fmtData as $case) {
 
             if ((isset($case->check_ins)) && (isset($case->check_outs))){
-                $case->checkDuration = locationCheckDuration($case->check_ins, $case->check_outs);
+                $case->checkDurationSeconds = locationCheckDuration($case->check_ins, $case->check_outs);
+                //format seconds into hours, minutes
+                $case->checkDuration = totalMinsInHours($case->checkDurationSeconds);
             }
         }
 
@@ -397,10 +399,22 @@ class ReportController extends Controller
 
         $total = $checkIns->count();
 
+        //need to check if all of the case notes are "Nothing to Report", if so, don't display "Case Details" heading on report
+        $caseNoteReported = $fmtData->first(function ($value, $key) {
+            return $value->title != "Nothing to Report";
+        });
+
+//        dd($caseNoteReported);
+        if($caseNoteReported == null){
+            $notes = 'nothing reported';
+        }else{
+            $notes = 'case notes reported';
+        }
+
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
 
-        return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report]);
+        return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report, 'notes' => $notes]);
 
     }
 
@@ -515,7 +529,8 @@ class ReportController extends Controller
                             'start' => $sdate,
                             'end' => $edate,
                             'total' => $formatData->get('total'),
-                            'show' => 'webpage'
+                            'show' => 'webpage',
+                            'notes' => $formatData->get('notes')
 
                         ));
 
@@ -838,7 +853,9 @@ class ReportController extends Controller
                             'report' => $formatData->get('report'),
                             'start' => $sdate,
                             'end' => $edate,
-                            'total' => $formatData->get('total')
+                            'total' => $formatData->get('total'),
+                            'notes' => $formatData->get('notes')
+
                         ));
 
                         if ($report->type == 'Client') {
@@ -1060,6 +1077,8 @@ class ReportController extends Controller
         }
     }
 
+    //archived
+    //was used for case notes view
     public function getCaseNotes($id, $token)
     {
         try {
@@ -1153,7 +1172,7 @@ class ReportController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int $reportId
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -1174,6 +1193,19 @@ class ReportController extends Controller
 
                 $report = json_decode((string)$response->getBody());
 
+                //format dates to be 3rd January 2107 for report date range
+                //  foreach($report as $i => $item){
+                //add the extracted date to each of the objects and format date
+                $s = $report->date_start;
+
+                $sdt = new DateTime($s);
+                $sdate = $sdt->format('jS F Y');
+
+                $e = $report->date_end;
+
+                $edt = new DateTime($e);
+                $edate = $edt->format('jS F Y');
+
                 if ($report->type == 'Case Notes') {
 
                     $response = $client->get(Config::get('constants.API_URL') . 'reportcases/' . $id, [
@@ -1183,25 +1215,11 @@ class ReportController extends Controller
                     ]);
 
                     $cases = json_decode((string)$response->getBody());
-
                     if ($cases->success == false) {
                         $err = 'There were no case notes created during the period that the selected report covers.';
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     } else {
-
-                        //format dates to be 3rd January 2107 for report date range
-                        //  foreach($report as $i => $item){
-                        //add the extracted date to each of the objects and format date
-                        $s = $report->date_start;
-
-                        $sdt = new DateTime($s);
-                        $sdate = $sdt->format('jS F Y');
-
-                        $e = $report->date_end;
-
-                        $edt = new DateTime($e);
-                        $edate = $edt->format('jS F Y');
 
                         //format dates to be mm/dd/yyyy for case notes
                         foreach ($cases->reportCaseNotes as $i => $item) {
@@ -1264,9 +1282,45 @@ class ReportController extends Controller
 
 
                     }
-                }
+                } else if (($report->type == 'Client') || ($report->type == 'Management')) {
 
-                /*********else if the report->type == ??***********/
+                    $data = $this->getLocationReportData($id, $token);
+
+//                    dd($data);
+
+                    if ($data != 'errorInResult') {
+
+                        $formatData = $this->formatLocationReportData($data, $report);
+
+//                        dd($formatData);
+
+                        $urlCancel = 'reports-' . $id . '-edit';
+
+                        view()->share(array(
+                            'data' => $formatData->get('groupData'),
+                            'location' => $data->location,
+                            'report' => $formatData->get('report'),
+                            'start' => $sdate,
+                            'end' => $edate,
+                            'total' => $formatData->get('total'),
+                            'show' => 'webpage',
+                            'notes' => $formatData->get('notes'),
+                            'edit' => 'edit',
+                            'urlCancel' => $urlCancel,
+                        ));
+
+                        if ($report->type == 'Client') {
+
+                            return view('report/client/edit');
+
+                        } else if ($report->type == 'Management') {
+//                            dd($formatData);
+
+                            return view('report/management/edit');
+
+                        }
+                    }
+                }
 
             } //ie no session token exists and therefore the user is not authenticated
             else {
@@ -1344,10 +1398,12 @@ class ReportController extends Controller
             return Redirect::back()
                 ->withErrors('Error displaying edit case note page');
         } catch (\ErrorException $error) {
+            dd($error);
             $e = 'Error displaying edit case note form';
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
+            dd($err);
             $e = 'Error displaying edit case note';
             return view('error-msg')->with('msg', $e);
 
@@ -1549,5 +1605,25 @@ class ReportController extends Controller
             $error = 'Error removing case note from system';
             return view('error-msg')->with('msg', $error);
         }
+    }
+
+    //returns case notes for a location over a period
+    //used for Client and Management Report
+    public function getLocationCaseNotes($reportId){
+
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->get(Config::get('constants.API_URL') . 'reportnotes/' . $reportId, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ]
+        ]);
+
+        $notes = json_decode((string)$response->getBody());
+        dd($notes);
+        return $notes;
+
     }
 }
