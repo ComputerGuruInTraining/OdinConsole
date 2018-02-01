@@ -717,7 +717,7 @@
                 <div>
                    <button onclick="openStep(event, 3); activeTab(3);" type="button" class="btn btn-info">Back</button>
                     <span class="form-buttons">
-                       {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
+                       {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
                        <a href="/rosters" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
                     </span>
                 </div>

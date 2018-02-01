@@ -16,6 +16,9 @@
             <td></td>
             <td></td>
             <td></td>
+            @if(isset($edit))
+                <td></td>
+            @endif
 
         </tr>
 
@@ -52,6 +55,21 @@
                 @else
                     <td></td>
                 @endif
+
+                {{--Edit btns for edit view only--}}
+                @if(isset($edit))
+                    @if($item->title != "Nothing to Report")
+
+                        <td><a href="/edit-case-notes/{{$item->case_note_id}}/reports/{{$report->id}}" class="edit-links"><i class="fa fa-edit"></i></a>
+
+                            <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
+                        </td>
+                    @else
+                        <td>
+                            <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    @endif
+                @endif
             </tr>
         @endforeach
         </tbody>
@@ -66,5 +84,8 @@
         <td></td>
         <td></td>
         <td></td>
+        @if(isset($edit))
+            <td></td>
+        @endif
     </tr>
 @endif
