@@ -12,26 +12,6 @@ if (!function_exists('confirmDlt')) {
     {
         try {
 
-//            $msg = '';
-//
-//            if ($url == 'employees') {
-//                $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
-//            }
-//
-//            if ($url == 'locations') {
-//                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
-//            }
-
-//            if($url == 'case-notes'){
-//
-////                $url = redirect()->back();
-////                $url = redirect()->back()->getTargetUrl();
-////                $url = re('routeName', ['id' => 1], false);
-////                $url = $request->path();
-//
-//
-//            }
-
             return view('confirm-delete')->with(array('id' => $id, 'url' => $url));
 
         }catch (GuzzleHttp\Exception\BadResponseException $e) {
@@ -61,21 +41,6 @@ if (!function_exists('confirmDel')) {
     function confirmDel($id, $url)
     {
         try {
-
-//            $msg = '';
-//
-//            if ($url == 'rosters') {
-//                $msg = 'Consider this carefully because, for eg, if a shift for a particular date is being deleted,
-//                    this will delete all the shift details for that date.';
-//            }
-//
-//            if ($url == 'employees') {
-//                $msg = 'Consider this carefully because deleting an employee may affect other data in the database related to the employee.';
-//            }
-//
-//            if ($url == 'locations') {
-//                $msg = 'Consider this carefully because a shift may be assigned to the location and reports may be impacted.';
-//            }
 
             return view('confirm-del')->with(array('id' => $id, 'url' => $url));
 
@@ -196,7 +161,7 @@ if (!function_exists('totalMinsInHours')) {
     function totalMinsInHours($time)
     {
             if ($time < 60) {
-                return $time .' seconds';
+                return $time .' s';
             }
 
             $mins = $time/60;
@@ -207,10 +172,10 @@ if (!function_exists('totalMinsInHours')) {
 
             if($hours != 0){
 
-                return sprintf('%d hour/s %d minute/s', $hours, $minutes);
+                return sprintf('%d h %d m', $hours, $minutes);
 
             }else{
-                return sprintf('%d minute/s', $minutes);
+                return sprintf('%d m', $minutes);
 
             }
 
@@ -545,6 +510,29 @@ if (!function_exists('getUser')) {
             $user = json_decode((string)$response->getBody());
 
             return $user;
+        }
+    }
+}
+
+if (!function_exists('getUserRole')) {
+
+    function getUserRole($userId)
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL').'/user/role/'.$userId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            //retrieves role as an array datatype with the role at index 0
+            $userRole = json_decode((string)$response->getBody());
+
+            return $userRole[0];
         }
     }
 }

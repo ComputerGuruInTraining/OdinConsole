@@ -3,7 +3,7 @@
 
 @section('button')
     <button type="button" class="btn btn-info" onclick="window.location.href='/reports-{{$report->id}}-edit'">
-        Manage Report
+        Manage Report Case Notes
     </button>
 @stop
 

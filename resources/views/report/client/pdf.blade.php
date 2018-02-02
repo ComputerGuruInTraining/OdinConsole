@@ -57,5 +57,5 @@
 @stop
 
 @section('additional-report-content')
-    @include('layouts.report.case_details')
+    @include('layouts.report.case_details_pdf')
 @stop

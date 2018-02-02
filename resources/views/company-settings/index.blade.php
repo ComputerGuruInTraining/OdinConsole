@@ -116,6 +116,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Manage</th>
                     </tr>
                     </thead>
@@ -126,11 +127,11 @@
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->role }}</td>
                             {{--<td>{{ $user->created_at->format('F d, Y h:ia') }}</td>--}}
                             <td>
-                                <a href="/user/{{ $user->user_id }}/edit">Edit</a>
-                                |
-                                <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;">Delete</a>
+                                <a href="/user/{{ $user->user_id }}/edit"><i class="fa fa-edit"></i></a>
+                                <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
                             </td>
                         </tr>
                     @endforeach
