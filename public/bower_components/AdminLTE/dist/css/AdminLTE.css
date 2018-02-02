@@ -513,10 +513,7 @@ h1.master-alt{
 
 
 /*styling for location list table Action btns*/
-.column-width{
-    /*width: 15%;*/
-    min-width: 200px;
-}
+
 
 /*Report Show Page Styling*/
 /*.report-title {*/
@@ -714,6 +711,11 @@ body {
 
     .col-min-width-med{
         min-width: 260px;
+    }
+
+    .column-width{
+        /*width: 15%;*/
+        min-width: 110px;
     }
 }
 @media (max-width: 767px) {

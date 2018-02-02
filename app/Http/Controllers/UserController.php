@@ -48,7 +48,6 @@ class UserController extends Controller
 
                 $compInfo = json_decode((string)$resp->getBody());
 
-
                 $users = array_sort($users, 'last_name', SORT_ASC);
 
                 $url = 'user';
@@ -82,8 +81,7 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $error);
         } catch(\handleViewException $handle){
             $error = 'Error displaying page';
-            return view('error-msg')->with('msg',
-$error);
+            return view('error-msg')->with('msg', $error);
 
         }
 	}
@@ -133,13 +131,15 @@ $error);
                 $this->validate($request, [
                     'first_name' => 'required|max:255',
                     'last_name' => 'required|max:255',
-                    'email' => 'required|email|max:255'
+                    'email' => 'required|email|max:255',
+                    'role' => 'required'
                 ]);
 
                 //data to be inserted into db
                 $first_name = ucwords(Input::get('first_name'));
                 $last_name = ucwords(Input::get('last_name'));
                 $email = Input::get('email');
+                $role = Input::get('role');
 
                 //api request variables
                 //retrieve token needed for authorized http requests
@@ -155,7 +155,7 @@ $error);
                             'Content-Type' => 'application/json'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email, 'company_id' => $compId
+                            'email' => $email, 'company_id' => $compId, 'role' => $role
                         )
                     )
                 );
@@ -225,7 +225,9 @@ $error);
 
                 $user = json_decode((string)$response->getBody());
 
-                return view('user/edit')->with('user', $user);
+                $userRole = getUserRole($id);
+
+                return view('user/edit')->with(array('user' => $user, 'role' => $userRole));
 
             } else {
                 return Redirect::to('/login');
@@ -269,7 +271,8 @@ $error);
                 $this->validate($request, [
                     'first_name' => 'required|max:255',
                     'last_name' => 'required|max:255',
-                    'email' => 'required|email|max:255'
+                    'email' => 'required|email|max:255',
+                    'role' => 'required'
                 ]);
 
                 $token = session('token');
@@ -278,7 +281,7 @@ $error);
                 $first_name = ucwords(Input::get('first_name'));
                 $last_name = ucwords(Input::get('last_name'));
                 $email = Input::get('email');
-
+                $role = Input::get('role');
 
                 $client = new GuzzleHttp\Client;
 
@@ -289,7 +292,7 @@ $error);
                             'X-HTTP-Method-Override' => 'PUT'
                         ),
                         'json' => array('first_name' => $first_name, 'last_name' => $last_name,
-                            'email' => $email
+                            'email' => $email, 'role' => $role
                         )
                     )
                 );

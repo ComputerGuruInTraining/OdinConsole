@@ -148,10 +148,10 @@
                 necessary. View upcoming shifts and locations.
             </p>
         </div>
-        <div>
+        {{--<div>--}}
             {{--FIXME: remove!!! important!!!--}}
-            <a href="http://bin.mailgun.net/b0f8acdf">Email Logging</a>
-        </div>
+            {{--<a href="http://bin.mailgun.net/b0f8acdf">Email Logging</a>--}}
+        {{--</div>--}}
     </div>
 
     @if(isset($loggedIn))

@@ -514,6 +514,29 @@ if (!function_exists('getUser')) {
     }
 }
 
+if (!function_exists('getUserRole')) {
+
+    function getUserRole($userId)
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL').'/user/role/'.$userId, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ]
+            ]);
+
+            //retrieves role as an array datatype with the role at index 0
+            $userRole = json_decode((string)$response->getBody());
+
+            return $userRole[0];
+        }
+    }
+}
+
 //function to remove the first and last character of a string
 if (!function_exists('stringRemove1stAndLast')) {
 

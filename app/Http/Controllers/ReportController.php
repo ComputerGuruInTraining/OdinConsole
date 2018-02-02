@@ -42,8 +42,6 @@ class ReportController extends Controller
 
                 $reports = json_decode((string)$response->getBody());
 
-//                dd($reports);
-
                 if (count($reports) > 0) {
                     foreach ($reports as $i => $item) {
                         //add the extracted date to each of the objects and format date
@@ -188,15 +186,19 @@ class ReportController extends Controller
                 if ($type == 'Case Notes') {
 
                     $result = $this->postCaseNote($location, $type, $dateFrom, $dateTo, $token, $compId);
+
                 } else if ($type == 'Location Checks') {
 
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+
                 } else if ($type == 'Client') {
 
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+
                 } else if ($type == 'Management') {
 
                     $result = $this->postCasesChecks($location, $type, $dateFrom, $dateTo, $token, $compId);
+
                 } else if ($type == 'Individual') {
 
                     $result = $this->postIndividual($empUserId, $type, $dateFrom, $dateTo, $token, $compId);
@@ -228,7 +230,6 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Operation failed.');
@@ -237,8 +238,6 @@ class ReportController extends Controller
                 ->withInput()
                 ->withErrors('Error generating report');
         } catch (\InvalidArgumentException $err) {
-            dd($err);
-            //tested: works :)
             return Redirect::to('reports/create')
                 ->withInput()
                 ->withErrors('Error generating report. Please check input is valid.');
@@ -391,8 +390,6 @@ class ReportController extends Controller
         $totalSecs = $fmtData->sum('checkDurationSeconds');
         $report->totalHours = totalMinsInHours($totalSecs);
 
-//                                    dd($report->totalHours, $fmtData, $totalSecs);
-
         //number of check ins at premise
         //fixme needs to be changed to be the number of completed check_ins (ie that have a check out)
         $checkIns = $fmtData->pluck('check_ins');
@@ -404,7 +401,6 @@ class ReportController extends Controller
             return $value->title != "Nothing to Report";
         });
 
-//        dd($caseNoteReported);
         if($caseNoteReported == null){
             $notes = 'nothing reported';
         }else{
@@ -475,15 +471,10 @@ class ReportController extends Controller
 
                     $checks = $this->getLocationChecks($id, $token);
 
-//                    dd($checks);//good
-
                     //ie success == false
                     if ($checks != 'errorInResult') {
 
-//                        $groupShiftChecks = $this->formatLocationChecksData($checks);
                         $collectChecks = $this->formatLocationChecksData($checks);
-
-//                        dd($collectChecks);
 
                         //number of check ins at premise
                         $checkIns = $collectChecks->pluck('check_ins');
@@ -515,8 +506,6 @@ class ReportController extends Controller
                 } else if (($report->type == 'Client') || ($report->type == 'Management')) {
 
                     $data = $this->getLocationReportData($id, $token);
-                    
-//                    dd($data);
 
                     if ($data != 'errorInResult') {
 
@@ -539,7 +528,6 @@ class ReportController extends Controller
                             return view('report/client/show');
 
                         } else if ($report->type == 'Management') {
-//                            dd($formatData);
 
                             return view('report/management/show');
 
@@ -555,13 +543,10 @@ class ReportController extends Controller
 
                     $data = $this->getIndividualReportData($id, $token);
 
-//                    dd($data);
 
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatIndividualReport($data->reportData);
-
-//                        dd($formatData, $data->report, $report);
 
                         view()->share(array(
                             'data' => $formatData,
@@ -590,19 +575,16 @@ class ReportController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             $err = 'Error displaying report';
             return view('error-msg')->with(array(
                 'msg' => $err,
                 'errorTitle' => 'Server down'
             ));
         } catch (\ErrorException $error) {
-            dd($error);
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
-            dd($err);
             $e = 'Error loading report';
             return view('error-msg')->with('msg', $e);
 
@@ -845,8 +827,6 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
-//                        dd($formatData);
-
                         view()->share(array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,
@@ -871,7 +851,7 @@ class ReportController extends Controller
                             }
 
                         } else if ($report->type == 'Management') {
-//                            dd($formatData);
+
                             if ($request->has('download')) {
 
                                 $pdf = PDF::loadView('report/management/pdf')->setPaper('a4', 'landscape');
@@ -968,8 +948,6 @@ class ReportController extends Controller
 
             $data = json_decode((string)$response->getBody());
 
-//            dd($data);
-
             if ($data->success == false) {
                 return 'errorInResult';
             } else {
@@ -999,8 +977,6 @@ class ReportController extends Controller
             ]);
 
             $data = json_decode((string)$response->getBody());
-
-//            dd($data);
 
             if ($data->success == false) {
                 return 'errorInResult';
@@ -1136,14 +1112,10 @@ class ReportController extends Controller
                         //remove the double forward slash in the img filepath
 //                        $imgFormatted = removeForwardSlash($subImg);
 
-//                        dd($imgFormatted);
-
                         //overwrite the value in img to be the img without the first and last characters
                         $cases->reportCaseNotes[$i]->img = $subImg;
 
                         $url = app('App\Http\Controllers\CaseNoteController')->download($cases->reportCaseNotes[$i]->img);
-
-//                        dd($url);
 
                         $cases->reportCaseNotes[$i]->url = $url;
 
@@ -1286,13 +1258,9 @@ class ReportController extends Controller
 
                     $data = $this->getLocationReportData($id, $token);
 
-//                    dd($data);
-
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatLocationReportData($data, $report);
-
-//                        dd($formatData);
 
                         $urlCancel = 'reports-' . $id . '-edit';
 
@@ -1314,7 +1282,6 @@ class ReportController extends Controller
                             return view('report/client/edit');
 
                         } else if ($report->type == 'Management') {
-//                            dd($formatData);
 
                             return view('report/management/edit');
 
@@ -1398,12 +1365,10 @@ class ReportController extends Controller
             return Redirect::back()
                 ->withErrors('Error displaying edit case note page');
         } catch (\ErrorException $error) {
-            dd($error);
             $e = 'Error displaying edit case note form';
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
-            dd($err);
             $e = 'Error displaying edit case note';
             return view('error-msg')->with('msg', $e);
 
@@ -1622,7 +1587,7 @@ class ReportController extends Controller
         ]);
 
         $notes = json_decode((string)$response->getBody());
-        dd($notes);
+
         return $notes;
 
     }

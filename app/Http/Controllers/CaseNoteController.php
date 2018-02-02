@@ -35,8 +35,6 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
-//                dd($data);
-
                 $dataFormat = $this->formatCaseNotes($data);
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
@@ -52,13 +50,9 @@ class CaseNoteController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            if(http_response_code(404)){
-
-                dd("not found: " . $e);
-            }else{
-
-                dd("error is: " . $e);
-            }
+//            if(http_response_code(404)){
+//            }else{
+//            }
             $err = 'Error displaying case notes';
             return view('error-msg')->with('msg', $err);
 
@@ -424,7 +418,6 @@ class CaseNoteController extends Controller
 
             $url = json_decode((string)$response->getBody());
 
-//            dd($url);
 
 //            $response = $client->get($url, [
 //                'headers' => [
@@ -473,7 +466,6 @@ class CaseNoteController extends Controller
 //
 //            //a file is returned from inthe response which forces the user's browser to download the photo
 //
-////            dd($url);
 //
 //            return $url;
 //        }

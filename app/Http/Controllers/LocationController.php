@@ -252,32 +252,6 @@ class LocationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-//    public function show($id)
-//    {
-//        $this->oauth();
-//
-//        //retrieve token needed for authorized http requests
-//        $token = $this->accessToken();
-//
-//        $client = new GuzzleHttp\Client;
-//
-//        $response = $client->get(Config::get('constants.API_URL').'location/'.$id, [
-//            'headers' => [
-//                'Authorization' => 'Bearer ' . $token,
-//            ]
-//        ]);
-//
-//        $location = json_decode((string)$response->getBody());
-//
-//        return view('location/show')->with('location', $location);
-//    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
@@ -314,7 +288,6 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
-            dd($err);
             $e = 'Error displaying edit location';
             return view('error-msg')->with('msg', $e);
 
@@ -750,7 +723,6 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\Exception $err) {
-            dd($err);
             $e = 'Error displaying edit location';
             return view('error-msg')->with('msg', $e);
 

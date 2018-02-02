@@ -46,7 +46,6 @@ class HomeController extends BaseController
                 ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
             Please ensure the account has been activated as this could be the problem.');
         }catch(\Exception $exception){
-//            dd($exception->getMessage());
             $errMsg = $exception->getMessage();
 
             $e = Config::get('constants.INTERNET_ERROR');
