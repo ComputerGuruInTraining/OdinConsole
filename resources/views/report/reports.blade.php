@@ -57,11 +57,13 @@
                                     </a>
 
                                     <a href="{{ route('pdf',['id' => $report->id, 'download'=>'pdf']) }}"
-                                       ><i class="fa fa-download icon-padding"></i></a>
-
+                                       ><i class="fa fa-download icon-padding"></i>
+                                    </a>
+                                    <a href="reports-{{$report->id}}-edit" class="edit-links">
+                                        <i class="fa fa-edit icon-padding"></i>
+                                    </a>
                                     <a href="/confirm-delete/{{$report->id}}/{{$url}}" style="color: #990000;">
                                         <i class="fa fa-trash-o icon-padding"></i></a>
-                                    {{--| <a href="/reports/{{$report->id}}/edit" class="edit-links">Edit or Delete Case Notes</a>--}}
                                 </td>
                             </tr>
                             </tbody>

@@ -116,6 +116,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Manage</th>
                     </tr>
                     </thead>
@@ -126,6 +127,7 @@
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->role }}</td>
                             {{--<td>{{ $user->created_at->format('F d, Y h:ia') }}</td>--}}
                             <td>
                                 <a href="/user/{{ $user->user_id }}/edit"><i class="fa fa-edit"></i></a>

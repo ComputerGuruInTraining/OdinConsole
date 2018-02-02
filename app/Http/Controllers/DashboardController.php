@@ -64,8 +64,6 @@ class DashboardController extends Controller
                     $location->address = 'San Francisco, CA, USA';
                 }
 
-//            dd($location->latitude, $location->longitude);
-
                 $company = $this->getCompanyDetail();
 
                 return view('dashboard.dashboard')->with(

@@ -84,8 +84,6 @@ class RosterController extends Controller
 
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
-//                dd($assigned);//grouped by assigned_shift_id
-
 
                 return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
             } else {
@@ -169,7 +167,6 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            dd($mismatch);
             return Redirect::to('login')
                 ->withErrors('Session expired. Please login.');
 
@@ -243,7 +240,6 @@ class RosterController extends Controller
                 ->withErrors('Operation failed');
 
         } catch (\ErrorException $error) {
-            dd($error);//array to string conversion
             return Redirect::to('rosters/create')
                 ->withInput()
                 ->withErrors('Error storing shift details');
@@ -605,7 +601,7 @@ class RosterController extends Controller
                 return Redirect::to('/login');
             }
 //        } catch(\Exception $exception){//unfortunately catches for validation errors too......
-//            dd($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));//doesn't work, still went to token mismatch exception in the page open awhile situation, otherwise does work
+//            d d($exception->getMessage(), Config::get('constants.ERROR_UPDATE'));//doesn't work, still went to token mismatch exception in the page open awhile situation, otherwise does work
 //
 //            $errMsg = $exception->getMessage();
 //

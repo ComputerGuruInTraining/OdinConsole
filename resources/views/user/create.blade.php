@@ -20,6 +20,29 @@
     {{ Form::open(['role' => 'form', 'url' => '/user', 'action' => 'POST']) }}
 
     <div class='form-group'>
+        {!! Form::Label('type', 'Role *') !!}
+        <select id="role" class="form-control" name="role" onkeypress="return noenter()">
+            {{--ROLES that our app supports generating--}}
+            @if(count( old('role')) > 0 )
+                @if(old('role') == Config::get('constants.ROLE_1'))
+                    <option value="{{Config::get('constants.ROLE_1')}}" selected>{{Config::get('constants.ROLE_1')}}</option>
+                @else
+                    <option value="{{Config::get('constants.ROLE_1')}}">{{Config::get('constants.ROLE_1')}}</option>
+                @endif
+                @if(old('role') == Config::get('constants.ROLE_2'))
+                    <option value="{{Config::get('constants.ROLE_2')}}" selected>{{Config::get('constants.ROLE_2')}}</option>
+                @else
+                    <option value="{{Config::get('constants.ROLE_2')}}">{{Config::get('constants.ROLE_2')}}</option>
+                @endif
+
+            @else
+                <option value="{{Config::get('constants.ROLE_1')}}">{{Config::get('constants.ROLE_1')}}</option>
+                <option value="{{Config::get('constants.ROLE_2')}}">{{Config::get('constants.ROLE_2')}}</option>
+            @endif
+        </select>
+    </div>
+
+    <div class='form-group'>
         {{ Form::label('first_name', 'First Name *') }}
         {{ Form::text('first_name', null, ['placeholder' => 'First Name', 'class' => 'form-control']) }}
     </div>
@@ -33,16 +56,6 @@
         {{ Form::label('email', 'Email *') }}
         {{ Form::email('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) }}
     </div>
-
-    {{--<div class='form-group'>--}}
-        {{--{{ Form::label('password', 'Password') }}--}}
-        {{--{{ Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) }}--}}
-    {{--</div>--}}
-
-    {{--<div class='form-group'>--}}
-        {{--{{ Form::label('password_confirmation', 'Confirm Password') }}--}}
-        {{--{{ Form::password('password_confirmation', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) }}--}}
-    {{--</div>--}}
 
     <div class='form-group form-buttons'>
         {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}

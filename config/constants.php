@@ -23,4 +23,7 @@ return [
     'INTERNET_ERROR' => 'Internet Connection Error',
     'CONN_SERVER_ERROR' => 'Experiencing error when connecting to server',
 
+    /*****user roles******/
+    'ROLE_1' => 'Manager',
+    'ROLE_2' => 'Investigator'
 ];

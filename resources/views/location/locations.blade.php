@@ -30,7 +30,7 @@
                         <td>{{$location->name}}</td>
                         <td>{{$location->address}}</td>
                         <td>{{$location->notes}}</td>
-                        <td class="column-width ">
+                        <td class="column-width">
                             <a href="/location-show-{{$location->id}}"><i class="fa fa-file"></i></a>
                             <a href="/location-edit-{{$location->id}}"><i class="fa fa-edit icon-padding"></i></a>
                             <a href="/confirmdel-{{$location->id}}-{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
