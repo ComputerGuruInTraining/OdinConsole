@@ -40,8 +40,6 @@
         <div class='form-group form-buttons'>
             {{--todo: with input for the back btn--}}
             {{ Form::submit('Create', ['class' => 'btn btn-primary']) }}
-{{--            {{ Form::cancel('Back', ['class' => 'btn btn-primary', 'onkeypress'=>'return noenter()']) }}--}}
-
             <a href="/location-back" class="btn btn-info" style="margin-right: 3px;">Back</a>
         </div>
         {{ Form::close() }}
