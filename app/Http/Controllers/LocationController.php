@@ -175,7 +175,6 @@ class LocationController extends Controller
     {
         try {
 
-//            dd($request->input('name'));
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
                 $token = session('token');
@@ -204,18 +203,16 @@ class LocationController extends Controller
 
                 $reply = json_decode((string)$response->getBody());
 
-                return $reply;
-
-//                if ($reply->success == true) {
-//                    //display confirmation page
-//                    return view('confirm-create-manual')->with(array(
-//                        'theData' => $address,
-//                        'url' => 'location-create',
-//                        'entity' => 'Location')
-//                    );
-//                } else {
-//                    return Redirect::to('/location-create');
-//                }
+                if ($reply->success == true) {
+                    //display confirmation page
+                    return view('confirm-create-manual')->with(array(
+                        'theData' => $address,
+                        'url' => 'location-create',
+                        'entity' => 'Location')
+                    );
+                } else {
+                    return Redirect::to('/location-create');
+                }
 
             } else {
                 return Redirect::to('/login');
