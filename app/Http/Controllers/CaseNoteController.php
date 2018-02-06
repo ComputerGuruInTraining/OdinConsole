@@ -35,7 +35,11 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
+//                dd($data);
+
                 $dataFormat = $this->formatCaseNotes($data);
+//                                dd($dataFormat);
+
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
@@ -129,8 +133,9 @@ class CaseNoteController extends Controller
 
                         $case->img = $subImg;
 
-                        $url = $this->download($case->img);
-                        $data[$i]->url = $url;
+//                        $url = $this->download($case->img);
+
+                        $data[$i]->url = "";
 
 //for v3 uploads
                     } else if(isset($case->files)){
@@ -146,6 +151,8 @@ class CaseNoteController extends Controller
 
                                     //remove the first and last character from the string ie remove " and " around string
                                     $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
+
+//                                    dd($imgs[$index]);
 
                                     $urls[$index] = $this->download($imgs[$index]);
                                 }
@@ -409,66 +416,11 @@ class CaseNoteController extends Controller
             $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/' . $file, [
             ]);
 
-
-//        $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.'1515638198829.jpeg/2e4dca1c24076df03586a19c48e2e6c7.jpeg', [
-//                'headers' => [
-////                    'Authorization' => 'Bearer ' . $token,
-////                    'x-ms-blob-content-type' => 'image/jpeg',
-//                ]
-
             $url = json_decode((string)$response->getBody());
+//dd($url);
 
-
-//            $response = $client->get($url, [
-//                'headers' => [
-//////                    'Authorization' => 'Bearer ' . $token,
-/////
-//                    'x-ms-blob-content-type' => 'image/jpeg',
-//                    'X-HTTP-Method-Override' => 'PUT'
-//
-//                ]
-//            ]);
-
-            //a file is returned from inthe response which forces the user's browser to download the photo
 
         }
             return $url;
     }
-
-//    function download($folder, $file)
-//    {
-//        //http request
-//        if (session()->has('token')) {
-//            //retrieve token needed for authorized http requests
-//            $token = session('token');
-//
-//            $client = new GuzzleHttp\Client;
-//
-//            //response is a url
-//            $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/'.$folder.'/'.$file, [
-////                'headers' => [
-//////                    'Authorization' => 'Bearer ' . $token,
-//////                    'x-ms-blob-content-type' => 'image/jpeg',
-////                ]
-//            ]);
-//
-//            $url = json_decode((string)$response->getBody());
-//
-////            $response = $client->get($url, [
-////                'headers' => [
-////////                    'Authorization' => 'Bearer ' . $token,
-///////
-////                    'x-ms-blob-content-type' => 'image/jpeg',
-////                    'X-HTTP-Method-Override' => 'PUT'
-////
-////                ]
-////            ]);
-//
-//            //a file is returned from inthe response which forces the user's browser to download the photo
-//
-//
-//            return $url;
-//        }
-
-//    }
 }
