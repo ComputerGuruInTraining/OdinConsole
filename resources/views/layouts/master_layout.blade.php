@@ -55,6 +55,26 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+<script>
+    window.addEventListener("load", function () {
+
+        var loader = document.getElementsByClassName('loader')[0];
+        loader.style.display = "none";
+    });
+
+    function displayLoader(){
+
+            var loader = document.getElementsByClassName('loader')[0];
+            loader.style.display = "block";
+    }
+
+//    window.addEventListener("DOMContentLoaded", function(event) {
+//        var loader = document.getElementsByClassName('loader')[0];
+//        loader.style.display = "none";
+//    });
+
+
+</script>
 <div class='container-fluid'>
     <div class="wrapper">
     {{--FIXME: scroll-bar change height as a bit buggy--}}
@@ -79,6 +99,8 @@
                     <li class="active">Here</li>
                 </ol>-->
             </section>
+            <div class="loader"></div>
+
             @yield('page-content')
         </div>
         <!-- /.content-wrapper -->

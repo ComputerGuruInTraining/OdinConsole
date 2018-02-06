@@ -63,16 +63,19 @@
 
                                     @if(sizeof($item->files) > 0)
                                         {{--first photo in array--}}
-                                        <td><a href="{{$item->urls[0]}}" target="_blank">Download {{$item->files[0]}}</a></td>
+                                        {{--<td><a href="{{$item->urls[0]}}" target="_blank">Download {{$item->files[0]}}</a></td>--}}
+                                        <td><img src="{{$item->urls[0]}}" height="25px" width="25px"/></td>
                                     @else
                                         {{--v2 uploads--}}
                                         {{--todo: remove once not using v2 mobile anymore--}}
-                                        <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                                        <td><a href="{{$item->url}}" target="_blank">WIP</a></td>
+                                        {{--<td><img src="{{$item->url}}"/></td>--}}
+
                                     @endif
                                 @else
                                     {{--v2 uploads--}}
                                     {{--todo: remove once not using v2 mobile anymore--}}
-                                    <td><a href="{{$item->url}}" target="_blank">Download</a></td>
+                                    <td><a href="{{$item->url}}" target="_blank">WIP</a></td>
 
                                 @endif
                             @else
@@ -104,7 +107,8 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="{{$item->urls[$i]}}" target="_blank">Download Image {{$i + 1}}</a></td>
+                                        <td><img src="{{$item->urls[$i]}}" height="25px" width="25px"/></td>
+                                        {{--<td><a href="{{$item->urls[$i]}}" target="_blank">Download Image {{$i + 1}}</a></td>--}}
                                         <td></td>
                                         <td></td>
                                     </tr>
