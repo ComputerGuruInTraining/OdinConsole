@@ -583,7 +583,6 @@ if (!function_exists('geoRangeDateTime')) {
 
     function geoRangeDateTime($collection, $location = null)
     {
-//        dd($collection);
         foreach ($collection as $i => $item) {
 //TODO: consider adding an endnote to report advising of this info
 
