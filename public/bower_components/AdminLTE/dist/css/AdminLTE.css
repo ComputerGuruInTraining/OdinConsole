@@ -16,6 +16,7 @@ Blue
 #00f0cc
 hover blue
 #367fa9
+#e6fffb//light blue bg
 
 
 Green
@@ -25,12 +26,12 @@ Green
 Purple
 #4d2970
 
-
 Red
 #B22222
 #f3bfbf
 
-
+Considering using
+#f1f0f5//light purple
 */
 
 /*Styles to be shared across app*/
@@ -46,6 +47,14 @@ Red
 
 .padding-top{
     padding-top: 15px !important;
+}
+
+.padding-right{
+    padding-right: 10px;
+}
+
+.margin-bottom{
+    margin-bottom: 10px;
 }
 
 .top-border{
@@ -69,6 +78,19 @@ Red
     padding-left: 15px;
 }
 
+.tp-data{
+    opacity: 0.2;
+}
+
+/*rotate images*/
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 @media (min-width: 768px) {
     .min-width-lg {
         min-width: 150px;
@@ -77,6 +99,34 @@ Red
     .min-width {
         min-width: 100px;
     }
+}
+
+
+/*Loader*/
+.loader {
+    display: none;
+    border: 8px solid #ccc;
+    border-radius: 50%;
+    border-top: 8px solid #00f0cc;
+    z-index: 1000;
+    position: absolute;
+    right: 45%;
+    top: 350px;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /*Create button w dropdown*/
@@ -416,10 +466,6 @@ section.content-header{
     right: 15px;
 }
 
-/*.padding-left{*/
-    /*padding-left: 25px !important;*/
-/*}*/
-
 #map{
     /*position:absolute;*/
     /*z-index: */
@@ -501,6 +547,13 @@ h1.master-alt{
 
 }
 
+.alt-cols:nth-child(even){
+    background-color: #f9f9f9;
+    border-top: 1px solid #444 !important;
+    border-bottom: 1px solid #444 !important;
+
+}
+
 .row-heading{
     font-weight: bold;
     color: #4d2970;
@@ -516,9 +569,9 @@ h1.master-alt{
 
 
 /*Report Show Page Styling*/
-/*.report-title {*/
-    /*color: #4d2970;*/
-/*}*/
+.report-title-bg {
+    background-color: #f2fffd;
+}
 
 .align-cols{
     padding-left: 14px;
@@ -562,9 +615,16 @@ h1.master-alt{
     text-decoration: underline;
 }
 
+.max-width-big{
+    max-width: 170px;
+}
 
 .max-width{
     max-width: 72px;
+}
+
+.max-width-med{
+    max-width: 80px;
 }
 
 /*geo within range*/
@@ -619,9 +679,9 @@ textarea#desc.form-control.case-desc{
 }
 
 .desc-max-width{
-
     max-width: 250px;
 }
+
 
 /*
  * Core: General Layout Style

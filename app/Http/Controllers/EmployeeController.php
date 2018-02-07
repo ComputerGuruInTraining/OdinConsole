@@ -267,7 +267,8 @@ class EmployeeController extends Controller
                 if ($employee->success == true) {
                     //display confirmation page
                     $theAction = 'The new employee has been added to the system and an email has been sent to 
-                    the supplied email address advising them to download the OdinLite mobile app and create a password for their
+                    the supplied email address advising them to download the ODIN Case Management mobile app and 
+                    create a password for their
                     account. 
                      <br> <br>
                      Please advise the employee to check their junk email folder for the email 
@@ -358,7 +359,7 @@ class EmployeeController extends Controller
                     $theAction = 'The console user has been added as an employee. 
                     <br><br>
                     An email has been sent to 
-                    their email address with a link to download the OdinLite mobile app. The employee can
+                    their email address with a link to download the ODIN Case Management mobile app. The employee can
                     login to the mobile app using their current user password.
                      <br> <br> 
                     Please advise the employee to check their junk email folder for the email 
