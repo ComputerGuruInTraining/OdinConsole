@@ -122,7 +122,10 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td><img src="{{$item->urls[$i]}}" height="75px" width="75px" /></td>
+                                        <td><a href="{{$item->urls[$i]}}" target="_blank">
+                                                <img src="{{$item->urls[$i]}}" height="75px" width="75px"/>
+                                            </a>
+                                        </td>
                                         <td></td>
                                         <td></td>
                                     </tr>

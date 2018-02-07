@@ -35,11 +35,7 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
-//                dd($data);
-
                 $dataFormat = $this->formatCaseNotes($data);
-//                                dd($dataFormat);
-
 
                 $cases = collect($dataFormat);//must collect or error = undefined method stdClass::groupBy(
 
@@ -151,8 +147,6 @@ class CaseNoteController extends Controller
 
                                     //remove the first and last character from the string ie remove " and " around string
                                     $imgs[$index] = stringRemove1stAndLast($case->files[$index]);
-
-//                                    dd($imgs[$index]);
 
                                     $urls[$index] = $this->download($imgs[$index]);
                                 }
@@ -417,9 +411,6 @@ class CaseNoteController extends Controller
             ]);
 
             $url = json_decode((string)$response->getBody());
-//dd($url);
-
-
         }
             return $url;
     }
