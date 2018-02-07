@@ -47,6 +47,15 @@
         }
     </script>
 
+    <script>
+        window.addEventListener("onkeydown", function(e){
+            console.log("onkeydown called");
+            if (e.keyCode == 27) {
+                hideLoading();
+            }
+        });
+    </script>
+
     {{--Company Settings Page & logged in support page ie --}}
     @yield('custom-scripts')
 
@@ -55,24 +64,57 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+<!-- display/hide loading on page navigate/load-->
 <script>
-    window.addEventListener("load", function () {
 
-        var loader = document.getElementsByClassName('loader')[0];
-        loader.style.display = "none";
-    });
+//    jQuery( 'a' )
+//        .click(function() {
+//            displayLoader();
+//            return false;
+//        });
+//
+//    $(document).on('click', 'button', function () {
+//        displayLoader();
+//    });
+
+
+//listed in order of execution
+
+    window.addEventListener("load", hideLoading());
+
+//    window.addEventListener("abort", hideLoading());
+
+//    window.addEventListener("unload", hideLoading());
+
+
+
+//    $(document).keydown(function(e) {
+//        if (e.keyCode == 27) { // escape key maps to keycode `27`
+//            hideLoading();
+//        }
+//    });
+
 
     function displayLoader(){
 
-            var loader = document.getElementsByClassName('loader')[0];
-            loader.style.display = "block";
+        var loader = document.getElementsByClassName('loader')[0];
+        loader.style.display = "block";
+
+//        var transparentBG = document.getElementsByTagName('body')[0];
+//        transparentBG.style.opacity = 0.1;
     }
 
-//    window.addEventListener("DOMContentLoaded", function(event) {
-//        var loader = document.getElementsByClassName('loader')[0];
-//        loader.style.display = "none";
-//    });
+    function hideLoading(){
+        console.log("hideLoading called");
+        var loader = document.getElementsByClassName('loader')[0];
 
+        if(loader !== undefined) {
+            loader.style.display = "none";
+            //        var transparentBG = document.getElementsByTagName('body')[0];
+            //        transparentBG.style.opacity =
+        }
+
+    }
 
 </script>
 <div class='container-fluid'>
@@ -81,9 +123,6 @@
     <!-- Main Header
             <header class="main-header">  -->
     @include('header')
-
-    <!-- Sidebar -->
-    {{--@include('sidebar')--}}
 
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">

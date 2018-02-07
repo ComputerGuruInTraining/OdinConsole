@@ -5,21 +5,28 @@
     {{--internal stylesheet being used as external stylesheet takes much longer to load, even if only contains the same styles--}}
     <style>
 
-        /*.pdf-bold{*/
-            /*font-weight: 700;*/
+        /*rotate images*/
+        .rotate90 {
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
 
-        /*}*/
-        /*not working atm:*/
-        /*.group-list:nth-child(even){*/
-            /*background-color: #f9f9f9;*/
-            /*border-top: 1px solid #444 !important;*/
-            /*border-bottom: 1px solid #444 !important;*/
+        .margin-right{
+            margin-right: 15px;
+        }
 
-        /*}*/
+        .margin-left-huge{
+            margin-left: 200px;
+        }
 
-        /*.table:nth-child(even){*/
-            /*background-color: #f9f9f9;*/
-        /*}*/
+        .width-170{
+            width: 170px !important;
+            min-width: 170px !important;
+
+        }
 
         .table-report{
             line-height: 1.8;

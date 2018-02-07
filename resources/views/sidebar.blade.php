@@ -68,20 +68,20 @@
         <ul class="sidebar-menu">
 
         <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="/map-geolocation" class="menu"><span>Who's on Duty</span></a></li>
-            <li class="active"><a href="/employees" class="menu"><span>Employees</span></a></li>
-            <li class="active"><a href="/location" class="menu"><span>Locations</span></a></li>
-            <li class="active"><a href="/rosters" class="menu"><span>Shifts</span></a></li>
+            <li class="active"><a href="/map-geolocation" class="menu" onclick="displayLoader();"><span>Who's on Duty</span></a></li>
+            <li class="active"><a href="/employees" class="menu" onclick="displayLoader();"><span>Employees</span></a></li>
+            <li class="active"><a href="/location" class="menu" onclick="displayLoader();"><span>Locations</span></a></li>
+            <li class="active"><a href="/rosters" class="menu" onclick="displayLoader();"><span>Shifts</span></a></li>
             <li class="active"><a href="/case-notes" class="menu" onclick="displayLoader();">Case Notes</a></li>
-            <li class="active"><a href="/reports" class="menu"><span>Reports</span></a></li>
+            <li class="active"><a href="/reports" class="menu" onclick="displayLoader();"><span>Reports</span></a></li>
 
             <div class="list-divider"></div>
 
             {{--FIXME: sidebar toggle operation - SOLUTION: routes need to be in the form "employees-create" not "employees/create" except this causes a problem elsewhere --}}
             <li class="treeview">
-                <a href="/support/users"><span>Support</span></a>
-                <a href="/settings"><span>Settings</span></a>
-                <a href="/logout"><span>Sign Out</span></a>
+                <a href="/support/users" onclick="displayLoader();"><span>Support</span></a>
+                <a href="/settings" onclick="displayLoader();"><span>Settings</span></a>
+                <a href="/logout" onclick="displayLoader();"><span>Sign Out</span></a>
             </li>
 
 

@@ -39,6 +39,21 @@
 
 <body class="hold-transition">
 <div class='container-fluid'>
+    <!-- display/hide loading on page navigate/load-->
+    {{--<script>--}}
+        {{--window.addEventListener("load", function () {--}}
+
+            {{--var loaderAlt = document.getElementsByClassName('loader-alt-header')[0];--}}
+            {{--loaderAlt.style.display = "none";--}}
+        {{--});--}}
+
+        {{--function displayLoaderAlt(){--}}
+
+            {{--var loaderAlt = document.getElementsByClassName('loader-alt-header')[0];--}}
+            {{--loaderAlt.style.display = "block";--}}
+        {{--}--}}
+
+    {{--</script>--}}
     <div class="wrapper">
     <!-- Main Header
             <header class="main-header">  -->
@@ -52,6 +67,7 @@
                 @yield('title-item')
                 </h1>
             </section>
+            {{--<div class="loader-alt-header"></div>--}}
             @yield('page-content')
         </div>
         <!-- /.content-wrapper -->
