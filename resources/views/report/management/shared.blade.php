@@ -5,9 +5,9 @@
 @if(count($data) != 0)
     @foreach($data as $index => $shiftCheck)
 
-        <tbody class="group-list">
+        {{--<tbody class="group-list">--}}
 
-        <tr>
+        <tr class="report-title-bg">
             <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
             {{--<td></td>--}}
             {{--<td></td>--}}
@@ -22,7 +22,7 @@
         </tr>
 
         @foreach ($data->get($index) as $item)
-
+            <tbody class="alt-cols">
             <tr>
                 <td></td>
                 <td>{{$item->timeTzCheckIn}}</td>
@@ -31,6 +31,9 @@
                 {{--action--}}
                 @if($item->title == "Nothing to Report")
                     <td>Nothing to Report</td>
+                    <td></td>
+                @elseif($item->case_notes_deleted_at != null)
+                    <td class="tp-data">Nothing to Report</td>
                     <td></td>
                 @else
                     <td>Case Note Reported</td>
@@ -46,9 +49,9 @@
                 {{--Total Time--}}
                     @if(isset($item->checkDuration))
                         {{--@if($item->checkDuration < 1)--}}
-                           {{--<td> < 1</td>--}}
+                        {{--<td> < 1</td>--}}
                         {{--@else--}}
-                            <td>{{$item->checkDuration}}</td>
+                        <td>{{$item->checkDuration}}</td>
                         {{--@endif--}}
                     @else
                         <td><i class="fa fa-minus" aria-hidden="true"></i></td>
@@ -87,20 +90,30 @@
 
                 {{--Edit btns for edit view only--}}
                 @if(isset($edit))
-                    @if($item->title != "Nothing to Report")
+                    @if($item->case_notes_deleted_at == null)
 
-                        <td><a href="/edit-case-notes/{{$item->case_note_id}}/reports/{{$report->id}}" class="edit-links"><i class="fa fa-edit"></i></a>
-                            <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
-                        </td>
+                        @if($item->title != "Nothing to Report")
+
+                            <td><a href="/edit-case-notes/{{$item->case_note_id}}/reports/{{$report->id}}" class="edit-links">
+                                    <i class="fa fa-edit"></i></a>
+                                <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">
+                                    <i class="fa fa-trash-o icon-padding"></i></a>
+                            </td>
+                        @else
+                            <td>
+                                <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">
+                                    <i class="fa fa-trash-o"></i></a>
+                            </td>
+                        @endif
                     @else
                         <td>
-                            <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;"><i class="fa fa-trash-o"></i></a>
+                            <i class="fa fa-trash-o" style="color: #990000; opacity: 0.2;"></i>
                         </td>
                     @endif
                 @endif
             </tr>
+            </tbody>
         @endforeach
-        </tbody>
     @endforeach
 @else
     <tr>
