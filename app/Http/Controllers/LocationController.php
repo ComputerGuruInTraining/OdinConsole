@@ -67,9 +67,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading locations';
@@ -118,9 +117,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading locations';
@@ -155,9 +153,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add location page';
@@ -242,10 +239,9 @@ class LocationController extends Controller
                 ->withErrors('Error storing location. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
-        }
+
+            return Redirect::to('/');
+                    }
     }
 
     /**
@@ -289,9 +285,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit location page';
@@ -373,9 +368,7 @@ class LocationController extends Controller
                 ->withErrors('Error updating location. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login');
-//                ->withInput()
-//                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
         }
     }
 
@@ -420,10 +413,9 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
-        } catch (\InvalidArgumentException $invalid) {
+
+            return Redirect::to('/');
+                    } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing location from system';
             return view('error-msg')->with('msg', $error);
         }
@@ -513,10 +505,9 @@ class LocationController extends Controller
                 ->withErrors('Error storing location. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
-        }
+
+            return Redirect::to('/');
+                    }
     }
 
     public function confirmEdit(Request $request, $id)
@@ -626,10 +617,9 @@ class LocationController extends Controller
                 ->withErrors('Error updating location. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
-        }
+
+            return Redirect::to('/');
+                    }
     }
 
     public function confirmCreateCancel()
@@ -665,9 +655,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add location page';
@@ -724,9 +713,8 @@ class LocationController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit location page';

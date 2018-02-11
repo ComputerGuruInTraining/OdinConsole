@@ -82,9 +82,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading reports';
@@ -131,16 +129,13 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add report page';
             return view('error-msg')->with('msg', $error);
         }
 
-//        return view('report/create')->with();
     }
 
     /**
@@ -159,8 +154,6 @@ class ReportController extends Controller
                     'dateFrom' => 'required',
                     'dateTo' => 'required',
                     'type' => 'required',
-//                    'location' => 'required',
-
                 ]);
 
                 //TODO: validate if type==
@@ -170,7 +163,6 @@ class ReportController extends Controller
 
                 $dateFromStr = Input::get('dateFrom');
                 $dateToStr = Input::get('dateTo');
-
 
                 $location = $request->input('location');
                 $empUserId = $request->input('employee');
@@ -246,9 +238,7 @@ class ReportController extends Controller
                 ->withInput()
                 ->withErrors('Operation failed. Please ensure input valid.');
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
         }
     }
 
@@ -387,8 +377,8 @@ class ReportController extends Controller
 
         }
 
-        $totalSecs = $fmtData->sum('checkDurationSeconds');
-        $report->totalHours = totalMinsInHours($totalSecs);
+        //all the $fmtData objects hold the same total_hours value, so just access the first object.
+        $report->totalHours = $fmtData[0]->total_hours;
 
         //number of check ins at premise
         //fixme needs to be changed to be the number of completed check_ins (ie that have a check out)
@@ -409,6 +399,9 @@ class ReportController extends Controller
 
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
+
+//        $groupData2 = $groupData->groupBy('shift_check_id');
+
 
         return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report, 'notes' => $notes]);
 
@@ -589,9 +582,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading report details';
@@ -840,7 +831,6 @@ class ReportController extends Controller
 
                         if ($report->type == 'Client') {
 
-//                            $viewName = 'report/client/pdf';
                             if ($request->has('download')) {
 
                                 $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
@@ -925,9 +915,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading report details';
@@ -1307,9 +1295,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit report page';
@@ -1373,9 +1359,7 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit case note page';
@@ -1457,9 +1441,7 @@ class ReportController extends Controller
                 ->withErrors('Error updating case note. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
         }
 
 
@@ -1508,9 +1490,8 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
+
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing report from system';
             return view('error-msg')->with('msg', $error);
@@ -1563,9 +1544,8 @@ class ReportController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
+
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing case note from system';
             return view('error-msg')->with('msg', $error);

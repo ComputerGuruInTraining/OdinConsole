@@ -76,9 +76,8 @@ class EmployeeController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading employees';
@@ -157,10 +156,9 @@ class EmployeeController extends Controller
             $e = 'Error displaying form';
             return view('error-msg')->with('msg', $e);
 
-        } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+        }catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add employee page';
@@ -203,9 +201,8 @@ class EmployeeController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add employee page';
@@ -301,9 +298,9 @@ class EmployeeController extends Controller
                 ->withErrors('Error storing employee details. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
     }
 
@@ -392,9 +389,9 @@ class EmployeeController extends Controller
                 ->withErrors('Error storing employee details. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
     }
 
@@ -473,9 +470,9 @@ class EmployeeController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit employee page';
@@ -564,9 +561,9 @@ class EmployeeController extends Controller
                 ->withErrors('Error updating employee. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
     }
 
@@ -621,9 +618,9 @@ class EmployeeController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing employee from system';
             return view('error-msg')->with('msg', $error);

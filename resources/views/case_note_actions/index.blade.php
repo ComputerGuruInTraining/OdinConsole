@@ -66,7 +66,6 @@
 
                                     @if(sizeof($item->files) > 0)
                                         {{--first photo in array--}}
-                                        {{--<td><a href="{{$item->urls[0]}}" target="_blank">Download {{$item->files[0]}}</a></td>--}}
                                         <td><a href="{{$item->urls[0]}}" target="_blank">
                                                 <img src="{{$item->urls[0]}}" height="75px" width="75px"/>
                                             </a>
