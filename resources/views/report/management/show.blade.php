@@ -16,7 +16,7 @@
 @stop
 
 @section('total1-val-show')
-    {{$total}}
+    {{$report->totalChecks}}
 @stop
 
 @section('total2-show')
