@@ -12,19 +12,19 @@
     {{$location->address}}
 @stop
 
-@section('total1-show')
+@section('total1-desc')
     Number of Checks at Premise:
 @stop
 
-@section('total1-val-show')
+@section('total1-val')
     {{$report->totalChecks}}
 @stop
 
-@section('total1-desc')
+@section('total2-desc')
     Total Hours Monitoring Premise:
 @stop
 
-@section('total1-val')
+@section('total2-val')
     {{$report->totalHours}}
 @stop
 
