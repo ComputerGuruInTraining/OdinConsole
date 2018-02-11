@@ -65,6 +65,14 @@
             locationInput.setAttribute("type", "text");
             locationInput.setAttribute("value", "");
 
+            if(myArray.length == 1) {
+                locationInput.setAttribute("placeholder", 1);
+
+            }else if(myArray.length > 1){
+                locationInput.setAttribute("placeholder", '1-9');
+
+            }
+
             return locationInput;
         }
 
@@ -310,20 +318,25 @@
                         tip.style.display = "block";
 
                         locationInput[i].setAttribute("placeholder", 1);
+                        locationInput[i].setAttribute("value", "");
                         locationInput[i].setAttribute("disabled", "disabled");
 
-                    }
+                    } else {
+                        if (checksObj[i].valueChecks != 0) {
 
-                    //todo: consider default of 1
-                    if(checksObj[i].valueChecks != 0){
-
-                        locationInput[i].setAttribute("value", checksObj[i].valueChecks);
-                    }else {
-                        //no value from current inputs, check if we have oldInput
-                        if(checksObj[i].oldCheckValue != 0){
-                            locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                            locationInput[i].setAttribute("value", checksObj[i].valueChecks);
+                        } else {
+                            //no value from current inputs, check if we have oldInput
+                            if (checksObj[i].oldCheckValue != 0) {
+                                locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                            }
+//                            else if(locationInput[i].value == 0){
+//                                locationInput[i].setAttribute("placeholder", 1);
+//
+//                            }
                         }
                     }
+
                 }
 
             }else{
