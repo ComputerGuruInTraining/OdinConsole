@@ -65,9 +65,7 @@ class CaseNoteController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading case notes';
@@ -245,6 +243,7 @@ class CaseNoteController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return Redirect::back()
                 ->withErrors('Error displaying edit case note page');
+
         } catch (\ErrorException $error) {
             $e = 'Error displaying edit case note form';
             return view('error-msg')->with('msg', $e);
@@ -254,11 +253,10 @@ class CaseNoteController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
 
-        } catch (\InvalidArgumentException $invalid) {
+            return Redirect::to('/');
+        }
+            catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit case note page';
             return view('error-msg')->with('msg', $error);
         }
@@ -337,9 +335,8 @@ class CaseNoteController extends Controller
 
         }
         catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
         }
     }
 
@@ -385,9 +382,9 @@ class CaseNoteController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error removing case note from system';
             return view('error-msg')->with('msg', $error);
@@ -412,6 +409,6 @@ class CaseNoteController extends Controller
 
             $url = json_decode((string)$response->getBody());
         }
-            return $url;
+            return $url;//empty {} if file doesn't exist
     }
 }

@@ -67,6 +67,14 @@
             locationInput.setAttribute("type", "text");
             locationInput.setAttribute("value", "");
 
+            if(myArray.length == 1) {
+
+                locationInput.setAttribute("placeholder", 1);
+
+            }else if(myArray.length > 1){
+
+                locationInput.setAttribute("placeholder", '1-9');
+            }
             return locationInput;
         }
 
@@ -110,7 +118,7 @@
                         myArrayLocId: 0,
                         oldCheckValue: 0,
                         valueChecks: 0,
-                        valueForEdit: 0//initialise value here for assignment later when current input values checked
+                        valueForEdit: 1//initialise value here for assignment later when current input values checked
                     });
                 }
 
@@ -204,7 +212,7 @@
                         myArrayLocId: arrayIndexAdd[a],
                         oldCheckValue: 0,
                         valueChecks: 0,
-                        valueForEdit: 0
+                        valueForEdit: 1
                     });
                 }
             }
@@ -346,23 +354,21 @@
 
                         locationInput[i].setAttribute("placeholder", 1);
                         locationInput[i].setAttribute("disabled", "disabled");
+                        locationInput[i].setAttribute("value", "");
 
-                    }
-
-                    //todo: consider default of 1
-                    if(checksObj[i].valueChecks != 0){
-
-                        locationInput[i].setAttribute("value", checksObj[i].valueChecks);
                     }else{
-                        //no current user input for the object, so check if old input or use the value coming from the saved item in the db (ie valueForEdit)
-                        if(checksObj[i].oldCheckValue != 0){
-                            locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                        if(checksObj[i].valueChecks != 0){
+
+                            locationInput[i].setAttribute("value", checksObj[i].valueChecks);
                         }else{
-                            locationInput[i].setAttribute("value", checksObj[i].valueForEdit);
+                            //no current user input for the object, so check if old input or use the value coming from the saved item in the db (ie valueForEdit)
+                            if(checksObj[i].oldCheckValue != 0){
+                                locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
+                            }else{
+                                locationInput[i].setAttribute("value", checksObj[i].valueForEdit);
 
+                            }
                         }
-
-
                     }
                 }
 

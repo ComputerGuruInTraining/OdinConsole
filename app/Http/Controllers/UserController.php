@@ -72,9 +72,9 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading users';
@@ -108,9 +108,9 @@ class UserController extends Controller
             return Redirect::to('/company/settings')->withErrors('Error displaying users page');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             return Redirect::to('/company/settings')->withErrors('Error displaying list of users');
@@ -195,9 +195,9 @@ class UserController extends Controller
                 ->withErrors('Error storing user details. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
 	}
 
@@ -245,9 +245,9 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit user page';
@@ -331,9 +331,9 @@ class UserController extends Controller
 
         }
         catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
 	}
 
@@ -391,9 +391,9 @@ class UserController extends Controller
             return Redirect::to('/company/settings')->withErrors('Error deleting user from database');
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             return Redirect::to('/company/settings')->withErrors('Error deleting user from system');

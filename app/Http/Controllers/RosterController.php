@@ -102,9 +102,9 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading shifts';
@@ -167,8 +167,7 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withErrors('Session expired. Please login.');
+            return Redirect::to('/');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading add shift page';
@@ -251,9 +250,9 @@ class RosterController extends Controller
 
         }
         catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         }
     }
 
@@ -452,9 +451,9 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading edit shift page';
@@ -632,8 +631,8 @@ class RosterController extends Controller
                 ->withErrors('Error updating shift. Please check input is valid.');
 
         } catch (\TokenMismatchException $mismatch) {
+
             return Redirect::to('/');
-//                ->withErrors('Session expired. Please login.');todo: include error msg when the redirect is working.
         }
     }
 
@@ -678,9 +677,9 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error deleting shift. Error code: InvalidArgumentException';
             return view('error-msg')->with('msg', $error);

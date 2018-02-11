@@ -89,9 +89,9 @@ class DashboardController extends Controller
             return view('error-msg')->with('msg', $e);
 
         } catch (\TokenMismatchException $mismatch) {
-            return Redirect::to('login')
-                ->withInput()
-                ->withErrors('Session expired. Please login.');
+
+            return Redirect::to('/');
+
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading map';

@@ -26,7 +26,14 @@ class HomeController extends BaseController
 
     public function getIndex()
     {
-        return View::make('home.index');
+        try {
+
+            return View::make('home.index');
+
+        }catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+        }
     }
 
     public function postIndex()
