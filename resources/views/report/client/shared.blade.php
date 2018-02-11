@@ -61,27 +61,27 @@
                 @endif
 
                 {{--Edit btns for edit view only--}}
-                @if(isset($edit))
-                    @if($item->case_notes_deleted_at == null)
-                        @if($item->title != "Nothing to Report")
-                            <td>
-                                <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">
-                                    <i class="fa fa-trash-o icon-padding"></i>
-                                </a>
-                            </td>
-                        @else
-                            <td>
-                                <a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">
-                                    <i class="fa fa-trash-o"></i>
-                                </a>
-                            </td>
-                        @endif
-                    @else
-                        <td>
-                            <i class="fa fa-trash-o" style="color: #990000; opacity: 0.2;"></i>
-                        </td>
-                    @endif
-                @endif
+                {{--@if(isset($edit))--}}
+                    {{--@if($item->case_notes_deleted_at == null)--}}
+                        {{--@if($item->title != "Nothing to Report")--}}
+                            {{--<td>--}}
+                                {{--<a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">--}}
+                                    {{--<i class="fa fa-trash-o icon-padding"></i>--}}
+                                {{--</a>--}}
+                            {{--</td>--}}
+                        {{--@else--}}
+                            {{--<td>--}}
+                                {{--<a href="/delete/{{$urlCancel}}/{{$item->case_note_id}}/{{$report->id}}" style="color: #990000;">--}}
+                                    {{--<i class="fa fa-trash-o"></i>--}}
+                                {{--</a>--}}
+                            {{--</td>--}}
+                        {{--@endif--}}
+                    {{--@else--}}
+                        {{--<td>--}}
+                            {{--<i class="fa fa-trash-o" style="color: #990000; opacity: 0.2;"></i>--}}
+                        {{--</td>--}}
+                    {{--@endif--}}
+                {{--@endif--}}
             </tr>
             </tbody>
         @endforeach
