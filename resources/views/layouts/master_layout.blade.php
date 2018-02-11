@@ -91,8 +91,6 @@
                 <h1>
                 @yield('title-item')
                 </h1>
-
-                </ol>-->
             </section>
             <div class="loader"></div>
 
