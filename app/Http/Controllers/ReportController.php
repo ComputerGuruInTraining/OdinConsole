@@ -351,7 +351,6 @@ class ReportController extends Controller
 
     public function formatLocationReportData($data, $report)
     {
-        //todo: change $data->reportData to be reportData in api
         $dataWithGeoData = geoRangeDateTime($data->reportData, $data->location);
 
         $fmtData = checkOutDateTime($dataWithGeoData, $data->location);
@@ -379,6 +378,7 @@ class ReportController extends Controller
 
         //all the $fmtData objects hold the same total_hours value, so just access the first object.
         $report->totalHours = $fmtData[0]->total_hours;
+        $report->totalChecks = $fmtData[0]->total_checks;
 
         //number of check ins at premise
         //fixme needs to be changed to be the number of completed check_ins (ie that have a check out)
