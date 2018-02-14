@@ -491,4 +491,21 @@ class UserController extends Controller
         }
     }
 
+    public function deliveredEmail(Request $request){
+
+        $event = $request->input('event');
+
+        $recipient = $request->input('recipient');
+
+        $description = $request->input('description');
+
+        $result = storeErrorLog($event, $recipient, $description);
+
+        return $result->message;
+//        return response()->json(['message' => 'post successful']);
+
+//        dd($result);
+
+    }
+
 }
