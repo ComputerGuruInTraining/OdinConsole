@@ -435,7 +435,6 @@ if (!function_exists('getEmployees')) {
             $emps = json_decode((string)$response->getBody());
 
             return $emps;
-
         }
     }
 }
@@ -534,6 +533,33 @@ if (!function_exists('getUserRole')) {
 
             return $userRole[0];
         }
+    }
+}
+
+if (!function_exists('storeErrorLog')) {
+
+    function storeErrorLog($event, $recipient, $description)
+    {
+        $client = new GuzzleHttp\Client;
+//        $token = session('token');
+
+        $response = $client->post(Config::get('constants.STANDARD_URL') . 'error-logging', array(
+                'headers' => array(
+//                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'event' => $event,
+                    'recipient' => $recipient,
+                    'description' => $description
+                )
+            )
+        );
+
+        $result = GuzzleHttp\json_decode((string)$response->getBody());
+
+        return $result;
+
     }
 }
 
