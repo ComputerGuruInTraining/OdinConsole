@@ -536,7 +536,6 @@ class ReportController extends Controller
 
                     $data = $this->getIndividualReportData($id, $token);
 
-
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatIndividualReport($data->reportData);

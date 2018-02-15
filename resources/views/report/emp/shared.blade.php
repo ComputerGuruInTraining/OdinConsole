@@ -32,6 +32,9 @@
                 @if($item->title == "Nothing to Report")
                     <td class="min-width-lg">Nothing to Report</td>
                     <td></td>
+                @elseif($item->deleted_at != null)
+                    <td class="tp-data">Nothing to Report</td>
+                    <td></td>
                 @else
                     <td>Case Note Reported</td>
                     <td># {{$item->case_id}}</td>

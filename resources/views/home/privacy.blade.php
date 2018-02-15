@@ -4,7 +4,7 @@
 
 @section('page-content')
     <div class='form-pages content-app master_alt'>
-        <p>This privacy policy discloses the privacy practices for OdinLite Mobile App and Management Console.
+        <p>This privacy policy discloses the privacy practices for ODIN Case Management Mobile App and Console.
             This privacy policy applies solely to information collected by these applications. It will notify you of the
             following:
         </p>
@@ -71,7 +71,7 @@
         <p> Our Privacy Policy may change from time to time and all updates will be posted on this page.</p>
 
         <p> If you feel that we are not abiding by this privacy policy, you should contact us immediately via email:
-            <span class="text-bold">odinlitemail@gmail.com</span>
+            <span class="text-bold">{{Config::get('constants.COMPANY_EMAIL')}}</span>
         </p>
     </div>
 @stop

@@ -452,7 +452,7 @@ class UserController extends Controller
                 $msgLine1 = 'The company account has been created and an email has been sent to ' . $emailUser . ' to 
                 complete the registration process.';
 
-                $msgLine2 =  'The ODIN team welcomes you on board and we trust that you will enjoy the experience our app provides.';
+                $msgLine2 =  'The ODIN Case Management team welcomes you on board and we trust that you will enjoy the experience our app provides.';
 
                 return view('/confirm_alt')->with(array('title' => 'Confirmation of Success', 'line1' => $msgLine1, 'line2' => $msgLine2));
 
@@ -497,9 +497,9 @@ class UserController extends Controller
 
         $recipient = $request->input('recipient');
 
-        $description = $request->input('description');
+//        $description = $request->input('description');
 
-        $result = storeErrorLog($event, $recipient, $description);
+        $result = storeErrorLog($event, $recipient);
 
         return $result->message;
 //        return response()->json(['message' => 'post successful']);
