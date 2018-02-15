@@ -891,7 +891,6 @@ if (!function_exists('loadPdf')) {
 
 if (!function_exists('nullifyDuplicates')) {
     function nullifyDuplicates($collection)
-    {
     {//all items will have uniqueShiftCheckId with a value, the items that are repeated for a shiftCheckId will have a value of null
 
 
@@ -914,11 +913,9 @@ if (!function_exists('nullifyDuplicates')) {
             }
         }
 
-
         for ($i = 0; $i < count($collection); $i++) {
             $casesArray = [];
 
-            //just loop the $i that meet the criteria:
             //just loop the $i that are not repeated shiftCheckIds
             if($collection[$i]->uniqueShiftCheckId != null) {
 
@@ -928,10 +925,6 @@ if (!function_exists('nullifyDuplicates')) {
                     if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
 
                         $object = new stdClass();
-                        $object->case_id = $collection[$i]->case_id;
-                        $object->title = $collection[$i]->title;
-                        $object->case_notes_deleted_at = $collection[$i]->case_notes_deleted_at;
-
                         $object->case_id = $collection[$j]->case_id;
                         $object->title = $collection[$j]->title;
                         $object->description = $collection[$j]->description;
@@ -959,7 +952,6 @@ if (!function_exists('nullifyDuplicates')) {
             //default is that a case note has not been reported or has been deleted
             $note = "Nothing to Report";
 
-            //if there are more than 1 case notes for a check in
             //if there are more than 1 case notes for a check in ie repeated shiftCheckIds
             if(count($collection[$c]->cases) > 1) {
 
@@ -967,17 +959,11 @@ if (!function_exists('nullifyDuplicates')) {
                 for ($b = 0; $b < count($collection[$c]->cases); $b++) {
 
                     if($collection[$c]->cases[$b]->title != "Nothing to Report"){
-//dd($collection[$c]->cases[$b]->title);
-
                         //if there is a case note reported that has not been deleted, the $note = "Case Note Reported"
                         if($collection[$c]->cases[$b]->case_notes_deleted_at == null){
                             $note = "Case Note Reported";
 
-
                         }
-
-                    }else{
-//                        dd($collection[$c]->cases[$b]->title);
 
                     }
                 }
@@ -996,8 +982,6 @@ if (!function_exists('nullifyDuplicates')) {
         return $collection;
     }
 }
-
-
 
 
 
