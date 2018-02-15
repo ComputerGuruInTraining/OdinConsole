@@ -20,6 +20,43 @@
             <tbody class="alt-cols">
             @if($item->uniqueShiftCheckId != null)
 
+
+
+                {{--
+                1. if $item->cases > 1
+                if $item->note != "Nothing to Report"
+                at least one case is something to report
+
+
+                for ($a = 0; $a < count($item->cases); $a++)
+                    if($item->cases[$a]->title != "Nothing to Report")
+                    print the whole line
+
+                    then loop through the rest of the cases (starting at the index we are already at)
+                    for($b = $a; $b < (count(($item->cases)) - ($a+1)); $b++)
+                            if($item->cases[$b]->title != "Nothing to Report")
+                                print another row with just case notes
+                            endif
+
+                    endfor
+
+
+                endfor
+
+
+
+                2. else if $item->note == "Nothing to Report"
+                then all cases are nothing to report
+                so just print once
+
+                3. $item->cases == 1
+                just print once
+
+
+
+
+                --}}
+
                 <tr>
                 <td></td>
                 <td>{{$item->timeTzCheckIn}}</td>

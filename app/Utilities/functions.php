@@ -899,8 +899,6 @@ if (!function_exists('nullifyDuplicates')) {
 
         for ($i = 0; $i < count($collection); $i++) {
 
-//            $collection[$i]->uniqueShiftCheckId = $collection[$i]->shift_check_id;
-
             for ($j = 0; $j < count($collection); $j++) {
 
                 //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
@@ -912,6 +910,70 @@ if (!function_exists('nullifyDuplicates')) {
                 }
             }
         }
+
+
+        for ($i = 0; $i < count($collection); $i++) {
+            $casesArray = [];
+
+            //just loop the $i that meet the criteria:
+            if($collection[$i]->uniqueShiftCheckId != null) {
+
+                //compare against the entire collection
+                for ($j = 0; $j < count($collection); $j++) {
+                    if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
+
+                        $object = new stdClass();
+                        $object->case_id = $collection[$i]->case_id;
+                        $object->title = $collection[$i]->title;
+                        $object->case_notes_deleted_at = $collection[$i]->case_notes_deleted_at;
+
+
+                        array_push($casesArray,$object);
+
+                    }
+                }
+                $collection[$i]->cases = $casesArray;
+
+            }else{
+                $collection[$i]->cases = [];
+            }
+        }
+
+        for ($c = 0; $c < count($collection); $c++) {
+
+            $note = "Nothing to Report";
+
+            //if there are more than 1 case notes for a check in
+            if(count($collection[$c]->cases) > 1) {
+
+                //loop through the case notes
+                for ($b = 0; $b < count($collection[$c]->cases); $b++) {
+
+                    if($collection[$c]->cases[$b]->title != "Nothing to Report"){
+//dd($collection[$c]->cases[$b]->title);
+
+                        if($collection[$c]->cases[$b]->case_notes_deleted_at == null){
+                            $note = "Case Note Reported";
+
+
+                        }
+
+                    }else{
+//                        dd($collection[$c]->cases[$b]->title);
+
+                    }
+                }
+
+            }else{
+                $note = "One";
+            }
+
+            $collection[$c]->note = $note;
+        }
+
+//dd($collection);
+
+
         return $collection;
     }
 }
