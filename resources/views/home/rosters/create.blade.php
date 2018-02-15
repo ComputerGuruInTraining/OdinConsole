@@ -322,6 +322,10 @@
                         locationInput[i].setAttribute("disabled", "disabled");
 
                     } else {
+
+                        var tip = document.getElementById("checks-tip");
+                        tip.style.display = "none";
+
                         if (checksObj[i].valueChecks != 0) {
 
                             locationInput[i].setAttribute("value", checksObj[i].valueChecks);
@@ -330,10 +334,6 @@
                             if (checksObj[i].oldCheckValue != 0) {
                                 locationInput[i].setAttribute("value", checksObj[i].oldCheckValue);
                             }
-//                            else if(locationInput[i].value == 0){
-//                                locationInput[i].setAttribute("placeholder", 1);
-//
-//                            }
                         }
                     }
 
@@ -342,6 +342,9 @@
             }else{
                 //hide the location checks label as myArray length is 0 and therefore no locations selected
                 locCheckLbl.style.display = "none";
+
+                var tip = document.getElementById("checks-tip");
+                tip.style.display = "none";
             }
         }
     </script>

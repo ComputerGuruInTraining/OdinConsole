@@ -538,7 +538,7 @@ if (!function_exists('getUserRole')) {
 
 if (!function_exists('storeErrorLog')) {
 
-    function storeErrorLog($event, $recipient, $description)
+    function storeErrorLog($event, $recipient)
     {
         $client = new GuzzleHttp\Client;
 //        $token = session('token');
@@ -551,7 +551,7 @@ if (!function_exists('storeErrorLog')) {
                 'json' => array(
                     'event' => $event,
                     'recipient' => $recipient,
-                    'description' => $description
+                    'description' => 'na'
                 )
             )
         );

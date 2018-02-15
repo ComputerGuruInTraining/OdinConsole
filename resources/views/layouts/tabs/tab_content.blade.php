@@ -50,7 +50,7 @@
             </p>
             <p>
                 Enter the name and email address of each security guard.
-                    Each guard will then receive an automated email to download the Odin Lite app from either the Apple
+                    Each guard will then receive an automated email to download the ODIN Case Management Mobile App from either the Apple
                     or Android app store.
                 </p>
 
@@ -69,7 +69,7 @@
             <p>
                     Choose a date range, the locations to be guarded, the number of visits
                     required by a guard at each location, and the guard/s responsible. The security guards will receive
-                    this information via their Odin Lite app.
+                    this information via their ODIN Case Management Mobile App.
                 </p>
 
             <p class="text-bold">
@@ -106,11 +106,11 @@
             </p>
 
             <p class="text-bold">
-                Step Two – Download the Odin Lite app.
+                Step Two – Download the ODIN Case Management Mobile App.
             </p>
             <p>
                 You will receive an email from your employer with instructions on
-                how to download the Odin Lite app from either the Apple or Android app store (this is a free download).
+                how to download the ODIN Case Management Mobile App from either the Apple or Android app store (this is a free download).
                 Upon first log in you will be prompted to create a fresh password.
             </p>
 
@@ -171,7 +171,7 @@
                 <p>
                     Enter the biographical details and email address for each of your
                     employees.
-                    They will then automatically receive an email prompting them to download the Odin Lite app from
+                    They will then automatically receive an email prompting them to download the ODIN Case Management Mobile App from
                     either the Apple or Android app store (this is a free download).
                 </p>
 

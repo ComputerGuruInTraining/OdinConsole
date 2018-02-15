@@ -302,7 +302,7 @@
                 }
             };
             console.log(companyId);
-            xhttp.open("GET", "http://odinlite.net/dashboard/"+ companyId +"/current-positions", true);
+            xhttp.open("GET", "https://odinliteapi.azurewebsites.net//dashboard/"+ companyId +"/current-positions", true);
             xhttp.send();
         }
 

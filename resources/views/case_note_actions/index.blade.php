@@ -48,7 +48,7 @@
                             @if(isset($item->date))
                                 <td>{{$item->date}}</td>
                             @else
-                                <td>GeoData n/a</td>
+                                <td>-</td>
                             @endif
 
                             @if(isset($item->time))
@@ -73,9 +73,7 @@
                                     @else
                                         {{--v2 uploads--}}
                                         {{--todo: remove once not using v2 mobile anymore--}}
-                                        <td>Mobile App V2 Image</td>
-                                        {{--<td><img src="{{$item->url}}"/></td>--}}
-
+                                        <td>-</td>
                                     @endif
                                 @else
                                     {{--v2 uploads--}}
