@@ -7,21 +7,20 @@
 
         <tr>
             <td class="report-title" colspan="4">{{formatDatesShort($index)}}</td>
-            {{--<td></td>--}}
-            {{--<td></td>--}}
-            {{--<td></td>--}}
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            @if(isset($edit))
-                <td></td>
-            @endif
+            {{--@if(isset($edit))--}}
+                {{--<td></td>--}}
+            {{--@endif--}}
         </tr>
 
         @foreach ($data->get($index) as $item)
             <tbody class="alt-cols">
-            <tr>
+            @if($item->uniqueShiftCheckId != null)
+
+                <tr>
                 <td></td>
                 <td>{{$item->timeTzCheckIn}}</td>
                 <td>{{$item->timeTzCheckOut}}</td>
@@ -34,7 +33,7 @@
                     <td></td>
                     <td></td>
                 @elseif($item->case_notes_deleted_at != null)
-                    <td class="tp-data">Nothing to Report</td>
+                    <td>Nothing to Report</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -83,6 +82,40 @@
                     {{--@endif--}}
                 {{--@endif--}}
             </tr>
+            @else
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    {{--action--}}
+                    @if(($item->title != "Nothing to Report")||($item->case_notes_deleted_at != null))
+                        <td>Nothing to Report</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    @else
+                        <td>Case Note Reported</td>
+                        <td># {{$item->case_id}}</td>
+                        <td>{{$item->title}}</td>
+
+                        {{--description--}}
+                        @if(isset($item->shortDesc))
+                            <td>{{$item->shortDesc}}</td>
+                        @else
+                            <td>{{$item->description}}</td>
+                        @endif
+
+                        {{--Image--}}
+                        @if($item->hasImg == "Y")
+                            <td>Yes</td>
+                        @else
+                            <td></td>
+                        @endif
+                    @endif
+                </tr>
+            @endif
             </tbody>
         @endforeach
     @endforeach
@@ -96,8 +129,8 @@
         <td></td>
         <td></td>
         <td></td>
-        @if(isset($edit))
-            <td></td>
-        @endif
+        {{--@if(isset($edit))--}}
+            {{--<td></td>--}}
+        {{--@endif--}}
     </tr>
 @endif

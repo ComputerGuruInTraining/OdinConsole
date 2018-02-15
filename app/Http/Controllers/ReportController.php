@@ -397,11 +397,10 @@ class ReportController extends Controller
             $notes = 'case notes reported';
         }
 
+        $fmtData = nullifyDuplicates($fmtData);
+
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
-
-//        $groupData2 = $groupData->groupBy('shift_check_id');
-
 
         return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report, 'notes' => $notes]);
 
@@ -500,9 +499,14 @@ class ReportController extends Controller
 
                     $data = $this->getLocationReportData($id, $token);
 
+//                    dd($data);
+
+
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatLocationReportData($data, $report);
+
+//                        dd($formatData);
 
                         view()->share(array(
                             'data' => $formatData->get('groupData'),
@@ -536,9 +540,13 @@ class ReportController extends Controller
 
                     $data = $this->getIndividualReportData($id, $token);
 
+//                    dd($data);
+
                     if ($data != 'errorInResult') {
 
                         $formatData = $this->formatIndividualReport($data->reportData);
+
+//                        dd($formatData);
 
                         view()->share(array(
                             'data' => $formatData,
@@ -573,6 +581,7 @@ class ReportController extends Controller
                 'errorTitle' => 'Server down'
             ));
         } catch (\ErrorException $error) {
+dd($error);
             $e = 'Error displaying report details';
             return view('error-msg')->with('msg', $e);
 

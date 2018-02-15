@@ -889,6 +889,34 @@ if (!function_exists('loadPdf')) {
     }
 }
 
+if (!function_exists('nullifyDuplicates')) {
+    function nullifyDuplicates($collection)
+    {
+        for ($z = 0; $z < count($collection); $z++) {
+
+            $collection[$z]->uniqueShiftCheckId = $collection[$z]->shift_check_id;
+        }
+
+        for ($i = 0; $i < count($collection); $i++) {
+
+//            $collection[$i]->uniqueShiftCheckId = $collection[$i]->shift_check_id;
+
+            for ($j = 0; $j < count($collection); $j++) {
+
+                //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
+                //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
+                if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
+                     if ($j > $i) {
+                        $collection[$j]->uniqueShiftCheckId = null;
+                     }
+                }
+            }
+        }
+        return $collection;
+    }
+}
+
+
 
 
 
