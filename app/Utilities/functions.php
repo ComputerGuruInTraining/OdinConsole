@@ -889,6 +889,99 @@ if (!function_exists('loadPdf')) {
     }
 }
 
+if (!function_exists('nullifyDuplicates')) {
+    function nullifyDuplicates($collection)
+    {//all items will have uniqueShiftCheckId with a value, the items that are repeated for a shiftCheckId will have a value of null
+
+
+        for ($z = 0; $z < count($collection); $z++) {
+
+            $collection[$z]->uniqueShiftCheckId = $collection[$z]->shift_check_id;
+        }
+
+        for ($i = 0; $i < count($collection); $i++) {
+
+            for ($j = 0; $j < count($collection); $j++) {
+
+                //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
+                //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
+                if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
+                     if ($j > $i) {
+                        $collection[$j]->uniqueShiftCheckId = null;
+                     }
+                }
+            }
+        }
+
+        for ($i = 0; $i < count($collection); $i++) {
+            $casesArray = [];
+
+            //just loop the $i that are not repeated shiftCheckIds
+            if($collection[$i]->uniqueShiftCheckId != null) {
+
+                //add an array for the several case notes that have the same shiftCheckId
+                //compare against the entire collection
+                for ($j = 0; $j < count($collection); $j++) {
+                    if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
+
+                        $object = new stdClass();
+                        $object->case_id = $collection[$j]->case_id;
+                        $object->title = $collection[$j]->title;
+                        $object->description = $collection[$j]->description;
+                        $object->case_notes_deleted_at = $collection[$j]->case_notes_deleted_at;
+                        $object->hasImg = $collection[$j]->hasImg;
+
+                        if(isset($collection[$j]->shortDesc)){
+                            $object->shortDesc = $collection[$j]->shortDesc;
+                        }
+
+                        array_push($casesArray,$object);
+
+                    }
+                }
+                $collection[$i]->cases = $casesArray;
+
+            }else{
+                //repeated shiftCheckIds will have an empty array
+                $collection[$i]->cases = [];
+            }
+        }
+
+        for ($c = 0; $c < count($collection); $c++) {
+
+            //default is that a case note has not been reported or has been deleted
+            $note = "Nothing to Report";
+
+            //if there are more than 1 case notes for a check in ie repeated shiftCheckIds
+            if(count($collection[$c]->cases) > 1) {
+
+                //loop through the case notes
+                for ($b = 0; $b < count($collection[$c]->cases); $b++) {
+
+                    if($collection[$c]->cases[$b]->title != "Nothing to Report"){
+                        //if there is a case note reported that has not been deleted, the $note = "Case Note Reported"
+                        if($collection[$c]->cases[$b]->case_notes_deleted_at == null){
+                            $note = "Case Note Reported";
+
+                        }
+
+                    }
+                }
+
+            }else{
+                //if there is only 1 case note
+                $note = "One";
+            }
+
+            $collection[$c]->note = $note;
+        }
+
+//dd($collection);
+
+
+        return $collection;
+    }
+}
 
 
 

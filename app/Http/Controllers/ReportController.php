@@ -397,11 +397,10 @@ class ReportController extends Controller
             $notes = 'case notes reported';
         }
 
+        $fmtData = nullifyDuplicates($fmtData);
+
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
-
-//        $groupData2 = $groupData->groupBy('shift_check_id');
-
 
         return $collection = collect(['groupData' => $groupData, 'total' => $total, 'report' => $report, 'notes' => $notes]);
 
