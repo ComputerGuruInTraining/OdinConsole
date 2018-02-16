@@ -22,41 +22,53 @@
         @foreach ($data->get($index) as $item)
             <tbody class="alt-cols">
 
-{{--            @if($item->uniqueShiftCheckId != null){{--if the uniqueShiftCheckId holds a value, the cases array will be declared --}}
 {{--6 scenarios:
 
 CNR = CASE NOTE REPORTED
 NTR = NOTHING TO REPORT
 
-1.  CNR
-    NTR
+1.  CNR (not deleted)
+    NTR (not deleted)
     ...
 
-2.  CNR
+2.  CNR (deleted or not)
 
-3.  NTR
+3.  NTR (deleted or not)
 
-4.  NTR
-    CNR
+4.  NTR (not deleted)
+    CNR (not deleted)
 
-5.  NTR
-    NTR
+5.  NTR (deleted or not)
+    NTR (deleted or not)
 
-6.  CNR
-    CNR
+6.  CNR (not deleted)
+    CNR (not deleted)
+
+//$item->note = "Nothing to Report" due to all being deleted
+7.  CNR (deleted)
+    CNR (deleted)
+
+8.  CNR (deleted)
+    NTR (deleted)
+
+9.  NTR (deleted)
+    CNR (deleted)
+
+
+    + 6 more for when all scenario items are deleted
+    + more scenarios for when some are deleted and some are not
 --}}
 
             @if(count($item->cases) > 1){{--scenarios 1, 4, 5, 6--}}
                     @if($item->note != "Nothing to Report"){{--scenario 1, 4, 6--}}
-                    {{--at least one case is something to report--}}
+                    {{--NB: if all cases have been deleted, will have $item->note == "Nothing to Report"--}}
 
                         @for ($a = 0; $a < count($item->cases); $a++)
                             @if($item->cases[$a]->case_notes_deleted_at == null)
-                                {{--NB: if all cases have been deleted, will have $item->note == "Nothing to Report"--}}
+
                                 @if($item->cases[$a]->title != "Nothing to Report"){{--scenario 1, 6, 4 (will skip the first item that is Nothing to Report)--}}
 
-                                    {{--print the whole line--}}
-
+                                {{--print the whole line--}}
                                 <tr>
                                     <td></td>
                                     <td>{{$item->timeTzCheckIn}}</td>
@@ -119,7 +131,7 @@ NTR = NOTHING TO REPORT
                                     {{--@endif--}}
                                 </tr>
 
-                                    {{--then loop through the rest of the cases (starting at the index we are already at)--}}
+                                {{--then loop through the rest of the cases (starting at the index we are already at)--}}
 
                                 @for($b = ($a + 1); $b < count($item->cases); $b++)
                                     @if($item->cases[$b]->case_notes_deleted_at == null)
@@ -165,13 +177,23 @@ NTR = NOTHING TO REPORT
                                     @endif
                                 @endfor
 
-                                {{--break to ensure we don't continue to loop through the array again--}}
+                                {{--break out of the if and the loop to ensure we don't continue to loop through the array again--}}
                                     @break 2;
                                 @endif
                             @endif
                         @endfor
-                    {{--@elseif($item->note == "Nothing to Report")--}}{{--scenario 5--}}
 
+                    @elseif($item->note == "Nothing to Report"){{--scenario 5, 7, 8, 9 as all deleted so $item->note == Nothing to Report and no --}}
+                        <tr>
+                            <td></td>
+                            <td>{{$item->timeTzCheckIn}}</td>
+                            <td>{{$item->timeTzCheckOut}}</td>
+                            <td>Nothing to Report</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     @endif{{--@endif($item->note != "Nothing to Report")--}}
             @elseif(count($item->cases) == 1){{--else (count($item->cases) == 1 or 0--}}{{--scenarios 2, 3--}}
                 <tr>
