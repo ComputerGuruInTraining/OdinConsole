@@ -397,8 +397,12 @@ class ReportController extends Controller
             $notes = 'case notes reported';
         }
 
-        $fmtData = nullifyDuplicates($fmtData);
+        $nullify = nullifyDuplicates($fmtData);
 
+        $casesArrayCollection = casesToArray($nullify);
+
+        $fmtData = caseNoteReported($casesArrayCollection);
+        
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
 

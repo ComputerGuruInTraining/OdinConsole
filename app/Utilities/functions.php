@@ -906,18 +906,25 @@ if (!function_exists('nullifyDuplicates')) {
                 //if startDate & shift time the same, preserve the startDate values for future comparisons and use:
                 //and add null to the uniqueDate field which was assigned the values in the startDate field previously,
                 if ($collection[$i]->shift_check_id == $collection[$j]->shift_check_id) {
-                     if ($j > $i) {
+                    if ($j > $i) {
                         $collection[$j]->uniqueShiftCheckId = null;
-                     }
+                    }
                 }
             }
         }
 
+        return $collection;
+    }
+}
+
+if (!function_exists('casesToArray')) {
+    function casesToArray($collection)
+    {
         for ($i = 0; $i < count($collection); $i++) {
             $casesArray = [];
 
             //just loop the $i that are not repeated shiftCheckIds
-            if($collection[$i]->uniqueShiftCheckId != null) {
+            if ($collection[$i]->uniqueShiftCheckId != null) {
 
                 //add an array for the several case notes that have the same shiftCheckId
                 //compare against the entire collection
@@ -931,23 +938,29 @@ if (!function_exists('nullifyDuplicates')) {
                         $object->case_notes_deleted_at = $collection[$j]->case_notes_deleted_at;
                         $object->hasImg = $collection[$j]->hasImg;
 
-                        if(isset($collection[$j]->shortDesc)){
+                        if (isset($collection[$j]->shortDesc)) {
                             $object->shortDesc = $collection[$j]->shortDesc;
                         }
 
-                        array_push($casesArray,$object);
+                        array_push($casesArray, $object);
 
                     }
                 }
                 $collection[$i]->cases = $casesArray;
 
-            }else{
+            } else {
                 //repeated shiftCheckIds will have an empty array
                 $collection[$i]->cases = [];
             }
         }
 
-        for ($c = 0; $c < count($collection); $c++) {
+        return $collection;
+    }
+}
+
+if (!function_exists('caseNoteReported')) {
+    function caseNoteReported($collection)
+    {        for ($c = 0; $c < count($collection); $c++) {
 
             //default is that a case note has not been reported or has been deleted
             $note = "Nothing to Report";
@@ -968,16 +981,10 @@ if (!function_exists('nullifyDuplicates')) {
                     }
                 }
 
-            }else{
-                //if there is only 1 case note
-                $note = "One";
             }
 
             $collection[$c]->note = $note;
         }
-
-//dd($collection);
-
 
         return $collection;
     }
