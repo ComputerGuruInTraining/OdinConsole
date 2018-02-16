@@ -19,6 +19,7 @@ return [
     'ERROR_SERVER' => 'Failed to load resource.',
 //    todo: change company email then.....but first, trademarked? I recall odin.net is taken I believe for email domain
     'COMPANY_EMAIL' => 'admin@odinlite.net',
+    'COMPANY_EMAIL_SUPPORT' => 'support@odincasemanagement.com',
     'COMPANY_NAME' => 'ODIN Case Management',
     'COMPANY_NICKNAME' => 'ODIN',
     'TEAM' => 'ODIN Team',

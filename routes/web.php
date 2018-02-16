@@ -87,15 +87,6 @@ Route::get('confirm-delete/{id}/{url}', function($id, $url){
         return $confirmView;
     }
 });
-//
-////report case note confirm-delete view
-//Route::get('confirm-delete-report-case/{url}/{id}', function($url, $id){
-//    if (session()->has('token')) {
-//        //confirmDlt defined in functions.php
-//        $confirmView = confirmDltReportCaseNote($url, $id);
-//        return $confirmView;
-//    }
-//});
 
 //reports/344/edit/2524/case-notes/
 //global confirm-delete view
@@ -131,7 +122,6 @@ Route::get('/settings', 'UserController@index');
 Route::get('/register', 'UserController@registerCompany');
 
 Route::post('/register/company', 'UserController@postRegister');
-
 
 //Route::resource('/locations', 'LocationController');
 Route::get('location', 'LocationController@index');
@@ -185,7 +175,12 @@ Route::get('cancel-delete', function(){
 
 Route::get('/support/users', 'HomeController@support');
 
+//todo: change to failed once works, and force it for an eg to ensure working even with failed.
+//to force it, use an email address that doesn't exist. definitely. what log error does this throw? failed for what reason?
 
+//we're goin to have the route in console so we can be an authenticated user (perhaps a different route file in api would work too??)
+//so are able to post to the db using the web.php route in api.
+Route::post('/webhooks/delivered', 'UserController@deliveredEmail');
 
 //global route to different pages TODO: WIP
 //Route::get('{url}-{id}', function($id, $url){
@@ -193,5 +188,15 @@ Route::get('/support/users', 'HomeController@support');
 //        //defined in functions.php
 //        $navTo = navTo($id, $url);
 //        return $navTo;
+//    }
+//});
+
+//
+////report case note confirm-delete view
+//Route::get('confirm-delete-report-case/{url}/{id}', function($url, $id){
+//    if (session()->has('token')) {
+//        //confirmDlt defined in functions.php
+//        $confirmView = confirmDltReportCaseNote($url, $id);
+//        return $confirmView;
 //    }
 //});

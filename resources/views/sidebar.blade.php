@@ -53,13 +53,12 @@
                     <button class="w3-button w3-circle btn-success dropdown-toggle"
                             id="menu1" type="button" data-toggle="dropdown"><span>+</span></button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                        {{--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" style="font-weight: bold;">Create</a></li>--}}
-                        {{--<li role="presentation" class="divider"></li>--}}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/employees/create">Add Employee</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/employee/create-existing">Add Existing User as Employee</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/location-create">Add Location</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/rosters/create">Add Shift</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/case-notes/create">Case Note</a></li>
+                        {{--<li role="presentation"><a role="menuitem" tabindex="-1" href="/case-notes/create">Add Case Note</a></li>--}}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/user/create">Add User</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="/reports/create">Generate Report</a></li>
                     </ul>
                 </div>
