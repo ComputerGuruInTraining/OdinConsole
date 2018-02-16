@@ -35,12 +35,11 @@
         }
 
         .top-border{
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid #4d4d4d;
         }
 
         .content-app{
             line-height: 1 !important;
-            /*margin: 15px !important;*/
             text-align: justify;
         }
 
@@ -58,7 +57,6 @@
         }
 
         .report-title {
-            /*color: #4d2970;*/
             margin-left: 5px;
         }
 
@@ -104,23 +102,23 @@
         }
 
         .table > tbody > tr > th {
-            border-top: 1px solid #f4f4f4;
-            border-bottom: 1px solid #f4f4f4;
+            border-top: 1px solid #4d4d4d;
+            border-bottom: 1px solid #4d4d4d;
 
         }
 
         .table td {
-            border-bottom: 1px solid #f4f4f4;
+            border-bottom: 1px solid #4d4d4d;
         }
 
         .table-responsive > .table tr th:last-child,
         .table-responsive > .table tr td:last-child {
-            border-right: 1px solid #f4f4f4;
+            border-right: 1px solid #4d4d4d;
         }
 
         .table-responsive > .table tr th:first-child,
         .table-responsive > .table tr td:first-child {
-            border-left: 1px solid #f4f4f4;
+            border-left: 1px solid #4d4d4d;
         }
 
         /*   Following styles sourced from
