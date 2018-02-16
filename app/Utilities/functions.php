@@ -645,12 +645,8 @@ if (!function_exists('geoRangeDateTime')) {
                 $collection[$i]->timeTzCheckIn = $no_data;
             }
 
-//           check outs
-            //if there is a value for the check_out datetime (ie check_outs property)
         }
-        //return $result;
-        return $collection;//yes, ok, no, "", "no geoData"
-//        return $groupclientData;
+        return $collection;
     }
 }
 
@@ -918,7 +914,7 @@ if (!function_exists('nullifyDuplicates')) {
 }
 
 if (!function_exists('casesToArray')) {
-    function casesToArray($collection)
+    function casesToArray($collection, $source = null)
     {
         for ($i = 0; $i < count($collection); $i++) {
             $casesArray = [];
@@ -934,12 +930,18 @@ if (!function_exists('casesToArray')) {
                         $object = new stdClass();
                         $object->case_id = $collection[$j]->case_id;
                         $object->title = $collection[$j]->title;
-                        $object->description = $collection[$j]->description;
-                        $object->case_notes_deleted_at = $collection[$j]->case_notes_deleted_at;
-                        $object->hasImg = $collection[$j]->hasImg;
 
-                        if (isset($collection[$j]->shortDesc)) {
-                            $object->shortDesc = $collection[$j]->shortDesc;
+                        if ($source == "locationReport") {
+                            $object->description = $collection[$j]->description;
+                            $object->case_notes_deleted_at = $collection[$j]->case_notes_deleted_at;
+                            $object->hasImg = $collection[$j]->hasImg;
+
+                            if (isset($collection[$j]->shortDesc)) {
+                                $object->shortDesc = $collection[$j]->shortDesc;
+                            }
+                        }else if($source == 'individualReport'){
+                            $object->case_notes_deleted_at = $collection[$j]->deleted_at;
+
                         }
 
                         array_push($casesArray, $object);
@@ -960,7 +962,8 @@ if (!function_exists('casesToArray')) {
 
 if (!function_exists('caseNoteReported')) {
     function caseNoteReported($collection)
-    {        for ($c = 0; $c < count($collection); $c++) {
+    {
+        for ($c = 0; $c < count($collection); $c++) {
 
             //default is that a case note has not been reported or has been deleted
             $note = "Nothing to Report";
@@ -977,10 +980,8 @@ if (!function_exists('caseNoteReported')) {
                             $note = "Case Note Reported";
 
                         }
-
                     }
                 }
-
             }
 
             $collection[$c]->note = $note;

@@ -12,7 +12,7 @@
 @stop
 
 @section('total1-show')
-    Number of Checks at Premise:
+    Number of Check Outs at Premise:
 @stop
 
 @section('total1-val-show')
