@@ -343,6 +343,13 @@ class ReportController extends Controller
             }
         }
 
+
+        $nullify = nullifyDuplicates($fmtData);
+
+        $casesArrayCollection = casesToArray($nullify, 'individualReport');
+
+        $fmtData = caseNoteReported($casesArrayCollection);
+
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
 
@@ -397,7 +404,11 @@ class ReportController extends Controller
             $notes = 'case notes reported';
         }
 
-        $fmtData = nullifyDuplicates($fmtData);
+        $nullify = nullifyDuplicates($fmtData);
+
+        $casesArrayCollection = casesToArray($nullify, 'locationReport');
+
+        $fmtData = caseNoteReported($casesArrayCollection);
 
         //group by date for better view
         $groupData = $fmtData->groupBy('dateTzCheckIn');
@@ -594,11 +605,8 @@ class ReportController extends Controller
     {
         //format check in timestamp to be a user friendly date and time which accounts for the timezone
         foreach ($checks->shiftChecks as $i => $item) {
-//TODO: consider adding an endnote to report advising of this info
 
             $no_data = '';
-            //constant
-//            define("$no_data", 0);
 //          check ins
 //         if there is a value for the check_in datetime (ie check_ins property) therefore there is a record
             //(because of check_ins datetime is a default value for the field)
@@ -617,7 +625,6 @@ class ReportController extends Controller
 
                     $distance = distance($item->checkin_latitude, $item->checkin_longitude,
                         $checks->location->latitude, $checks->location->longitude);
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
 
                     $result = geoRange($distance);
 
@@ -632,32 +639,11 @@ class ReportController extends Controller
                         $checks->shiftChecks[$i]->img = 'if_cross_5233';
                     }
 
-                    //for testing purposes only: 1
-
-//                    $distance = distance($item->checkin_latitude, $item->checkin_longitude, -35.381536, 149.058894);// testing
-
-
                 } else {
-                    //for testing purposes only: 1
-//                 $distance = distance($checks->location->latitude, $checks->location->longitude, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
                     $checks->shiftChecks[$i]->withinRange = "-";
 
                     $checks->shiftChecks[$i]->img = 'if_minus_216340';
-
-                    //for testing purposes only: 2
-
-//                    $distance2 = distance(-35.381536, 149.058894, $checks->location->latitude, $checks->location->longitude);//should return 0.0km
-
-                    //
-                    //Latitude -35.381536
-//                    longitude: 149.058894
-
-
-//                    $checks->shiftChecks[$i]->withinRange = $distance + " should equal 0 as same location";
-//                    $checks->shiftChecks[$i]->withinRange = $distance2 + " not gathered";
-
                 }
-
 
             } else {
 
@@ -681,25 +667,13 @@ class ReportController extends Controller
                 $checks->shiftChecks[$i]->dateTzCheckOut = $no_data;
                 $checks->shiftChecks[$i]->timeTzCheckOut = $no_data;
             }
-
-
         }
 
 //        //number of check ins at premise
 //        //change to collection datatype from array for using groupBy fn and count
         $collectChecks = collect($checks->shiftChecks);
-//
-//        $checkIns = $collectChecks->pluck('check_ins');
-//
-//        $total = $checkIns->count();
-//
-////        $checksCollection = collect($checks->shiftChecks);
-//
-//        //group by date for better view
-//        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
 
         return $collectChecks;
-//        return $groupShiftChecks;
     }
 
     /**
@@ -716,7 +690,6 @@ class ReportController extends Controller
                 $token = session('token');
 
                 $client = new GuzzleHttp\Client;
-//                $id = 24;
 
                 $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
                     'headers' => [
@@ -996,35 +969,8 @@ class ReportController extends Controller
 
             if ($checks->success == false) {
                 return 'errorInResult';
-//
+
             } else {
-//                //extract location latitude and longitude to be used to find timezone
-//                //for this report atm, case note geoLocation is presumed to be location of premise
-//                $lat = $checks->location->latitude;
-//                $long = $checks->location->longitude;
-//                //calculate the date and time based on the location and any of the case notes created_at timestamp
-//                $collection = timezone($lat, $long, $checks->reportCaseNotes[0]->created_at);
-//
-//                //format dates to be mm/dd/yyyy for case notes
-//                foreach ($checks->reportCaseNotes as $i => $item) {
-//                    //add the extracted date to each of the objects and format date to be mm/dd/yyyy
-//                    $t = $checks->reportCaseNotes[$i]->created_at;
-//
-//                    //friendly dates
-//                    $dateForTS = date_create($t);
-//                    $dateInTS = date_timestamp_get($dateForTS);
-//
-//                    //google timezone api returns the time in seconds from utc time (rawOffset)
-//                    //and a value for if in daylight savings timezone (dstOffset) which will equal 0 if not applicable
-//                    $tsUsingResult = $dateInTS + $collection->get('dstOffset') + $collection->get('rawOffset');
-//
-//                    //convert timestamp to a datetime string
-//                    $date = date('m/d/Y', $tsUsingResult);
-//
-//                    $time = date('g.i a', $tsUsingResult);
-//
-//                    $checks->reportCaseNotes[$i]->case_date = $date;
-//                    $checks->reportCaseNotes[$i]->case_time = $time;
 
                 return $checks;
             }
