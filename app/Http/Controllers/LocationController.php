@@ -260,10 +260,6 @@ class LocationController extends Controller
     {
         try {
             if (session()->has('token')) {
-                //retrieve token needed for authorized http requests
-//                $token = session('token');
-//
-//                $client = new GuzzleHttp\Client;
 
                 $location = $this->getLocation($id);
 
@@ -273,14 +269,6 @@ class LocationController extends Controller
                     return verificationFailedMsg();
 
                 }
-
-//                $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
-//                    'headers' => [
-//                        'Authorization' => 'Bearer ' . $token,
-//                    ]
-//                ]);
-//
-//                $location = json_decode((string)$response->getBody());
 
                 return view('location/edit-locations')->with('location', $location);
 
@@ -414,8 +402,10 @@ class LocationController extends Controller
                     ]
                 ]);
 
+                $location = json_decode((string)$response->getBody());
+
                 //ie record and user belong to different companies, therefore user not verified
-                if ($response == false) {
+                if ($location == false) {
 
                     return verificationFailedMsg();
                 }

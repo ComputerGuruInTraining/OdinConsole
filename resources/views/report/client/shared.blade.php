@@ -75,19 +75,6 @@ NTR = NOTHING TO REPORT
                                     <td>{{$item->timeTzCheckOut}}</td>
 
                                     {{--action--}}
-                                    {{--@if($item->title == "Nothing to Report")--}}
-                                        {{--<td>Nothing to Report</td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                    {{--@elseif($item->case_notes_deleted_at != null)--}}
-                                        {{--<td>Nothing to Report</td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                        {{--<td></td>--}}
-                                    {{--@if--}}
                                         <td>Case Note Reported</td>
                                         <td># {{$item->cases[$a]->case_id}}</td>
                                         <td>{{$item->cases[$a]->title}}</td>

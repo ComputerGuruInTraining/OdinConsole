@@ -801,6 +801,7 @@ class ReportController extends Controller
                             if ($request->has('download')) {
 
                                 $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+
                                 // download pdf w current date in the name
                                 $dateTime = Carbon::now();
                                 $date = substr($dateTime, 0, 10);
@@ -1391,7 +1392,6 @@ class ReportController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    /*IMPORTANT: ROUTE NOT COMPANY VERIFIED TODO*/
     public function destroy($id)
     {
         try {
@@ -1402,12 +1402,21 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $client->post(Config::get('constants.API_URL') . 'reports/' . $id, [
+                $response = $client->post(Config::get('constants.API_URL') . 'reports/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                         'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
+
+                $result = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($result == false) {
+
+                    return verificationFailedMsg();
+
+                }
 
                 $theAction = 'You have successfully deleted the report';
 
