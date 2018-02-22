@@ -50,7 +50,6 @@
                         <td>{{$employee->email}}</td>
 
                         <td>
-                            {{--<a href="/employees/{{ $employee->id }}">View</a> | <a href="/employees/{{$employee->id}}/edit">Edit</a>--}}
                             <a href="/employees/{{$employee->user_id}}/edit"><i class="fa fa-edit"></i></a>
                             <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
 

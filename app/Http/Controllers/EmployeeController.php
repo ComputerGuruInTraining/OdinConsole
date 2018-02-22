@@ -24,8 +24,6 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
         try {
@@ -103,32 +101,6 @@ class EmployeeController extends Controller
 
 
     }
-
-
-    //view with a next button (radio fn then create fn) and a radio option
-
-
-    //radio function from next button
-
-    //route = '/employees/option-existing'
-
-    //if value == false ie no
-    //create fn
-    //if value == true
-    //createExisting fn
-
-
-    //check value in radio input
-    //if true and using existing user ->
-    //get user values from api
-
-    //return view with user values auto-populated
-    //and isset($user) submit btn takes to one route & storeExisting() with an id sent through
-
-
-
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -396,26 +368,28 @@ class EmployeeController extends Controller
     }
 
     /**
+     * NOT CURRENTLY IN USE
      * Display the specified resource.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
-    {
-        try {
-            if (session()->has('token')) {
-                //shows the detail of a particular employee when accessed from /employees page
-                return view('employee.show', compact('employee'));
-            } else {
-                return Redirect::to('/login');
-            }
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return view('/employees');
-        } catch (\ErrorException $error) {
-            return view('/employees');
-        }
-    }
+
+//    public function show(Employee $employee)
+//    {
+//        try {
+//            if (session()->has('token')) {
+//                //shows the detail of a particular employee when accessed from /employees page
+//                return view('employee.show', compact('employee'));
+//            } else {
+//                return Redirect::to('/login');
+//            }
+//        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+//            return view('/employees');
+//        } catch (\ErrorException $error) {
+//            return view('/employees');
+//        }
+//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -440,6 +414,12 @@ class EmployeeController extends Controller
                 ]);
 
                 $employees = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($employees == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 $employee = $employees[0];
 
@@ -532,6 +512,12 @@ class EmployeeController extends Controller
 
                 $employee = json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($employee == false) {
+
+                    return verificationFailedMsg();
+                }
+
                 //direct user based on whether record updated successfully or not
                 if ($employee->success == true) {
                     $theAction = 'You have successfully edited the employee details';
@@ -590,6 +576,12 @@ class EmployeeController extends Controller
                 ]);
 
                 $employee = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($employee == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 if ($employee->success == true) {
                     $theAction = 'You have successfully deleted the employee';
