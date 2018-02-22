@@ -376,6 +376,13 @@ class RosterController extends Controller
 
                 $assigned = GuzzleHttp\json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($assigned == false) {
+
+                    return verificationFailedMsg();
+
+                }
+
                 $responseUsers = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -439,6 +446,7 @@ class RosterController extends Controller
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             $err = 'Error displaying edit shift page';
             return view('error-msg')->with('msg', $err);
 
@@ -583,6 +591,13 @@ class RosterController extends Controller
 
                 $updated = json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($updated == false) {
+
+                    return verificationFailedMsg();
+
+                }
+
                 if ($updated->success == true) {
 
                     $theAction = 'You have successfully edited the shift';
@@ -594,7 +609,6 @@ class RosterController extends Controller
                         ->withErrors('Failed to save the changes');
 
                 }
-
 
             } else {
                 return Redirect::to('/login');
@@ -659,7 +673,17 @@ class RosterController extends Controller
                     ]
                 ]);
 
+                $result = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($result == false) {
+
+                    return verificationFailedMsg();
+
+                }
+
                 $theAction = 'You have successfully deleted the shift';
+
                 return view('confirm')->with('theAction', $theAction);
             } else {
                 return Redirect::to('/login');

@@ -14,15 +14,8 @@ use GuzzleHttp;
 use Form;
 use Config;
 
-
 class HomeController extends BaseController
 {
-//    public $token;
-//
-//    public function _construct($token){
-//        $this->token = $token;
-//
-//    }
 
     public function getIndex()
     {

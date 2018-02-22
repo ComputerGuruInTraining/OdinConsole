@@ -219,6 +219,12 @@ class CaseNoteController extends Controller
 
                 $data = json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($data == false) {
+
+                    return verificationFailedMsg();
+                }
+
                 //format dates to be mm/dd/yyyy for case notes and extract time
                 $t = $data->caseNote->created_at;
 
@@ -301,6 +307,12 @@ class CaseNoteController extends Controller
 
                 $casenote = json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($casenote == false) {
+
+                    return verificationFailedMsg();
+                }
+
                 //direct user based on whether record updated successfully or not
                 if($casenote->success == true)
                 {
@@ -363,6 +375,14 @@ class CaseNoteController extends Controller
                     ]
                 ]);
 
+                $casenote = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($casenote == false) {
+
+                    return verificationFailedMsg();
+                }
+
                 $theAction = 'You have successfully deleted the case note';
 
                 return view('confirm')->with('theAction', $theAction);
@@ -390,9 +410,6 @@ class CaseNoteController extends Controller
             return view('error-msg')->with('msg', $error);
         }
     }
-
-    //todo: work in progress
-    //parameter is filename
 
     function download($file)
     {

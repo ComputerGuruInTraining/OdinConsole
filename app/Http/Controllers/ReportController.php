@@ -427,18 +427,16 @@ class ReportController extends Controller
     {
         try {
             if (session()->has('token')) {
-                //retrieve token needed for authorized http requests
+
                 $token = session('token');
 
-                $client = new GuzzleHttp\Client;
+                $report = $this->getReport($id);
 
-                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                //ie record and user belong to different companies, therefore user not verified
+                if ($report == false) {
 
-                $report = json_decode((string)$response->getBody());
+                    return verificationFailedMsg();
+                }
 
                 //format dates to be in the form 3rd January 2107 for report date range
                 $sdate = formatDates($report->date_start);
@@ -689,15 +687,13 @@ class ReportController extends Controller
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
-                $client = new GuzzleHttp\Client;
+                $report = $this->getReport($id);
 
-                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                //ie record and user belong to different companies, therefore user not verified
+                if ($report == false) {
 
-                $report = json_decode((string)$response->getBody());
+                    return verificationFailedMsg();
+                }
 
                 //format dates to be in the form 3rd January 2107 for report date range
                 $sdate = formatDates($report->date_start);
@@ -805,6 +801,7 @@ class ReportController extends Controller
                             if ($request->has('download')) {
 
                                 $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+
                                 // download pdf w current date in the name
                                 $dateTime = Carbon::now();
                                 $date = substr($dateTime, 0, 10);
@@ -1079,6 +1076,7 @@ class ReportController extends Controller
      * @param  int $reportId
      * @return \Illuminate\Http\Response
      */
+    /*IMPORTANT: ROUTE NOT TESTED FOR COMPANY VERIFIED*/
     public function edit($id)
     {
         //edit will return the show() but with edit btns next to each case note
@@ -1089,13 +1087,13 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                $report = $this->getReport($id);
 
-                $report = json_decode((string)$response->getBody());
+                //ie record and user belong to different companies, therefore user not verified
+                if ($report == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 //format dates to be 3rd January 2107 for report date range
                 //  foreach($report as $i => $item){
@@ -1171,8 +1169,6 @@ class ReportController extends Controller
                         $urlCancel = 'reports-' . $id . '-edit';
 
                         //pass through report id, attach the case note id on the Manage Report Case Notes Page
-//                        $urlDel = '/report/'.$id.'/delete/';
-//                        $urlDel = 'case-notes';
                         $reportId = $id;
 
                         return view('report/case_notes/edit')->with(array('cases' => $cases,
@@ -1247,13 +1243,12 @@ class ReportController extends Controller
         }
     }
 
-
     /**
      * Show the form for editing the selected case note in the report.
      * @param $reportId
      * @param $caseNoteId
      */
-
+    /*IMPORTANT: ROUTE NOT COMPANY VERIFIED*/
     public function editCaseNote($caseNoteId, $reportId)
     {
         try {
@@ -1407,12 +1402,21 @@ class ReportController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-                $client->post(Config::get('constants.API_URL') . 'reports/' . $id, [
+                $response = $client->post(Config::get('constants.API_URL') . 'reports/' . $id, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                         'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
+
+                $result = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($result == false) {
+
+                    return verificationFailedMsg();
+
+                }
 
                 $theAction = 'You have successfully deleted the report';
 
@@ -1448,6 +1452,7 @@ class ReportController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+    /*IMPORTANT: ROUTE NOT COMPANY VERIFIED*/
     public function destroyCaseNote($reportId, $id)
     {
         try {
@@ -1514,5 +1519,23 @@ class ReportController extends Controller
 
         return $notes;
 
+    }
+
+    public function getReport($id){
+
+        //retrieve token needed for authorized http requests
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->get(Config::get('constants.API_URL') . 'report/' . $id, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ]
+        ]);
+
+        $report = json_decode((string)$response->getBody());
+
+        return $report;
     }
 }
