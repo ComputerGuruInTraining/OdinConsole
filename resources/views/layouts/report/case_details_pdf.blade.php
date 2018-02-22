@@ -40,11 +40,17 @@
                                 <span>Images:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                 <br/>
-                                <span class="margin-left-huge">
+                                <span>
                                     @for($i=0; $i < sizeof($item->files); $i++)
-                                        <img src="{{$item->urls[$i]}}" height="150px" width="150px" class="margin-bottom margin-right"/>
+                                        <div>{{$item->urls[$i]}}</div>
+                                        <img src="{{$item->urls[$i]}}" height="75px" width="25px" />
                                     @endfor
                                 </span>
+                                {{--<span class="margin-left-huge">--}}
+                                    {{--@for($i=0; $i < sizeof($item->files); $i++)--}}
+                                        {{--<img src="{{$item->urls[$i]}}" height="150px" width="150px" class="margin-bottom margin-right"/>--}}
+                                    {{--@endfor--}}
+                                {{--</span>--}}
                             @endif
                         @endif
                     </div>

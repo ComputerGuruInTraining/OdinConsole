@@ -673,6 +673,15 @@ class RosterController extends Controller
                     ]
                 ]);
 
+                $result = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($result == false) {
+
+                    return verificationFailedMsg();
+
+                }
+
                 $theAction = 'You have successfully deleted the shift';
 
                 return view('confirm')->with('theAction', $theAction);
