@@ -643,7 +643,7 @@ class LocationController extends Controller
         } catch (\TokenMismatchException $mismatch) {
 
             return Redirect::to('/');
-                    }
+        }
     }
 
     public function confirmCreateCancel()
