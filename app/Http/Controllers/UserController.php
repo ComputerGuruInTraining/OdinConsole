@@ -216,7 +216,6 @@ class UserController extends Controller
 
                 $client = new GuzzleHttp\Client;
 
-
                 $response = $client->get(Config::get('constants.API_URL').'user/' . $id . '/edit', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -224,6 +223,12 @@ class UserController extends Controller
                 ]);
 
                 $user = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($user == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 $userRole = getUserRole($id);
 
@@ -299,6 +304,12 @@ class UserController extends Controller
 
                 $user = json_decode((string)$response->getBody());
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($user == false) {
+
+                    return verificationFailedMsg();
+                }
+
                 //direct user based on whether record updated successfully or not
                 if($user->success == true)
                 {
@@ -360,6 +371,12 @@ class UserController extends Controller
                 ]);
 
                 $user = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($user == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 if($user->success == true)
                 {
@@ -491,6 +508,7 @@ class UserController extends Controller
         }
     }
 
+    //WIP
     public function deliveredEmail(Request $request){
 
         $event = $request->input('event');

@@ -82,6 +82,7 @@ class LocationController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+    /*with company verification*/
     public function show($id)
     {
         try {
@@ -89,15 +90,19 @@ class LocationController extends Controller
 
                 $location = $this->getLocation($id);
 
+                //ie record and user belong to different companies, therefore user not verified
+                if ($location == false) {
 
-//            $success = 'response with string';
+                    return verificationFailedMsg();
+
+                }
 
                 //the $show variable is used on the map to determine whether to include input fields or not
-            return view('location/show')->with(array(
-                'location' => $location,
-                'show' => 'show',
-                'url' => 'location'
-                ));
+                return view('location/show')->with(array(
+                    'location' => $location,
+                    'show' => 'show',
+                    'url' => 'location'
+                    ));
 
             } else {
                 return Redirect::to('/login');
@@ -250,22 +255,32 @@ class LocationController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+    /*with company verification*/
     public function edit($id)
     {
         try {
             if (session()->has('token')) {
                 //retrieve token needed for authorized http requests
-                $token = session('token');
+//                $token = session('token');
+//
+//                $client = new GuzzleHttp\Client;
 
-                $client = new GuzzleHttp\Client;
+                $location = $this->getLocation($id);
 
-                $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                //ie record and user belong to different companies, therefore user not verified
+                if ($location == false) {
 
-                $location = json_decode((string)$response->getBody());
+                    return verificationFailedMsg();
+
+                }
+
+//                $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
+//                    'headers' => [
+//                        'Authorization' => 'Bearer ' . $token,
+//                    ]
+//                ]);
+//
+//                $location = json_decode((string)$response->getBody());
 
                 return view('location/edit-locations')->with('location', $location);
 
@@ -301,7 +316,6 @@ class LocationController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-
     public function update($id)
     {
         try {
@@ -331,6 +345,12 @@ class LocationController extends Controller
                 );
 
                 $location = json_decode((string)$response->getBody());
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($location == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 //direct user based on whether record updated successfully or not
                 if ($location->success == true) {
@@ -393,6 +413,12 @@ class LocationController extends Controller
                         'X-HTTP-Method-Override' => 'DELETE'
                     ]
                 ]);
+
+                //ie record and user belong to different companies, therefore user not verified
+                if ($response == false) {
+
+                    return verificationFailedMsg();
+                }
 
                 $theAction = 'You have successfully deleted the location';
 
@@ -535,6 +561,14 @@ class LocationController extends Controller
 
                     //values for map confirm page, pushed to view
                     $location = $this->getLocation($id);
+
+                    //ie record and user belong to different companies, therefore user not verified
+                    if ($location == false) {
+
+                        return verificationFailedMsg();
+
+                    }
+
                     $sameAddress = $location->address;
                     $sameLatitude = $location->latitude;
                     $sameLongitude = $location->longitude;
@@ -667,20 +701,16 @@ class LocationController extends Controller
     function confirmEditCancel($id){
         try {
             if (session()->has('token')) {
-                //retrieve token needed for authorized http requests
-                $token = session('token');
 
-                $client = new GuzzleHttp\Client;
+                //values for map confirm page, pushed to view
+                $location = $this->getLocation($id);
 
-                $response = $client->get(Config::get('constants.API_URL') . 'locations/' . $id . '/edit', [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                //ie record and user belong to different companies, therefore user not verified
+                if ($location == false) {
 
-                //the original details
-                $location = json_decode((string)$response->getBody());
+                    return verificationFailedMsg();
 
+                }
                 //any edited details
                 $address = session('addressEdit');
                 $name = session('aliasEdit');

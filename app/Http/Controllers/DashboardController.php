@@ -119,11 +119,6 @@ class DashboardController extends Controller
         }
     }
 
-//    public function testFunction(Request $request){
-//        $locations = Location::all('latitude', 'longitude', 'name');
-//        return $locations;
-//    }
-
     public function privacy()
     {
         return view('home.privacy');

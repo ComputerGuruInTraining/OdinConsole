@@ -991,6 +991,19 @@ if (!function_exists('caseNoteReported')) {
     }
 }
 
+if (!function_exists('verificationFailedMsg')) {
+
+    function verificationFailedMsg()
+    {
+        $msg = 'Access to the record denied.';
+        return view('error-msg')->with(array(
+            'msg' => $msg,
+            'errorTitle' => 'Authentication Error'
+        ));
+    }
+}
+
+
 
 
 
