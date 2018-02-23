@@ -15,7 +15,7 @@ class VerifyCsrfToken extends BaseVerifier
         '/admin',
         '/',
         '/register/company',
-        '/webhooks/delivered'
+        '/webhooks/failed'
 
     ];
 }

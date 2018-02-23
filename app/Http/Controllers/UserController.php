@@ -508,32 +508,27 @@ class UserController extends Controller
         }
     }
 
-    //WIP
     public function failedEmail(Request $request){
 
         $event = $request->input('event');
 
         $recipient = $request->input('recipient');
 
-//        if($request->has('message-headers')){
-//
-//            $textMsgHeaders = $request->input('message-headers');
-////            $jsonMsgHeaders = json_decode($textMsgHeaders);
-//
-////            if(isset($jsonMsgHeaders->subject)){
-//
-//                $result = storeErrorLog($event, $recipient, $textMsgHeaders);
-//
-//
-////            }else{
-////                $result = storeErrorLog($event, $recipient);
-////            }
-//        }else{
+        if($request->has('message-headers')) {
+
+            $textMsgHeaders = $request->input('message-headers');
+            $jsonMsgHeaders = json_decode($textMsgHeaders);
+
+            if (isset($jsonMsgHeaders->subject)) {
+
+                $result = storeErrorLog($event, $recipient, $textMsgHeaders);
+                return 'post successful';
+            }
+        }
 
             $result = storeErrorLog($event, $recipient);
-//        }
 
-        return 'post successful';
+            return 'post successful';
     }
 
 //    public function test(){
