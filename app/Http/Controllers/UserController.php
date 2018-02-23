@@ -518,16 +518,16 @@ class UserController extends Controller
         if($request->has('message-headers')){
 
             $textMsgHeaders = $request->input('message-headers');
-            $jsonMsgHeaders = json_decode($textMsgHeaders);
+//            $jsonMsgHeaders = json_decode($textMsgHeaders);
 
-            if(isset($jsonMsgHeaders->subject)){
+//            if(isset($jsonMsgHeaders->subject)){
 
-                $result = storeErrorLog($event, $recipient, $jsonMsgHeaders->subject);
+                $result = storeErrorLog($event, $recipient, $textMsgHeaders);
 
 
-            }else{
-                $result = storeErrorLog($event, $recipient);
-            }
+//            }else{
+//                $result = storeErrorLog($event, $recipient);
+//            }
         }else{
 
             $result = storeErrorLog($event, $recipient);
