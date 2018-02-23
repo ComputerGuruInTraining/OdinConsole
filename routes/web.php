@@ -174,7 +174,7 @@ Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 //to force it, use an email address that doesn't exist. definitely. what log error does this throw? failed for what reason?
 //have the route in console so we can be an authenticated user (perhaps a different route file in api would work too??)
 //so are able to post to the db using the web.php route in api.
-Route::post('/webhooks/delivered', 'UserController@deliveredEmail');
+Route::post('/webhooks/failed', 'UserController@failedEmail');
 
-Route::get('/webhooks/test', 'UserController@test');
+//Route::get('/webhooks/test', 'UserController@test');
 

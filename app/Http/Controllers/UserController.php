@@ -509,33 +509,60 @@ class UserController extends Controller
     }
 
     //WIP
-    public function deliveredEmail(Request $request){
+    public function failedEmail(Request $request){
 
         $event = $request->input('event');
 
         $recipient = $request->input('recipient');
 
-//        $request = $request->all();
+        if($request->has('message-headers')){
 
-        $result = storeErrorLog($event, $recipient);
+            $textMsgHeaders = $request->input('message-headers');
+            $jsonMsgHeaders = json_decode($textMsgHeaders);
 
+            if(isset($jsonMsgHeaders->subject)){
 
-        return 'post successful';
-
-//        $description = $request->input('description');
-
-//        $result = storeErrorLog($event, $recipient);
-
-//        return $result->message;
+                $result = storeErrorLog($event, $recipient, $jsonMsgHeaders->subject);
 
 
-//        dd($result);
+            }else{
+                $result = storeErrorLog($event, $recipient);
+            }
+        }else{
 
-    }
-
-    public function test(){
+            $result = storeErrorLog($event, $recipient);
+        }
 
         return 'post successful';
-
     }
+
+//    public function test(){
+//
+//        $event = 'testEvent';
+//
+//        $recipient = 'email@whatever2.com';
+//
+////        if($request->has('message-headers')){
+//
+//        $textMsgHeaders = '{ "name":"John", "age":30, "city":"New York"}';
+//
+//            $jsonMsgHeaders = json_decode($textMsgHeaders);
+//            if(isset($jsonMsgHeaders->subject)){
+//
+//                $result = storeErrorLog($event, $recipient, $jsonMsgHeaders->subject);
+//
+//
+//            }else{
+//                $result = storeErrorLog($event, $recipient);
+//
+//            }
+////        }else{
+////
+////            $result = storeErrorLog($event, $recipient);
+////
+////        }
+//
+//        return 'post successful';
+//
+//    }
 }
