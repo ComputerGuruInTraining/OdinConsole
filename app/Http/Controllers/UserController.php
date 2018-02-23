@@ -511,11 +511,14 @@ class UserController extends Controller
     //WIP
     public function deliveredEmail(Request $request){
 
-//        $event = $request->input('event');
-//
-//        $recipient = $request->input('recipient');
+        $event = $request->input('event');
+
+        $recipient = $request->input('recipient');
 
 //        $request = $request->all();
+
+        $result = storeErrorLog($event, $recipient);
+
 
         return 'post successful';
 

@@ -541,11 +541,9 @@ if (!function_exists('storeErrorLog')) {
     function storeErrorLog($event, $recipient)
     {
         $client = new GuzzleHttp\Client;
-//        $token = session('token');
 
         $response = $client->post(Config::get('constants.STANDARD_URL') . 'error-logging', array(
                 'headers' => array(
-//                    'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json'
                 ),
                 'json' => array(
