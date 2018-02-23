@@ -175,3 +175,6 @@ Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 //have the route in console so we can be an authenticated user (perhaps a different route file in api would work too??)
 //so are able to post to the db using the web.php route in api.
 Route::post('/webhooks/delivered', 'UserController@deliveredEmail');
+
+Route::get('/webhooks/test', 'UserController@test');
+

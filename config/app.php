@@ -53,6 +53,8 @@ return [
 
     'url' => env('APP_URL', 'https://odinlitemgmt.azurewebsites.net/'),
 
+//    'url' => env('APP_URL', 'https://odinlitemgmttest.azurewebsites.net/'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

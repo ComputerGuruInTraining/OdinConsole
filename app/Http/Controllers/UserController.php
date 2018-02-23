@@ -517,7 +517,7 @@ class UserController extends Controller
 
 //        $request = $request->all();
 
-        return response()->json(['message' => 'post successful']);
+        return 'post successful';
 
 //        $description = $request->input('description');
 
@@ -530,4 +530,9 @@ class UserController extends Controller
 
     }
 
+    public function test(){
+
+        return 'post successful';
+
+    }
 }
