@@ -512,6 +512,9 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
+//                        dd($formatData);
+
+
                         view()->share(array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,

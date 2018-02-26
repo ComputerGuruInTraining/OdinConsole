@@ -42,7 +42,21 @@
                                 <br/>
                                 <span class="margin-left-huge">
                                     @for($i=0; $i < sizeof($item->files); $i++)
-                                        <img src="{{$item->urls[$i]}}" height="150px" width="150px" class="margin-bottom margin-right"/>
+                                        @if(gettype($item->fullUrls[$i]) != "object")
+                                            {{--check if thumbnail image exists, otherwise will be an empty object--}}
+                                            @if(gettype($item->urls[$i]) != "object")
+                                                <img src="{{$item->urls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                            @else
+                                                <img src="{{$item->fullUrls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                            @endif
+                                        @else
+                                            {{--check if thumbnail image exists, otherwise will be an empty object--}}
+                                            @if(gettype($item->urls[$i]) != "object")
+                                                    <img src="{{$item->urls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                            @else
+                                                Image preview not available
+                                            @endif
+                                        @endif
                                     @endfor
                                 </span>
                             @endif
