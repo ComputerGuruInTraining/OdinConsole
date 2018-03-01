@@ -8,10 +8,9 @@
                 data-content="Change GeoLocation Gather Rate from every 5 min to every 30 seconds" onclick="adjFreq()">
             <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> GeoLocation Rate <br/>
             <div style="font-size: smaller;">currently: <span id="freq"></span></div>
-
         </button>
-        <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover" data-placement="top"
-                data-content="Change from every 5m to every 30s" onclick="info()"
+        <button type="button" id="info" class="padding-bottom" clear data-container="body" data-toggle="popover"
+                data-placement="top"  data-trigger="focus" data-content="Change from every 5m to every 30s" onclick="info()"
                 style="color:#3c8dbc; border: none; background-color: transparent;">
             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
         </button>
