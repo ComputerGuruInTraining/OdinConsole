@@ -530,34 +530,4 @@ class UserController extends Controller
 
             return 'post successful';
     }
-
-//    public function test(){
-//
-//        $event = 'testEvent';
-//
-//        $recipient = 'email@whatever2.com';
-//
-////        if($request->has('message-headers')){
-//
-//        $textMsgHeaders = '{ "name":"John", "age":30, "city":"New York"}';
-//
-//            $jsonMsgHeaders = json_decode($textMsgHeaders);
-//            if(isset($jsonMsgHeaders->subject)){
-//
-//                $result = storeErrorLog($event, $recipient, $jsonMsgHeaders->subject);
-//
-//
-//            }else{
-//                $result = storeErrorLog($event, $recipient);
-//
-//            }
-////        }else{
-////
-////            $result = storeErrorLog($event, $recipient);
-////
-////        }
-//
-//        return 'post successful';
-//
-//    }
 }

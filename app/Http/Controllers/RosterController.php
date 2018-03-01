@@ -85,7 +85,10 @@ class RosterController extends Controller
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
 
-                return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
+                return view('home/rosters/index')->with(array(
+                    'assigned' => $assigned,
+                    'url' => 'rosters',
+                ));
             } else {
                 return Redirect::to('/login');
             }
@@ -380,7 +383,15 @@ class RosterController extends Controller
                 if ($assigned == false) {
 
                     return verificationFailedMsg();
+                }
 
+                foreach($assigned as $i => $shift){
+                    if($shift->commenced == "commenced"){
+
+                        $err = 'The shift has been commenced so editing is not enabled.';
+                        $errors = collect($err);
+                        return Redirect::to('/rosters')->with('errors', $errors);
+                    }
                 }
 
                 $responseUsers = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
@@ -400,6 +411,8 @@ class RosterController extends Controller
                 $locations = GuzzleHttp\json_decode((string)$responseLocs->getBody());
 
                 $assigned = collect($assigned);
+
+
 
                 //to populate the select lists with the locations and employees currently assigned to the shift
                 $locationsUnique = $assigned->unique('location_id');
@@ -440,13 +453,13 @@ class RosterController extends Controller
                     'endDate' => $endDate,
                     'endTime' => $endTime,
                     'locationsAll' => $locations,
-                    'employeesAll' => $employees
+                    'employeesAll' => $employees,
+//                    'commenced' => $commenced
                 ));
             } else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             $err = 'Error displaying edit shift page';
             return view('error-msg')->with('msg', $err);
 

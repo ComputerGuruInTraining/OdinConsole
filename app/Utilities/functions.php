@@ -814,36 +814,6 @@ if (!function_exists('imgToUrl')) {
 
                         $urls[$index] = downloadImg('thumb'.$imgs[$index]);
 
-//                        if(empty($urls[$index] )){
-//
-//                            dd("imgUrl !empty is true", $urls[$index] );
-//                        }else if(!isset($urls[$index] )){
-//
-//                            dd("imgUrl !isset is true", $urls[$index] );
-//                        }else if(count($urls[$index]) == 0){
-//
-//                            dd("imgUrl count = 0 is true", $urls[$index] );
-//                        }else if($urls[$index] == null){
-//
-//                            dd("imgUrl null is true", $urls[$index] );
-//                        }else if($urls[$index] == ""){
-//
-//                            dd("imgUrl blank string is true", $urls[$index] );
-//                        }else if(!$urls[$index]){
-//
-//                            dd("imgUrl doesnt pass statement, so null, false or blank is true", $urls[$index] );
-//                        }
-////                        else{
-////
-////                            dd(gettype($urls[$index] ));
-////                        }
-//
-//
-//                        else if(gettype($urls[$index]) == "object"){
-//
-//                            dd("imgUrl is an object", $urls[$index] );
-//                        }
-
                         $fullUrls[$index] = downloadImg($imgs[$index]);
                     }
 
@@ -1036,11 +1006,3 @@ if (!function_exists('verificationFailedMsg')) {
         ));
     }
 }
-
-
-
-
-
-
-
-
