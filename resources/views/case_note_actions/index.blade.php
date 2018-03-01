@@ -120,7 +120,7 @@
                                         <td></td>
                                         <td></td>
                                         <td><a href="{{$item->urls[$i]}}" target="_blank">
-                                                <img src="{{$item->urls[$i]}}" height="150px" width="150px"/>
+                                                <img src="{{$item->urls[$i]}}" height="75px" width="75px"/>
                                             </a>
                                         </td>
                                         <td></td>

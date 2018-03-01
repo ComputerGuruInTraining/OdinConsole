@@ -9,7 +9,6 @@
     Shifts
 @stop
 
-
 @section('page-content')
     <div class="col-md-12">
         <script>
