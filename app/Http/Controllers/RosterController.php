@@ -65,7 +65,6 @@ class RosterController extends Controller
                     $assigned[$i]->unique_date = $assigned[$i]->start_date;
                     $assigned[$i]->unique_locations = $assigned[$i]->location;
                     $assigned[$i]->unique_employees = $assigned[$i]->employee;
-
                 }
 
                 //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
@@ -76,7 +75,6 @@ class RosterController extends Controller
 
                     $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
                     $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
-
                 }
 
                 //change to collection datatype from array for using groupBy fn
@@ -412,8 +410,6 @@ class RosterController extends Controller
 
                 $assigned = collect($assigned);
 
-
-
                 //to populate the select lists with the locations and employees currently assigned to the shift
                 $locationsUnique = $assigned->unique('location_id');
                 $employeesUnique = $assigned->unique('mobile_user_id');
@@ -454,7 +450,6 @@ class RosterController extends Controller
                     'endTime' => $endTime,
                     'locationsAll' => $locations,
                     'employeesAll' => $employees,
-//                    'commenced' => $commenced
                 ));
             } else {
                 return Redirect::to('/login');
