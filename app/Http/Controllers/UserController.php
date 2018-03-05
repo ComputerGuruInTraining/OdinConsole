@@ -376,10 +376,12 @@ class UserController extends Controller
                 if ($user == false) {
 
                     return verificationFailedMsg();
-                }
 
-                if($user->success == true)
-                {
+                } else if(isset($user->primaryContact)){
+
+                    return refuseDeleteMsg($user->primaryContact, 'user');
+
+                } else if($user->success == true) {
                     $sessionId = session('id');
 
                     if($id == $sessionId){
@@ -389,23 +391,22 @@ class UserController extends Controller
                         //display confirmation page
                         return view('confirm')->with('theAction', $msg);
                     }
-                }
-                else {
-                    return Redirect::to('company/settings')->withErrors('Failed to delete user');
+                } else {
+                    return Redirect::to('/settings')->withErrors('Failed to delete user');
                 }
             }
             //user does not have a valid token
             else {
                 return Redirect::to('/login');
             }
-        }//db error
+        }//api error
         catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/company/settings')->withErrors('Error deleting user');
+            return Redirect::to('/settings')->withErrors('Error deleting user');
         }//error returned to laravel and caught
         catch (\ErrorException $error) {
-            return Redirect::to('/company/settings')->withErrors('Error deleting the user');
+            return Redirect::to('/settings')->withErrors('Error deleting the user');
         } catch (\Exception $err) {
-            return Redirect::to('/company/settings')->withErrors('Error deleting user from database');
+            return Redirect::to('/settings')->withErrors('Error deleting user from database');
 
         } catch (\TokenMismatchException $mismatch) {
 
@@ -413,7 +414,7 @@ class UserController extends Controller
 
 
         } catch (\InvalidArgumentException $invalid) {
-            return Redirect::to('/company/settings')->withErrors('Error deleting user from system');
+            return Redirect::to('/settings')->withErrors('Error deleting user from system');
         }
 	}
 

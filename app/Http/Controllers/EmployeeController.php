@@ -581,9 +581,11 @@ class EmployeeController extends Controller
                 if ($employee == false) {
 
                     return verificationFailedMsg();
-                }
+                }else if(isset($employee->primaryContact)){
 
-                if ($employee->success == true) {
+                    return refuseDeleteMsg($employee->primaryContact, 'employee');
+
+                }else if ($employee->success == true) {
                     $theAction = 'You have successfully deleted the employee';
 
                     return view('confirm')->with(array('theAction' => $theAction));

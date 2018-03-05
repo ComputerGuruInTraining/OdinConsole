@@ -3,15 +3,15 @@
 <head>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>@yield('title')</title>
-    {{--Bootstrap Cdn stylesheet--}}
+    <!-- Bootstrap Cdn stylesheet-->
     <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
     <!-- Font Awesome -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-    {{--Font Family by Google--}}
+<!-- Font Family by Google-->
     <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 
-    {{--Bootstrap stylesheet--}}
+    <!-- Bootstrap stylesheet-->
     <link rel="stylesheet" href="{{ asset("/bower_components/AdminLTE/bootstrap/css/bootstrap.min.css") }}"
           type="text/css">
     <!-- Ionicons -->
@@ -22,17 +22,8 @@
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect.
     -->
-    {{--<link rel="{{ asset("/bower_components/adminlte/dist/css/skins/skin-blue.min.css")}}" type="text/css">--}}
-
-    {{--necessary at least for date picker, if not other features--}}
-    {{--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">--}}
-    {{--<link rel="stylesheet" href="/resources/demos/style.css">--}}
-
 
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    {{--<script type="text/javascript"--}}
-            {{--src="{{asset('/bower_components/adminlte/plugins/jQuery/jquery-3.2.1.js')}}"></script>--}}
-
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -47,7 +38,7 @@
         }
     </script>
 
-    {{--Company Settings Page & logged in support page ie --}}
+    <!--Company Settings Page & logged in support page ie -->
     @yield('custom-scripts')
 
     @yield('custom-styles')
@@ -79,9 +70,9 @@
 </script>
 <div class='container-fluid'>
     <div class="wrapper">
-    {{--FIXME: scroll-bar change height as a bit buggy--}}
-    <!-- Main Header
-            <header class="main-header">  -->
+        <!-- FIXME: scroll-bar change height as a bit buggy-->
+        <!-- Main Header
+                <header class="main-header">  -->
     @include('header')
 
     <!-- Content Wrapper. Contains page content -->
