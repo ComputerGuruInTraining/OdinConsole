@@ -168,10 +168,6 @@ Route::get('/support/users', 'HomeController@support');
 /*Routes Used??? TODO: check*/
 Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 
+Route::post('/webhooks/failed', 'UserController@failedEmail');
 
-/*WIP*/
-//todo: change from delivered to failed once works, and force it for an eg to ensure working even with failed.
-//to force it, use an email address that doesn't exist. definitely. what log error does this throw? failed for what reason?
-//have the route in console so we can be an authenticated user (perhaps a different route file in api would work too??)
-//so are able to post to the db using the web.php route in api.
-Route::post('/webhooks/delivered', 'UserController@deliveredEmail');
+

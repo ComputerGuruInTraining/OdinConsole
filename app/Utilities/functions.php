@@ -538,20 +538,18 @@ if (!function_exists('getUserRole')) {
 
 if (!function_exists('storeErrorLog')) {
 
-    function storeErrorLog($event, $recipient)
+    function storeErrorLog($event, $recipient, $subject = null)
     {
         $client = new GuzzleHttp\Client;
-//        $token = session('token');
 
         $response = $client->post(Config::get('constants.STANDARD_URL') . 'error-logging', array(
                 'headers' => array(
-//                    'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json'
                 ),
                 'json' => array(
                     'event' => $event,
                     'recipient' => $recipient,
-                    'description' => 'na'
+                    'description' => $subject
                 )
             )
         );
@@ -559,7 +557,6 @@ if (!function_exists('storeErrorLog')) {
         $result = GuzzleHttp\json_decode((string)$response->getBody());
 
         return $result;
-
     }
 }
 
@@ -795,7 +792,7 @@ if (!function_exists('imgToUrl')) {
                     //replace $item->img with formatted string
                     $item->img = $subImg;
 
-                    //get from api the url for the img??
+                    //get from api the url for the img
                     $url = downloadImg($item->img);
                     $item->url = $url;
                 }
@@ -808,18 +805,24 @@ if (!function_exists('imgToUrl')) {
 
                     $imgs = [];
                     $urls = [];
+                    $fullUrls = [];
 
                     for ($index = 0; $index < sizeof($item->files); $index++) {
 
                         //remove the first and last character from the string ie remove " and " around string
                         $imgs[$index] = stringRemove1stAndLast($item->files[$index]);
 
-                        $urls[$index] = downloadImg($imgs[$index]);
+                        $urls[$index] = downloadImg('thumb'.$imgs[$index]);
+
+                        $fullUrls[$index] = downloadImg($imgs[$index]);
                     }
 
                     $item->imgs = $imgs;
 
                     $item->urls = $urls;
+
+                    $item->fullUrls = $fullUrls;
+
                 } else {
                     $item->hasImg = '-';
                 }
@@ -849,10 +852,11 @@ if (!function_exists('downloadImg')) {
             $response = $client->get(Config::get('constants.STANDARD_URL') . 'download-photo/' . $file, [
             ]);
 
-            $url = json_decode((string)$response->getBody());
+            $url = json_decode((string)$response->getBody());//empty {} if file doesn't exist
 
+            return $url;
         }
-        return $url;
+
     }
 }
 
@@ -1003,10 +1007,13 @@ if (!function_exists('verificationFailedMsg')) {
     }
 }
 
+if (!function_exists('refuseDeleteMsg')) {
 
-
-
-
-
-
-
+    function refuseDeleteMsg($msg, $entity)
+    {
+        return view('error-msg')->with(array(
+            'msg' => $msg,
+            'errorTitle' => 'Request to delete '. $entity . ' denied'
+        ));
+    }
+}

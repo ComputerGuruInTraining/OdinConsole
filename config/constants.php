@@ -28,5 +28,6 @@ return [
 
     /*****user roles******/
     'ROLE_1' => 'Manager',
-    'ROLE_2' => 'Investigator'
+    'ROLE_2' => 'Investigator',
+
 ];

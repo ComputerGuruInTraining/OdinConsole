@@ -65,7 +65,6 @@ class RosterController extends Controller
                     $assigned[$i]->unique_date = $assigned[$i]->start_date;
                     $assigned[$i]->unique_locations = $assigned[$i]->location;
                     $assigned[$i]->unique_employees = $assigned[$i]->employee;
-
                 }
 
                 //pass data to compareValues function in order to only display unique data for each date, rather than duplicating the date and the time when they are duplicate values
@@ -76,7 +75,6 @@ class RosterController extends Controller
 
                     $assigned[$i]->start_time = timeMidnight($assigned[$i]->start_time);
                     $assigned[$i]->end_time = timeMidnight($assigned[$i]->end_time);
-
                 }
 
                 //change to collection datatype from array for using groupBy fn
@@ -85,7 +83,10 @@ class RosterController extends Controller
                 //group by date for better view
                 $assigned = $this->groupByShift($assigned);
 
-                return view('home/rosters/index')->with(array('assigned' => $assigned, 'url' => 'rosters'));
+                return view('home/rosters/index')->with(array(
+                    'assigned' => $assigned,
+                    'url' => 'rosters',
+                ));
             } else {
                 return Redirect::to('/login');
             }
@@ -380,7 +381,15 @@ class RosterController extends Controller
                 if ($assigned == false) {
 
                     return verificationFailedMsg();
+                }
 
+                foreach($assigned as $i => $shift){
+                    if($shift->commenced == "commenced"){
+
+                        $err = 'The shift has been commenced so editing is not enabled.';
+                        $errors = collect($err);
+                        return Redirect::to('/rosters')->with('errors', $errors);
+                    }
                 }
 
                 $responseUsers = $client->get(Config::get('constants.API_URL') . 'employees/list/' . $compId, [
@@ -440,13 +449,12 @@ class RosterController extends Controller
                     'endDate' => $endDate,
                     'endTime' => $endTime,
                     'locationsAll' => $locations,
-                    'employeesAll' => $employees
+                    'employeesAll' => $employees,
                 ));
             } else {
                 return Redirect::to('/login');
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             $err = 'Error displaying edit shift page';
             return view('error-msg')->with('msg', $err);
 
@@ -680,11 +688,23 @@ class RosterController extends Controller
 
                     return verificationFailedMsg();
 
+                }else if(isset($result->commenced)) {
+                    if ($result->commenced == "commenced") {
+                        //shift has been commenced, so do not delete
+
+                        $err = 'The shift has been commenced so deleting is not enabled.';
+                        $errors = collect($err);
+                        return Redirect::to('/rosters')->with('errors', $errors);
+                    }
+                }else if(isset($result->success)) {
+                    if ($result->success == true) {
+                        //shift deleted
+                        $theAction = 'You have successfully deleted the shift';
+
+                        return view('confirm')->with('theAction', $theAction);
+                    }
                 }
 
-                $theAction = 'You have successfully deleted the shift';
-
-                return view('confirm')->with('theAction', $theAction);
             } else {
                 return Redirect::to('/login');
             }
@@ -693,6 +713,7 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
+
             $e = 'Error deleting shift. Error code: ErrorException';
             return view('error-msg')->with('msg', $e);
 

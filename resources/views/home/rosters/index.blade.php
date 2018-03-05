@@ -11,6 +11,22 @@
 
 @section('page-content')
     <div class="col-md-12">
+        <script>
+            function mngShift(){
+                $('#info-mng-shift').popover('toggle')
+
+            }
+        </script>
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div style="padding:15px 0px 10px 0px;">
             <button type="button" class="btn btn-success" onclick="window.location.href='rosters/create'">
@@ -25,7 +41,14 @@
                     <th>Locations</th>
                     <th>Location Checks</th>
                     <th>Assigned to</th>
-                    <th>Manage</th>
+                    <th>Manage
+                        <button type="button" id="info-mng-shift" class="padding-bottom" clear data-container="body"
+                                data-toggle="popover" data-placement="top" data-trigger="focus"
+                                data-content="Commenced shifts cannot be edited nor deleted" onclick="mngShift()"
+                                style="color:#3c8dbc; border: none; background-color: transparent;">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </button>
+                    </th>
                 </tr>
 
                 @php
@@ -37,12 +60,27 @@
                                 <td class='col-min-width'>".$formattedShift[0]->start_time." - ".$formattedShift[0]->end_time."</td>
                                 <td class='col-min-width-med'>".$formattedShift[0]->unique_locations."</td>
                                 <td>".$formattedShift[0]->checks."</td>
-                                <td>".$formattedShift[0]->unique_employees."</td>
-                                <td class='col-min-width-sm'>
-                                    <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'><i class='fa fa-edit'></i></a>
-                                    <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."' style='color: #990000;'><i class='fa fa-trash-o icon-padding'></i></a>
-                                </td>
-                         </tr>";
+                                <td>".$formattedShift[0]->unique_employees."</td>";
+
+                            $commenced = false;
+                            foreach($assigned->get($index) as $shift){
+
+                                if($shift->commenced == "commenced"){
+                                    $commenced = true;
+                                    break;
+                                }
+                            }
+
+                             if($commenced == true){
+                             echo "<td class='col-min-width-sm'>
+                                </td>";
+                             }else{
+                             echo "<td class='col-min-width-sm'>
+                                        <a href='/rosters/".$formattedShift[0]->assigned_shift_id."/edit'><i class='fa fa-edit'></i></a>
+                                        <a href='/confirm-delete/".$formattedShift[0]->assigned_shift_id."/".$url."' style='color: #990000;'><i class='fa fa-trash-o icon-padding'></i></a>
+                                    </td>";
+                             }
+                             echo "</tr>";
 
                         //variables needed for displaying multiple employees and locations
                         $i = 0;
