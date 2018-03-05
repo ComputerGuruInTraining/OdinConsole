@@ -1006,3 +1006,14 @@ if (!function_exists('verificationFailedMsg')) {
         ));
     }
 }
+
+if (!function_exists('refuseDeleteMsg')) {
+
+    function refuseDeleteMsg($msg, $entity)
+    {
+        return view('error-msg')->with(array(
+            'msg' => $msg,
+            'errorTitle' => 'Request to delete '. $entity . ' denied'
+        ));
+    }
+}

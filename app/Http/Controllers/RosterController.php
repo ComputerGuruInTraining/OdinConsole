@@ -688,11 +688,23 @@ class RosterController extends Controller
 
                     return verificationFailedMsg();
 
+                }else if(isset($result->commenced)) {
+                    if ($result->commenced == "commenced") {
+                        //shift has been commenced, so do not delete
+
+                        $err = 'The shift has been commenced so deleting is not enabled.';
+                        $errors = collect($err);
+                        return Redirect::to('/rosters')->with('errors', $errors);
+                    }
+                }else if(isset($result->success)) {
+                    if ($result->success == true) {
+                        //shift deleted
+                        $theAction = 'You have successfully deleted the shift';
+
+                        return view('confirm')->with('theAction', $theAction);
+                    }
                 }
 
-                $theAction = 'You have successfully deleted the shift';
-
-                return view('confirm')->with('theAction', $theAction);
             } else {
                 return Redirect::to('/login');
             }
@@ -701,6 +713,7 @@ class RosterController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
+
             $e = 'Error deleting shift. Error code: ErrorException';
             return view('error-msg')->with('msg', $e);
 
