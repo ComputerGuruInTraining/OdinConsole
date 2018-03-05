@@ -9,11 +9,11 @@
 //api routes
 return [
 
-//    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
-//    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
+    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
+    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
 
-    'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
-    'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
+//    'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
+//    'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
 
     'ERROR_GENERIC' => 'Failed to load webpage.',
     'ERROR_SERVER' => 'Failed to load resource.',
