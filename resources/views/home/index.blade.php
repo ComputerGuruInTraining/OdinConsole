@@ -26,8 +26,7 @@
                                 {{ Form::text('username', null, [
                                 'placeholder' => 'Email',
                                  'class' => 'form-control',
-                                 'style' =>  'border: 1px solid #4d2970;
-                                    -webkit-text-fill-color: grey;
+                                 'style' =>  '-webkit-text-fill-color: grey;
                                     -webkit-box-shadow: 0 0 0px 1000px white inset;
                                     transition: background-color 5000s ease-in-out 0s;'
                                 ]) }}
@@ -38,8 +37,7 @@
                                 {{ Form::password('password', [
                                 'placeholder' => 'Password',
                                  'class' => 'form-control login-input',
-                                'style' =>  'border: 1px solid #4d2970;
-                                    -webkit-text-fill-color: grey;
+                                'style' =>  '-webkit-text-fill-color: grey;
                                     -webkit-box-shadow: 0 0 0px 1000px white inset;
                                     transition: background-color 5000s ease-in-out 0s;'
                                   ])
@@ -63,7 +61,7 @@
                             <div>
                                 <br/>
                                 New to ODIN Case Management?
-                                <a href="/register" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
+                                <a href="/register/start-free-trial" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
                                 to get started
                             </div>
 

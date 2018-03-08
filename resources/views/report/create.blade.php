@@ -27,23 +27,18 @@
 
                 var selectLocs = document.getElementById("selectLocations");
                 selectLocs.style.display = "block";
-//                selectLocs.removeAttribute('disabled', 'disabled');
 
                 var selectEmps = document.getElementById("selectEmployees");
                 selectEmps.style.display = "none";
-
-//                selectEmps.setAttribute('disabled', 'disabled');
 
             }else if(strType == "Individual"){
 
                 var selectEmps = document.getElementById("selectEmployees");
                 selectEmps.style.display = "block";
 
-//                selectEmps.removeAttribute('disabled', 'disabled');
 
                 var selectLocs = document.getElementById("selectLocations");
                 selectLocs.style.display = "none";
-//                selectLocs.setAttribute('disabled', 'disabled');
             }
     }
 

@@ -8,13 +8,13 @@
 
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function(){
-            openCity(event, 'Users');
+            openSetting(event, 'Users');
 
             document.getElementById('loadPgTab').className += " active";
 
         }, false);
 
-        function openCity(evt, cityName) {
+        function openSetting(evt, name) {
             // Declare all variables
             var i, tabcontent, tablinks;
 
@@ -31,7 +31,7 @@
             }
 
             // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(cityName).style.display = "block";
+            document.getElementById(name).style.display = "block";
             evt.currentTarget.className += " active";
         }
     </script>
@@ -88,9 +88,9 @@
 @stop
 @section('page-content')
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Users')" id="loadPgTab">Users</button>
-        <button class="tablinks" onclick="openCity(event, 'Company')">Company Info</button>
-        {{--<button class="tablinks" onclick="openCity(event, 'Tokyo')">My Profile Settings</button>--}}
+        <button class="tablinks" onclick="openSetting(event, 'Users')" id="loadPgTab">Users</button>
+        <button class="tablinks" onclick="openSetting(event, 'Company')">Company Info</button>
+        <button class="tablinks" onclick="openSetting(event, 'Subscription')">Subscription</button>
     </div>
 
     @if (count($errors) > 0)
@@ -151,14 +151,16 @@
                     {{$compInfo->company->name}}
                 </td>
             </tr>
-            <tr>
-                <th>
-                    Owner:
-                </th>
-                <td>
-                    {{$compInfo->company->owner}}
-                </td>
-            </tr>
+            @if($compInfo->company->owner != null)
+                <tr>
+                    <th>
+                        Owner:
+                    </th>
+                    <td>
+                        {{$compInfo->company->owner}}
+                    </td>
+                </tr>
+            @endif
             <tr>
                 <th>
                     Primary Contact:
@@ -191,10 +193,36 @@
         </table>
     </div>
 
-    {{--<div id="Tokyo" class="tabcontent">--}}
-    {{--<h3>Tokyo</h3>--}}
-    {{--<p>Tokyo is the capital of Japan.</p>--}}
-    {{--</div>--}}
-    {{--</div>--}}
+    <div id="Subscription" class="tabcontent padding-top">
+{{--        The {{Config::get('constants.BASIC_PLAN')}} plan--}}
+        {{--<br/>--}}
+        {{--<br/>--}}
+        {{--<a href='http://odincasemanagement.com/#pricing'>--}}
+            {{--<img src="{{ asset("/images/PricingModel_2018-03-07.png") }}"  width="55%" height="55%"--}}
+                 {{--alt="Pricing Model courtesy of Odin Case Management Marketing Team" />--}}
+        {{--</a>--}}
+        {{--<br/>--}}
+        {{--<br/>--}}
+        {{--@if(gettype($subscriptionStatus) == "object")--}}
+            {{--fixme subscription exists but may be out of date at this point no check--}}
+        {{--@elseif(gettype($subscriptionStatus) == "boolean")--}}
+            {{--trial variable has been returned, could be true or false--}}
+            @if($subscriptionStatus == true)
+                Trial period ends:
+
+                {{$trialEndsAt}}
+
+            {{--@else--}}
+                {{--{{$subscriptionStatus}}--}}
+            @endif
+
+        {{--@endif--}}
+
+        <div style="padding:15px 0px 10px 0px;">
+            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'">Upgrade Plan
+            </button>
+        </div>
+
+    </div>
 
 @stop

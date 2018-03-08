@@ -14,8 +14,9 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         '/admin',
         '/',
-        '/register/company',
-        '/webhooks/failed'
+//        '/register/company',
+        '/webhooks/failed',
+//        '/start-trial'
 
     ];
 }

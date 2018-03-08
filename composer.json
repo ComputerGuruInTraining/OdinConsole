@@ -11,6 +11,7 @@
         "doctrine/inflector": "v1.1.0",
         "guzzlehttp/guzzle": "^6.2",
         "illuminate/html": "^5.0",
+        "laravel/cashier": "~7.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4"
