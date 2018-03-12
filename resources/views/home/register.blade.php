@@ -15,6 +15,9 @@
                         <div class='alert error'>{!! $error !!}</div>
                     @endforeach
                 @endif
+                @if(isset($trial))
+                    <div class="alert green-font padding-top-btm-none">START FREE TRIAL</div>
+                @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
                     <div class="panel-heading"  style="color: white; background-color: #4d2970;">Register Company</div>
                     <div class="panel-body">
@@ -133,30 +136,30 @@
                                                     Cancel
                                                 </a>
                                             </div>
-                                        @else
-                                            <div class="col-md-12" style="padding-top: 5px;">
-                                                <script
-                                                        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                                                        data-key="pk_test_u5hJw0nEAL2kgix2Za91d3cV"
-                                                        data-amount="999"
-                                                        data-name="Odin Case Management"
-                                                        data-description="Example charge"
-                                                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                                                        data-locale="auto"
-                                                        data-currency="aud">
-                                                </script>
-                                                <a href="/login" class="btn btn-primary" style="
-                                                    display:inline-block;
-                                                    color: white;
-                                                    background-color: #4d2970;
-                                                    font-size: large;
-                                                    border: #4d2970;
-                                                    padding: 8px 12px 10px 12px;
-                                                    margin-top: -5px;
-                                                    margin-left: 10px;">
-                                                    Cancel
-                                                </a>
-                                            </div>
+                                        {{--@else--}}
+                                            {{--<div class="col-md-12" style="padding-top: 5px;">--}}
+                                                {{--<script--}}
+                                                        {{--src="https://checkout.stripe.com/checkout.js" class="stripe-button"--}}
+                                                        {{--data-key="pk_test_u5hJw0nEAL2kgix2Za91d3cV"--}}
+                                                        {{--data-amount="999"--}}
+                                                        {{--data-name="Odin Case Management"--}}
+                                                        {{--data-description="Example charge"--}}
+                                                        {{--data-image="https://stripe.com/img/documentation/checkout/marketplace.png"--}}
+                                                        {{--data-locale="auto"--}}
+                                                        {{--data-currency="aud">--}}
+                                                {{--</script>--}}
+                                                {{--<a href="/login" class="btn btn-primary" style="--}}
+                                                    {{--display:inline-block;--}}
+                                                    {{--color: white;--}}
+                                                    {{--background-color: #4d2970;--}}
+                                                    {{--font-size: large;--}}
+                                                    {{--border: #4d2970;--}}
+                                                    {{--padding: 8px 12px 10px 12px;--}}
+                                                    {{--margin-top: -5px;--}}
+                                                    {{--margin-left: 10px;">--}}
+                                                    {{--Cancel--}}
+                                                {{--</a>--}}
+                                            {{--</div>--}}
                                         @endif
 
                                     </div>

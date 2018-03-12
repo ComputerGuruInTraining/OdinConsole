@@ -23,6 +23,10 @@ Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
 
+Route::get('/login/{plan}/{term}', 'HomeController@getIndex');
+
+Route::post('/login/{plan}/{term}', 'HomeController@postIndex');
+
 Route::get('/admin', 'DashboardController@index');
 
 //generic error exception msg route
@@ -173,11 +177,28 @@ Route::get('/support/users', 'HomeController@support');
 
 Route::post('/webhooks/failed', 'UserController@failedEmail');
 
+//returns the upgrade subscription page
 Route::get('/subscription/upgrade', 'UserController@upgrade');
 
-Route::get('/subscription/upgrade/{plan}/{period}', 'UserController@postUpgrade');
+//a user selects a plan from subscription options
+Route::get('/subscription/upgrade/{plan}/{term}', 'UserController@upgradePlan');
+
+//credit card details have been submitted
+Route::post('/subscription/payment', 'UserController@paymentUpgrade');
+
+//Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 
 
+Route::get('/error-page', function(){
+    try{
+        return view('confirm_alt');
+
+    }catch(\Exception $exception){
+        $errMsg = $exception->getMessage();
+        dd($errMsg);
+    }
+
+});
 //Route::get('/test', 'UserController@test');
 
 /*Routes Used??? TODO: check*/

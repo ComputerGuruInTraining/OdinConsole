@@ -220,6 +220,7 @@
 
         <div style="padding:15px 0px 10px 0px;">
             <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'">Upgrade Plan
+                {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
             </button>
         </div>
 

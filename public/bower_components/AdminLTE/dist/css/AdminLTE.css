@@ -18,10 +18,9 @@ hover blue
 #367fa9
 #e6fffb//light blue bg
 
-
 Green
 #b3ff66
-
+#28C309  (eg Get Srted btns on Subscription page)
 
 Purple
 #4d2970
@@ -32,11 +31,63 @@ Red
 
 Considering using
 #f1f0f5//light purple
+
+GREYS:
+#5F5F5F
+
 */
 
 .full-width{
     width: 100%;
 }
+
+/*Discount ribbon*/
+
+.ribbon {
+    position: absolute;
+    right: -5px; top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px; height: 75px;
+    text-align: right;
+}
+.ribbon span {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    width: 100px;
+    display: block;
+    background: #79A70A;
+    background: linear-gradient(#0C0F01 0%, #514E4E 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px; right: -21px;
+}
+.ribbon span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid #514E4E;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #514E4E;
+}
+.ribbon span::after {
+    content: "";
+    position: absolute; right: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #514E4E;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #514E4E;
+}
+
+
 
 /*Switch eg used on subscription page*/
 /* The switch - the box around the slider */
@@ -93,12 +144,12 @@ input:checked + .slider:before {
 /* Rounded sliders */
 .slider.round {
     border-radius: 30px;
-    z-index: -1;
+    z-index: -1;/*if 0 displays on safari, "paid quarterly" still not*/
 }
 
 .slider.round:before {
     border-radius: 30px;
-    z-index: -1;
+    z-index: -1; /*if 0 displays on safari, "paid quarterly" still not*/
 }
 
 /*text ons sliders*/
@@ -193,6 +244,10 @@ input:checked + .slider:before {
     line-height: 4.0;
 }
 
+.stripe-button-el>span{
+    display: none !important;
+}
+
 .stripe-button-el, .stripe-button-el>a {
     /*color: white;*/
     background: #4d2970 !important;
@@ -225,6 +280,25 @@ input:checked + .slider:before {
 }
 
 /*Styles to be shared across app*/
+
+.green-font{
+    color: #28C309;
+}
+
+.white-font{
+    color: #fff;
+}
+
+.grey-font{
+    color: #5f5f5f;
+}
+
+.padding-top-btm-none{
+
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
 .padding-side-lg{
     padding-left: 30px !important;
     padding-right: 60px !important;
@@ -3325,7 +3399,7 @@ a {
     text-decoration: underline;
 }
 .alert-success {
-    border-color: #008d4c;
+    border-color: #28C309;
 }
 .alert-danger,
 .alert-error {
@@ -5355,7 +5429,7 @@ table.text-center th {
 .alert-success,
 .label-success,
 .modal-success .modal-body {
-    background-color: #00a65a !important;
+    background-color: #28C309 !important;
 }
 .bg-navy {
     background-color: #001f3f !important;

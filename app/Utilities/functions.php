@@ -1019,3 +1019,77 @@ if (!function_exists('refuseDeleteMsg')) {
         ));
     }
 }
+
+if (!function_exists('planSpecs')) {
+
+    function planSpecs($plan, $term)
+    {
+        $amount = 0;
+        $numUsers = "";
+
+        if($plan == 'plan1'){
+
+            $numUsers = "up to 5";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M1');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q1');
+            }
+
+        }else if($plan == 'plan2'){
+
+            $numUsers = "6 - 10";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M2');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q2');
+            }
+        }else if($plan == 'plan3'){
+
+            $numUsers = "11 - 20";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M3');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q3');
+            }
+        }
+
+        $collection = collect(['amount' => $amount, 'numUsers' => $numUsers]);
+
+        return $collection;
+    }
+}
+
+
+if (!function_exists('planNumUsers')) {
+
+    function planNumUsers($plan)
+    {
+        $numUsers = "";
+
+        if($plan == 'plan1'){
+
+            $numUsers = "up to 5";
+
+        }else if($plan == 'plan2'){
+
+            $numUsers = "6 - 10";
+
+        }else if($plan == 'plan3'){
+
+            $numUsers = "11 - 20";
+        }
+
+        return $numUsers;
+    }
+}
+

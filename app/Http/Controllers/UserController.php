@@ -600,18 +600,6 @@ class UserController extends Controller
         }
     }
 
-//    public function startTrial(Request $request){
-//
-//        $company = $request->input('company');
-//        $owner = $request->input('owner');
-//        $first = $request->input('first');
-//        $last = $request->input('last');
-//        $emailUser = $request->input('emailUser');
-//        $pw = $request->input('password');
-//
-//        dd($request->stripeToken, $company, $first);//tok_1C2A8SARm1DhvNyDXSyuNuoE returned
-//    }
-
     public function failedEmail(Request $request){
 
         $event = $request->input('event');
@@ -636,13 +624,163 @@ class UserController extends Controller
     }
 
     public function upgrade(){
-            return view('company-settings/upgrade');
+        try {
+            if (session()->has('token')) {
+
+                //retrieve id from session data
+                $id = session('id');
+
+                $user = getUser($id);
+
+                $email = $user->email;
+
+                return view('company-settings/upgrade')->with('email', $email);
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
+    }
+
+    public function paymentUpgrade(Request $request){
+        try {
+            if (session()->has('token')) {
+
+                //use stripeEmail returned from payment request
+                $email = $request->stripeEmail;
+
+                //todo: atm , assumed successful
+                $confirm = 'Plan successfully updated. Receipt for the payment has been emailed to '.$email;
+//                $confirm = 'Plan failed to update.'; + reason
+
+                return view('company-settings/upgrade')
+                    ->with(array(
+                        'email'=> $email,
+                        'confirm' => $confirm,
+//                        'current' => ,
+//                        'modified' => $modified
+                    ));
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
+
+
+
+
+//        dd('submitted', $request->plan, $request->period, $request->stripeToken);//works
 
     }
 
-    public function postUpgrade($plan, $period){
 
-        dd($plan, $period);
+    //return the view "upgrade.blade.php" with the checkout widget in the foreground (so initiate the btn click)
+    public function upgradePlan($plan, $term){
+        try {
+            if (session()->has('token')) {
+
+//                dd($plan, $term);
+
+                //retrieve id from session data
+                $id = session('id');
+
+                $user = getUser($id);
+
+                $email = $user->email;
+
+                return view('company-settings/upgrade')
+                    ->with(array(
+                    'email'=> $email,
+                    'selected' => $plan,
+                    'chosenTerm' => $term,
+//                        'current' => ,
+//                        'modified' => $modified
+                ));
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
+
+
     }
 
 //    public function test(){
