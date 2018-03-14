@@ -34,8 +34,197 @@ Considering using
 #f1f0f5//light purple
 */
 
-/*Styles to be shared across app*/
+.full-width{
+    width: 100%;
+}
 
+/*Switch eg used on subscription page*/
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40%;
+    margin-left: 30%;
+    height: 60px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #4d2970;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 52px;
+    width: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #4d2970;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #4d2970;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(95%);
+    -ms-transform: translateX(95%);
+    transform: translateX(95%);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 30px;
+    z-index: -1;
+}
+
+.slider.round:before {
+    border-radius: 30px;
+    z-index: -1;
+}
+
+/*text ons sliders*/
+.text-1{
+    z-index: 1;
+    padding-top: 18px;
+    padding-left: 50px;
+    font-weight: 100;
+}
+
+.text-2{
+    z-index: 1;
+    text-align: right;
+    padding-top: 18px;
+    padding-right: 50px;
+    font-weight: 100;
+
+}
+
+/*#text-2{*/
+    /*color: white;*/
+/*}*/
+
+
+/*Box with tiles eg subscription page*/
+.padding-left-x-lg{
+    padding-left: 170px;
+
+}
+
+.box-layout{
+    background-image: url(http://www.odincasemanagement.com/wp-content/uploads/2015/11/absurdity.png?id=137) !important;
+    height: 100%;
+    z-index: inherit;
+}
+
+.box-tile{
+    display: inline-block;
+    background-color: #FFFFFF;
+    border: 1px solid #ECECEC;
+    box-shadow: 0px 1px 0px 0px rgba(0,0,0, 0.1) !important;
+    border-radius: 10px 10px 10px 10px !important;
+    height: 350px;
+    width: 200px;
+    float: left;
+    box-sizing: border-box !important;
+    margin-bottom: -20px;
+    position: relative;
+    text-align: center;
+    top: 20px;
+    font-size: 18px;
+    margin-right: 20px;
+}
+
+.padding-tiles{
+    padding-top: 50px;
+    padding-bottom: 25px;
+}
+
+.sm-font{
+    font-size: 18px;
+}
+
+.alt-font{
+    font-family: "Trebuchet MS";
+}
+
+.tiles-heading{
+    text-align: center;
+    font-size: 26px;
+
+}
+
+.tile-dollar{
+    font-size: 25px;
+    vertical-align: super;
+}
+
+.tile-dollar-amount{
+    display: inline-block;
+    height: 150px;
+    font-size: 80px;
+}
+
+.tile-btn{
+    border-radius: 20px !important;
+    font-size: 18px;
+}
+
+#tile-text-amount{
+    font-size: 30px;
+    line-height: 4.0;
+}
+
+.stripe-button-el, .stripe-button-el>a {
+    /*color: white;*/
+    background: #4d2970 !important;
+    /*font-size: large;*/
+    border-color: #4d2970;
+    /*padding: 20px;*/
+}
+
+.stripe-button-el>span, .stripe-button-el>a{
+    background: #4d2970 !important;
+    font-size: large !important;
+    border-color: #4d2970;
+    padding: 6px 10px 6px 12px !important;
+    text-align: center;
+    vertical-align: middle;
+    vertical-align: middle;
+    margin-bottom: 12px;
+}
+
+.register .form-group input{
+    width: 95%;
+    margin: auto;
+    /*border: 1px solid #4d2970;*/
+}
+
+.register .form-group label{
+    text-align: left;
+    padding-left: 15px;
+    padding-top: 0px !important;
+}
+
+/*Styles to be shared across app*/
 .padding-side-lg{
     padding-left: 30px !important;
     padding-right: 60px !important;
@@ -366,9 +555,11 @@ a.dropdown-toggle.header-icon{
 
 /*Register Page*/
 .register-headings{
-    padding-left: 75px;
-    font-size: 20px;
-    /*font-family: cursive, Sans-Serif;*/
+    padding-left: 15px !important;
+    font-size: 16px;
+    color: #555;
+    text-decoration: underline;
+    margin-bottom: 0px !important;
 }
 
 /*confirm-alt page*/

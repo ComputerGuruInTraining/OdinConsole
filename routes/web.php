@@ -110,7 +110,13 @@ Route::get('/reset/pw', 'ForgotPWController@resetPW');
 //route to show Settings page when the Settings btn is pressed eg via Header Avatar Dropdown
 Route::get('/settings', 'UserController@index');
 
+//default route = proceed to payment option, no free trial
+//todo: archived for the moment, bring back in with scenario: stumble upon website
+// todo cont.: and register and choose between start free trial or payment plan immediatley
 Route::get('/register', 'UserController@registerCompany');
+
+//TODO: url from Start Free Trial is/will be /register/start-free-trial
+Route::get('/register/{trial}', 'UserController@registerCompany');
 
 Route::post('/register/company', 'UserController@postRegister');
 
@@ -165,9 +171,18 @@ Route::get('cancel-delete', function(){
 
 Route::get('/support/users', 'HomeController@support');
 
+Route::post('/webhooks/failed', 'UserController@failedEmail');
+
+Route::get('/subscription/upgrade', 'UserController@upgrade');
+
+Route::get('/subscription/upgrade/{plan}/{period}', 'UserController@postUpgrade');
+
+
+//Route::get('/test', 'UserController@test');
+
 /*Routes Used??? TODO: check*/
 Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
 
-Route::post('/webhooks/failed', 'UserController@failedEmail');
+
 
 

@@ -112,6 +112,7 @@ if (!function_exists('jobDateTime')) {
     }
 }
 
+//db friendly date
 if (!function_exists('dateFormat')) {
     function dateFormat($date)
     {
@@ -304,6 +305,7 @@ if (!function_exists('formatDatesShort')) {
         return $fdate;
     }
 }
+
 //calculate time and date based on geoCoords using Google API
 //return the values to be used to calculate the date and time
 if (!function_exists('timezone')) {

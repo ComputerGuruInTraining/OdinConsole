@@ -11,7 +11,7 @@ use Psy\Exception\ErrorException;
 use Redirect;
 use Hash;
 use Config;
-
+use DateTime;
 
 class UserController extends Controller
 {
@@ -48,11 +48,82 @@ class UserController extends Controller
 
                 $compInfo = json_decode((string)$resp->getBody());
 
+                $jsonResponse = $client->get(Config::get('constants.API_URL').'subscription/' . $compId, [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                    ]
+                ]);
+
+                //response could be either 1) $subscriptionStatus->trial = false or true, $subscriptionStatus->trial_ends_at = date if inTrial
+                //or 2)$subscriptionStatus->subscriptions (entries in db)
+                $subscriptionStatus = json_decode((string)$jsonResponse->getBody());
+
+//                dd($subscription);//null at this point. why not false??? must count>0! ah because only 1 user ! ugh//fixme
+
                 $users = array_sort($users, 'last_name', SORT_ASC);
 
                 $url = 'user';
 
-                return view('company-settings.index')->with(array('users' => $users, 'compInfo' => $compInfo, 'url' => $url));
+                if(isset($subscriptionStatus->trial)){
+
+                    if(isset($subscriptionStatus->trial_ends_at)) {
+
+                        //convert date object to string
+                        //format as friendly string
+
+
+//                        $date = date_create($subscriptionStatus->trial_ends_at);
+
+                        //$subscriptionStatus->trial_ends_at is an object of stdclass
+                        //php manual advises will json_encode to a simple js object
+                        //although the result here is a string in the json format
+
+                        $date = json_encode($subscriptionStatus->trial_ends_at);//$date = a json string
+
+                        $json = json_decode($date, true);
+
+//                        dd($json, $json['date']);
+
+                        $date = formatDates($json['date']);
+
+//                        dd($date);
+
+//                        dd(gettype($subscriptionStatus->trial_ends_at), $subscriptionStatus->trial_ends_at);
+
+                        return view('company-settings.index')->with(array(
+                            'users' => $users,
+                            'compInfo' => $compInfo,
+                            'url' => $url,
+                            'subscriptionStatus' => $subscriptionStatus->trial,
+                            'trialEndsAt' => $date
+                        ));
+
+                    }
+//                    dd($subscriptionStatus->trial,  $subscriptionStatus->trial_ends_at);
+
+
+                    return view('company-settings.index')->with(array(
+                        'users' => $users,
+                        'compInfo' => $compInfo,
+                        'url' => $url,
+                        'subscriptionStatus' => $subscriptionStatus->trial));
+
+                }else if(isset($subscriptionStatus->subscriptions)){
+
+//                    dd($subscriptionStatus->subscriptions);
+
+                    return view('company-settings.index')->with(array(
+                        'users' => $users,
+                        'compInfo' => $compInfo,
+                        'url' => $url,
+                        'subscriptionStatus' => $subscriptionStatus->subscriptions));//array
+
+                }
+
+//                return view('company-settings.index')->with(array(
+//                    'users' => $users,
+//                    'compInfo' => $compInfo,
+//                    'url' => $url));
 
             }
             //user does not have a token
@@ -424,9 +495,9 @@ class UserController extends Controller
      *
     */
 
-    public function registerCompany()
+    public function registerCompany($trial = null)
     {
-        return view('home.register');
+        return view('home.register')->with('trial', $trial);
     }
 
     public function postRegister(Request $request)
@@ -439,15 +510,33 @@ class UserController extends Controller
                 'emailUser' => 'required|email|max:255',
                 'password' => 'required|min:6|confirmed|max:15',
                 'first' => 'required|max:255',
-                'last' => 'required|max:255'
+                'last' => 'required|max:255',
             ]);
+//            dd($request);
+
 
             $company = $request->input('company');
-            $owner = $request->input('owner');
             $first = $request->input('first');
             $last = $request->input('last');
             $emailUser = $request->input('emailUser');
             $pw = $request->input('password');
+
+            //initialize in case no value input by user
+            $owner = null;
+
+            //optional field
+            if($request->has('owner')){
+                $owner = $request->input('owner');
+            }
+
+            //initialise the value for the requests that do not have a value in stripeToken ie free trials
+            $stripeToken = null;
+
+            if($request->has('stripeToken')) {
+                $stripeToken = $request->stripeToken;
+            }
+
+//            dd($company, $first);
 
             $client = new GuzzleHttp\Client;
 
@@ -458,7 +547,8 @@ class UserController extends Controller
                         'Content-Type' => 'application/json'
                     ),
                     'json' => array('company' => $company, 'owner' => $owner,
-                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser, 'pw' => $pw
+                        'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser,
+                        'pw' => $pw, 'stripeToken' => $stripeToken
                     )
                 )
             );
@@ -491,23 +581,36 @@ class UserController extends Controller
                 }
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return Redirect::to('/register')
+            return Redirect::back()
                 ->withInput()
                 ->withErrors('There is an error in the input. 
             This could be caused by an invalid email or 
             an email that already exists in the system. Please check your input.');
         } catch (\ErrorException $error) {
-            return Redirect::to('/register')
+            dd($error);
+            return Redirect::back()
                 ->withInput()
                 ->withErrors('Unable to complete the request. 
                 Please check you have provided all required input as this may be the cause.');
         }catch (\InvalidArgumentException $err) {
-            return Redirect::to('/register')
+            return Redirect::back()
                 ->withInput()
                 ->withErrors('Unable to complete the request. Please check input is valid as this may 
                  be the cause.');
         }
     }
+
+//    public function startTrial(Request $request){
+//
+//        $company = $request->input('company');
+//        $owner = $request->input('owner');
+//        $first = $request->input('first');
+//        $last = $request->input('last');
+//        $emailUser = $request->input('emailUser');
+//        $pw = $request->input('password');
+//
+//        dd($request->stripeToken, $company, $first);//tok_1C2A8SARm1DhvNyDXSyuNuoE returned
+//    }
 
     public function failedEmail(Request $request){
 
@@ -531,4 +634,20 @@ class UserController extends Controller
 
             return 'post successful';
     }
+
+    public function upgrade(){
+            return view('company-settings/upgrade');
+
+    }
+
+    public function postUpgrade($plan, $period){
+
+        dd($plan, $period);
+    }
+
+//    public function test(){
+//
+//        return view('home.test');
+//    }
+
 }
