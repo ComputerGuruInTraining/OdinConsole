@@ -7,8 +7,8 @@
          width="200px"
          style="position: absolute; left:30px; top:30px;"/>
 
-    <div class="standard-links"><a href="/upgrade" target="_blank" ><h4 class="top-text-left">Free Trial</h4></a></div>
-    <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
+    <div class="standard-links grey-color"><a href="/upgrade" target="_blank" ><h4 class="top-text-left">Pricing</h4></a></div>
+    <div class="standard-links grey-color"><a href="/support" target="_blank"><h4 class="top-text">Support</h4></a></div>
     <div class="container" style="padding-top: 150px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" style="font-size: large;">

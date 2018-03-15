@@ -21,9 +21,9 @@
                 margin-top: 5%;
             }
 
-            #grey-color{
-                color: #555;
-            }
+            /*#grey-color{*/
+                /*color: #555;*/
+            /*}*/
 
             .top-text {
             position: absolute;
@@ -38,13 +38,13 @@
             }
 
             .standard-links a:link{
-                 color: #28C309;
+                 color: #555;
 
              }
 
             .standard-links a:hover{
                 color: #b5b5b5;
-                /*text-decoration: underline !important;   !not working on chrome*/
+                /*text-decoration: underline !important;   !*!not working on chrome*!*/
 
             }
 

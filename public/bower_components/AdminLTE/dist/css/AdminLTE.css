@@ -87,7 +87,33 @@ GREYS:
     border-top: 3px solid #514E4E;
 }
 
+.content-header-register{
+    margin-top: 35px !important;
+}
 
+.free-trial-div-register{
+    text-align: center;
+    font-family: "Trebuchet MS";
+    position: inherit;
+
+}
+
+.free-trial-line2-register{
+    padding-bottom: 15px;
+}
+
+.free-trial-line4-register{
+    padding-bottom: 10px;
+}
+
+.free-trial-line2-register, .free-trial-line4-register{
+    color: #5d5d5d;
+}
+
+/*.free-trial{*/
+    /*clear: left;*/
+    /*padding-top: 100px;*/
+/*}*/
 
 /*Switch eg used on subscription page*/
 /* The switch - the box around the slider */
@@ -203,11 +229,6 @@ input:checked + .slider:before {
 
 }
 
-/*#text-2{*/
-    /*color: white;*/
-/*}*/
-
-
 /*Box with tiles eg subscription page*/
 .padding-left-x-lg{
     padding-left: 170px;
@@ -317,6 +338,14 @@ input:checked + .slider:before {
 
 .green-font{
     color: #28C309;
+}
+
+.grey-color{
+    color: #555;
+}
+
+.dark-green-font{
+    color: #009900;
 }
 
 .white-font{

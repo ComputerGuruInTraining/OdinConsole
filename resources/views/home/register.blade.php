@@ -5,9 +5,13 @@
 @section('content')
     <img src="{{ asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png") }}" alt="Odin Logo" height="60px" width="200px" style="position: absolute; left:30px; top:30px;"/>
 
-    <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
+    <div class="standard-links grey-color"><a href="/upgrade" target="_blank" ><h4 class="top-text-left">Pricing</h4></a></div>
+    <div class="standard-links grey-color"><a href="/support" target="_blank"><h4 class="top-text">Support</h4></a></div>
 
-    <div class="container" style="padding-top: 70px;">
+    {{--purple header border--}}
+    <section class="content-header content-header-register"></section>
+
+    <div class="container" style="padding-top: 40px;">
         <div class="row">
             <div class="col-md-6 col-md-offset-3" >
                 @if (count( $errors ) > 0)
@@ -16,7 +20,16 @@
                     @endforeach
                 @endif
                 @if(isset($trial))
-                    <div class="alert green-font padding-top-btm-none">START FREE TRIAL</div>
+                    <div class="free-trial-register">
+                        <div class="free-trial-div-register">
+                            <p class="free-trial-line2-register">Take it for a spin…no charge, no commitment</p>
+
+                            <p class="alert dark-green-font padding-top-btm-none">
+                                    START FREE TRIAL
+                            </p>
+                            <p class="free-trial-line4-register">No credit card required</p>
+                        </div>
+                    </div>
                 @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
                     <div class="panel-heading"  style="color: white; background-color: #4d2970;">Register Company</div>

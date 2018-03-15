@@ -102,20 +102,6 @@ Upgrade Subscription
     {{--purple header border--}}
     <section class="content-header"></section>
 
-
-
-
     @include('company-settings.upgrade_layout')
-
-    {{--<div class="separator-line"></div>--}}
-
-
-    {{--<div class="free-trial-div">--}}
-        {{--<p class="free-trial-line1">Not Sure This Is For You?</p>--}}
-        {{--<p class="free-trial-line2">Take it for a spin…no charge, no commitment</p>--}}
-
-        {{--<p><a href="/register/start-free-trial" class="free-trial-btn">START FREE TRIAL</a></p>--}}
-        {{--<p class="free-trial-line4">No credit card required</p>--}}
-    {{--</div>--}}
 
 @stop
