@@ -21,7 +21,7 @@ return [
     'COMPANY_NAME' => 'ODIN Case Management',
     'COMPANY_NICKNAME' => 'ODIN',
     'TEAM' => 'ODIN Team',
-    'LOGO' => asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png"),
+//    'LOGO' => asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png"),
 
     /****Error Msgs*****/
     'ERROR_UPDATE' => 'Unexpected error updating details',

@@ -634,7 +634,11 @@ class UserController extends Controller
 
                 $email = $user->email;
 
-                return view('company-settings/upgrade')->with('email', $email);
+                return view('company-settings/upgrade')->with(array(
+                    'email'=> $email,
+                    'selected' => null,
+                    'chosenTerm' => null,
+                    ));
 
             }//user does not have a token
             else {
@@ -683,6 +687,8 @@ class UserController extends Controller
                     ->with(array(
                         'email'=> $email,
                         'confirm' => $confirm,
+                        'selected' => null,
+                        'chosenTerm' => null,
 //                        'current' => ,
 //                        'modified' => $modified
                     ));
@@ -726,7 +732,7 @@ class UserController extends Controller
     }
 
 
-    //return the view "upgrade.blade.php" with the checkout widget in the foreground (so initiate the btn click)
+    //return the view "upgrade_layout.blade.php" with the checkout widget in the foreground (so initiate the btn click)
     public function upgradePlan($plan, $term){
         try {
             if (session()->has('token')) {

@@ -31,6 +31,50 @@
             top: 50px;
             }
 
+            .top-text-left{
+                position: absolute;
+                right: 140px;
+                top: 50px;
+            }
+
+            .standard-links a:link{
+                 color: #28C309;
+
+             }
+
+            .standard-links a:hover{
+                color: #b5b5b5;
+                /*text-decoration: underline !important;   !not working on chrome*/
+
+            }
+
+            /**start not working on chrome*/
+            .standard-links a:visited{
+                color: #367fa9 !important;
+            }
+
+            .standard-links a:visited{
+                color: #4d2970 !important;
+            }
+
+            /***end not working on chrome**/
+
+
+            /* visited link */
+            /*a:visited {*/
+                /*color: green;*/
+            /*}*/
+
+            /*!* mouse over link *!*/
+            /*a:hover {*/
+                /*color: red;*/
+            /*}*/
+
+            /*!* selected link *!*/
+            /*a:active {*/
+                /*color: yellow;*/
+            /*}*/
+
             .row>.title-bg-app>.title-block-app{
                 background-color: #4d2970 !important;
                 height: 100px;
@@ -74,7 +118,6 @@
 
             .text-bold{
                 font-weight: 600;
-
             }
 
             .title-text-app{
@@ -82,6 +125,10 @@
 
             }
         </style>
+
+        @yield('public-custom-scripts')
+
+        @yield('public-custom-styles')
 
     </head>
     <body>

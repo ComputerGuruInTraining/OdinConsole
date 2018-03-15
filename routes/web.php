@@ -23,10 +23,6 @@ Route::get('/', 'HomeController@getIndex');
 
 Route::post('/', 'HomeController@postIndex');
 
-Route::get('/login/{plan}/{term}', 'HomeController@getIndex');
-
-Route::post('/login/{plan}/{term}', 'HomeController@postIndex');
-
 Route::get('/admin', 'DashboardController@index');
 
 //generic error exception msg route
@@ -119,7 +115,7 @@ Route::get('/settings', 'UserController@index');
 // todo cont.: and register and choose between start free trial or payment plan immediatley
 Route::get('/register', 'UserController@registerCompany');
 
-//TODO: url from Start Free Trial is/will be /register/start-free-trial
+//MOE: give url from Start Free Trial = /register/start-free-trial
 Route::get('/register/{trial}', 'UserController@registerCompany');
 
 Route::post('/register/company', 'UserController@postRegister');
@@ -175,19 +171,42 @@ Route::get('cancel-delete', function(){
 
 Route::get('/support/users', 'HomeController@support');
 
+/*****Mailgun Failed Emails Route***/
 Route::post('/webhooks/failed', 'UserController@failedEmail');
 
-//returns the upgrade subscription page
+/*****Subscription Routes***/
+
+//returns the login page for non logged-in users that select Get Started btn on www.odincasemanagement.com marketing website
+//Moe Get Started btn
+Route::get('/login/{plan}/{term}', 'HomeController@getIndex');
+
+//Usage: users that navigated via www.odincasemanagement.com Get Started btn are logged in via
+//this function and redirected to /upgrade/subscription/{plan}/{term}
+// the upgrade subscription page with credit card widget in the foreground
+//INTERNAL ROUTE ONLY
+Route::post('/login/{plan}/{term}', 'HomeController@postIndex');
+
+//returns the pricing model page for non logged-in users
+Route::get('/upgrade', 'HomeController@upgradePublic');
+
+//Usage: routed to via Upgrade btn on subscription>settings page and
+//returns the upgrade subscription page for logged in users, ie includes sidebar
+//INTERNAL ROUTE ONLY
 Route::get('/subscription/upgrade', 'UserController@upgrade');
 
-//a user selects a plan from subscription options
-Route::get('/subscription/upgrade/{plan}/{term}', 'UserController@upgradePlan');
+//Usage: a user has logged in via '/login/{plan}/{term}' after navigating from www.odincasemanagement.com marketing website
+//and is then redirected to the subscription page with credit card widget in the foreground
+//INTERNAL ROUTE ONLY
+Route::get('/upgrade/subscription/{plan}/{term}', 'UserController@upgradePlan');
 
 //credit card details have been submitted
 Route::post('/subscription/payment', 'UserController@paymentUpgrade');
 
-//Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 
+
+
+//Route USED???
+//Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 
 Route::get('/error-page', function(){
     try{

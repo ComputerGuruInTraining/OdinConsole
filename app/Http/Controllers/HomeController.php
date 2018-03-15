@@ -58,7 +58,7 @@ class HomeController extends BaseController
                 if($term == null){
                     return Redirect::intended('/admin');
                 }else{
-                    return Redirect::intended('/subscription/upgrade/'.$plan.'/'.$term);
+                    return Redirect::intended('/upgrade/subscription/'.$plan.'/'.$term);
                 }
             }
             //else, not api authenticated so user credentials not valid
@@ -135,6 +135,17 @@ class HomeController extends BaseController
                 $error = 'Error loading case notes';
                 return view('error-msg')->with('msg', $error);
             }
+    }
+
+
+    public function upgradePublic(){
+
+        return view('company-settings/upgrade_public')->with(array(
+            'public' => true,
+            'email'=> null,
+            'selected' => null,
+            'chosenTerm' => null,
+        ));
     }
 
 }
