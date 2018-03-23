@@ -49,7 +49,7 @@
                                                      height="250px" width="250px" class="margin-bottom margin-right"
                                                      style="word-wrap: break-word;"/>
                                             @else
-                                                <img src="" alt="{{$item->fullUrls[$i]}}"
+                                                <img src="{{$item->fullUrls[$i]}}" alt="{{$item->fullUrls[$i]}}"
                                                      height="250px" width="250px" class="margin-bottom margin-right"
                                                      style="word-wrap: break-word;"/>
                                             @endif
