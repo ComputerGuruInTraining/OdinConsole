@@ -115,7 +115,7 @@ Route::get('/settings', 'UserController@index');
 // todo cont.: and register and choose between start free trial or payment plan immediatley
 Route::get('/register', 'UserController@registerCompany');
 
-//TODO: url from Start Free Trial is/will be /register/start-free-trial
+//MOE: give url from Start Free Trial = /register/start-free-trial
 Route::get('/register/{trial}', 'UserController@registerCompany');
 
 Route::post('/register/company', 'UserController@postRegister');
@@ -171,13 +171,53 @@ Route::get('cancel-delete', function(){
 
 Route::get('/support/users', 'HomeController@support');
 
+/*****Mailgun Failed Emails Route***/
 Route::post('/webhooks/failed', 'UserController@failedEmail');
 
+/*****Subscription Routes***/
+
+//returns the login page for non logged-in users that select Get Started btn on www.odincasemanagement.com marketing website
+//Moe Get Started btn
+Route::get('/login/{plan}/{term}', 'HomeController@getIndex');
+
+//Usage: users that navigated via www.odincasemanagement.com Get Started btn are logged in via
+//this function and redirected to /upgrade/subscription/{plan}/{term}
+// the upgrade subscription page with credit card widget in the foreground
+//INTERNAL ROUTE ONLY
+Route::post('/login/{plan}/{term}', 'HomeController@postIndex');
+
+//returns the pricing model page for non logged-in users
+Route::get('/upgrade', 'HomeController@upgradePublic');
+
+//Usage: routed to via Upgrade btn on subscription>settings page and
+//returns the upgrade subscription page for logged in users, ie includes sidebar
+//INTERNAL ROUTE ONLY
 Route::get('/subscription/upgrade', 'UserController@upgrade');
 
-Route::get('/subscription/upgrade/{plan}/{period}', 'UserController@postUpgrade');
+//Usage: a user has logged in via '/login/{plan}/{term}' after navigating from www.odincasemanagement.com marketing website
+//and is then redirected to the subscription page with credit card widget in the foreground
+//INTERNAL ROUTE ONLY
+Route::get('/upgrade/subscription/{plan}/{term}', 'UserController@upgradePlan');
+
+//credit card details have been submitted
+Route::post('/subscription/payment', 'UserController@paymentUpgrade');
 
 
+
+
+//Route USED???
+//Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
+
+Route::get('/error-page', function(){
+    try{
+        return view('confirm_alt');
+
+    }catch(\Exception $exception){
+        $errMsg = $exception->getMessage();
+        dd($errMsg);
+    }
+
+});
 //Route::get('/test', 'UserController@test');
 
 /*Routes Used??? TODO: check*/

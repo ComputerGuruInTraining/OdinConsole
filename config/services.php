@@ -32,7 +32,7 @@ return [
     'stripe' => [
         'model' => App\User::class,
         'key' => 'pk_test_u5hJw0nEAL2kgix2Za91d3cV',
-        'secret' => 'sk_test_WmGxgDGLP3M9MRJ2oWLJCxlc',
+        'secret' => env('STRIPE_SECRET'),
     ],
 
 ];

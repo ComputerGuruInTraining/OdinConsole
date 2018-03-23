@@ -785,7 +785,7 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
-                        view()->share(array(
+                        $data = (array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,
                             'report' => $formatData->get('report'),
@@ -793,14 +793,13 @@ class ReportController extends Controller
                             'end' => $edate,
                             'total' => $formatData->get('total'),
                             'notes' => $formatData->get('notes')
-
                         ));
 
                         if ($report->type == 'Client') {
 
                             if ($request->has('download')) {
 
-                                $pdf = PDF::loadView('report/client/pdf')->setPaper('a4', 'landscape');
+                                $pdf = PDF::loadView('report/client/pdf', $data)->setPaper('a4', 'landscape');
 
                                 // download pdf w current date in the name
                                 $dateTime = Carbon::now();
@@ -812,7 +811,7 @@ class ReportController extends Controller
 
                             if ($request->has('download')) {
 
-                                $pdf = PDF::loadView('report/management/pdf')->setPaper('a4', 'landscape');
+                                $pdf = PDF::loadView('report/management/pdf', $data)->setPaper('a4', 'landscape');
                                 // download pdf w current date in the name
                                 $dateTime = Carbon::now();
                                 $date = substr($dateTime, 0, 10);

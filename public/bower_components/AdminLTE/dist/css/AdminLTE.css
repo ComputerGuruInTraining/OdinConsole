@@ -18,10 +18,9 @@ hover blue
 #367fa9
 #e6fffb//light blue bg
 
-
 Green
 #b3ff66
-
+#28C309  (eg Get Srted btns on Subscription page)
 
 Purple
 #4d2970
@@ -32,14 +31,151 @@ Red
 
 Considering using
 #f1f0f5//light purple
+
+GREYS:
+#5F5F5F
+
 */
 
 .full-width{
     width: 100%;
 }
 
+/*Discount ribbon*/
+
+.ribbon {
+    position: absolute;
+    right: -5px; top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px; height: 75px;
+    text-align: right;
+}
+.ribbon span {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    width: 100px;
+    display: block;
+    background: #79A70A;
+    background: linear-gradient(#0C0F01 0%, #514E4E 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px; right: -21px;
+}
+.ribbon span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid #514E4E;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #514E4E;
+}
+.ribbon span::after {
+    content: "";
+    position: absolute; right: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #514E4E;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #514E4E;
+}
+
+.content-header-register{
+    margin-top: 35px !important;
+}
+
+.free-trial-div-register{
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    position: inherit;
+    margin-top: -20px;
+
+}
+
+.free-trial-line2-register{
+    padding-bottom: 15px;
+}
+
+.free-trial-line4-register{
+    padding-bottom: 10px;
+}
+
+.free-trial-line2-register, .free-trial-line4-register{
+    color: #5d5d5d;
+}
+
+/*.free-trial{*/
+    /*clear: left;*/
+    /*padding-top: 100px;*/
+/*}*/
+/**Ensure the footer does not move up the page above other page content on medium devices*/
+@media (max-width: 1200px) {
+    .footer-alt{
+        margin-top: 50%;
+    }
+}
+
+/*Ensure the boxes don't overlap*/
+@media (max-width: 1110px) {
+    .box-tile {
+        margin-top: 5%;
+    }
+}
+
 /*Switch eg used on subscription page*/
 /* The switch - the box around the slider */
+
+/***Ensure the switch text does not overlap on smaller devices***/
+@media (max-width: 900px) {
+
+    .text-1, .text-2{
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 790px) {
+
+    .text-1, .text-2{
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .text-1, .text-2{
+        padding-left: 140px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .text-1{
+        padding-right: 140px;
+    }
+
+    .footer-alt{
+        margin-top: 75%;
+        clear: left;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-alt{
+        margin-top: 75%;
+        clear: left;
+        padding-top: 75%;
+    }
+}
+
+
+
 .switch {
     position: relative;
     display: inline-block;
@@ -93,17 +229,20 @@ input:checked + .slider:before {
 /* Rounded sliders */
 .slider.round {
     border-radius: 30px;
-    z-index: -1;
+    /*z-index: -1;!*if 0 displays on safari, "paid quarterly" still not*!*/
+    z-index: 0;
 }
 
 .slider.round:before {
     border-radius: 30px;
-    z-index: -1;
+    /*z-index: -1; !*if 0 displays on safari, "paid quarterly" still not*!*/
+    z-index: 0;
 }
 
 /*text ons sliders*/
 .text-1{
     z-index: 1;
+    position: relative;
     padding-top: 18px;
     padding-left: 50px;
     font-weight: 100;
@@ -111,6 +250,7 @@ input:checked + .slider:before {
 
 .text-2{
     z-index: 1;
+    position: relative;
     text-align: right;
     padding-top: 18px;
     padding-right: 50px;
@@ -118,14 +258,21 @@ input:checked + .slider:before {
 
 }
 
-/*#text-2{*/
-    /*color: white;*/
-/*}*/
-
-
 /*Box with tiles eg subscription page*/
 .padding-left-x-lg{
     padding-left: 170px;
+
+}
+
+.explain-text{
+    clear: left;
+    padding-top: 60px;
+    padding-left: 20%;
+    font-size: 12px;
+}
+
+.explain-text-register{
+    padding-left: 15%;
 
 }
 
@@ -163,7 +310,7 @@ input:checked + .slider:before {
 }
 
 .alt-font{
-    font-family: "Trebuchet MS";
+    font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
 .tiles-heading{
@@ -191,6 +338,10 @@ input:checked + .slider:before {
 #tile-text-amount{
     font-size: 30px;
     line-height: 4.0;
+}
+
+.stripe-button-el>span{
+    display: none !important;
 }
 
 .stripe-button-el, .stripe-button-el>a {
@@ -225,6 +376,37 @@ input:checked + .slider:before {
 }
 
 /*Styles to be shared across app*/
+
+.green-font{
+    color: #28C309;
+}
+
+.grey-color{
+    color: #555;
+}
+
+.dark-green-font{
+    color: #009900;
+}
+
+.white-font{
+    color: #fff;
+}
+
+.grey-font{
+    color: #5f5f5f;
+}
+
+.dark-blue-font{
+    color: #367fa9;
+}
+
+.padding-top-btm-none{
+
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
 .padding-side-lg{
     padding-left: 30px !important;
     padding-right: 60px !important;
@@ -252,10 +434,6 @@ input:checked + .slider:before {
 
 .bottom-border{
     border-bottom: 2px solid #ddd;
-}
-
-.dark-blue-font{
-    color: #367fa9;
 }
 
 .margin-top{
@@ -537,10 +715,6 @@ a.dropdown-toggle.header-icon{
 .login-pgs-footer, .footer-alt {
     border-top: none !important;
     text-align: center;
-    /*position: absolute;*/
-    /*bottom: 20px;*/
-    /*left: 100px;*/
-    /*right: 100px;*/
 }
 
 .email-footer-alt{
@@ -1122,6 +1296,7 @@ a {
 .main-header .navbar-right {
     float: right;
 }
+
 @media (max-width: 991px) {
     .main-header .navbar-custom-menu a,
     .main-header .navbar-right a {
@@ -3325,7 +3500,7 @@ a {
     text-decoration: underline;
 }
 .alert-success {
-    border-color: #008d4c;
+    border-color: #28C309;
 }
 .alert-danger,
 .alert-error {
@@ -5355,7 +5530,7 @@ table.text-center th {
 .alert-success,
 .label-success,
 .modal-success .modal-body {
-    background-color: #00a65a !important;
+    background-color: #28C309 !important;
 }
 .bg-navy {
     background-color: #001f3f !important;
