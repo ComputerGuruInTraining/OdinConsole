@@ -7,7 +7,8 @@
          width="200px"
          style="position: absolute; left:30px; top:30px;"/>
 
-    <div><a href="/support" target="_blank"><h4 class="top-text" id="grey-color">Support</h4></a></div>
+    <div class="standard-links grey-color"><a href="/upgrade" target="_blank" ><h4 class="top-text-left">Pricing</h4></a></div>
+    <div class="standard-links grey-color"><a href="/support" target="_blank"><h4 class="top-text">Support</h4></a></div>
     <div class="container" style="padding-top: 150px;">
         <div class="row">
             <div class="col-md-8 col-md-offset-2" style="font-size: large;">
@@ -16,10 +17,23 @@
                         <div class="alert error">{{ $error }}</div>
                     @endforeach
                 @endif
+                @if (isset($term))
+                        <div class="alert green-font padding-top-btm-none">UPGRADE SUBSCRIPTION</div>
+                        <div class="alert grey-font padding-top-btm-none">First things first, please login to verify your company account
+                            and then we'll finalise the {{ $term }} subscription for {{$numUsers}} users.</div>
+                @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
+
                     <div class="panel-heading panel-head">Login</div>
                     <div class="panel-body">
-                        {{ Form::open(['role' => 'form','method' => 'POST']) }}
+
+                        @if(!isset($term))
+                            {{ Form::open(['role' => 'form','method' => 'POST']) }}
+                        @else
+                            {{ Form::open(['role' => 'form', 'method' => 'POST', 'url' => '/login/'.$plan.'/'.$term]) }}
+                        @endif
+
+                        {{ csrf_field() }}
                         <div>
                             <div class='form-group'>
                                 <label for="email" class="col-md-4 control-label">E-Mail</label>

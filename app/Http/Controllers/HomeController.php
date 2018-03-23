@@ -17,19 +17,34 @@ use Config;
 class HomeController extends BaseController
 {
 
-    public function getIndex()
+    public function getIndex($plan = null, $term = null)
     {
         try {
+            //check for the presence of term, amount and term will be passed through together if at all
+            if($term == null) {
+                return View::make('home.index');
+            }else{
 
-            return View::make('home.index');
+                //retrieve the number of users and amount based on plan specifics
+                $numUsers = planNumUsers($plan);
+
+                $term = ucwords($term);
+
+                return View::make('home.index')->with(array(
+//                    'amount' => $specs->get('amount'),
+                    'numUsers' => $numUsers,
+                    'term' => $term,
+                    'plan' => $plan
+                ));
+            }
 
         }catch (\TokenMismatchException $mismatch) {
 
-            return Redirect::to('/');
+            return Redirect::to('/error-page');
         }
     }
 
-    public function postIndex()
+    public function postIndex($plan = null, $term = null)
     {
         try {
             $username = Input::get('username');
@@ -38,13 +53,19 @@ class HomeController extends BaseController
             //oauth2 fn will validate only for those users in the user_roles table
             //outh2 is defined in App/Utilities/functions.php
             if (oauth2($username, $password)) {
-                return Redirect::intended('/admin');
+
+                //check for the presence of term, amount and term will be passed through together if at all
+                if($term == null){
+                    return Redirect::intended('/admin');
+                }else{
+                    return Redirect::intended('/upgrade/subscription/'.$plan.'/'.$term);
+                }
             }
             //else, not api authenticated so user credentials not valid
             return Redirect::back()
-                ->withInput()
-                ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
-            Please ensure the account has been activated as this could be the problem.');
+                    ->withInput()
+                    ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
+                        Please ensure the account has been activated as this could be the problem.');
         }catch(\Exception $exception){
             $errMsg = $exception->getMessage();
 
@@ -114,6 +135,18 @@ class HomeController extends BaseController
                 $error = 'Error loading case notes';
                 return view('error-msg')->with('msg', $error);
             }
+    }
+
+
+    public function upgradePublic(){
+
+        return view('company-settings/upgrade_public')->with(array(
+            'public' => true,
+            'email'=> null,
+            'selected' => null,
+            'chosenTerm' => null,
+            'current' => null,
+        ));
     }
 
 }

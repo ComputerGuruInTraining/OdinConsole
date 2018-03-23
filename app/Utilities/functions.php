@@ -314,9 +314,17 @@ if (!function_exists('timezone')) {
         $dateForTS = date_create($t);
         $dateInTS = date_timestamp_get($dateForTS);
 
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
         //find the timezone for each case note using google timezone api
         $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
-            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I',
+        false, stream_context_create($arrContextOptions));
 
         $data = json_decode($result);
 
@@ -335,9 +343,16 @@ if (!function_exists('timezoneDT')) {
         $dateForTS = date_create($t);
         $dateInTS = date_timestamp_get($dateForTS);
 
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
         //find the timezone for each case note using google timezone api
         $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
-            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', false, stream_context_create($arrContextOptions));
 
         $data = json_decode($result);
 
@@ -1019,3 +1034,77 @@ if (!function_exists('refuseDeleteMsg')) {
         ));
     }
 }
+
+if (!function_exists('planSpecs')) {
+
+    function planSpecs($plan, $term)
+    {
+        $amount = 0;
+        $numUsers = "";
+
+        if($plan == 'plan1'){
+
+            $numUsers = "up to 5";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M1');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q1');
+            }
+
+        }else if($plan == 'plan2'){
+
+            $numUsers = "6 - 10";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M2');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q2');
+            }
+        }else if($plan == 'plan3'){
+
+            $numUsers = "11 - 20";
+
+            if($term == 'monthly'){
+                $amount = Config::get('constants.AMOUNT_M3');
+
+            }else{
+                //term == 'quarterly'
+                $amount = Config::get('constants.AMOUNT_Q3');
+            }
+        }
+
+        $collection = collect(['amount' => $amount, 'numUsers' => $numUsers]);
+
+        return $collection;
+    }
+}
+
+
+if (!function_exists('planNumUsers')) {
+
+    function planNumUsers($plan)
+    {
+        $numUsers = "";
+
+        if($plan == 'plan1'){
+
+            $numUsers = "up to 5";
+
+        }else if($plan == 'plan2'){
+
+            $numUsers = "6 - 10";
+
+        }else if($plan == 'plan3'){
+
+            $numUsers = "11 - 20";
+        }
+
+        return $numUsers;
+    }
+}
+

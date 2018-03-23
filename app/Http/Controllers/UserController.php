@@ -512,8 +512,6 @@ class UserController extends Controller
                 'first' => 'required|max:255',
                 'last' => 'required|max:255',
             ]);
-//            dd($request);
-
 
             $company = $request->input('company');
             $first = $request->input('first');
@@ -535,8 +533,6 @@ class UserController extends Controller
             if($request->has('stripeToken')) {
                 $stripeToken = $request->stripeToken;
             }
-
-//            dd($company, $first);
 
             $client = new GuzzleHttp\Client;
 
@@ -587,7 +583,6 @@ class UserController extends Controller
             This could be caused by an invalid email or 
             an email that already exists in the system. Please check your input.');
         } catch (\ErrorException $error) {
-            dd($error);
             return Redirect::back()
                 ->withInput()
                 ->withErrors('Unable to complete the request. 
@@ -599,18 +594,6 @@ class UserController extends Controller
                  be the cause.');
         }
     }
-
-//    public function startTrial(Request $request){
-//
-//        $company = $request->input('company');
-//        $owner = $request->input('owner');
-//        $first = $request->input('first');
-//        $last = $request->input('last');
-//        $emailUser = $request->input('emailUser');
-//        $pw = $request->input('password');
-//
-//        dd($request->stripeToken, $company, $first);//tok_1C2A8SARm1DhvNyDXSyuNuoE returned
-//    }
 
     public function failedEmail(Request $request){
 
@@ -635,19 +618,192 @@ class UserController extends Controller
             return 'post successful';
     }
 
+    /**returns the Subscription page for logged in users***/
     public function upgrade(){
-            return view('company-settings/upgrade');
+        try {
+            if (session()->has('token')) {
 
+                //retrieve id from session data
+                $id = session('id');
+
+                $user = getUser($id);
+
+                $email = $user->email;
+
+                //todo: get the current subscription, if any, via the api, or perhaps display end trial date again on upgrade page??
+                $current = null;//fixme
+
+                return view('company-settings/upgrade')->with(array(
+                    'email'=> $email,
+                    'selected' => null,
+                    'chosenTerm' => null,
+                    'current' => $current,//todo: testing only atm
+                    ////current should be set to null for public access etc; other values should be plan1, plan2, plan3, plan4/tailor
+
+                ));
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
     }
 
-    public function postUpgrade($plan, $period){
+    public function paymentUpgrade(Request $request){
+        try {
+            if (session()->has('token')) {
 
-        dd($plan, $period);
+                //use stripeEmail returned from payment request
+                $email = $request->stripeEmail;
+
+                $plan = $request->plan;
+
+                //todo: atm , assumed successful
+                $confirm = 'Plan successfully updated. Receipt for the payment has been emailed to '.$email;
+//                $confirm = 'Plan failed to update.'; + reason
+
+                //todo: get plan chosen
+
+                return view('company-settings/upgrade')
+                    ->with(array(
+                        'email'=> $email,
+                        'confirm' => $confirm,
+                        'selected' => null,
+                        'chosenTerm' => null,
+                        'current' => $plan,//todo: testing only atm
+//                        'modified' => $modified
+                    ));
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
     }
 
-//    public function test(){
-//
-//        return view('home.test');
-//    }
+    //return the view "upgrade_layout.blade.php" with the checkout widget in the foreground (so initiate the btn click)
+    public function upgradePlan($plan, $term){
+        try {
+            if (session()->has('token')) {
+
+                //retrieve id from session data
+                $id = session('id');
+
+                $user = getUser($id);
+
+                $email = $user->email;
+
+                //todo: get current subscription
+                $current = null;//fixme
+
+                return view('company-settings/upgrade')
+                    ->with(array(
+                    'email'=> $email,
+                    'selected' => $plan,
+                    'chosenTerm' => $term,
+                    'current' => $current,
+//                        'modified' => $modified
+                ));
+
+            }//user does not have a token
+            else {
+                return Redirect::to('/login');
+            }
+
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error displaying subscription plan';
+            return view('error-msg')->with('msg', $err);
+
+        } catch (\ErrorException $error) {
+            $e = 'Error displaying subscription page';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\Exception $err) {
+            $e = 'Unable to display subscription plans';
+            return view('error-msg')->with('msg', $e);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $error = 'Error loading subscription page';
+            return view('error-msg')->with('msg', $error);
+
+        } catch(\handleViewException $handle){
+            $error = 'Error displaying page';
+            return view('error-msg')->with('msg', $error);
+
+        }
+    }
+
+    public function test(){
+
+        $signature = '%2FyRVzgyQeGB8x0N6ZruXbWFla3KrP3l3%2BV3TcHG%2BRU8%3D';
+
+        $signature = rawurlencode($signature);
+
+        $myUrl = 'https://odinlitestorage.blob.core.windows.net/images/1518068557291.jpeg?st=2018-03-20T23%3A59%3A00Z&se=2018-03-22T08%3A00%3A00Z&sr=b&sp=r&sv=2017-04-17&rsct=image/jpeg&sig=';
+
+        return view('home.test')->with(array(
+                    'signature' => $signature,
+                    'myUrl' => $myUrl,
+
+                ));
+
+        dd($signature);
+
+        $myUrl = 'https://odinlitestorage.blob.core.windows.net/images/1518068557291.jpeg?st=2018-03-20T23%3A59%3A00Z&se=2018-03-22T08%3A00%3A00Z&sr=b&sp=r&sv=2017-04-17&rsct=image/jpeg&sig=';
+    }
 
 }
