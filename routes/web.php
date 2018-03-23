@@ -203,8 +203,6 @@ Route::get('/upgrade/subscription/{plan}/{term}', 'UserController@upgradePlan');
 Route::post('/subscription/payment', 'UserController@paymentUpgrade');
 
 
-
-
 //Route USED???
 //Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 
@@ -216,9 +214,8 @@ Route::get('/error-page', function(){
         $errMsg = $exception->getMessage();
         dd($errMsg);
     }
-
 });
-//Route::get('/test', 'UserController@test');
+Route::get('/test', 'UserController@test');
 
 /*Routes Used??? TODO: check*/
 Route::get('/laravel-pdf', 'ReportController@generate')->name('laravelPdf');
