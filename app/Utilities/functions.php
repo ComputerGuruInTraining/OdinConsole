@@ -314,9 +314,17 @@ if (!function_exists('timezone')) {
         $dateForTS = date_create($t);
         $dateInTS = date_timestamp_get($dateForTS);
 
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
         //find the timezone for each case note using google timezone api
         $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
-            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I',
+        false, stream_context_create($arrContextOptions));
 
         $data = json_decode($result);
 
@@ -335,9 +343,16 @@ if (!function_exists('timezoneDT')) {
         $dateForTS = date_create($t);
         $dateInTS = date_timestamp_get($dateForTS);
 
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
         //find the timezone for each case note using google timezone api
         $result = file_get_contents('https://maps.googleapis.com/maps/api/timezone/json?location=' . $lat . ',' . $long .
-            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I');
+            '&timestamp=' . $dateInTS . '&key=AIzaSyBbSWmsBgv_YTUxYikKaLTQGf5r4n0o-9I', false, stream_context_create($arrContextOptions));
 
         $data = json_decode($result);
 

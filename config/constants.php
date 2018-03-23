@@ -21,7 +21,6 @@ return [
     'COMPANY_NAME' => 'ODIN Case Management',
     'COMPANY_NICKNAME' => 'ODIN',
     'TEAM' => 'ODIN Team',
-//    'LOGO' => asset("/bower_components/AdminLTE/dist/img/odinLogoCurr.png"),
 
     /****Error Msgs*****/
     'ERROR_UPDATE' => 'Unexpected error updating details',
@@ -42,12 +41,13 @@ return [
     'AMOUNT_M1' => 29,
     'AMOUNT_M2' => 59,
     'AMOUNT_M3' => 99,
-    'AMOUNT_Q1' => 19,
-    'AMOUNT_Q2' => 39,
-    'AMOUNT_Q3' => 69,
+    'AMOUNT_Y1' => 19,
+    'AMOUNT_Y2' => 39,
+    'AMOUNT_Y3' => 69,
     'DISCOUNT1' => 34,
     'DISCOUNT2' => 34,
     'DISCOUNT3' => 30,
+    'CONVERSION_RATE' => 1.293137 /***USD TO AUD CONVERSION**/
 
 
 ];

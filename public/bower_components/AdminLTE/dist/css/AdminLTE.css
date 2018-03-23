@@ -93,8 +93,9 @@ GREYS:
 
 .free-trial-div-register{
     text-align: center;
-    font-family: "Trebuchet MS";
+    font-family: "Trebuchet MS", Arial, sans-serif;
     position: inherit;
+    margin-top: -20px;
 
 }
 
@@ -114,6 +115,19 @@ GREYS:
     /*clear: left;*/
     /*padding-top: 100px;*/
 /*}*/
+/**Ensure the footer does not move up the page above other page content on medium devices*/
+@media (max-width: 1200px) {
+    .footer-alt{
+        margin-top: 50%;
+    }
+}
+
+/*Ensure the boxes don't overlap*/
+@media (max-width: 1110px) {
+    .box-tile {
+        margin-top: 5%;
+    }
+}
 
 /*Switch eg used on subscription page*/
 /* The switch - the box around the slider */
@@ -145,7 +159,22 @@ GREYS:
     .text-1{
         padding-right: 140px;
     }
+
+    .footer-alt{
+        margin-top: 75%;
+        clear: left;
+    }
 }
+
+@media (max-width: 600px) {
+    .footer-alt{
+        margin-top: 75%;
+        clear: left;
+        padding-top: 75%;
+    }
+}
+
+
 
 .switch {
     position: relative;
@@ -235,6 +264,18 @@ input:checked + .slider:before {
 
 }
 
+.explain-text{
+    clear: left;
+    padding-top: 60px;
+    padding-left: 20%;
+    font-size: 12px;
+}
+
+.explain-text-register{
+    padding-left: 15%;
+
+}
+
 .box-layout{
     background-image: url(http://www.odincasemanagement.com/wp-content/uploads/2015/11/absurdity.png?id=137) !important;
     height: 100%;
@@ -269,7 +310,7 @@ input:checked + .slider:before {
 }
 
 .alt-font{
-    font-family: "Trebuchet MS";
+    font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
 .tiles-heading{
@@ -674,10 +715,6 @@ a.dropdown-toggle.header-icon{
 .login-pgs-footer, .footer-alt {
     border-top: none !important;
     text-align: center;
-    /*position: absolute;*/
-    /*bottom: 20px;*/
-    /*left: 100px;*/
-    /*right: 100px;*/
 }
 
 .email-footer-alt{
@@ -1259,6 +1296,7 @@ a {
 .main-header .navbar-right {
     float: right;
 }
+
 @media (max-width: 991px) {
     .main-header .navbar-custom-menu a,
     .main-header .navbar-right a {

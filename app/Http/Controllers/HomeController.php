@@ -145,6 +145,7 @@ class HomeController extends BaseController
             'email'=> null,
             'selected' => null,
             'chosenTerm' => null,
+            'current' => null,
         ));
     }
 

@@ -45,14 +45,20 @@
                                         @if(gettype($item->fullUrls[$i]) != "object")
                                             {{--check if thumbnail image exists, otherwise will be an empty object--}}
                                             @if(gettype($item->urls[$i]) != "object")
-                                                <img src="{{$item->urls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                                <img src="{{$item->urls[$i]}}" alt="{{$item->urls[$i]}}"
+                                                     height="250px" width="250px" class="margin-bottom margin-right"
+                                                     style="word-wrap: break-word;"/>
                                             @else
-                                                <img src="{{$item->fullUrls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                                <img src="" alt="{{$item->fullUrls[$i]}}"
+                                                     height="250px" width="250px" class="margin-bottom margin-right"
+                                                     style="word-wrap: break-word;"/>
                                             @endif
                                         @else
                                             {{--check if thumbnail image exists, otherwise will be an empty object--}}
                                             @if(gettype($item->urls[$i]) != "object")
-                                                    <img src="{{$item->urls[$i]}}" alt="case note image" height="250px" width="250px" class="margin-bottom margin-right"/>
+                                                    <img src="{{$item->urls[$i]}}" alt="{{$item->urls[$i]}}"
+                                                         height="250px" width="250px" class="margin-bottom margin-right"
+                                                         style="word-wrap: break-word;"/>
                                             @else
                                                 Image preview not available
                                             @endif

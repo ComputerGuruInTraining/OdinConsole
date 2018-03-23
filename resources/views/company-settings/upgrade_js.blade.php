@@ -5,15 +5,16 @@
     const monthlyAmount1 = "<?php echo Config::get('constants.AMOUNT_M1');?>";
     const monthlyAmount2 = "<?php echo Config::get('constants.AMOUNT_M2');?>";
     const monthlyAmount3 = "<?php echo Config::get('constants.AMOUNT_M3');?>";
-    const quarterlyAmount1 = "<?php echo Config::get('constants.AMOUNT_Q1');?>";
-    const quarterlyAmount2 = "<?php echo Config::get('constants.AMOUNT_Q2');?>";
-    const quarterlyAmount3 = "<?php echo Config::get('constants.AMOUNT_Q3');?>";
+    const yearlyAmount1 = "<?php echo Config::get('constants.AMOUNT_Y1');?>";
+    const yearlyAmount2 = "<?php echo Config::get('constants.AMOUNT_Y2');?>";
+    const yearlyAmount3 = "<?php echo Config::get('constants.AMOUNT_Y3');?>";
 
     window.onload = function (){
         defaultPage();
 
         var selected = "<?php echo $selected?>";
         var chosenTerm = "<?php echo $chosenTerm?>";
+        var current = "<?php echo $current?>";
 
         //check to see if the selected variable has a value,
         // else it will be a blank string if initialised as null on controller ie routed via = '/subscription/upgrade'
@@ -22,6 +23,10 @@
         if(selected != ""){
 
             stripeConfig(selected, chosenTerm);
+        }
+
+        if(current !== ""){
+            displayCurrent(current);
         }
     };
 
@@ -35,7 +40,59 @@
         text1.style.color = "#333";
 
         retrieveTerm();
+    }
 
+    function displayCurrent(current){
+
+        if(current === 'plan1') {
+            //change box style
+            var currentPlan = document.getElementById('plan1-box');
+            currentPlan.style.backgroundColor = '#909090';
+            currentPlan.style.borderColor = '#333';
+
+            //change text on btn
+            var currentBtn = document.getElementById('plan1-btn');
+            currentBtn.innerHTML = 'Current Plan';
+
+            //disable current plan btn
+            currentBtn.setAttribute('disabled', 'disabled');
+        }else if(current === 'plan2') {
+            //change box style
+            var currentPlan = document.getElementById('plan2-box');
+            currentPlan.style.backgroundColor = '#909090';
+            currentPlan.style.borderColor = '#333';
+
+            //change text on btn
+            var currentBtn = document.getElementById('plan2-btn');
+            currentBtn.innerHTML = 'Current Plan';
+
+            //disable current plan btn
+            currentBtn.setAttribute('disabled', 'disabled');
+        }else if(current === 'plan3') {
+            //change box style
+            var currentPlan = document.getElementById('plan3-box');
+            currentPlan.style.backgroundColor = '#909090';
+            currentPlan.style.borderColor = '#333';
+
+            //change text on btn
+            var currentBtn = document.getElementById('plan3-btn');
+            currentBtn.innerHTML = 'Current Plan';
+
+            //disable current plan btn
+            currentBtn.setAttribute('disabled', 'disabled');
+        }else if(current === 'plan4') {
+            //change box style
+            var currentPlan = document.getElementById('plan4-box');
+            currentPlan.style.backgroundColor = '#909090';
+            currentPlan.style.borderColor = '#333';
+
+            //change text on btn
+            var currentBtn = document.getElementById('plan4-btn');
+            currentBtn.innerHTML = 'Contact to Update';
+
+            //disable current plan btn
+            currentBtn.setAttribute('disabled', 'disabled');
+        }
     }
 
     //get the period via toggle swtich and pass that to updateDisplay
@@ -46,11 +103,11 @@
 
         //update the value in term and update the amounts for passing through with the url
         if(Boolean(the_value) === true){
-            //the slider is to the right and the period = Paid Quarterly
-            term = "quarterly";
-            amount1 = quarterlyAmount1;
-            amount2 = quarterlyAmount2;
-            amount3 = quarterlyAmount3;
+            //the slider is to the right and the period = Paid yearly
+            term = "yearly";
+            amount1 = yearlyAmount1;
+            amount2 = yearlyAmount2;
+            amount3 = yearlyAmount3;
 
         }else{
             term = "monthly";
@@ -63,7 +120,7 @@
         updateDisplay(term);
     }
 
-    //change the view to display the quarterly or monthly amounts
+    //change the view to display the yearly or monthly amounts
     function updateDisplay(period){
 
         var plan1 = document.getElementById('plan1');
@@ -74,11 +131,11 @@
         var text2 = document.getElementById('text-2');
         var span = "<span class='tile-dollar'>$</span>";
 
-        if(period === "quarterly"){
-            //change the amounts to reflect quarterly amounts
-            plan1.innerHTML = span + quarterlyAmount1.toString();
-            plan2.innerHTML = span + quarterlyAmount2.toString();
-            plan3.innerHTML = span + quarterlyAmount3.toString();
+        if(period === "yearly"){
+            //change the amounts to reflect yearly amounts
+            plan1.innerHTML = span + yearlyAmount1.toString();
+            plan2.innerHTML = span + yearlyAmount2.toString();
+            plan3.innerHTML = span + yearlyAmount3.toString();
 
             //change the color of the text
             text1.style.color = "white";
@@ -119,8 +176,8 @@
                 return monthlyAmount1*100;
 
             }else{
-                //term == 'quarterly'
-                return quarterlyAmount1*100;
+                //term == 'yearly'
+                return (yearlyAmount1*100)*12;
             }
 
         }else if(planNum === 'plan2'){
@@ -129,8 +186,8 @@
                 return monthlyAmount2*100;
 
             }else{
-                //term == 'quarterly'
-                return quarterlyAmount2*100;
+                //term == 'yearly'
+                return (yearlyAmount2*100)*12;
             }
         }else if(planNum === 'plan3'){
 
@@ -138,8 +195,8 @@
                 return monthlyAmount3*100;
 
             }else{
-                //term == 'quarterly'
-                return quarterlyAmount3*100;
+                //term == 'yearly'
+                return (yearlyAmount3*100)*12;
             }
         }
     }
@@ -153,14 +210,24 @@
         var period = document.getElementById('period');
         period.value = term;
 
+//        var theUrl = 'https://odinlitemgmttest.azurewebsites.net/error-page';
+//
+//        var xmlHttp = new XMLHttpRequest();
+//        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+//        xmlHttp.send( null );
+//        return xmlHttp.responseText;
+
+        alert("Upgrade Plan is a Work in Progress. Please watch this space.");
+
         //open the checkout widget for payment processing
-        stripeConfig(planNum, term);
+//        stripeConfig(planNum, term);//fixme once complete, uncomment
 
     }
 
     function stripeConfig(planNum, term){
 
         var amount = planAmount(planNum, term);
+        var currency = 'USD';//todo: make user toggle and variable
 
         var tokenRes = document.getElementById('stripeToken');
         var tokenEmail = document.getElementById('stripeEmail');
@@ -186,7 +253,7 @@
             image:       logo,
             description: 'Upgrade',
             panelLabel:  'Pay',
-            currency: 'AUD',
+            currency: currency,
             locale: 'auto',
             zipCode: 'true',
             token:       token

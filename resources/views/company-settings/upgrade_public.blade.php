@@ -17,9 +17,7 @@ Upgrade Subscription
 
         .box-layout{
             background-image: none !important;
-            /*height: 100%;*/
             z-index: inherit;
-            /*margin-top: 20px;*/
         }
 
         .container-fluid{
@@ -52,8 +50,9 @@ Upgrade Subscription
 
         .free-trial-div{
             text-align: center;
-            font-family: "Trebuchet MS";
+            font-family: "Trebuchet MS", Arial, sans-serif;
             position: inherit;
+            margin-top: -20px;
 
         }
 
@@ -71,7 +70,7 @@ Upgrade Subscription
 
         .free-trial{
             clear: left;
-            padding-top: 100px;
+            padding-top: 50px;
         }
 
         .separator-line{
@@ -81,12 +80,6 @@ Upgrade Subscription
             margin: auto;
             z-index: inherit;
             margin-bottom: 40px;
-        }
-
-        @media (max-width: 1110px) {
-            .box-tile {
-                margin-top: 5%;
-            }
         }
 
     </style>

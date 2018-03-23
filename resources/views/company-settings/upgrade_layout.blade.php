@@ -13,7 +13,7 @@
 
     <div class="full-width">
         <!-- Rounded switch -->
-        <label class="switch"><p class="text-2 alt-font" id="text-2">Paid Quarterly</p>
+        <label class="switch"><p class="text-2 alt-font" id="text-2">Paid Yearly</p>
             <input type="checkbox" id="inputTerm" name="term-slider" value="term" onchange="retrieveTerm()">
             <span class="slider round"><p class="text-1 alt-font" id="text-1">Paid Monthly</p></span>
         </label>
@@ -31,7 +31,7 @@
 
 
     <div class="padding-left-x-lg">
-        <div class="box-tile">
+        <div class="box-tile" id="plan1-box">
             <div class="ribbon"><span>{{Config::get('constants.DISCOUNT1')}}% Off</span></div>
             <div class="tile-dollar-amount"><span class="tile-amount" id="plan1"><span
                             class="tile-dollar">$</span>29</span></div>
@@ -41,7 +41,7 @@
             </div>
             <br/><br/>
             <div>
-                <button type="button" class="btn btn-success tile-btn pay-btn"
+                <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
                         onclick="submitBtn('plan1');"
                         style="color:white !important; background-color: #28C309 !important;
                         font-size: 16px !important;">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="box-tile">
+        <div class="box-tile" id="plan2-box">
             <div class="ribbon"><span>{{Config::get('constants.DISCOUNT2')}}% Off</span></div>
             <div class="tile-dollar-amount"><span class="tile-amount" id="plan2"><span
                             class="tile-dollar">$</span>59</span></div>
@@ -61,14 +61,14 @@
             <br/><br/>
             <div>
                 <button class="btn btn-success tile-btn pay-btn" type="button" onclick="submitBtn('plan2');"
-                        style="color:white !important; background-color: #28C309 !important;
+                        id="plan2-btn" style="color:white !important; background-color: #28C309 !important;
                         font-size: 16px !important;">
                     Get Started
                 </button>
             </div>
         </div>
 
-        <div class="box-tile ">
+        <div class="box-tile" id="plan3-box">
             <div class="ribbon"><span>{{Config::get('constants.DISCOUNT3')}}% Off</span></div>
 
             <div class="tile-dollar-amount"><span class="tile-amount" id="plan3"><span
@@ -79,7 +79,7 @@
             </div>
             <br/><br/>
             <div>
-                <button class="btn btn-success tile-btn pay-btn"
+                <button class="btn btn-success tile-btn pay-btn" id="plan3-btn"
                         type="button" onclick="submitBtn('plan3');"
                         style="color:white !important; background-color: #28C309 !important;
                         font-size: 16px !important;">
@@ -88,15 +88,15 @@
             </div>
         </div>
 
-        <div class="box-tile ">
-            <div class="tile-dollar-amount" id="tile-text-amount">Call Us</div>
+        <div class="box-tile" id="plan4-box">
+            <div class="tile-dollar-amount" id="tile-text-amount">Contact Us</div>
             <div>
                 <br/><br/>
                 <span class="alt-font">21+ Users</span>
             </div>
             <br/><br/>
             <div>
-                <button type="button" class="btn btn-success tile-btn"
+                <button type="button" class="btn btn-success tile-btn" id="plan4-btn"
                         onclick="location.href='/support/users';"
                         style="color:white !important; background-color: #28C309 !important;
                         font-size: 16px !important;">
@@ -104,6 +104,10 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <div class="explain-text explain-text-register">
+        i) Prices quoted in USD
     </div>
 
     @if(isset($public))
