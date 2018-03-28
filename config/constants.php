@@ -9,11 +9,11 @@
 //api routes
 return [
 
-    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
-    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
+//    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
+//    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
     /*****Api*****/
-//    'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
-//    'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
+    'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
+    'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
 
     /*****Company Specs******/
     'COMPANY_EMAIL' => 'admin@odinlite.net',
@@ -47,7 +47,20 @@ return [
     'DISCOUNT1' => 34,
     'DISCOUNT2' => 34,
     'DISCOUNT3' => 30,
-    'CONVERSION_RATE' => 1.293137 /***USD TO AUD CONVERSION**/
+//    'CONVERSION_RATE' => 1.293137, /***USD TO AUD CONVERSION**/
+
+    //stripe plan ids
+    'PLAN1_MONTHLY' => '',
+    'PLAN1_YEARLY' => '',
+    'PLAN2_MONTHLY' => '',
+    'PLAN2_YEARLY' => '',
+    'PLAN3_MONTHLY' => '',
+    'PLAN3_YEARLY' => '',
+    'PLAN4_MONTHLY' => '',
+    'PLAN4_YEARLY' => '',
+    'TEST_PLAN1_MONTHLY' => 'plan_CXk0vEO3OII8ZU',
+    'TEST_PLAN1_YEARLY' => 'plan_CXk0hfbFwLLvVd',
+
 
 
 ];

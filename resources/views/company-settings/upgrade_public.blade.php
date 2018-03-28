@@ -82,6 +82,10 @@ Upgrade Subscription
             margin-bottom: 40px;
         }
 
+        .explain-text-public{
+            padding-left: 20% !important;
+        }
+
     </style>
 @stop
 

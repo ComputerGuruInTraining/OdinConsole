@@ -118,6 +118,8 @@ Route::get('/register', 'UserController@registerCompany');
 //MOE: give url from Start Free Trial = /register/start-free-trial
 Route::get('/register/{trial}', 'UserController@registerCompany');
 
+Route::get('/register/plan/{plan}/{term}', 'UserController@registerCompany');
+
 Route::post('/register/company', 'UserController@postRegister');
 
 Route::get('location', 'LocationController@index');
@@ -178,15 +180,16 @@ Route::post('/webhooks/failed', 'UserController@failedEmail');
 
 //returns the login page for non logged-in users that select Get Started btn on www.odincasemanagement.com marketing website
 //Moe Get Started btn
-Route::get('/login/{plan}/{term}', 'HomeController@getIndex');
+Route::get('/login/upgrade/{plan}/{term}', 'HomeController@getIndex');
+
 
 //Usage: users that navigated via www.odincasemanagement.com Get Started btn are logged in via
 //this function and redirected to /upgrade/subscription/{plan}/{term}
 // the upgrade subscription page with credit card widget in the foreground
 //INTERNAL ROUTE ONLY
-Route::post('/login/{plan}/{term}', 'HomeController@postIndex');
+Route::post('/login/upgrade/{plan}/{term}', 'HomeController@postIndex');
 
-//returns the pricing model page for non logged-in users
+//returns the pricing model page for non logged-in users ie public route
 Route::get('/upgrade', 'HomeController@upgradePublic');
 
 //Usage: routed to via Upgrade btn on subscription>settings page and
@@ -202,7 +205,12 @@ Route::get('/upgrade/subscription/{plan}/{term}', 'UserController@upgradePlan');
 //credit card details have been submitted
 Route::post('/subscription/payment', 'UserController@paymentUpgrade');
 
+Route::get('subscription/upgrade/nonprimary', function(){
 
+    return Redirect::to('/subscription/upgrade')->withErrors('Plan upgrades must be requested by the 
+    primary contact. Details of primary contact can be found and edited in Settings>Company.');
+
+});
 //Route USED???
 //Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 

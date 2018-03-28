@@ -12,6 +12,8 @@ use Redirect;
 use Hash;
 use Config;
 use DateTime;
+use Carbon\Carbon;
+
 
 class UserController extends Controller
 {
@@ -32,6 +34,11 @@ class UserController extends Controller
 
                 $compId = session('compId');
 
+                $currentUser = session('name');
+
+                $url = 'user';
+
+                //Users tab
                 $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -40,6 +47,9 @@ class UserController extends Controller
 
                 $users = json_decode((string)$response->getBody());
 
+                $users = array_sort($users, 'last_name', SORT_ASC);
+
+                //company tab
                 $resp = $client->get(Config::get('constants.API_URL').'company/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -48,6 +58,7 @@ class UserController extends Controller
 
                 $compInfo = json_decode((string)$resp->getBody());
 
+                //subscription tab
                 $jsonResponse = $client->get(Config::get('constants.API_URL').'subscription/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
@@ -60,9 +71,7 @@ class UserController extends Controller
 
 //                dd($subscription);//null at this point. why not false??? must count>0! ah because only 1 user ! ugh//fixme
 
-                $users = array_sort($users, 'last_name', SORT_ASC);
 
-                $url = 'user';
 
                 if(isset($subscriptionStatus->trial)){
 
@@ -82,11 +91,7 @@ class UserController extends Controller
 
                         $json = json_decode($date, true);
 
-//                        dd($json, $json['date']);
-
                         $date = formatDates($json['date']);
-
-//                        dd($date);
 
 //                        dd(gettype($subscriptionStatus->trial_ends_at), $subscriptionStatus->trial_ends_at);
 
@@ -95,7 +100,8 @@ class UserController extends Controller
                             'compInfo' => $compInfo,
                             'url' => $url,
                             'subscriptionStatus' => $subscriptionStatus->trial,
-                            'trialEndsAt' => $date
+                            'trialEndsAt' => $date,
+                            'currentUser' => $currentUser
                         ));
 
                     }
@@ -106,7 +112,9 @@ class UserController extends Controller
                         'users' => $users,
                         'compInfo' => $compInfo,
                         'url' => $url,
-                        'subscriptionStatus' => $subscriptionStatus->trial));
+                        'subscriptionStatus' => $subscriptionStatus->trial,
+                        'currentUser' => $currentUser
+                    ));
 
                 }else if(isset($subscriptionStatus->subscriptions)){
 
@@ -116,7 +124,10 @@ class UserController extends Controller
                         'users' => $users,
                         'compInfo' => $compInfo,
                         'url' => $url,
-                        'subscriptionStatus' => $subscriptionStatus->subscriptions));//array
+                        'subscriptionStatus' => $subscriptionStatus->subscriptions,
+                        'currentUser' => $currentUser
+
+                    ));//array
 
                 }
 
@@ -145,7 +156,6 @@ class UserController extends Controller
         } catch (\TokenMismatchException $mismatch) {
 
             return Redirect::to('/');
-
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading users';
@@ -618,7 +628,7 @@ class UserController extends Controller
             return 'post successful';
     }
 
-    /**returns the Subscription page for logged in users***/
+    /**returns the Subscription Pricing Model page for logged in users***/
     public function upgrade(){
         try {
             if (session()->has('token')) {
@@ -632,12 +642,25 @@ class UserController extends Controller
 
                 //todo: get the current subscription, if any, via the api, or perhaps display end trial date again on upgrade page??
                 $current = null;//fixme
+                $chosenTerm = null;
+
+                $subscription = getSubscription();
+
+                $inTrial = $subscription->get('inTrial');
+                $trialEndsAt = $subscription->get('trialEndsAt');
+                $current = $subscription->get('subscriptionPlan');
+                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 return view('company-settings/upgrade')->with(array(
-                    'email'=> $email,
+                    'email' => $email,
                     'selected' => null,
-                    'chosenTerm' => null,
+                    'chosenTerm' => $chosenTerm,
                     'current' => $current,//todo: testing only atm
+                    'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                    'public' => null,
+                    'inTrial' => $inTrial,
+                    'trialEndsAt' => $trialEndsAt
                     ////current should be set to null for public access etc; other values should be plan1, plan2, plan3, plan4/tailor
 
                 ));
@@ -647,11 +670,12 @@ class UserController extends Controller
                 return Redirect::to('/login');
             }
 
-        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
             $err = 'Error displaying subscription plan';
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
+//            dd($error);
             $e = 'Error displaying subscription page';
             return view('error-msg')->with('msg', $e);
 
@@ -674,33 +698,77 @@ class UserController extends Controller
         }
     }
 
+    //have plan, period, email, stripeToken
     public function paymentUpgrade(Request $request){
         try {
             if (session()->has('token')) {
 
+                //todo: ??get plan chosen
+                $plan = $request->plan;
+                $period = $request->period;
+                $stripeToken = $request->stripeToken;
+                $trialEndsAt = $request->trialEndsAt;
+
+                $success = "";
+
+                //create subscription
+                if(isset($stripeToken)) {
+
+//                    dd($trialEndsAt, $stripeToken, $plan, $period);
+                    $success = postSubscription($plan, $stripeToken, $period, $trialEndsAt);
+
+                }
+//                else{
+//                //todo: swap subscription maybe postSubscription but swap if no stripeToken
+//                    // except also update credit card details use this perhaps
+//                    $success = postSwapSubscription($plan, $period);
+//                }
+
                 //use stripeEmail returned from payment request
                 $email = $request->stripeEmail;
 
-                $plan = $request->plan;
+                $subscription = getSubscription();
 
-                //todo: atm , assumed successful
-                $confirm = 'Plan successfully updated. Receipt for the payment has been emailed to '.$email;
-//                $confirm = 'Plan failed to update.'; + reason
+                $inTrial = $subscription->get('inTrial');
+                $trialEndsAt = $subscription->get('trialEndsAt');
+                $current = $subscription->get('subscriptionPlan');
+                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTrial = $subscription->get('subscriptionTrial');
 
-                //todo: get plan chosen
+                if($success) {
+                    $confirm = 'SUCCESS! Plan updated. Receipt for the payment has been emailed to ' . $email;
 
-                return view('company-settings/upgrade')
-                    ->with(array(
-                        'email'=> $email,
-                        'confirm' => $confirm,
-                        'selected' => null,
-                        'chosenTerm' => null,
-                        'current' => $plan,//todo: testing only atm
+                    return view('company-settings/upgrade')
+                        ->with(array(
+                            'email' => $email,
+                            'confirm' => $confirm,
+                            'selected' => null,
+                            'chosenTerm' => $chosenTerm,
+                            'current' => $current,//todo: testing only atm
+                            'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                            'public' => null,
+                            'inTrial' => $inTrial,
+                            'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
 //                        'modified' => $modified
-                    ));
+                        ));
+                }else{
+                    //todo: check payment successful
+                    //post unsuccessful but payment assumed successful. Reason???
+
+                    $msg = 'Plan failed to update.'; //todo: + reason
+
+                    return Redirect::to('/subscription/upgrade')->withErrors($msg);
+                }
 
             }//user does not have a token
             else {
+
+                $plan = $request->plan;
+                $period = $request->period;
+
+                if($plan != null)
+                    return app('App\Http\Controllers\HomeController')->getIndex($plan, $period);
+
                 return Redirect::to('/login');
             }
 
@@ -744,7 +812,15 @@ class UserController extends Controller
                 $email = $user->email;
 
                 //todo: get current subscription
-                $current = null;//fixme
+//                $current = null;//fixme
+
+                $subscription = getSubscription();
+
+                $inTrial = $subscription->get('inTrial');
+                $trialEndsAt = $subscription->get('trialEndsAt');
+                $current = $subscription->get('subscriptionPlan');
+                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 return view('company-settings/upgrade')
                     ->with(array(
@@ -752,7 +828,10 @@ class UserController extends Controller
                     'selected' => $plan,
                     'chosenTerm' => $term,
                     'current' => $current,
-//                        'modified' => $modified
+                    'public' => null,
+                    'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                    'inTrial' => $inTrial,
+                    'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
                 ));
 
             }//user does not have a token
