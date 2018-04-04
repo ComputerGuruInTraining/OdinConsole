@@ -1163,6 +1163,7 @@ if (!function_exists('getSubscription')) {
 
             $subscriptionStatus = json_decode((string)$response->getBody());
 
+
             $inTrial = null;
             $trialEndsAt = null;
             $subscriptionPlan = null;
@@ -1182,8 +1183,6 @@ if (!function_exists('getSubscription')) {
                     //although the result here is a string in the json format
                     $trialEndsAt = jsonDate($subscriptionStatus->trial_ends_at);
 
-//                    $trialEndsAt = $date;
-
                 }else{
                     $inTrial = false;
                 }
@@ -1197,12 +1196,15 @@ if (!function_exists('getSubscription')) {
 
                     //if any of the subscriptions have not been cancelled
                     //the non cancelled subscription will be the active subscription, there should only be 1 of these.
+//                    if(!isset($sub->ends_at)){
                     if($sub->ends_at == null){
 
                         $activeSub = $sub;
 
                         //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
                         $stripePlan = stripePlan($activeSub->stripe_plan);
+
+//                        dd($stripePlan, $activeSub->stripe_plan);
 
                         $subscriptionPlan = $stripePlan->get('planNum');
 
@@ -1211,7 +1213,6 @@ if (!function_exists('getSubscription')) {
 
                         if(isset($sub->trial_ends_at))
                         $subscriptionTrial = formatDates($sub->trial_ends_at);
-
 
                     }
                 }
@@ -1260,6 +1261,47 @@ if (!function_exists('stripePlan')) {
 
             }else if($planId == Config::get('constants.TEST_PLAN1_YEARLY')){
                 $planNum = 'plan1';
+                $term = 'yearly';
+            }
+        }else{
+            if($planId == Config::get('constants.PLAN1_MONTHLY')){
+
+                $planNum = 'plan1';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN2_MONTHLY')){
+
+                $planNum = 'plan2';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN3_MONTHLY')) {
+
+                $planNum = 'plan3';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN4_MONTHLY')){
+
+                $planNum = 'plan4';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN1_YEARLY')){
+
+                $planNum = 'plan1';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN2_YEARLY')){
+
+                $planNum = 'plan2';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN3_YEARLY')){
+
+                $planNum = 'plan3';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN4_YEARLY')){
+
+                $planNum = 'plan4';
                 $term = 'yearly';
             }
         }
