@@ -115,11 +115,6 @@ Route::get('/settings', 'UserController@index');
 // todo cont.: and register and choose between start free trial or payment plan immediatley
 Route::get('/register', 'UserController@registerCompany');
 
-//MOE: give url from Start Free Trial = /register/start-free-trial
-Route::get('/register/{trial}', 'UserController@registerCompany');
-
-Route::get('/register/plan/{plan}/{term}', 'UserController@registerCompany');
-
 Route::post('/register/company', 'UserController@postRegister');
 
 Route::get('location', 'LocationController@index');
@@ -178,10 +173,14 @@ Route::post('/webhooks/failed', 'UserController@failedEmail');
 
 /*****Subscription Routes***/
 
+//MOE: give url from Start Free Trial = /register/start-free-trial
+Route::get('/register/{trial}', 'UserController@registerCompany');
+
+Route::get('/register/plan/{plan}/{term}', 'UserController@registerCompany');
+
 //returns the login page for non logged-in users that select Get Started btn on www.odincasemanagement.com marketing website
 //Moe Get Started btn
 Route::get('/login/upgrade/{plan}/{term}', 'HomeController@getIndex');
-
 
 //Usage: users that navigated via www.odincasemanagement.com Get Started btn are logged in via
 //this function and redirected to /upgrade/subscription/{plan}/{term}

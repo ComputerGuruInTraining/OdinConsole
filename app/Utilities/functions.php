@@ -1229,7 +1229,7 @@ if (!function_exists('getSubscription')) {
     }
 }
 
-if (!function_exists('stripePlan')) {
+if (!function_exists('jsonDate')) {
 
     function jsonDate($jsonStringDate)
     {

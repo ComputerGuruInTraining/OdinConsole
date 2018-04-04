@@ -257,6 +257,7 @@
 
     }
 
+    //create new subscription request, not in trial, accept payment now
     function submitBtn(planNum){
 
         //update the values in the hidden input values for passing through to the controller
@@ -266,13 +267,12 @@
         var period = document.getElementById('period');
         period.value = term;
 
-        //check if on trial period
-
         //open the checkout widget for payment processing
         stripeConfig(planNum, term);
 
     }
 
+    //create new subscription request, in trial, just collect credit card details now and pay $0
     function submitDetailsBtn(planNum){
 
         //update the values in the hidden input values for passing through to the controller
@@ -288,12 +288,7 @@
             var trial = document.getElementById('trialEndsAt');
             trial.value = trialEndsAt;
         }
-        //if user is not logged in, they will be redirected to login page with a custom msg
-//        userLoggedIn(planNum, term);
 
-//        alert("Upgrade Plan is a Work in Progress. Please watch this space.");
-
-        //check if on trial period
         //open the checkout widget for payment processing
         stripeConfig(planNum, term, 0);
 
@@ -307,6 +302,9 @@
 
         var period = document.getElementById('period');
         period.value = term;
+
+        //todo proper swap code
+
 
         alert("Swap Plan is a Work in Progress. Please watch this space.");
 
@@ -353,15 +351,17 @@
 
                 var logo = "<?php echo asset("/bower_components/AdminLTE/dist/img/odinlogoSm.jpg")?>";
                 var company = "<?php echo Config::get('constants.COMPANY_NAME');?>";
-                var key = "<?php echo Config::get('constants.STRIPE_TEST_KEY');?>";
+                var key = "<?php echo Config::get('services.stripe.key');;?>";
                 var userEmail = "<?php echo $email?>";
 
                 var token = function (res) {
 
-                    tokenRes.value = res.id;
-                    tokenEmail.value = res.email;
+                        console.log(res);
 
-                    document.getElementById("stripeForm").submit();
+                        tokenRes.value = res.id;
+                        tokenEmail.value = res.email;
+
+                        document.getElementById("stripeForm").submit();
                 };
 
                 if (amount === undefined) {
@@ -372,7 +372,7 @@
 
                     StripeCheckout.open({
                         key: key,
-                        amount: amount,
+                        amount: 001,
                         name: company,
                         email: userEmail,
                         image: logo,
@@ -383,6 +383,10 @@
                         zipCode: true,
                         token: token
                     });
+
+
+
+
                 } else {
 
                     panelLabel = 'Pay $0';

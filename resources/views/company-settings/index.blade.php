@@ -262,25 +262,35 @@
             {{--trial variable has been returned, could be true or false--}}
 
         {{--Trial or Plan Details--}}
-        @if($subscriptionStatus == true)
-            <p class="nonlist-heading">Trial period ends:</p>
+        @if(isset($trial))
+            @if($trial === true)
+                {{--on trial, not subscribed--}}
+                <p class="nonlist-heading">Trial period ends:</p>
 
-            <p>{{$trialEndsAt}}</p>
-        @else
-            <p class="nonlist-heading">Your Plan:</p>
-            {{--todo: variable--}}
-            {{--{{$subscriptionStatus}}--}}
-            <p>Eg Up to 5 users @ $29</p>
+                <p>{{$trialEndsAt}}</p>
+            @else
 
-            <br/>
+                @if(!isset($numUsers))
+                        {{--not on trial, not on subscription--}}
 
-            {{--Billing Cycle Details--}}
+                @else
+                    {{--on subscription--}}
+                    <p class="nonlist-heading">Your Plan:</p>
+                    {{--todo: variable--}}
+                    <p>
+                        {{$numUsers}}
+                    </p>
 
-            <p class="nonlist-heading">Billing Cycle:</p>
-            {{--todo: variable--}}
+                    <br/>
 
-            <p>Eg Monthly OR Yearly</p>
+                    {{--Billing Cycle Details--}}
 
+                    <p class="nonlist-heading">Billing Cycle:</p>
+                    {{--todo: variable--}}
+
+                    <p>{{$chosenTerm}}</p>
+                @endif
+            @endif
         @endif
 
         <br/>

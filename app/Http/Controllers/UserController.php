@@ -39,7 +39,7 @@ class UserController extends Controller
                 $url = 'user';
 
                 //Users tab
-                $response = $client->get(Config::get('constants.API_URL').'user/list/' . $compId, [
+                $response = $client->get(Config::get('constants.API_URL') . 'user/list/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -50,7 +50,7 @@ class UserController extends Controller
                 $users = array_sort($users, 'last_name', SORT_ASC);
 
                 //company tab
-                $resp = $client->get(Config::get('constants.API_URL').'company/' . $compId, [
+                $resp = $client->get(Config::get('constants.API_URL') . 'company/' . $compId, [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token,
                     ]
@@ -58,86 +58,121 @@ class UserController extends Controller
 
                 $compInfo = json_decode((string)$resp->getBody());
 
-                //subscription tab
-                $jsonResponse = $client->get(Config::get('constants.API_URL').'subscription/' . $compId, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
-                ]);
+                $subscription = getSubscription();
 
-                //response could be either 1) $subscriptionStatus->trial = false or true, $subscriptionStatus->trial_ends_at = date if inTrial
-                //or 2)$subscriptionStatus->subscriptions (entries in db)
-                $subscriptionStatus = json_decode((string)$jsonResponse->getBody());
+                //trial
+                $inTrial = $subscription->get('inTrial');
+                $trialEndsAt = $subscription->get('trialEndsAt');
+                //subscription
+                $current = $subscription->get('subscriptionPlan');
+                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTrial = $subscription->get('subscriptionTrial');
 
-//                dd($subscription);//null at this point. why not false??? must count>0! ah because only 1 user ! ugh//fixme
+                $numUsers = null;
 
-
-
-                if(isset($subscriptionStatus->trial)){
-
-                    if(isset($subscriptionStatus->trial_ends_at)) {
-
-                        //convert date object to string
-                        //format as friendly string
-
-
-//                        $date = date_create($subscriptionStatus->trial_ends_at);
-
-                        //$subscriptionStatus->trial_ends_at is an object of stdclass
-                        //php manual advises will json_encode to a simple js object
-                        //although the result here is a string in the json format
-
-                        $date = json_encode($subscriptionStatus->trial_ends_at);//$date = a json string
-
-                        $json = json_decode($date, true);
-
-                        $date = formatDates($json['date']);
-
-//                        dd(gettype($subscriptionStatus->trial_ends_at), $subscriptionStatus->trial_ends_at);
-
-                        return view('company-settings.index')->with(array(
-                            'users' => $users,
-                            'compInfo' => $compInfo,
-                            'url' => $url,
-                            'subscriptionStatus' => $subscriptionStatus->trial,
-                            'trialEndsAt' => $date,
-                            'currentUser' => $currentUser
-                        ));
-
-                    }
-//                    dd($subscriptionStatus->trial,  $subscriptionStatus->trial_ends_at);
-
-
-                    return view('company-settings.index')->with(array(
-                        'users' => $users,
-                        'compInfo' => $compInfo,
-                        'url' => $url,
-                        'subscriptionStatus' => $subscriptionStatus->trial,
-                        'currentUser' => $currentUser
-                    ));
-
-                }else if(isset($subscriptionStatus->subscriptions)){
-
-//                    dd($subscriptionStatus->subscriptions);
-
-                    return view('company-settings.index')->with(array(
-                        'users' => $users,
-                        'compInfo' => $compInfo,
-                        'url' => $url,
-                        'subscriptionStatus' => $subscriptionStatus->subscriptions,
-                        'currentUser' => $currentUser
-
-                    ));//array
-
+                //convert planNum into numUsers
+                if(isset($current)) {
+                    $numUsers = planNumUsers($current);
                 }
+                //subscription tab
+                /*  $jsonResponse = $client->get(Config::get('constants.API_URL').'subscription/' . $compId, [
+                      'headers' => [
+                          'Authorization' => 'Bearer ' . $token,
+                      ]
+                  ]);
+
+                  //response could be either 1) $subscriptionStatus->trial = false or true, $subscriptionStatus->trial_ends_at = date if inTrial
+                  //or 2)$subscriptionStatus->subscriptions (entries in db)
+                  $subscriptionStatus = json_decode((string)$jsonResponse->getBody());
+
+  //                dd($subscription);//null at this point. why not false??? must count>0! ah because only 1 user ! ugh//fixme
+
+
+
+                  if(isset($subscriptionStatus->trial)){
+
+                      if(isset($subscriptionStatus->trial_ends_at)) {
+
+                          //convert date object to string
+                          //format as friendly string
+
+
+  //                        $date = date_create($subscriptionStatus->trial_ends_at);
+
+                          //$subscriptionStatus->trial_ends_at is an object of stdclass
+                          //php manual advises will json_encode to a simple js object
+                          //although the result here is a string in the json format
+
+                          $date = json_encode($subscriptionStatus->trial_ends_at);//$date = a json string
+
+                          $json = json_decode($date, true);
+
+                          $date = formatDates($json['date']);
+
+  //                        dd(gettype($subscriptionStatus->trial_ends_at), $subscriptionStatus->trial_ends_at);
+
+                          //on trial
+                          return view('company-settings.index')->with(array(
+                              'users' => $users,
+                              'compInfo' => $compInfo,
+                              'url' => $url,
+                              'trial' => $subscriptionStatus->trial,
+                              'trialEndsAt' => $date,
+                              'currentUser' => $currentUser
+                          ));
+
+                      }
+  //                    dd($subscriptionStatus->trial,  $subscriptionStatus->trial_ends_at);
+
+                      //not on trial, not on subscription
+                      return view('company-settings.index')->with(array(
+                          'users' => $users,
+                          'compInfo' => $compInfo,
+                          'url' => $url,
+                          'trial' => $subscriptionStatus->trial,
+                          'currentUser' => $currentUser
+                      ));
+
+                  }else if(isset($subscriptionStatus->subscriptions)){
+
+                      $subscriptions = $subscriptionStatus->subscriptions;
+
+                      $activeSub = null;
+                      //grab the active subscription, not cancelled subscriptions
+                      foreach($subscriptions as $subscription){
+                          if($subscription->ends_at == null){
+                              //the first subscription without a cancelled date will be the activeSub (ordered by updated_at)
+                              //assumption: only 1 active subscription
+                              $activeSub = $subscription;
+                              break;
+                          }
+                      }*/
+
+                //on subscription
+                return view('company-settings.index')->with(array(
+                    //company and users tab
+                    'users' => $users,
+                    'compInfo' => $compInfo,
+                    'url' => $url,
+                    //subscription tab, if subscription
+                    'numUsers' => $numUsers,
+                    'chosenTerm' => $chosenTerm,
+                    'subscriptionTrial' => $subscriptionTrial,
+                    //subscription tab, if no subscription
+                    'trial' => $inTrial,
+                    'trialEndsAt' => $trialEndsAt,
+
+                    'currentUser' => $currentUser,
+                ));//array
+
+//            }
 
 //                return view('company-settings.index')->with(array(
 //                    'users' => $users,
 //                    'compInfo' => $compInfo,
 //                    'url' => $url));
 
-            }
-            //user does not have a token
+            } //user does not have a token
             else {
                 return Redirect::to('/login');
             }

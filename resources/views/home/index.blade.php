@@ -76,7 +76,7 @@
                                 <div>
                                     <br/>
                                     New to ODIN Case Management?
-                                    <a href="/register" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
+                                    <a href="/register/start-free-trial" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
                                     to get started
                                 </div>
                             @else
