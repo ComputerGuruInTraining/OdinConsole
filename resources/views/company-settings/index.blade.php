@@ -276,7 +276,6 @@
                 @else
                     {{--on subscription--}}
                     <p class="nonlist-heading">Your Plan:</p>
-                    {{--todo: variable--}}
                     <p>
                         {{ucfirst($numUsers)}}
                     </p>
@@ -286,9 +285,8 @@
                     {{--Billing Cycle Details--}}
 
                     <p class="nonlist-heading">Billing Cycle:</p>
-                    {{--todo: variable--}}
 
-                    <p>{{ucwords($chosenTerm)}}</p>
+                    <p>{{ucwords($subscriptionTerm)}}</p>
                 @endif
             @endif
         <br/>

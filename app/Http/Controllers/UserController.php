@@ -65,7 +65,7 @@ class UserController extends Controller
                 $trialEndsAt = $subscription->get('trialEndsAt');
                 //subscription
                 $current = $subscription->get('subscriptionPlan');
-                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTerm = $subscription->get('subscriptionTerm');
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 $numUsers = null;
@@ -156,7 +156,7 @@ class UserController extends Controller
                     'url' => $url,
                     //subscription tab, if subscription
                     'numUsers' => $numUsers,
-                    'chosenTerm' => $chosenTerm,
+                    'subscriptionTerm' => $subscriptionTerm,
                     'subscriptionTrial' => $subscriptionTrial,
                     //subscription tab, if no subscription
                     'trial' => $inTrial,
@@ -684,15 +684,16 @@ class UserController extends Controller
                 $inTrial = $subscription->get('inTrial');
                 $trialEndsAt = $subscription->get('trialEndsAt');
                 $current = $subscription->get('subscriptionPlan');
-                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTerm = $subscription->get('subscriptionTerm');
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 return view('company-settings/upgrade')->with(array(
                     'email' => $email,
                     'selected' => null,
                     'chosenTerm' => $chosenTerm,
-                    'current' => $current,//todo: testing only atm
+                    'current' => $current,
                     'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                    'subscriptionTerm' => $subscriptionTerm,
                     'public' => null,
                     'inTrial' => $inTrial,
                     'trialEndsAt' => $trialEndsAt
@@ -767,7 +768,7 @@ class UserController extends Controller
                 $inTrial = $subscription->get('inTrial');
                 $trialEndsAt = $subscription->get('trialEndsAt');
                 $current = $subscription->get('subscriptionPlan');
-                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTerm = $subscription->get('subscriptionTerm');
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 if($success) {
@@ -778,9 +779,10 @@ class UserController extends Controller
                             'email' => $email,
                             'confirm' => $confirm,
                             'selected' => null,
-                            'chosenTerm' => $chosenTerm,
+                            'chosenTerm' => $subscriptionTerm,
                             'current' => $current,//todo: testing only atm
                             'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                            'subscriptionTerm' => $subscriptionTerm,
                             'public' => null,
                             'inTrial' => $inTrial,
                             'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
@@ -851,10 +853,12 @@ class UserController extends Controller
 
                 $subscription = getSubscription();
 
+//                dd($subscription, $plan, $term);
+
                 $inTrial = $subscription->get('inTrial');
                 $trialEndsAt = $subscription->get('trialEndsAt');
                 $current = $subscription->get('subscriptionPlan');
-                $chosenTerm = $subscription->get('subscriptionTerm');
+                $subscriptionTerm = $subscription->get('subscriptionTerm');
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 return view('company-settings/upgrade')
@@ -865,6 +869,7 @@ class UserController extends Controller
                     'current' => $current,
                     'public' => null,
                     'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
+                    'subscriptionTerm' => $subscriptionTerm,
                     'inTrial' => $inTrial,
                     'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
                 ));
