@@ -151,6 +151,7 @@ class HomeController extends BaseController
             'current' => null,
             'inTrial' => false,
             'subscriptionTrial' => null,//must be sent to view if $current != null
+            'subscriptionTerm' => null,
             'trialEndsAt' => null
 
         ));

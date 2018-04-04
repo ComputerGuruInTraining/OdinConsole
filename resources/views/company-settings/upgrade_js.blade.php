@@ -31,21 +31,21 @@
 
             }else {
                 //create subscription option 1: with trial $0
-//                todo: test this
-                /*  var inTrial = "<?php echo $inTrial?>";
+
+                var inTrial = "<?php echo $inTrial?>";//converts the boolean true to 1
+
                  if(inTrial !== ""){
-                 if(inTrial === true){
-                 stripeConfig(selected, chosenTerm,0);
+                     if(inTrial){
+                        stripeConfig(selected, chosenTerm, 0);
+                     }else{
+                         //create subscription option 2: no trial $Costs
+                         stripeConfig(selected, chosenTerm);
+                     }
 
-
+                 }else {
+                     //create subscription option 2: no trial $Costs
+                     stripeConfig(selected, chosenTerm);
                  }
-
-                 }else{
-                 //create subscription option 2: no trial $Costs
-                 stripeConfig(selected, chosenTerm);
-                 }
-                 }*/
-                stripeConfig(selected, chosenTerm);
             }
         }
 
@@ -68,6 +68,23 @@
     }
 
     function displayCurrent(current){
+
+        var subscriptionTerm = "<?php echo $subscriptionTerm?>";
+        var inputTerm = document.getElementById('inputTerm');
+
+        if(subscriptionTerm === "yearly"){
+
+//            inputTerm should be checked
+            inputTerm.checked = 1;
+
+        }else{
+            //not checked
+            inputTerm.checked = 0;
+
+        }
+
+        //to change the display of the billing cycle toggle switch and the amounts displaying on the plans
+        retrieveTerm();
 
         if(current === 'plan1') {
             //change box style
@@ -368,7 +385,7 @@
 
                     amount = planAmount(planNum, term);
                     panelLabel = 'Pay';
-                    desc = 'Create Subscription';
+                    desc = 'Create Subscription - ' + term;
 
                     StripeCheckout.open({
                         key: key,
@@ -383,9 +400,6 @@
                         zipCode: true,
                         token: token
                     });
-
-
-
 
                 } else {
 
