@@ -135,8 +135,7 @@
             }
         }
 
-        function setInfoWindow(marker, position, lat, long)
-        {
+        function setInfoWindow(marker, position, lat, long) {
             /*Gathering accurate date and time and formatting*/
             //convert date to current timezone and user-friendly date and time
 

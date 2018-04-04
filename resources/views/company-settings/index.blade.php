@@ -12,6 +12,8 @@
 
             document.getElementById('loadPgTab').className += " active";
 
+//            enableUpgradeBtn();
+
         }, false);
 
         function openSetting(evt, name) {
@@ -34,6 +36,8 @@
             document.getElementById(name).style.display = "block";
             evt.currentTarget.className += " active";
         }
+
+
     </script>
 @stop
 @section('custom-styles')
@@ -89,7 +93,7 @@
 @section('page-content')
     <div class="tab">
         <button class="tablinks" onclick="openSetting(event, 'Users')" id="loadPgTab">Users</button>
-        <button class="tablinks" onclick="openSetting(event, 'Company')">Company Info</button>
+        <button class="tablinks" onclick="openSetting(event, 'Company')">Company</button>
         <button class="tablinks" onclick="openSetting(event, 'Subscription')">Subscription</button>
     </div>
 
@@ -143,58 +147,107 @@
     <div id="Company" class="tabcontent padding-top">
         <table class="table no-borders">
             <div class="col-md-10">
-            <tr>
-                <th class="col-md-2">
+
+                <p class="nonlist-heading">
                     Company Name:
-                </th>
-                <td>
+                </p>
+                <p>
                     {{$compInfo->company->name}}
-                </td>
-            </tr>
-            @if($compInfo->company->owner != null)
-                <tr>
-                    <th>
-                        Owner:
-                    </th>
-                    <td>
+                </p>
+                <br/>
+
+                @if($compInfo->company->owner != null)
+                    <p class="nonlist-heading">
+                    Owner:
+                    </p>
+                    <p>
                         {{$compInfo->company->owner}}
-                    </td>
-                </tr>
-            @endif
-            <tr>
-                <th>
+                    </p>
+                @endif
+                <br/>
+
+                <p class="nonlist-heading">
                     Primary Contact:
-                </th>
+                </p>
                 @if($compInfo->contact != null)
-                    <td>
+                    <p>
                         {{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}
-                    </td>
+                    </p>
                 @else
-                    <td>
+                    <p>
                         Contact has been deleted via Settings>Users Page
-                    </td>
+                    </p>
                 @endif
-            </tr>
-            <tr>
-                <th>
+                <br/>
+
+                <p class="nonlist-heading">
                     Contact Email:
-                </th>
+                </p>
                 @if($compInfo->contact != null)
-                <td>
-                    {{$compInfo->contact->email}}
-                </td>
+                    <p>
+                        {{$compInfo->contact->email}}
+                    </p>
                 @else
-                    <td>
+                    <p>
                         Contact has been deleted via Settings>Users Page
-                    </td>
+                    </p>
                 @endif
-            </tr>
+                <br/>
+
+            {{--<tr>--}}
+                {{--<th class="col-md-2">--}}
+                    {{--Company Name:--}}
+                {{--</th>--}}
+                {{--<td>--}}
+                    {{--{{$compInfo->company->name}}--}}
+                {{--</td>--}}
+            {{--</tr>--}}
+            {{--@if($compInfo->company->owner != null)--}}
+                {{--<tr>--}}
+                    {{--<th>--}}
+                        {{--Owner:--}}
+                    {{--</th>--}}
+                    {{--<td>--}}
+                        {{--{{$compInfo->company->owner}}--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+            {{--@endif--}}
+            {{--<tr>--}}
+                {{--<th>--}}
+                    {{--Primary Contact:--}}
+                {{--</th>--}}
+                {{--@if($compInfo->contact != null)--}}
+                    {{--<td>--}}
+                        {{--{{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}--}}
+                    {{--</td>--}}
+                {{--@else--}}
+                    {{--<td>--}}
+                        {{--Contact has been deleted via Settings>Users Page--}}
+                    {{--</td>--}}
+                {{--@endif--}}
+            {{--</tr>--}}
+            {{--<tr>--}}
+                {{--<th>--}}
+                    {{--Contact Email:--}}
+                {{--</th>--}}
+                {{--@if($compInfo->contact != null)--}}
+                    {{--<td>--}}
+                        {{--{{$compInfo->contact->email}}--}}
+                    {{--</td>--}}
+                {{--@else--}}
+                    {{--<td>--}}
+                        {{--Contact has been deleted via Settings>Users Page--}}
+                    {{--</td>--}}
+                {{--@endif--}}
+            {{--</tr>--}}
             </div>
         </table>
     </div>
 
     <div id="Subscription" class="tabcontent padding-top">
-{{--        The {{Config::get('constants.BASIC_PLAN')}} plan--}}
+        <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+        {{--        The {{Config::get('constants.BASIC_PLAN')}} plan--}}
         {{--<br/>--}}
         {{--<br/>--}}
         {{--<a href='http://odincasemanagement.com/#pricing'>--}}
@@ -207,21 +260,64 @@
             {{--fixme subscription exists but may be out of date at this point no check--}}
         {{--@elseif(gettype($subscriptionStatus) == "boolean")--}}
             {{--trial variable has been returned, could be true or false--}}
-            @if($subscriptionStatus == true)
-                Trial period ends:
 
-                {{$trialEndsAt}}
+        {{--Trial or Plan Details--}}
+        @if(isset($trial))
+            @if($trial === true)
+                {{--on trial, not subscribed--}}
+                <p class="nonlist-heading">Trial period ends:</p>
 
-            {{--@else--}}
-                {{--{{$subscriptionStatus}}--}}
+                <p>{{$trialEndsAt}}</p>
+            @else
+
+                @if(!isset($numUsers))
+                        {{--not on trial, not on subscription--}}
+
+                @else
+                    {{--on subscription--}}
+                    <p class="nonlist-heading">Your Plan:</p>
+                    {{--todo: variable--}}
+                    <p>
+                        {{$numUsers}}
+                    </p>
+
+                    <br/>
+
+                    {{--Billing Cycle Details--}}
+
+                    <p class="nonlist-heading">Billing Cycle:</p>
+                    {{--todo: variable--}}
+
+                    <p>{{$chosenTerm}}</p>
+                @endif
             @endif
+        @endif
 
-        {{--@endif--}}
+        <br/>
+
+
+        {{--Primary Contact Details--}}
+        <p class="nonlist-heading">
+            Primary Contact Authorized to Upgrade Plan:
+        </p>
+        @if($compInfo->contact != null)
+            <p>
+                {{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}
+            </p>
+        @else
+            <p>
+                Contact has been deleted via Settings>Users Page
+            </p>
+        @endif
+        <br/>
 
         <div style="padding:15px 0px 10px 0px;">
-            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'">Upgrade Plan
+
+            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                    id="upgradeBtn">Upgrade Plan
                 {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
             </button>
+
         </div>
 
     </div>

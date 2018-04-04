@@ -149,8 +149,8 @@
                                                     Cancel
                                                 </a>
                                             </div>
-                                        {{--@else--}}
-                                            {{--<div class="col-md-12" style="padding-top: 5px;">--}}
+                                        @else
+                                            <div class="col-md-12" style="padding-top: 5px;">
                                                 {{--<script--}}
                                                         {{--src="https://checkout.stripe.com/checkout.js" class="stripe-button"--}}
                                                         {{--data-key="pk_test_u5hJw0nEAL2kgix2Za91d3cV"--}}
@@ -161,18 +161,18 @@
                                                         {{--data-locale="auto"--}}
                                                         {{--data-currency="aud">--}}
                                                 {{--</script>--}}
-                                                {{--<a href="/login" class="btn btn-primary" style="--}}
-                                                    {{--display:inline-block;--}}
-                                                    {{--color: white;--}}
-                                                    {{--background-color: #4d2970;--}}
-                                                    {{--font-size: large;--}}
-                                                    {{--border: #4d2970;--}}
-                                                    {{--padding: 8px 12px 10px 12px;--}}
-                                                    {{--margin-top: -5px;--}}
-                                                    {{--margin-left: 10px;">--}}
-                                                    {{--Cancel--}}
-                                                {{--</a>--}}
-                                            {{--</div>--}}
+                                                <a href="/login" class="btn btn-primary" style="
+                                                    display:inline-block;
+                                                    color: white;
+                                                    background-color: #4d2970;
+                                                    font-size: large;
+                                                    border: #4d2970;
+                                                    padding: 8px 12px 10px 12px;
+                                                    margin-top: -5px;
+                                                    margin-left: 10px;">
+                                                    Cancel
+                                                </a>
+                                            </div>
                                         @endif
 
                                     </div>

@@ -443,68 +443,69 @@ class ReportController extends Controller
 
                 $edate = formatDates($report->date_end);
 
-                if ($report->type == 'Case Notes') {
-
-                    $cases = $this->getCaseNotes($id, $token);
-
-                    if ($cases != 'errorInResult') {
-                        foreach ($cases->reportCaseNotes as $i => $item) {
-                            //change to collection datatype from array for using groupBy fn
-                            $caseNotes = collect($cases->reportCaseNotes);
-                            $groupCases = $caseNotes->groupBy('case_date');
-                        }
-
-                        view()->share(array('cases' => $cases,
-                            'groupCases' => $groupCases,
-                            'report' => $report,
-                            'start' => $sdate,
-                            'end' => $edate
-                        ));
-
-                        return view('report/case_notes/show');
-
-                    } else {
-                        $err = 'There were no case notes created during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                } else if ($report->type == 'Location Checks') {
-
-                    $checks = $this->getLocationChecks($id, $token);
-
-                    //ie success == false
-                    if ($checks != 'errorInResult') {
-
-                        $collectChecks = $this->formatLocationChecksData($checks);
-
-                        //number of check ins at premise
-                        $checkIns = $collectChecks->pluck('check_ins');
-
-                        //fixme: change to only be when also check_outs
-
-                        $total = $checkIns->count();
-
-                        //group by date for better view
-                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
-
-                        view()->share(array(
-                            'shiftChecks' => $groupShiftChecks,
-                            'location' => $checks->location,
-                            'report' => $report,
-                            'start' => $sdate,
-                            'end' => $edate,
-                            'total' => $total
-                        ));
-
-                        return view('report/location_checks/show');
-
-                    } else {
-                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
-                        $err = 'There were no location checks during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                } else if (($report->type == 'Client') || ($report->type == 'Management')) {
+//                if ($report->type == 'Case Notes') {
+//
+//                    $cases = $this->getCaseNotes($id, $token);
+//
+//                    if ($cases != 'errorInResult') {
+//                        foreach ($cases->reportCaseNotes as $i => $item) {
+//                            //change to collection datatype from array for using groupBy fn
+//                            $caseNotes = collect($cases->reportCaseNotes);
+//                            $groupCases = $caseNotes->groupBy('case_date');
+//                        }
+//
+//                        view()->share(array('cases' => $cases,
+//                            'groupCases' => $groupCases,
+//                            'report' => $report,
+//                            'start' => $sdate,
+//                            'end' => $edate
+//                        ));
+//
+//                        return view('report/case_notes/show');
+//
+//                    } else {
+//                        $err = 'There were no case notes created during the period that the selected report covers.';
+//                        $errors = collect($err);
+//                        return Redirect::to('/reports')->with('errors', $errors);
+//                    }
+//                } else if ($report->type == 'Location Checks') {
+//
+//                    $checks = $this->getLocationChecks($id, $token);
+//
+//                    //ie success == false
+//                    if ($checks != 'errorInResult') {
+//
+//                        $collectChecks = $this->formatLocationChecksData($checks);
+//
+//                        //number of check ins at premise
+//                        $checkIns = $collectChecks->pluck('check_ins');
+//
+//                        //fixme: change to only be when also check_outs
+//
+//                        $total = $checkIns->count();
+//
+//                        //group by date for better view
+//                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
+//
+//                        view()->share(array(
+//                            'shiftChecks' => $groupShiftChecks,
+//                            'location' => $checks->location,
+//                            'report' => $report,
+//                            'start' => $sdate,
+//                            'end' => $edate,
+//                            'total' => $total
+//                        ));
+//
+//                        return view('report/location_checks/show');
+//
+//                    } else {
+//                        //TODO: test me else change me if never see it work (or haven't by 15th jan)
+//                        $err = 'There were no location checks during the period that the selected report covers.';
+//                        $errors = collect($err);
+//                        return Redirect::to('/reports')->with('errors', $errors);
+//                    }
+//                } else
+                    if (($report->type == 'Client') || ($report->type == 'Management')) {
 
                     $data = $this->getLocationReportData($id, $token);
 
@@ -512,7 +513,7 @@ class ReportController extends Controller
 
                         $formatData = $this->formatLocationReportData($data, $report);
 
-                        view()->share(array(
+                        $data = (array(
                             'data' => $formatData->get('groupData'),
                             'location' => $data->location,
                             'report' => $formatData->get('report'),
@@ -526,11 +527,11 @@ class ReportController extends Controller
 
                         if ($report->type == 'Client') {
 
-                            return view('report/client/show');
+                            return view('report/client/show')->with($data);
 
                         } else if ($report->type == 'Management') {
 
-                            return view('report/management/show');
+                            return view('report/management/show')->with($data);;
 
                         }
                     } else {
@@ -548,7 +549,7 @@ class ReportController extends Controller
 
                         $formatData = $this->formatIndividualReport($data->reportData);
 
-                        view()->share(array(
+                        $data = (array(
                             'data' => $formatData,
                             'report' => $report,
                             'reportInd' => $data->report,
@@ -557,7 +558,7 @@ class ReportController extends Controller
                             'show' => 'webpage'
                         ));
 
-                            return view('report/emp/show');
+                            return view('report/emp/show')->with($data);;
 
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
@@ -700,84 +701,85 @@ class ReportController extends Controller
 
                 $edate = formatDates($report->date_end);
 
-                if ($report->type == 'Case Notes') {
-
-                    $cases = $this->getCaseNotes($id, $token);
-
-                    if ($cases != 'errorInResult') {
-                        foreach ($cases->reportCaseNotes as $i => $item) {
-                            //change to collection datatype from array for using groupBy fn
-                            $caseNotes = collect($cases->reportCaseNotes);
-                            $groupCases = $caseNotes->groupBy('case_date');
-                        }
-
-                        view()->share(array('cases' => $cases,
-                            'groupCases' => $groupCases,
-                            'report' => $report,
-                            'start' => $sdate,
-                            'end' => $edate
-                        ));
-
-                        if ($request->has('download')) {
-                            // pass view file
-                            $pdf = PDF::loadView('report/case_notes/pdf')->setPaper('a4', 'landscape');
-                            // download pdf w current date in the name
-                            $dateTime = Carbon::now();
-                            $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Case Notes Report ' . $date . '.pdf');
-                        }
-
-                        return view('report/case_notes/pdf');
-                    } else {
-                        $err = 'There were no case notes created during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                } else if ($report->type == 'Location Checks') {
-                    $checks = $this->getLocationChecks($id, $token);
-
-                    //ie success == false
-                    if ($checks != 'errorInResult') {
-
-//                        $groupShiftChecks = $this->formatLocationChecksData($checks);
-                        $collectChecks = $this->formatLocationChecksData($checks);
-
-                        //number of check ins at premise
-                        $checkIns = $collectChecks->pluck('check_ins');
-
-                        //fixme: change to only be when also check_outs
-                        $total = $checkIns->count();
-
-                        //group by date for better view
-                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
-
-                        view()->share(array(
-                            'shiftChecks' => $groupShiftChecks,
-                            'location' => $checks->location,
-                            'report' => $report,
-                            'start' => $sdate,
-                            'end' => $edate,
-                            'total' => $total
-                        ));
-
-                        if ($request->has('download')) {
-                            // pass view file
-                            $pdf = PDF::loadView('report/location_checks/pdf')->setPaper('a4', 'landscape');
-                            // download pdf w current date in the name
-                            $dateTime = Carbon::now();
-                            $date = substr($dateTime, 0, 10);
-                            return $pdf->download('Location Checks Report ' . $date . '.pdf');
-                        }
-
-                        return view('report/location_checks/pdf');
-
-                    } else {
-                        //TODO: test me
-                        $err = 'There were no location checks during the period that the selected report covers.';
-                        $errors = collect($err);
-                        return Redirect::to('/reports')->with('errors', $errors);
-                    }
-                } else if (($report->type == 'Client') || ($report->type == 'Management')) {
+//                if ($report->type == 'Case Notes') {
+//
+//                    $cases = $this->getCaseNotes($id, $token);
+//
+//                    if ($cases != 'errorInResult') {
+//                        foreach ($cases->reportCaseNotes as $i => $item) {
+//                            //change to collection datatype from array for using groupBy fn
+//                            $caseNotes = collect($cases->reportCaseNotes);
+//                            $groupCases = $caseNotes->groupBy('case_date');
+//                        }
+//
+//                        view()->share(array('cases' => $cases,
+//                            'groupCases' => $groupCases,
+//                            'report' => $report,
+//                            'start' => $sdate,
+//                            'end' => $edate
+//                        ));
+//
+//                        if ($request->has('download')) {
+//                            // pass view file
+//                            $pdf = PDF::loadView('report/case_notes/pdf')->setPaper('a4', 'landscape');
+//                            // download pdf w current date in the name
+//                            $dateTime = Carbon::now();
+//                            $date = substr($dateTime, 0, 10);
+//                            return $pdf->download('Case Notes Report ' . $date . '.pdf');
+//                        }
+//
+//                        return view('report/case_notes/pdf');
+//                    } else {
+//                        $err = 'There were no case notes created during the period that the selected report covers.';
+//                        $errors = collect($err);
+//                        return Redirect::to('/reports')->with('errors', $errors);
+//                    }
+//                } else if ($report->type == 'Location Checks') {
+//                    $checks = $this->getLocationChecks($id, $token);
+//
+//                    //ie success == false
+//                    if ($checks != 'errorInResult') {
+//
+////                        $groupShiftChecks = $this->formatLocationChecksData($checks);
+//                        $collectChecks = $this->formatLocationChecksData($checks);
+//
+//                        //number of check ins at premise
+//                        $checkIns = $collectChecks->pluck('check_ins');
+//
+//                        //fixme: change to only be when also check_outs
+//                        $total = $checkIns->count();
+//
+//                        //group by date for better view
+//                        $groupShiftChecks = $collectChecks->groupBy('dateTzCheckIn');
+//
+//                        view()->share(array(
+//                            'shiftChecks' => $groupShiftChecks,
+//                            'location' => $checks->location,
+//                            'report' => $report,
+//                            'start' => $sdate,
+//                            'end' => $edate,
+//                            'total' => $total
+//                        ));
+//
+//                        if ($request->has('download')) {
+//                            // pass view file
+//                            $pdf = PDF::loadView('report/location_checks/pdf')->setPaper('a4', 'landscape');
+//                            // download pdf w current date in the name
+//                            $dateTime = Carbon::now();
+//                            $date = substr($dateTime, 0, 10);
+//                            return $pdf->download('Location Checks Report ' . $date . '.pdf');
+//                        }
+//
+//                        return view('report/location_checks/pdf');
+//
+//                    } else {
+//                        //TODO: test me
+//                        $err = 'There were no location checks during the period that the selected report covers.';
+//                        $errors = collect($err);
+//                        return Redirect::to('/reports')->with('errors', $errors);
+//                    }
+//                } else
+                    if (($report->type == 'Client') || ($report->type == 'Management')) {
 
                     $data = $this->getLocationReportData($id, $token);
 
@@ -834,7 +836,7 @@ class ReportController extends Controller
 
                         $formatData = $this->formatIndividualReport($data->reportData);
 
-                        view()->share(array(
+                        $data = (array(
                             'data' => $formatData,
                             'report' => $report,
                             'reportInd' => $data->report,
@@ -844,7 +846,7 @@ class ReportController extends Controller
 
                         if ($request->has('download')) {
 
-                            $pdf = PDF::loadView('report/emp/pdf')->setPaper('a4', 'landscape');
+                            $pdf = PDF::loadView('report/emp/pdf', $data)->setPaper('a4', 'landscape');
                             // download pdf w current date in the name
                             $dateTime = Carbon::now();
                             $date = substr($dateTime, 0, 10);
@@ -852,20 +854,16 @@ class ReportController extends Controller
 
                         }
 
-//                        return view('report/emp/pdf');
-
                     } else {
                         //TODO: test me else change me if never see it work (or haven't by 15th jan)
                         $err = 'There is insufficient data for the period that the report covers.';
                         $errors = collect($err);
                         return Redirect::to('/reports')->with('errors', $errors);
                     }
-
                 }
 
             } else {
                 //ie no session token exists and therefore the user is not authenticated
-
                 return Redirect::to('/login');
             }
 
