@@ -233,54 +233,51 @@ if (!function_exists('oauth2')) {
 
             $auth = json_decode((string)$response->getBody());
 
-            //get user
-            $responseUser = $client->get($urlApi . 'user', [
+            $responseStatus = $client->get($urlApi . 'session', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $auth->access_token,
                 ]
             ]);
 
-            $user = json_decode((string)$responseUser->getBody());
+            //array datatype, even though only 1 object in the array
+            $session = json_decode((string)$responseStatus->getBody());
 
-            $responseStatus = $client->get($urlApi . 'status/' . $user->company_id, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $auth->access_token,
-                ]
-            ]);
+            $userDetails = new stdClass();
 
-            //array datatype, even though only 1 item in the array
-            $status = json_decode((string)$responseStatus->getBody());
+            foreach($session as $user){
+
+                $userDetails = $user[0];
+            }
+
+//            dd($userDetails, $userDetails->status);
+
             //company account has been created but has not been activated via email authentication
-            if ($status != "active") {
+            if ($userDetails->status != "active") {
                 return false;
             } else {
-                $responseRole = $client->get($urlApi . 'user/role/' . $user->id, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $auth->access_token,
-                    ]
-                ]);
-
-                //array datatype, even though only 1 item in the array
-                $role = json_decode((string)$responseRole->getBody());
-
                 //ensure the user is in the user_role table and therefore allowed access to the console
-                if ($role != null) {
+                if ($userDetails->role != null) {
                     $token = $auth->access_token;
-                    $name = $user->first_name . ' ' . $user->last_name;
+                    $name = $userDetails->first_name . ' ' . $userDetails->last_name;
                     //save the token in a session helper method along with the user id and name
                     //see https://laravel.com/docs/5.4/session#retrieving-data Section:The Global Session Helper
                     session([
                         'token' => $token,
-                        'id' => $user->id,
+                        'id' => $userDetails->userId,
                         'name' => $name,
-                        'role' => $role[0],
-                        'compId' => $user->company_id]);
+                        'role' => $userDetails->role,
+                        'compId' => $userDetails->compId,
+                        'compName' => $userDetails->name,
+                        'primaryContact' => $userDetails->primary_contact,
+                        'trialEndsAt' => $userDetails->trial_ends_at
+                        ]);
 
                     return true;
                 } //else the user is not allowed access to the console
                 else {
                     return false;
                 }
+
             }
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return false;
@@ -1051,7 +1048,7 @@ if (!function_exists('planSpecs')) {
 
             }else{
                 //term == 'quarterly'
-                $amount = Config::get('constants.AMOUNT_Q1');
+                $amount = Config::get('constants.AMOUNT_Y1');
             }
 
         }else if($plan == 'plan2'){
@@ -1063,7 +1060,7 @@ if (!function_exists('planSpecs')) {
 
             }else{
                 //term == 'quarterly'
-                $amount = Config::get('constants.AMOUNT_Q2');
+                $amount = Config::get('constants.AMOUNT_Y2');
             }
         }else if($plan == 'plan3'){
 
@@ -1074,7 +1071,7 @@ if (!function_exists('planSpecs')) {
 
             }else{
                 //term == 'quarterly'
-                $amount = Config::get('constants.AMOUNT_Q3');
+                $amount = Config::get('constants.AMOUNT_Y3');
             }
         }
 
@@ -1107,4 +1104,242 @@ if (!function_exists('planNumUsers')) {
         return $numUsers;
     }
 }
+
+//get a list of users that are not already added as employees
+if (!function_exists('postSubscription')) {
+
+    function postSubscription($plan, $stripeToken, $period, $trialEndsAt)
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->post(Config::get('constants.API_URL').'subscription/create', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array(
+                        'plan' => $plan,
+                        'stripeToken' => $stripeToken,
+                        'term' => $period,
+                        'trialEndsAt' => $trialEndsAt
+                    )
+                )
+            );
+
+            $users = json_decode((string)$response->getBody());
+
+            return $users;
+
+        }
+    }
+}
+
+//returns 1 of 3 variable sets:
+//1. if in trial, $inTrial = true and $trialEndsAt = date & subscription = null
+//2. if not in trial, $inTrial = false and $subscription = active
+//3. if not in trial $inTrial = false, and $subscription = ending soon
+//4. if not in trial, and no subscription started (for Moe and nigel and some of mine)
+
+if (!function_exists('getSubscription')) {
+
+    function getSubscription()
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+            $compId = session('compId');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->get(Config::get('constants.API_URL').'/subscription/'.$compId, array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    )
+                )
+            );
+
+            $subscriptionStatus = json_decode((string)$response->getBody());
+
+
+            $inTrial = null;
+            $trialEndsAt = null;
+            $subscriptionPlan = null;
+            $subscriptionTerm = null;
+            $activeSub = null;
+            $subscriptionTrial = null;
+
+            if(isset($subscriptionStatus->trial)) {
+
+
+                if (isset($subscriptionStatus->trial_ends_at)) {
+                    $inTrial = true;
+
+
+                    //$subscriptionStatus->trial_ends_at is an object of stdclass
+                    //php manual advises will json_encode to a simple js object
+                    //although the result here is a string in the json format
+                    $trialEndsAt = jsonDate($subscriptionStatus->trial_ends_at);
+
+                }else{
+                    $inTrial = false;
+                }
+            }else if(isset($subscriptionStatus->subscriptions)) {
+
+                $inTrial = false;
+
+                $subscriptions = $subscriptionStatus->subscriptions;
+
+                foreach($subscriptions as $sub){
+
+                    //if any of the subscriptions have not been cancelled
+                    //the non cancelled subscription will be the active subscription, there should only be 1 of these.
+//                    if(!isset($sub->ends_at)){
+                    if($sub->ends_at == null){
+
+                        $activeSub = $sub;
+
+                        //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
+                        $stripePlan = stripePlan($activeSub->stripe_plan);
+
+//                        dd($stripePlan, $activeSub->stripe_plan);
+
+                        $subscriptionPlan = $stripePlan->get('planNum');
+
+                        $subscriptionTerm = $stripePlan->get('term');
+
+
+                        if(isset($sub->trial_ends_at))
+                        $subscriptionTrial = formatDates($sub->trial_ends_at);
+
+                    }
+                }
+            }
+
+            $collection = collect(['subscription' => $activeSub, 'inTrial' => $inTrial, 'trialEndsAt' => $trialEndsAt,
+                'subscriptionPlan' => $subscriptionPlan, 'subscriptionTerm' => $subscriptionTerm,
+                'subscriptionTrial' => $subscriptionTrial
+            ]);
+
+            return $collection;
+
+
+        }
+    }
+}
+
+if (!function_exists('jsonDate')) {
+
+    function jsonDate($jsonStringDate)
+    {
+        $date = json_encode($jsonStringDate);//$date = a json string
+
+        $json = json_decode($date, true);
+
+        $date = formatDates($json['date']);
+
+        return $date;
+    }
+}
+
+if (!function_exists('stripePlan')) {
+
+    function stripePlan($planId)
+    {
+        $stripeKey = Config::get('services.stripe.key');
+        $planNum = "";
+        $term = "";
+
+        if (strpos($stripeKey, 'test')) {
+
+            if($planId == Config::get('constants.TEST_PLAN1_MONTHLY')){
+
+                $planNum = 'plan1';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.TEST_PLAN1_YEARLY')){
+                $planNum = 'plan1';
+                $term = 'yearly';
+            }
+        }else{
+            if($planId == Config::get('constants.PLAN1_MONTHLY')){
+
+                $planNum = 'plan1';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN2_MONTHLY')){
+
+                $planNum = 'plan2';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN3_MONTHLY')) {
+
+                $planNum = 'plan3';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN4_MONTHLY')){
+
+                $planNum = 'plan4';
+                $term = 'monthly';
+
+            }else if($planId == Config::get('constants.PLAN1_YEARLY')){
+
+                $planNum = 'plan1';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN2_YEARLY')){
+
+                $planNum = 'plan2';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN3_YEARLY')){
+
+                $planNum = 'plan3';
+                $term = 'yearly';
+
+            }else if($planId == Config::get('constants.PLAN4_YEARLY')){
+
+                $planNum = 'plan4';
+                $term = 'yearly';
+            }
+        }
+
+        $collection = collect(['planNum' => $planNum, 'term' => $term]);
+
+        return $collection;
+
+    }
+}
+
+//if (!function_exists('pullApartString')) {
+//
+//    function pullApartString($string, $separator)
+//    {
+//
+//        $strpos = strpos($string, $separator);
+//
+////dd($strpos);
+//        if($strpos != 0) {
+//            //get the portion at the end of the original string
+//            $string2 = substr($string, ($strpos+1));//term
+//
+//            //get the portion at the beginning of the original string
+//            $string1 = substr($string, 0, ($strpos));//plan
+//
+////        dd($strpos, $string2, $string1);
+//
+//
+//            $collection = collect(['string1' => $string1, 'string2' => $string2,]);
+//
+//            return $collection;
+//
+//        }else{
+//
+//            return null;
+//        }
+//    }
+//}
+
 

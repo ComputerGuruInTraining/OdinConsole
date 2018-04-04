@@ -41,6 +41,17 @@ GREYS:
     width: 100%;
 }
 
+.page-icon{
+    position: absolute;
+    right: 25px;
+}
+
+.nonlist-heading{
+
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    text-decoration: underline;
+}
+
 /*Discount ribbon*/
 
 .ribbon {
@@ -264,10 +275,10 @@ input:checked + .slider:before {
 
 }
 
+
 .explain-text{
     clear: left;
     padding-top: 60px;
-    padding-left: 20%;
     font-size: 12px;
 }
 

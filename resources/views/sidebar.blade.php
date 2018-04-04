@@ -80,6 +80,7 @@
             <li class="treeview">
                 <a href="/support/users" onclick="displayLoader();"><span>Support</span></a>
                 <a href="/settings" onclick="displayLoader();"><span>Settings</span></a>
+                <a href="/subscription/upgrade" onclick="displayLoader();"><span>Upgrade Plan</span></a>
                 <a href="/logout" onclick="displayLoader();"><span>Sign Out</span></a>
             </li>
 

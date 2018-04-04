@@ -19,7 +19,7 @@
                 @endif
                 @if (isset($term))
                         <div class="alert green-font padding-top-btm-none">UPGRADE SUBSCRIPTION</div>
-                        <div class="alert grey-font padding-top-btm-none">First things first, please login to verify your company account
+                        <div class="alert grey-font padding-top-btm-none">First things first, please login or register your company account
                             and then we'll finalise the {{ $term }} subscription for {{$numUsers}} users.</div>
                 @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
@@ -30,7 +30,7 @@
                         @if(!isset($term))
                             {{ Form::open(['role' => 'form','method' => 'POST']) }}
                         @else
-                            {{ Form::open(['role' => 'form', 'method' => 'POST', 'url' => '/login/'.$plan.'/'.$term]) }}
+                            {{ Form::open(['role' => 'form', 'method' => 'POST', 'url' => '/login/upgrade/'.$plan.'/'.$term]) }}
                         @endif
 
                         {{ csrf_field() }}
@@ -72,13 +72,21 @@
                             <div>
                                 <a href='/reset/link' style="color: #4d2970;" target="_blank">Forgot Password?</a>
                             </div>
-                            <div>
-                                <br/>
-                                New to ODIN Case Management?
-                                <a href="/register/start-free-trial" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
-                                to get started
-                            </div>
-
+                            @if(!isset($term))
+                                <div>
+                                    <br/>
+                                    New to ODIN Case Management?
+                                    <a href="/register/start-free-trial" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
+                                    to get started
+                                </div>
+                            @else
+                                <div>
+                                    <br/>
+                                    New to ODIN Case Management?
+                                    <a href="/register/plan/{{$plan}}/{{$term}}" style="color:#4d2970; text-decoration: underline;">Register Your Company</a>
+                                    to get started
+                                </div>
+                            @endif
 
                         </div>
                         {{ Form::close() }}

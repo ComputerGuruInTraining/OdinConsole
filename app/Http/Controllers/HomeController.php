@@ -20,6 +20,8 @@ class HomeController extends BaseController
     public function getIndex($plan = null, $term = null)
     {
         try {
+//            dd($plan, $term);
+
             //check for the presence of term, amount and term will be passed through together if at all
             if($term == null) {
                 return View::make('home.index');
@@ -28,7 +30,7 @@ class HomeController extends BaseController
                 //retrieve the number of users and amount based on plan specifics
                 $numUsers = planNumUsers($plan);
 
-                $term = ucwords($term);
+//                $term = ucwords($term);
 
                 return View::make('home.index')->with(array(
 //                    'amount' => $specs->get('amount'),
@@ -67,6 +69,7 @@ class HomeController extends BaseController
                     ->withErrors('Login Denied: Either email/password combo does not exist or you do not have access. 
                         Please ensure the account has been activated as this could be the problem.');
         }catch(\Exception $exception){
+
             $errMsg = $exception->getMessage();
 
             $e = Config::get('constants.INTERNET_ERROR');
@@ -146,6 +149,11 @@ class HomeController extends BaseController
             'selected' => null,
             'chosenTerm' => null,
             'current' => null,
+            'inTrial' => false,
+            'subscriptionTrial' => null,//must be sent to view if $current != null
+            'subscriptionTerm' => null,
+            'trialEndsAt' => null
+
         ));
     }
 
