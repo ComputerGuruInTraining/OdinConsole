@@ -372,7 +372,7 @@
 
                     StripeCheckout.open({
                         key: key,
-                        amount: 001,
+                        amount: amount,
                         name: company,
                         email: userEmail,
                         image: logo,

@@ -30,7 +30,7 @@ class HomeController extends BaseController
                 //retrieve the number of users and amount based on plan specifics
                 $numUsers = planNumUsers($plan);
 
-                $term = ucwords($term);
+//                $term = ucwords($term);
 
                 return View::make('home.index')->with(array(
 //                    'amount' => $specs->get('amount'),

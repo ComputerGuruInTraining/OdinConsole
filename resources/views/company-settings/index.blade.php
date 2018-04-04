@@ -278,7 +278,7 @@
                     <p class="nonlist-heading">Your Plan:</p>
                     {{--todo: variable--}}
                     <p>
-                        {{$numUsers}}
+                        {{ucfirst($numUsers)}}
                     </p>
 
                     <br/>
@@ -288,13 +288,11 @@
                     <p class="nonlist-heading">Billing Cycle:</p>
                     {{--todo: variable--}}
 
-                    <p>{{$chosenTerm}}</p>
+                    <p>{{ucwords($chosenTerm)}}</p>
                 @endif
             @endif
-        @endif
-
         <br/>
-
+        @endif
 
         {{--Primary Contact Details--}}
         <p class="nonlist-heading">
@@ -311,6 +309,8 @@
         @endif
         <br/>
 
+        {{--todo: terms and conditions link--}}
+
         <div style="padding:15px 0px 10px 0px;">
 
             <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
@@ -318,7 +318,12 @@
                 {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
             </button>
 
+            {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+            <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
+
         </div>
+
+
 
     </div>
 
