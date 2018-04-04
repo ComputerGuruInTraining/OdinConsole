@@ -12,7 +12,7 @@
     window.onload = function (){
         defaultPage();
 
-        var selected = "<?php echo $selected?>";
+        var selected = "<?php echo $selected?>";//plan
         var chosenTerm = "<?php echo $chosenTerm?>";
         var current = "<?php echo $current?>";
 
@@ -35,16 +35,22 @@
                 var inTrial = "<?php echo $inTrial?>";//converts the boolean true to 1
 
                  if(inTrial !== ""){
+
+                     term = chosenTerm;//set the term
+
                      if(inTrial){
-                        stripeConfig(selected, chosenTerm, 0);
+
+                         submitDetailsBtn(selected);//set the value of term and plan which will be passed through with form submission
+//                        stripeConfig(selected, chosenTerm, 0);
                      }else{
-                         //create subscription option 2: no trial $Costs
-                         stripeConfig(selected, chosenTerm);
+                         //create subscription option 2: not in trial therefore $Costs
+                         submitBtn(selected);
+//                         stripeConfig(selected, chosenTerm);
                      }
 
                  }else {
-                     //create subscription option 2: no trial $Costs
-                     stripeConfig(selected, chosenTerm);
+                     //create subscription option 2: not in trial therefore $Costs
+                     submitBtn(selected);
                  }
             }
         }
@@ -330,7 +336,6 @@
 
 
     }
-
 
     function stripeConfig(planNum, term, amount){
 

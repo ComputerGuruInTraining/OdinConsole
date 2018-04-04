@@ -196,7 +196,7 @@ Route::get('/upgrade', 'HomeController@upgradePublic');
 //INTERNAL ROUTE ONLY
 Route::get('/subscription/upgrade', 'UserController@upgrade');
 
-//Usage: a user has logged in via '/login/{plan}/{term}' after navigating from www.odincasemanagement.com marketing website
+//Usage: a user has logged in via '/login/upgrade/{plan}/{term}' after navigating from www.odincasemanagement.com marketing website
 //and is then redirected to the subscription page with credit card widget in the foreground
 //INTERNAL ROUTE ONLY
 Route::get('/upgrade/subscription/{plan}/{term}', 'UserController@upgradePlan');
