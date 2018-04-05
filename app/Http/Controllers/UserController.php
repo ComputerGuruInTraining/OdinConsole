@@ -772,7 +772,13 @@ class UserController extends Controller
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
                 if($success) {
-                    $confirm = 'SUCCESS! Plan updated. Receipt for the payment has been emailed to ' . $email;
+
+                    if(isset($trialEndsAt)){
+                        $confirm = 'SUCCESS! Plan updated. You have not been billed for this update.';
+
+                    }else {
+                        $confirm = 'SUCCESS! Plan updated. Receipt for the payment has been emailed to ' . $email;
+                    }
 
                     return view('company-settings/upgrade')
                         ->with(array(
