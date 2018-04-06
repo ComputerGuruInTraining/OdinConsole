@@ -39,7 +39,7 @@
                 //create subscription option 1: with trial $0
 
                 var inTrial = "<?php echo $inTrial?>";//converts the boolean true to 1
-//                alert(chosenTerm, inTrial, selected, current);
+
 
                  if(inTrial !== ""){
 
@@ -61,7 +61,6 @@
                      if(subTrialGrace !== ""){
 
                          //set the trial_ends_at input which will be submitted with form to be used on controller
-                         {{--var subTrialGrace = "<?php echo $subTrialGrace?>";//submit payment--}}
                          var trial = document.getElementById('trialEndsAt');
                          trial.value = subTrialGrace;//friendly date passed through
 
@@ -70,13 +69,6 @@
                      }else{
                          //cancelled plan, in which case createSubscription (no trial) PRESUMABLY OR createSubscription with trial days again??
                          if(subTermCancel !== ""){
-
-                             //incase we need trial days...
-                         /*    //set the trial_ends_at input which will be submitted with form to be used on controller
-                             var subTrialCancel = "<?php echo $subTrialCancel?>";//submit payment
-                             var trial = document.getElementById('trialEndsAt');
-                             trial.value = subTrialCancel;//friendly date passed through
-                             */
 
                              submitBtn(selected);//no trial days
                          }
@@ -111,15 +103,17 @@
         var subscriptionTerm = "<?php echo $subscriptionTerm?>";
         var inputTerm = document.getElementById('inputTerm');
 
-        if(subscriptionTerm === "yearly"){
+        if(subscriptionTerm !== ""){
+            if(subscriptionTerm === "yearly"){
 
 //            inputTerm should be checked
-            inputTerm.checked = 1;
+                inputTerm.checked = 1;
 
-        }else{
-            //not checked
-            inputTerm.checked = 0;
+            }else{
+                //not checked
+                inputTerm.checked = 0;
 
+            }
         }
 
         //to change the display of the billing cycle toggle switch and the amounts displaying on the plans
