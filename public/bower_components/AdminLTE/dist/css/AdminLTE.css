@@ -52,6 +52,18 @@ GREYS:
     text-decoration: underline;
 }
 
+.alert-odin-info{
+    background-color: #f1f0f5 !important;
+    border-color: #e2e0eb;
+    color: #333 !important;
+}
+
+.alert-odin-success{
+    background-color: #e5ffcc !important;
+    border-color: #c9ff99;
+    color: #333 !important;
+}
+
 /*Discount ribbon*/
 
 .ribbon {

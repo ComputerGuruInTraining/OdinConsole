@@ -245,36 +245,40 @@
     </div>
 
     <div id="Subscription" class="tabcontent padding-top">
-        <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+        {{--<div id="Subscription" class="tabcontent">--}}
 
-        {{--        The {{Config::get('constants.BASIC_PLAN')}} plan--}}
-        {{--<br/>--}}
-        {{--<br/>--}}
-        {{--<a href='http://odincasemanagement.com/#pricing'>--}}
-            {{--<img src="{{ asset("/images/PricingModel_2018-03-07.png") }}"  width="55%" height="55%"--}}
-                 {{--alt="Pricing Model courtesy of Odin Case Management Marketing Team" />--}}
-        {{--</a>--}}
-        {{--<br/>--}}
-        {{--<br/>--}}
-        {{--@if(gettype($subscriptionStatus) == "object")--}}
-            {{--fixme subscription exists but may be out of date at this point no check--}}
-        {{--@elseif(gettype($subscriptionStatus) == "boolean")--}}
-            {{--trial variable has been returned, could be true or false--}}
+        {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
 
         {{--Trial or Plan Details--}}
         @if(isset($trial))
             @if($trial === true)
+
                 {{--on trial, not subscribed--}}
+                <div class="alert alert-odin-info">
+                    Kindly reminding you to subscribe to a plan before your free trial ends.
+                </div>
+
+                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
                 <p class="nonlist-heading">Trial period ends:</p>
 
                 <p>{{$trialEndsAt}}</p>
             @else
+                {{--trial has ended, not subscribed--}}
+                <div class="alert alert-danger">
+                    Trial period ended! <br />
+                    Kindly subscribe to a plan to continue using the application suite.
+                </div>
 
-                @if(!isset($numUsers))
-                        {{--not on trial, not on subscription--}}
+                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
 
-                @else
-                    {{--on subscription--}}
+            @endif
+        @else
+                @if(isset($subscriptionTerm))
+
+                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                {{--active subscription--}}
                     <p class="nonlist-heading">Your Plan:</p>
                     <p>
                         {{ucfirst($numUsers)}}
@@ -283,12 +287,42 @@
                     <br/>
 
                     {{--Billing Cycle Details--}}
-
                     <p class="nonlist-heading">Billing Cycle:</p>
 
                     <p>{{ucwords($subscriptionTerm)}}</p>
+
+                    @if(isset($subscriptionTrial))
+                        <br/>
+                        {{--Trial period Ends/Billing Begins--}}
+                        <p class="nonlist-heading">Free Trial Period Ends and Billing Begins:
+                            {{--Billing begins after remaining free trial days:--}}
+                        </p>
+
+                        <p>{{$subscriptionTrial}}</p>
+                    @endif
+
+                @elseif(isset($subTermCancel))
+                    {{--cancelled subscription--}}
+                    <div class="alert alert-danger">
+                        Subscription cancelled! <br />
+                        Kindly subscribe to a plan to continue using the application suite.
+                    </div>
+
+                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                @elseif(isset($subTermGrace))
+                {{--onGracePeriod--}}
+
+                <div class="alert alert-danger">
+                        Subscription cancelled! <br />
+                        Kindly subscribe to a plan to continue using the application suite beyond the grace period.
+                    </div>
+
+                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                    <p class="nonlist-heading">Grace Period Ends:</p>
+                    <p>{{$subTrialGrace}}</p>
                 @endif
-            @endif
         <br/>
         @endif
 

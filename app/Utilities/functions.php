@@ -1137,12 +1137,12 @@ if (!function_exists('postSubscription')) {
     }
 }
 
-//returns 1 of 3 variable sets:
-//1. if in trial, $inTrial = true and $trialEndsAt = date & subscription = null
-//2. if not in trial, $inTrial = false and $subscription = active
-//3. if not in trial $inTrial = false, and $subscription = ending soon
-//4. if not in trial, and no subscription started (for Moe and nigel and some of mine)
-
+//returns 1 of 4 variable sets:
+//1. return $subscriptions == 1 active subscription (will only be one based on design);
+//2. or return , $graceSub == if in trialPeriod but cancelled (with the latest trial_ends_at date,
+///////// as could be 2 if edit primary contact, and cancel first subscription, create 2nd, then user cancels 2nd;
+//3. or return $cancelSub == if not in trial period but cancelled (with the latest trial_ends_at date, as with gracePeriod, could be 2.)
+//4. or returns $trial == false or inTrial == true and $trial_ends_at == date if no subscription created yet ever.
 if (!function_exists('getSubscription')) {
 
     function getSubscription()
@@ -1163,69 +1163,130 @@ if (!function_exists('getSubscription')) {
 
             $subscriptionStatus = json_decode((string)$response->getBody());
 
-
+            //in trial, no subscription
             $inTrial = null;
             $trialEndsAt = null;
+
+            //active subscription
             $subscriptionPlan = null;
             $subscriptionTerm = null;
             $activeSub = null;
             $subscriptionTrial = null;
 
+            //inGracePeriod subscription variables
+            $subPlanGrace = null;
+            $subTrialGrace = null;
+            $subTermGrace = null;
+            $graceSub = null;
+
+            //cancelled nonGracePeriod subscription
+            $subTrialCancel = null;
+            $subTermCancel = null;
+            $subPlanCancel = null;
+            $cancelSub = null;
+
             if(isset($subscriptionStatus->trial)) {
 
 
-                if (isset($subscriptionStatus->trial_ends_at)) {
+                //$subscriptionStatus->trial_ends_at is an object of stdclass
+                //php manual advises will json_encode to a simple js object
+                //the result here is a string in the json format
+                $trialEndsAt = jsonDate($subscriptionStatus->trial_ends_at);
+
+                if($subscriptionStatus->trial == true){
+//                if (isset($subscriptionStatus->trial_ends_at)) {
+
                     $inTrial = true;
-
-
-                    //$subscriptionStatus->trial_ends_at is an object of stdclass
-                    //php manual advises will json_encode to a simple js object
-                    //although the result here is a string in the json format
-                    $trialEndsAt = jsonDate($subscriptionStatus->trial_ends_at);
 
                 }else{
                     $inTrial = false;
                 }
+
             }else if(isset($subscriptionStatus->subscriptions)) {
 
-                $inTrial = false;
+//                $inTrial = false;
 
-                $subscriptions = $subscriptionStatus->subscriptions;
+                //active subscription, just the 1 object
+                $activeSub = $subscriptionStatus->subscriptions;
 
-                foreach($subscriptions as $sub){
+//                getSubscriptionDetails();
 
-                    //if any of the subscriptions have not been cancelled
-                    //the non cancelled subscription will be the active subscription, there should only be 1 of these.
+//                foreach($subscription as $sub){
+
+                //if any of the subscriptions have not been cancelled
+                //the non cancelled subscription will be the active subscription, there should only be 1 of these.
 //                    if(!isset($sub->ends_at)){
-                    if($sub->ends_at == null){
+//                    if($sub->ends_at == null){
 
-                        $activeSub = $sub;
+//                        $activeSub = $sub;
 
-                        //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
-                        $stripePlan = stripePlan($activeSub->stripe_plan);
+                //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
+                $stripePlan = stripePlan($activeSub->stripe_plan);
 
-//                        dd($stripePlan, $activeSub->stripe_plan);
+                $subscriptionPlan = $stripePlan->get('planNum');
 
-                        $subscriptionPlan = $stripePlan->get('planNum');
+                $subscriptionTerm = $stripePlan->get('term');
 
-                        $subscriptionTerm = $stripePlan->get('term');
+                if (isset($activeSub->trial_ends_at))
+                    $subscriptionTrial = formatDates($activeSub->trial_ends_at);
 
 
-                        if(isset($sub->trial_ends_at))
-                        $subscriptionTrial = formatDates($sub->trial_ends_at);
+//                    }
+//                }
+            }else if(isset($subscriptionStatus->graceSub)){
 
-                    }
-                }
+                //cancelled subscription, still in trial grace period, just the 1 object
+                $graceSub = $subscriptionStatus->graceSub;
+
+                //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
+                $stripePlanGrace = stripePlan($graceSub->stripe_plan);
+
+                $subPlanGrace = $stripePlanGrace->get('planNum');
+
+                $subTermGrace = $stripePlanGrace->get('term');
+
+                if (isset($graceSub->trial_ends_at))
+                    $subTrialGrace = formatDates($graceSub->trial_ends_at);
+
+            }else if(isset($subscriptionStatus->cancelSub)){
+
+                //cancelled subscription, not in trial period, just the 1 object
+                $cancelSub = $subscriptionStatus->cancelSub;
+
+                //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
+                $stripePlanCancel = stripePlan($cancelSub->stripe_plan);
+
+                $subPlanCancel = $stripePlanCancel->get('planNum');
+
+                $subTermCancel = $stripePlanCancel->get('term');
+
+                if (isset($cancelSub->trial_ends_at))
+                    $subTrialCancel = formatDates($cancelSub->trial_ends_at);
+
             }
 
-            $collection = collect(['subscription' => $activeSub, 'inTrial' => $inTrial, 'trialEndsAt' => $trialEndsAt,
-                'subscriptionPlan' => $subscriptionPlan, 'subscriptionTerm' => $subscriptionTerm,
-                'subscriptionTrial' => $subscriptionTrial
+            $collection = collect([
+                //intrial, no subscription
+                'inTrial' => $inTrial,
+                'trialEndsAt' => $trialEndsAt,
+                //active subscription
+                'subscription' => $activeSub,//tentative remove as not used, but check other fn calls first
+                'subscriptionPlan' => $subscriptionPlan,
+                'subscriptionTerm' => $subscriptionTerm,
+                'subscriptionTrial' => $subscriptionTrial,
+                //inGracePeriod subscription
+                'graceSub' => $graceSub,//tentative remove as not used, but check other fn calls first
+                'subTermGrace' => $subTermGrace,
+                'subPlanGrace' => $subPlanGrace,
+                'subTrialGrace' => $subTrialGrace,
+                //cancelled nonGracePeriod subscription
+                'cancelSub' => $cancelSub,//tentative remove as not used, but check other fn calls first
+                'subPlanCancel' => $subPlanCancel,//tentative remove as not used, but check other fn calls first
+                'subTermCancel' => $subTermCancel,
+                'subTrialCancel' => $subTrialCancel,//tentative remove as not used, but check other fn calls first
             ]);
 
             return $collection;
-
-
         }
     }
 }

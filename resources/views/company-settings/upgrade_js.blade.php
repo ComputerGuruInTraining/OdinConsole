@@ -13,44 +13,77 @@
         defaultPage();
 
         var selected = "<?php echo $selected?>";//plan
-        var chosenTerm = "<?php echo $chosenTerm?>";
-        var current = "<?php echo $current?>";
+        var chosenTerm = "<?php echo $chosenTerm?>";//term
+        var current = "<?php echo $current?>";//active sub
 
         //check to see if the selected variable has a value, if so, open checkout widget
         // else it will be a blank string if initialised as null on controller ie routed via = '/subscription/upgrade'
         //Usage: '/upgrade/subscription/{plan}/{term}' route passes through the plan and term
         // and opens the checkout widget for user (naving from pricing model and via login page this page opens)
         if(selected !== ""){
-            //2 scenarios
-            //current plan in which case swap
-            //no plan, in which case createSubscription (no trial) or createTrialSubscription
+            //5 scenarios
+            //current plan in which case swap, trial days remaining if inTrial, send through for caculating trial days on swapped subscription perhaps?? todo check docs
+            // current plan no trial days in which case swap
+            //no plan (inTrial = true), in which case createSubscription  with trial days, no payment
+            //no plan (no trial = false) or createSubscription and accept payment
+            //cancelled plan, in which case createSubscription (no trial) PRESUMABLY OR createSubscription with trial days again???todo: find out nIgel
+            //cancelled plan and inGracePeriod, in which case resumePlan with trial days still
+
+            term = chosenTerm;//set the term
 
             if(current !== "") {
-                //swap plans
+                //on active plan, swap plans
                 swapBtn(selected);
 
             }else {
                 //create subscription option 1: with trial $0
 
                 var inTrial = "<?php echo $inTrial?>";//converts the boolean true to 1
+//                alert(chosenTerm, inTrial, selected, current);
 
                  if(inTrial !== ""){
 
-                     term = chosenTerm;//set the term
-
                      if(inTrial){
 
-                         submitDetailsBtn(selected);//set the value of term and plan which will be passed through with form submission
+                         submitDetailsBtn(selected);//set the value of plan which will be passed through with form submission
 //                        stripeConfig(selected, chosenTerm, 0);
                      }else{
-                         //create subscription option 2: not in trial therefore $Costs
+                         //create subscription option 2: in trial == false and no subscription ever therefore $Costs
                          submitBtn(selected);
 //                         stripeConfig(selected, chosenTerm);
                      }
 
-                 }else {
+                 }else{
+                    //not in trial, not on current active plan
+                     var subTrialGrace = "<?php echo $subTrialGrace?>";//resumePlan
+                     var subTermCancel = "<?php echo $subTermCancel?>";//submit payment
+
+                     if(subTrialGrace !== ""){
+
+                         //set the trial_ends_at input which will be submitted with form to be used on controller
+                         {{--var subTrialGrace = "<?php echo $subTrialGrace?>";//submit payment--}}
+                         var trial = document.getElementById('trialEndsAt');
+                         trial.value = subTrialGrace;//friendly date passed through
+
+                         resumeBtn(selected);
+
+                     }else{
+                         //cancelled plan, in which case createSubscription (no trial) PRESUMABLY OR createSubscription with trial days again??
+                         if(subTermCancel !== ""){
+
+                             //incase we need trial days...
+                         /*    //set the trial_ends_at input which will be submitted with form to be used on controller
+                             var subTrialCancel = "<?php echo $subTrialCancel?>";//submit payment
+                             var trial = document.getElementById('trialEndsAt');
+                             trial.value = subTrialCancel;//friendly date passed through
+                             */
+
+                             submitBtn(selected);//no trial days
+                         }
+                     }
+
                      //create subscription option 2: not in trial therefore $Costs
-                     submitBtn(selected);
+//                     submitBtn(selected);
                  }
             }
         }
@@ -317,6 +350,7 @@
 
     }
 
+    //don't collect credit card details
     function swapBtn(planNum){
 
         //update the values in the hidden input values for passing through to the controller
@@ -334,6 +368,20 @@
         //will be:
         //document.getElementById("stripeForm").submit();
 
+
+    }
+
+    //collect credit card details again to be sure
+    function resumeBtn(planNum){
+        //update the values in the hidden input values for passing through to the controller
+        var plan = document.getElementById('plan');
+        plan.value = planNum;
+
+        var period = document.getElementById('period');
+        period.value = term;
+
+        //todo proper swap code
+        alert("Resume Plan is a Work in Progress. Please watch this space.");
 
     }
 

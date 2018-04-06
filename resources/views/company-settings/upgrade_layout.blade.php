@@ -7,23 +7,36 @@
     @endif
 
     @if(isset($confirm))
-        <div class="white-font alert alert-success margin-top">{{$confirm}}</div>
+        <div class="white-font alert alert-odin-success margin-top">{{$confirm}}</div>
     @endif
 
     @if(!isset($current))
         @if($inTrial === true)
-            <div class="white-font alert alert-success margin-top">
-                @if(isset($trialEndsAt))
-                    Free trial period ends on: {{$trialEndsAt}}<br>
-                @endif
+            <div class="white-font alert alert-odin-info margin-top">
+                Free trial period ends on: {{$trialEndsAt}}<br>
                 Subscribe Now, Pay Later.<br>
                 Subscribing to a plan will incur no upfront charges today.
                 You will be billed when your trial period ends.
             </div>
         @endif
+
+        @if(isset($subTermGrace))
+            <div class="white-font alert alert-danger margin-top">
+                Subscription cancelled! <br />
+                Kindly subscribe to a plan to continue using the application suite beyond the grace period.<br />
+                Resume Subscription Now, Pay Later.<br />
+                You will be billed when your grace period ends.
+            </div>
+        @elseif(isset($subTermCancel))
+            <div class="alert alert-danger margin-top">
+                Subscription cancelled! <br />
+                Kindly subscribe to a plan to continue using the application suite.
+            </div>
+        @endif
+
     @else
         @if(isset($subscriptionTrial))
-            <div class="white-font alert alert-success margin-top">
+            <div class="white-font alert alert-odin-info margin-top">
                 Subscription Active.<br>
                 Billing will commence when trial periods ends on: {{$subscriptionTrial}}
             </div>
@@ -76,23 +89,41 @@
                         font-size: 16px !important;">
                         Change Plan
                     </button>
-                @else
-                    @if($inTrial === true)
-                        <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
-                                onclick="submitDetailsBtn('plan1');"
-                                style="color:white !important; background-color: #28C309 !important;
-                            font-size: 16px !important;">
-                            Get Started
-                        </button>
-                    @else
-
-                        <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
-                                onclick="submitBtn('plan1');"
-                                style="color:white !important; background-color: #28C309 !important;
+                @elseif(isset($inTrial))
+                        @if($inTrial === true)
+                            {{--on trial, user just submits credit card details--}}
+                            <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
+                                    onclick="submitDetailsBtn('plan1');"
+                                    style="color:white !important; background-color: #28C309 !important;
                                 font-size: 16px !important;">
-                            Get Started
-                        </button>
-                    @endif
+                                Get Started
+                            </button>
+                        @else
+                            {{--not on trial, user submits payment--}}
+                            <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
+                                    onclick="submitBtn('plan1');"
+                                    style="color:white !important; background-color: #28C309 !important;
+                                    font-size: 16px !important;">
+                                Get Started
+                            </button>
+                        @endif
+                @elseif(isset($subTermGrace))
+                    {{--resume subscription, also swap if needs be by accessing $subPlanGrace in js function? payment? see docs--}}
+                    <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
+                            onclick="resumeBtn('plan1');"
+                            style="color:white !important; background-color: #28C309 !important;
+                        font-size: 16px !important;">
+                        Get Started
+                    </button>
+                @elseif(isset($subTermCancel))
+                    {{--cancelled subscription, --}}
+                    <button type="button" class="btn btn-success tile-btn pay-btn" id="plan1-btn"
+                            onclick="submitBtn('plan1');"
+                            style="color:white !important; background-color: #28C309 !important;
+                                    font-size: 16px !important;">
+                        Get Started
+                    </button>
+                {{--@endif--}}
                 @endif
             </div>
         </div>
