@@ -145,7 +145,7 @@ class HomeController extends BaseController
 
         return view('company-settings/upgrade_public')->with(array(
             'public' => true,
-            'inTrial' => false,//should be null???
+            'inTrial' => null,//should be null???
             //nullify variables used in js on view for other purposes, not this function's purpose
             'email'=> null,
             'selected' => null,
@@ -159,6 +159,7 @@ class HomeController extends BaseController
             'subTrialGrace' => null,
             'subTermCancel' => null,
             'subTrialCancel' => null,
+            'inTrialJS' => null,
 
         ));
     }

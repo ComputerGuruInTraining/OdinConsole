@@ -38,12 +38,11 @@
             }else {
                 //create subscription option 1: with trial $0
 
-                var inTrial = "<?php echo $inTrial?>";//converts the boolean true to 1
+                var inTrialJS = "<?php echo $inTrialJS?>";//converts the boolean true to 1
 
+                 if(inTrialJS !== ""){
 
-                 if(inTrial !== ""){
-
-                     if(inTrial){
+                     if(inTrialJS === "true"){
 
                          submitDetailsBtn(selected);//set the value of plan which will be passed through with form submission
 //                        stripeConfig(selected, chosenTerm, 0);
@@ -96,24 +95,32 @@
         text1.style.color = "#333";
 
         retrieveTerm();
+
+    }
+
+    //just set the value in the input term which will be used for form submission and checkout processing
+    function setTerm(termForToggle){
+        var inputTerm = document.getElementById('inputTerm');
+
+        if(termForToggle === "yearly"){
+
+//            inputTerm should be checked
+            inputTerm.checked = 1;
+
+        }else{
+            //not checked
+            inputTerm.checked = 0;
+        }
+
     }
 
     function displayCurrent(current){
 
         var subscriptionTerm = "<?php echo $subscriptionTerm?>";
-        var inputTerm = document.getElementById('inputTerm');
 
-        if(subscriptionTerm !== ""){
-            if(subscriptionTerm === "yearly"){
+        if(subscriptionTerm !== "") {
 
-//            inputTerm should be checked
-                inputTerm.checked = 1;
-
-            }else{
-                //not checked
-                inputTerm.checked = 0;
-
-            }
+            setTerm(subscriptionTerm);
         }
 
         //to change the display of the billing cycle toggle switch and the amounts displaying on the plans
@@ -366,6 +373,11 @@
     }
 
     //collect credit card details again to be sure
+
+    //either stripeConfig with a 4th optional pm, (change all 3rd non parameters to be null or going to need another function)
+    //different form submit route. or have an input field which we set and then reset once form submitted (so on payment/upgrade route) which says resume/swap/create
+    //
+
     function resumeBtn(planNum){
         //update the values in the hidden input values for passing through to the controller
         var plan = document.getElementById('plan');
@@ -405,6 +417,15 @@
 
             } else {
 
+
+                //wip
+                //most of the time, the term will be known, but in the instance where navigated via public route and term = yearly
+                // and don't change the switch, then the value in term is yearly, but should retrieve the term from the input toggle the user is viewing
+//                if(selected !== "") {
+                retrieveTerm();
+//                }
+                //end wip
+
                 var panelLabel = "";
                 var desc = "";
 
@@ -420,8 +441,6 @@
 
                 var token = function (res) {
 
-                        console.log(res);
-
                         tokenRes.value = res.id;
                         tokenEmail.value = res.email;
 
@@ -432,7 +451,7 @@
 
                     amount = planAmount(planNum, term);
                     panelLabel = 'Pay';
-                    desc = 'Create Subscription - ' + term;
+                    desc = 'Create Subscription - ' + planNum + " " + term;
 
                     StripeCheckout.open({
                         key: key,
@@ -451,7 +470,7 @@
                 } else {
 
                     panelLabel = 'Pay $0';
-                    desc = 'Subscribe Now, Pay Later';
+                    desc = 'Subscribe Now, Pay Later - ' + planNum + term;
 
                     StripeCheckout.open({
                         key: key,

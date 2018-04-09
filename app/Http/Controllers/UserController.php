@@ -126,6 +126,7 @@ class UserController extends Controller
                     //subscription tab, if no subscription
                     'trial' => $inTrial,
                     'trialEndsAt' => $trialEndsAt,
+                    'inTrialJS' => null,
 
                 ));//array
 
@@ -664,6 +665,7 @@ class UserController extends Controller
                     //in trial, subscription not yet started
                     'inTrial' => $inTrial,
                     'trialEndsAt' => $trialEndsAt,
+                    'inTrialJS' => null,
 
                     //active sub
                     'current' => $current,//plan num
@@ -731,6 +733,16 @@ class UserController extends Controller
     }
 
     //have plan, period, email, stripeToken
+    //if cancelled,notGracePeriod, we'll come via here with amount = amount.
+        //msg to user once processed: $confirm ie receipt
+        //current should show by using via $current variable
+    //if onGracePeriod, we'll be resuming,
+    //if on plan, we'll be swapping, perhaps come via here with amount = $0,
+    //if not on trial anymore as trial ended, we'll be paying or maybe trial again for a short period?? todo: nigel
+    //if on trial, come via here with amount = $0
+        //msg to user once processed: $confirm ie not billed yet.
+        //current should show by using via $current variable
+
     public function paymentUpgrade(Request $request){
         try {
             if (session()->has('token')) {
@@ -788,7 +800,8 @@ class UserController extends Controller
                             'public' => null,
                             'inTrial' => $inTrial,
                             'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
-//                        'modified' => $modified
+                            'inTrialJS' => null,
+
                         ));
                 }else{
                     //todo: check payment successful
@@ -852,7 +865,7 @@ class UserController extends Controller
 
                 $subscription = getSubscription();
 
-//                dd($subscription, $plan, $term);
+//                dd($subscription, $plan, $term, $subscription->get('inTrial'));
 
                 //in trial
                 $inTrial = $subscription->get('inTrial');
@@ -873,6 +886,21 @@ class UserController extends Controller
                 $subTermCancel= $subscription->get('subTermCancel');
                 $subTrialCancel= $subscription->get('subTrialCancel');
 
+                //convert the value $inTrial from true/false (boolean) to "true" "false" (strings)
+                // because php conversion of false to js is not dealt with as expected on the view
+
+                $inTrialJS = null;
+
+                if($inTrial == false){
+
+                    $inTrialJS = "false";
+
+                }else{
+
+                    $inTrialJS = "true";
+                }
+
+                //end remove soon
 
                 return view('company-settings/upgrade')
                     ->with(array(
@@ -890,6 +918,7 @@ class UserController extends Controller
                     //in trial
                     'inTrial' => $inTrial,
                     'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
+                    'inTrialJS' => $inTrialJS,
 
                     //subscription tab, if onGracePeriod of cancelled subscription
                     'subTermGrace' => $subTermGrace,
