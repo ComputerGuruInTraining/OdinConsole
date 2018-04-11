@@ -2,7 +2,7 @@
 
     @if (count( $errors ) > 0)
         @foreach ($errors->all() as $error)
-            <div class="alert error">{{ $error }}</div>
+            <div class="alert alert-danger margin-top">{{ $error }}</div>
         @endforeach
     @endif
 
@@ -20,7 +20,7 @@
             </div>
         @elseif($inTrial === false)
             <div class="alert alert-danger margin-top">
-                Subscription cancelled! <br />
+                Trial period ended! <br />
                 Kindly subscribe to a plan to continue using the application suite.
             </div>
         @endif
@@ -43,10 +43,31 @@
         @if(isset($subscriptionTrial))
             <div class="white-font alert alert-odin-info margin-top">
                 Subscription Active.<br>
-                Billing will commence when trial periods ends on: {{$subscriptionTrial}}
+                Your nominated credit card will be charged once the trial periods ends on: {{$subscriptionTrial}}
             </div>
         @endif
     @endif
+
+    {{--Modal that displays when a user opts to swap a plan via public view pricing model, then logs in, and modal displays to confirm the swap--}}
+    <div id="myModal" class="modal-odin">
+        <div class="modal-odin-content">
+            <div class="modal-odin-header">
+                <span class="close-odin">&times;</span>
+                <h3>Upgrade Subscription</h3>
+            </div>
+            <div class="modal-odin-body">
+                @if(isset($numUsers))
+                    <p>Current Subscription - Billing Cycle: {{ucfirst($subscriptionTerm)}}; Number of Users: {{$numUsers}}</p>
+                @endif
+                @if(isset($newNumUsers))
+                    <p>New Subscription&nbsp&nbsp&nbsp&nbsp&nbsp- Billing Cycle: {{ucfirst($chosenTerm)}}; Number of Users: {{$newNumUsers}}</p>
+                @endif
+                <p class="padding-bottom-10">Kindly confirm you would like to change your subscription?</p>
+                <button type="button" class="btn btn-border" onclick="submitSwap()">Confirm</button>
+                <button type="button" class="btn btn-border" onclick="cancelSwap()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <div class="padding-tiles">
         <div class="tiles-heading alt-font">
@@ -67,6 +88,7 @@
 
     <form style="display: none;" action="/subscription/payment" method="POST" id="stripeForm">
         {{ csrf_field() }}
+        <input type="hidden" name="formPath" value="" id="formPath"/>
         <input type="hidden" name="plan" value="plan" id="plan"/>
         <input type="hidden" name="period" value="period" id="period"/>
         <input type="hidden" name="trialEndsAt" value="" id="trialEndsAt"/>
@@ -149,7 +171,8 @@
                 <span class="alt-font">6-10 Users</span>
             </div>
             <br/><br/>
-            <div>                @if(isset($current))
+            <div>
+                @if(isset($current))
                     {{--swap plan, as currently on a plan, no payment now--}}
                     <button type="button" class="btn btn-success tile-btn pay-btn" id="plan2-btn"
                             onclick="swapBtn('plan2');"
@@ -200,30 +223,6 @@
                         Get Started
                     </button>
                 @endif
-                {{--@if(isset($current))--}}
-                    {{--swap plan, as currently on a plan, no payment now--}}
-                    {{--<button type="button" class="btn btn-success tile-btn pay-btn" id="plan2-btn"--}}
-                            {{--onclick="swapBtn('plan2');"--}}
-                            {{--style="color:white !important; background-color: #28C309 !important;--}}
-                        {{--font-size: 16px !important;">--}}
-                        {{--Change Plan--}}
-                    {{--</button>--}}
-                {{--@else--}}
-                    {{--@if($inTrial === true)--}}
-                        {{--<button type="button" class="btn btn-success tile-btn pay-btn" id="plan2-btn"--}}
-                                {{--onclick="submitDetailsBtn('plan2');"--}}
-                                {{--style="color:white !important; background-color: #28C309 !important;--}}
-                            {{--font-size: 16px !important;">--}}
-                            {{--Get Started--}}
-                        {{--</button>--}}
-                    {{--@else--}}
-                        {{--<button class="btn btn-success tile-btn pay-btn" type="button" onclick="submitBtn('plan2');"--}}
-                                     {{--id="plan2-btn" style="color:white !important; background-color: #28C309 !important;--}}
-                            {{--font-size: 16px !important;">--}}
-                            {{--Get Started--}}
-                        {{--</button>--}}
-                    {{--@endif--}}
-                {{--@endif--}}
             </div>
         </div>
 
@@ -289,31 +288,6 @@
                         Get Started
                     </button>
                 @endif
-                {{--@if(isset($current))--}}
-                    {{--swap plan, as currently on a plan, no payment now--}}
-                    {{--<button type="button" class="btn btn-success tile-btn pay-btn" id="plan3-btn"--}}
-                            {{--onclick="swapBtn('plan3');"--}}
-                            {{--style="color:white !important; background-color: #28C309 !important;--}}
-                        {{--font-size: 16px !important;">--}}
-                        {{--Change Plan--}}
-                    {{--</button>--}}
-                {{--@else--}}
-                    {{--@if($inTrial === true)--}}
-                        {{--<button type="button" class="btn btn-success tile-btn pay-btn" id="plan3-btn"--}}
-                                {{--onclick="submitDetailsBtn('plan3');"--}}
-                                {{--style="color:white !important; background-color: #28C309 !important;--}}
-                            {{--font-size: 16px !important;">--}}
-                            {{--Get Started--}}
-                        {{--</button>--}}
-                    {{--@else--}}
-                        {{--<button class="btn btn-success tile-btn pay-btn" id="plan3-btn"--}}
-                                {{--type="button" onclick="submitBtn('plan3');"--}}
-                                {{--style="color:white !important; background-color: #28C309 !important;--}}
-                                {{--font-size: 16px !important;">--}}
-                            {{--Get Started--}}
-                        {{--</button>--}}
-                    {{--@endif--}}
-                {{--@endif--}}
             </div>
         </div>
 

@@ -287,11 +287,12 @@
                     <br/>
 
                     {{--Billing Cycle Details--}}
-                    <p class="nonlist-heading">Billing Cycle:</p>
-
-                    <p>{{ucwords($subscriptionTerm)}}</p>
 
                     @if(isset($subscriptionTrial))
+                        <p class="nonlist-heading">Billing Cycle:</p>
+
+                        <p>{{ucwords($subscriptionTerm)}}</p>
+
                         <br/>
                         {{--Trial period Ends/Billing Begins--}}
                         <p class="nonlist-heading">Free Trial Period Ends and Billing Begins:
@@ -299,6 +300,16 @@
                         </p>
 
                         <p>{{$subscriptionTrial}}</p>
+                         <br/>
+                    @else
+                        <p class="nonlist-heading">Billing Cycle (nominated credit card charged at the end of each billing cycle):</p>
+
+                        <p>{{ucwords($subscriptionTerm)}}</p>
+
+                {{--todo: wip--}}
+                        {{--<p>Credit card will have next payment deducted on:</p>--}}
+
+                        <br/>
                     @endif
 
                 @elseif(isset($subTermCancel))
@@ -309,11 +320,10 @@
                     </div>
 
                     <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
-
                 @elseif(isset($subTermGrace))
-                {{--onGracePeriod--}}
+                    {{--onGracePeriod--}}
 
-                <div class="alert alert-danger">
+                    <div class="alert alert-danger">
                         Subscription cancelled! <br />
                         Kindly subscribe to a plan to continue using the application suite beyond the grace period.
                     </div>
@@ -322,8 +332,9 @@
 
                     <p class="nonlist-heading">Grace Period Ends:</p>
                     <p>{{$subTrialGrace}}</p>
-                @endif
-        <br/>
+                    <br/>
+
+            @endif
         @endif
 
         {{--Primary Contact Details--}}

@@ -60,6 +60,8 @@ class UserController extends Controller
 
                 $subscription = getSubscription();
 
+//                dd($subscription);
+
                 //trial
                 $inTrial = $subscription->get('inTrial');
                 $trialEndsAt = $subscription->get('trialEndsAt');
@@ -91,11 +93,6 @@ class UserController extends Controller
                     $numUsers = planNumUsers($subPlanGrace);
 
                 }
-//                else if(isset($subPlanCancel)){
-//
-//                    $numUsers = planNumUsers($subPlanCancel);
-//
-//                }
 
                 //on subscription
                 return view('company-settings.index')->with(array(
@@ -752,62 +749,118 @@ class UserController extends Controller
                 $period = $request->period;
                 $stripeToken = $request->stripeToken;
                 $trialEndsAt = $request->trialEndsAt;
+                $formPath = $request->formPath;
 
-                $success = "";
+                $result = null;
 
                 //create subscription
                 if(isset($stripeToken)) {
 
-//                    dd($trialEndsAt, $stripeToken, $plan, $period);
-                    $success = postSubscription($plan, $stripeToken, $period, $trialEndsAt);
+                    //returns either success = false and primaryContact = false
+                    //or returns success = false only if subscription did not update for some reason
+                    //or returns success = true if successful created subscription
+                    $result = postSubscription($plan, $stripeToken, $period, $trialEndsAt);
 
+                } else{
+                    if($formPath == "swap"){
+
+                            $result = postSwapSubscription($plan, $period);
+                    }
                 }
-//                else{
-//                //todo: swap subscription maybe postSubscription but swap if no stripeToken
-//                    // except also update credit card details use this perhaps
-//                    $success = postSwapSubscription($plan, $period);
-//                }
 
                 //use stripeEmail returned from payment request
                 $email = $request->stripeEmail;
 
                 $subscription = getSubscription();
 
-                $inTrial = $subscription->get('inTrial');
-                $trialEndsAt = $subscription->get('trialEndsAt');
+                /*if form submission successful,
+                the current & subscription term values will hold a value*/
+
                 $current = $subscription->get('subscriptionPlan');
                 $subscriptionTerm = $subscription->get('subscriptionTerm');
                 $subscriptionTrial = $subscription->get('subscriptionTrial');
 
-                if($success) {
+                /***if form submission fails the trial,
+                 * cancel and grace period variables might hold a value,
+                 * else value will be null***/
 
-                    if(isset($trialEndsAt)){
-                        $confirm = 'SUCCESS! Plan updated. You have not been billed for this update.';
+                $inTrial = $subscription->get('inTrial');
+                $trialEndsAt = $subscription->get('trialEndsAt');
+
+                //onGracePeriod of cancelled subscription
+                $subPlanGrace= $subscription->get('subPlanGrace');
+                $subTermGrace = $subscription->get('subTermGrace');
+                $subTrialGrace= $subscription->get('subTrialGrace');
+
+                //cancelled nonGracePeriod subscription
+//                $subPlanCancel= $subscription->get('subPlanCancel');
+                $subTermCancel= $subscription->get('subTermCancel');
+                $subTrialCancel= $subscription->get('subTrialCancel');
+
+                if($result->success == true) {
+
+                    if($formPath == "swap") {
+
+                        $confirm = 'SUCCESS! Plan upgraded. You have not been billed for this upgrade.';
 
                     }else {
-                        $confirm = 'SUCCESS! Plan updated. Receipt for the payment has been emailed to ' . $email;
+                        if (isset($trialEndsAt)) {
+                            $confirm = 'SUCCESS! Plan upgraded. You have not been billed for this upgrade.';
+
+                        } else {
+
+                            $confirm = 'SUCCESS! Plan upgraded. Receipt for the payment has been emailed to ' . $email;
+                        }
                     }
 
                     return view('company-settings/upgrade')
                         ->with(array(
                             'email' => $email,
                             'confirm' => $confirm,
+                            'public' => null,
+
                             'selected' => null,
                             'chosenTerm' => $subscriptionTerm,
+
                             'current' => $current,//todo: testing only atm
                             'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
                             'subscriptionTerm' => $subscriptionTerm,
-                            'public' => null,
+
+                            //if form submission fails these variables might hold a value, else value will be null
                             'inTrial' => $inTrial,
                             'trialEndsAt' => $trialEndsAt,//must be sent to view if($inTrial === true)
                             'inTrialJS' => null,
 
-                        ));
-                }else{
-                    //todo: check payment successful
-                    //post unsuccessful but payment assumed successful. Reason???
+                            //subscription tab, onGracePeriod of cancelled subscription
+                            'subTermGrace' => $subTermGrace,
+                            'subPlanGrace' => $subPlanGrace,
+                            'subTrialGrace' => $subTrialGrace,
 
-                    $msg = 'Plan failed to update.'; //todo: + reason
+                            //subscription tab, if cancelled subscription not on grace period
+                            'subTermCancel' => $subTermCancel,
+                            'subTrialCancel' => $subTrialCancel,
+                        ));
+
+                }else{
+
+                    if(isset($result->subscriptionStatus)){
+                        $msg = 'FAILED to update subscription. The status of your subscription is '.$result->subscriptionStatus.'. 
+                        Please contact support to assist you in creating a subscription.';
+
+                        return Redirect::to('/subscription/upgrade')->withErrors($msg);
+                    }
+
+                    //success is false
+                    if(isset($result->primaryContact)){
+                        //user is not the primar contact
+                        $msg = 'FAILED to update subscription. Only the primary contact is authorized to manage subscriptions. 
+                        The primary contact can be edited in settings>users';
+
+                        return Redirect::to('/subscription/upgrade')->withErrors($msg);
+                    }
+
+                    //subscription failed for some unknown reason
+                    $msg = 'FAILED to update subscription.  Please contact support to assist you in creating a subscription.';
 
                     return Redirect::to('/subscription/upgrade')->withErrors($msg);
                 }
@@ -886,19 +939,40 @@ class UserController extends Controller
                 $subTermCancel= $subscription->get('subTermCancel');
                 $subTrialCancel= $subscription->get('subTrialCancel');
 
+                //for current plans or onGracePeriod plans...
+                $numUsers = null;
+
+                //convert planNum into numUsers
+                if(isset($current)) {
+
+                    $numUsers = planNumUsers($current);
+
+                }else if(isset($subPlanGrace)){
+
+                    $numUsers = planNumUsers($subPlanGrace);
+
+                }
+
+                //for chosen plans from pricing model
+                $newNumUsers = planNumUsers($plan);
+
                 //convert the value $inTrial from true/false (boolean) to "true" "false" (strings)
                 // because php conversion of false to js is not dealt with as expected on the view
 
                 $inTrialJS = null;
 
-                if($inTrial == false){
+                if(isset($inTrial)) {
+                    if ($inTrial == false) {
 
-                    $inTrialJS = "false";
+                        $inTrialJS = "false";
 
-                }else{
+                    } else {
 
-                    $inTrialJS = "true";
+                        $inTrialJS = "true";
+                    }
                 }
+
+//                dd($inTrial, $inTrialJS);
 
                 //end remove soon
 
@@ -907,6 +981,7 @@ class UserController extends Controller
                     'email'=> $email,
                     'selected' => $plan,
                     'chosenTerm' => $term,
+                    'newNumUsers' => $newNumUsers,
 
                     'public' => null,
 
@@ -914,6 +989,7 @@ class UserController extends Controller
                     'subscriptionTrial' => $subscriptionTrial,//must be sent to view if $current != null
                     'subscriptionTerm' => $subscriptionTerm,
                     'current' => $current,
+                    'numUsers' => $numUsers,
 
                     //in trial
                     'inTrial' => $inTrial,
@@ -941,6 +1017,7 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
+            dd($error);
             $e = 'Error displaying subscription page';
             return view('error-msg')->with('msg', $e);
 

@@ -12,15 +12,18 @@
     window.onload = function (){
         defaultPage();
 
-        var selected = "<?php echo $selected?>";//plan
-        var chosenTerm = "<?php echo $chosenTerm?>";//term
-        var current = "<?php echo $current?>";//active sub
+        var selected = "<?php echo $selected?>";//plan or null
+        var chosenTerm = "<?php echo $chosenTerm?>";//term or null
+        var current = "<?php echo $current?>";//active sub or php null which == "" for js purposes
+
+//console.log(current);
 
         //check to see if the selected variable has a value, if so, open checkout widget
         // else it will be a blank string if initialised as null on controller ie routed via = '/subscription/upgrade'
         //Usage: '/upgrade/subscription/{plan}/{term}' route passes through the plan and term
         // and opens the checkout widget for user (naving from pricing model and via login page this page opens)
         if(selected !== ""){
+
             //5 scenarios
             //current plan in which case swap, trial days remaining if inTrial, send through for caculating trial days on swapped subscription perhaps?? todo check docs
             // current plan no trial days in which case swap
@@ -53,10 +56,11 @@
                      }
 
                  }else{
-                    //not in trial, not on current active plan
+
+                     //not in trial, not on current active plan
                      var subTrialGrace = "<?php echo $subTrialGrace?>";//resumePlan
                      var subTermCancel = "<?php echo $subTermCancel?>";//submit payment
-
+console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
                      if(subTrialGrace !== ""){
 
                          //set the trial_ends_at input which will be submitted with form to be used on controller
@@ -83,6 +87,14 @@
         if(current !== ""){
             displayCurrent(current);
         }
+    };
+
+    window.onunload = function () {
+        var modal = document.getElementById('myModal');
+
+        //close the modal just in case it was open
+        modal.style.display = "none";
+
     };
 
     function defaultPage(){
@@ -329,7 +341,8 @@
 
     }
 
-    //create new subscription request, in trial, just collect credit card details now and pay $0
+    //Usage 1: create new subscription request, in trial, just collect credit card details now and pay $0
+    //Usage 2: swap subscription, whether in trial or not, and collect credit details and pay $0
     function submitDetailsBtn(planNum){
 
         //update the values in the hidden input values for passing through to the controller
@@ -346,12 +359,20 @@
             trial.value = trialEndsAt;
         }
 
-        //open the checkout widget for payment processing
+        //open the checkout widget for credit card details gathering
         stripeConfig(planNum, term, 0);
 
     }
 
     //don't collect credit card details
+    //set the inputField to swap and create or "" when not swapping (or resume)
+    //submit via same function as usual, on controller if the inputField = swap, postSwapSubscription rather than postSubscription
+
+    //for confirm view following form submission:
+    //need a $confirm msg which relies on a variable $swap or value = "swap"
+    //
+
+    //laravel docs: ->swap() method If the user is on trial, the trial period will be maintained.
     function swapBtn(planNum){
 
         //update the values in the hidden input values for passing through to the controller
@@ -361,23 +382,93 @@
         var period = document.getElementById('period');
         period.value = term;
 
-        //todo proper swap code
+        //update the values in the hidden input values for passing through to the controller
+        var formPath = document.getElementById('formPath');
+        formPath.value = "swap";
+
+        //check that the user hasn't selected their current term and plan
+        var currentTerm = "<?php echo $subscriptionTerm?>";
+        var currentPlan = "<?php echo $current?>";//active sub
+
+        if((currentTerm !== "")&&(currentPlan !== "")) {
+
+            if ((currentTerm === term) && (planNum === currentPlan)) {
+
+                var urlNotSwap = "<?php echo url('subscription/swap/cancelled');?>";
+
+                window.location.replace(urlNotSwap);
+
+            } else {
+                //proceed
+
+                //check if user is the primary contact first, else, redirect them to same page with an error msg
+                var verifyUserSwap = verifyPrimaryContact();
+
+                if (verifyUserSwap === false) {
+
+                    var urlContactSwap = "<?php echo url('subscription/upgrade/nonprimary');?>";
+
+                    window.location.replace(urlContactSwap);
+
+                } else {
 
 
-        alert("Swap Plan is a Work in Progress. Please watch this space.");
+                    // Get the modal
+                    var modal = document.getElementById('myModal');
 
-        //will be:
-        //document.getElementById("stripeForm").submit();
+                    // Get the button that opens the modal
+//                    var btn = document.getElementById("myBtn");
 
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close-odin")[0];
+
+                    // When the user clicks on the button, open the modal
+//                    btn.onclick = function() {
+                        modal.style.display = "block";
+//                    }
+
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                        if (event.target === modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                    /**end Modal JS**/
+                }
+            }
+        }else{
+            console.log("no subscription to swap");
+
+        }
+    }
+
+    function submitSwap(){
+        var modal = document.getElementById('myModal');
+        //close the modal and then submit the form
+        modal.style.display = "none";
+        //submit the form without using the checkout widget, as company already has an active subscription so credit card details are on hand.
+        document.getElementById("stripeForm").submit();
+
+    }
+
+    function cancelSwap(){
+        var modal = document.getElementById('myModal');
+
+        //close the modal, do not submit form
+        modal.style.display = "none";
 
     }
 
     //collect credit card details again to be sure
-
     //either stripeConfig with a 4th optional pm, (change all 3rd non parameters to be null or going to need another function)
-    //different form submit route. or have an input field which we set and then reset once form submitted (so on payment/upgrade route) which says resume/swap/create
+    //different form submit route.
+    // or have an input field which we set and then reset once form submitted (so on payment/upgrade route) which says resume/swap/create
     //
-
     function resumeBtn(planNum){
         //update the values in the hidden input values for passing through to the controller
         var plan = document.getElementById('plan');
@@ -417,14 +508,7 @@
 
             } else {
 
-
-                //wip
-                //most of the time, the term will be known, but in the instance where navigated via public route and term = yearly
-                // and don't change the switch, then the value in term is yearly, but should retrieve the term from the input toggle the user is viewing
-//                if(selected !== "") {
                 retrieveTerm();
-//                }
-                //end wip
 
                 var panelLabel = "";
                 var desc = "";
@@ -451,7 +535,7 @@
 
                     amount = planAmount(planNum, term);
                     panelLabel = 'Pay';
-                    desc = 'Create Subscription - ' + planNum + " " + term;
+                    desc = 'Create ' + term +  ' subscription';
 
                     StripeCheckout.open({
                         key: key,
@@ -470,7 +554,7 @@
                 } else {
 
                     panelLabel = 'Pay $0';
-                    desc = 'Subscribe Now, Pay Later - ' + planNum + term;
+                    desc = 'Payment after trial ('+ term + ')';
 
                     StripeCheckout.open({
                         key: key,

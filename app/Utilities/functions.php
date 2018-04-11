@@ -1105,7 +1105,10 @@ if (!function_exists('planNumUsers')) {
     }
 }
 
-//get a list of users that are not already added as employees
+//create subscription in db and with stripe service
+//returns either success = false and primaryContact = false
+//or returns success = false only if subscription did not update for some reason
+//or returns success = true
 if (!function_exists('postSubscription')) {
 
     function postSubscription($plan, $stripeToken, $period, $trialEndsAt)
@@ -1129,13 +1132,53 @@ if (!function_exists('postSubscription')) {
                 )
             );
 
-            $users = json_decode((string)$response->getBody());
+            $result = json_decode((string)$response->getBody());
 
-            return $users;
+            return $result;
 
         }
     }
 }
+
+//swap subscription in the db and with stripe service
+if (!function_exists('postSwapSubscription')) {
+
+    function postSwapSubscription($plan, $period)
+    {
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->post(Config::get('constants.API_URL').'subscription/swap', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $token,
+                        'Content-Type' => 'application/json'
+                    ),
+                    'json' => array(
+                        'plan' => $plan,
+                        'term' => $period,
+                    )
+                )
+            );
+
+            $result = json_decode((string)$response->getBody());
+
+            return $result;
+
+        }
+    }
+}
+if (!function_exists('checkSwapOrSame')) {
+
+    function checkSwapOrSame(){
+
+
+
+    }
+
+}
+
 
 //returns 1 of 4 variable sets:
 //1. return $subscriptions == 1 active subscription (will only be one based on design);
@@ -1187,7 +1230,6 @@ if (!function_exists('getSubscription')) {
 
             if(isset($subscriptionStatus->trial)) {
 
-
                 //$subscriptionStatus->trial_ends_at is an object of stdclass
                 //php manual advises will json_encode to a simple js object
                 //the result here is a string in the json format
@@ -1204,21 +1246,8 @@ if (!function_exists('getSubscription')) {
 
             }else if(isset($subscriptionStatus->subscriptions)) {
 
-//                $inTrial = false;
-
                 //active subscription, just the 1 object
                 $activeSub = $subscriptionStatus->subscriptions;
-
-//                getSubscriptionDetails();
-
-//                foreach($subscription as $sub){
-
-                //if any of the subscriptions have not been cancelled
-                //the non cancelled subscription will be the active subscription, there should only be 1 of these.
-//                    if(!isset($sub->ends_at)){
-//                    if($sub->ends_at == null){
-
-//                        $activeSub = $sub;
 
                 //stripe_plan holds the plan id from stripe plan which can be used to determine the plan and period
                 $stripePlan = stripePlan($activeSub->stripe_plan);
@@ -1230,9 +1259,6 @@ if (!function_exists('getSubscription')) {
                 if (isset($activeSub->trial_ends_at))
                     $subscriptionTrial = formatDates($activeSub->trial_ends_at);
 
-
-//                    }
-//                }
             }else if(isset($subscriptionStatus->graceSub)){
 
                 //cancelled subscription, still in trial grace period, just the 1 object
