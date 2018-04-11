@@ -52,6 +52,97 @@ GREYS:
     text-decoration: underline;
 }
 
+.alert-odin-info{
+    background-color: #f1f0f5 !important;
+    border-color: #e2e0eb;
+    color: #333 !important;
+}
+
+.alert-odin-success{
+    background-color: #e5ffcc !important;
+    border-color: #c9ff99;
+    color: #333 !important;
+}
+
+.btn-border{
+
+    border: 1px solid #28C309 !important;
+    background-color: #ffffff;
+
+}
+
+/*Modal*/
+/* The Modal (background) */
+.modal-odin {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 150px; /* Location of the box */
+    padding-left: 150px;/* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    /*background-color: rgb(0,0,0); !* Fallback color *!*/
+    /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+    color: #555;
+}
+
+/* Modal Content */
+.modal-odin-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close-odin {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-odin:hover,
+.close-odin:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-odin-header {
+    padding: 1px 16px 0px 16px;
+    background-color: #28C309;
+    color: white;
+    height: 60px;
+}
+
+.modal-odin-body {
+    padding: 16px;
+    line-height: 2;
+}
+/*end Modal*/
+
 /*Discount ribbon*/
 
 .ribbon {
@@ -434,6 +525,12 @@ input:checked + .slider:before {
 .padding-right{
     padding-right: 10px;
 }
+
+.padding-bottom-10{
+    padding-bottom: 10px;
+
+}
+
 
 .margin-bottom{
     margin-bottom: 10px;

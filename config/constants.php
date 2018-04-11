@@ -67,6 +67,4 @@ return [
     'TEST_PLAN1_MONTHLY' => 'plan_CXk0vEO3OII8ZU',
     'TEST_PLAN1_YEARLY' => 'plan_CXk0hfbFwLLvVd',
 
-
-
 ];
