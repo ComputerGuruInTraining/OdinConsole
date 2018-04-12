@@ -18,9 +18,11 @@
                     @endforeach
                 @endif
                 @if (isset($term))
-                        <div class="alert green-font padding-top-btm-none">UPGRADE SUBSCRIPTION</div>
+                        <div class="alert green-font padding-top-btm-none">
+                            UPGRADE SUBSCRIPTION: <span class="grey-font">{{ ucfirst($term) }} subscription for {{$numUsers}} users</span>
+                        </div>
                         <div class="alert grey-font padding-top-btm-none">First things first, please login or register your company account
-                            and then we'll finalise the {{ $term }} subscription for {{$numUsers}} users.</div>
+                            then we'll finalise the subscription.</div>
                 @endif
                 <div class="panel panel-default" style="border-color: #4d2970;">
 

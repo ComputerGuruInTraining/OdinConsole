@@ -210,6 +210,16 @@ Route::get('subscription/upgrade/nonprimary', function(){
     primary contact. Details of primary contact can be found and edited in Settings>Company.');
 
 });
+
+//do not swap the subscription as the selected subscription is the same as the current subscription,
+// so show the user a msg to that effect.
+Route::get('subscription/swap/cancelled', function(){
+
+    return Redirect::to('/subscription/upgrade')->withErrors(
+        'The selected term and plan are the same as your current term and plan, so no changes have been made.'
+    );
+
+});
 //Route USED???
 //Route::post('/subscription/payment/{plan}/{term}', 'UserController@paymentUpgrade');
 
