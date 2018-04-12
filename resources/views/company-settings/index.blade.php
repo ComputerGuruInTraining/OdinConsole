@@ -8,11 +8,14 @@
 
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function(){
+
             openSetting(event, 'Users');
 
             document.getElementById('loadPgTab').className += " active";
 
-//            enableUpgradeBtn();
+            //default display
+            var errorPrimary = document.getElementById('error-primary');
+            errorPrimary.style.display = "none";
 
         }, false);
 
@@ -37,6 +40,127 @@
             evt.currentTarget.className += " active";
         }
 
+        function enableEditPrimary(){
+
+            var inputArray = document.getElementsByClassName("primaryInput");//one for each user
+            console.log(inputArray);
+
+            for (i = 0; i < inputArray.length; i++){
+
+                inputArray[i].removeAttribute('disabled');
+            }
+        }
+
+        function checkSelectedIsCurrent(selectedValue){
+
+            var sessionId = "<?php echo session('id');?>";
+
+            //if there is a session, ie this page has not been accessed via a public route
+            if(sessionId !== ""){
+                return sessionId === selectedValue;
+            }
+            return false;
+
+        }
+
+        function checkPrimaryNotSelectedContact(selectedValue){
+
+            var primaryContact = "<?php echo session('primaryContact');?>";
+
+            //if there is a session, ie this page has not been accessed via a public route
+//            if(sessionId !== ""){
+                return selectedValue === primaryContact;
+//            }
+//            return false;//extra measure to ensure if user not logged in cannot process payment
+
+
+        }
+
+        function editPrimaryContact() {
+            console.log('radio changed');
+
+            var inputArray = document.getElementsByClassName("primaryInput");//one for each user
+
+            for (i = 0; i < inputArray.length; i++) {
+
+                if (inputArray[i].checked === true) {
+
+                    var selectedValue = inputArray[i].value;
+                }
+            }
+            //if conditions met
+
+            //1. if primary contact == selected user
+            //do nothing
+            var checkPrimarySelected = checkPrimaryNotSelectedContact(selectedValue);
+
+            if (checkPrimarySelected === true) {
+
+                //do not allow
+                alert("cannot edit the contact as the selected contact is the primary contact already" + selectedValue);
+
+                console.log("primary contact is the selected contact, so do not make a change");
+
+            } else {
+
+                //2. current user == selected user
+                var result = checkSelectedIsCurrent(selectedValue);
+
+                if (result === true) {
+
+                    //present stripe config to user
+
+                    //then
+    //            document.getElementById("radioPrimary").submit();
+                    alert("can edit the contact" + selectedValue);
+
+                } else {
+                    //alert to user that can only select yourself
+                    // ie can only change the primary contact to the logged in user because credit card details are required
+                    alert("cannot edit the contact" + selectedValue);
+
+                }
+            }
+
+        }
+
+        function updateCreditCard(){
+            //conditions:
+            //1. logged in user == primary contact
+
+            //check if user is the primary contact first, else, redirect them to same page with an error msg
+            var verifyUserSwap = verifyUserPrimaryContact();
+
+            if (verifyUserSwap === true) {
+
+                //present checkout widget to user if meets conditions
+                alert("wip.");
+
+            }else{
+
+                //alert error msg to user that only the primary contact can update the credit card details.
+                var errorPrimary = document.getElementById('error-primary');
+                errorPrimary.style.display = "block";
+            }
+
+        }
+
+        //verify the user is the primary contact before displaying the credit card widget
+        //returns true if session user is the primary contact
+        //or false if not the primary contact of not logged in
+        function verifyUserPrimaryContact(){
+
+            var sessionId = "<?php echo session('id');?>";
+
+            var primaryContact = "<?php echo session('primaryContact');?>";
+
+            //if there is a session, ie this page has not been accessed via a public route
+            if(sessionId !== ""){
+                return sessionId === primaryContact;
+            }
+            return false;//extra measure to ensure if user not logged in cannot process payment
+
+        }
 
     </script>
 @stop
@@ -82,11 +206,9 @@
             border-top: none;
         }
 
-        /*.alert-danger{*/
-            /*border-color: #d73925;*/
-            /*color: #fff !important;*/
-            /*background-color: #990000 !important;*/
-        /*}*/
+        #error-primary{
+            display: none;
+        }
 
     </style>
 @stop
@@ -107,6 +229,12 @@
         </div>
     @endif
 
+    {{--DEFAULT do not display, but is made visible if a non primary contact attempts to change credit card details--}}
+    <div class="alert alert-danger margin-top" id="error-primary">
+        Only the primary contact is authorized to update credit card details.
+        The primary contact can be changed in settings>users.
+    </div>
+
     <div id="Users" class="tabcontent col-md-12">
 
             <div style="padding:15px 0px 10px 0px;">
@@ -121,6 +249,7 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Primary Contact <button type="button" onclick="enableEditPrimary()"><i class="fa fa-edit"></i></button></th>
                         <th>Manage</th>
                     </tr>
                     </thead>
@@ -132,6 +261,23 @@
                             <td>{{ $user->last_name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->role }}</td>
+
+                            {{--Display a green checkmark for the primary contact--}}
+                            <form action="/edit-primary-contact" method="POST" id="radioPrimary">
+
+                                @if($user->role == "Manager")
+                                    @if($user->user_id == $compInfo->contact->id)
+                                        <td><input type="radio" name="primaryContact" value="{{$user->user_id}}" onchange="editPrimaryContact()"
+                                                   class="primaryInput" disabled></td>
+                                    @else
+                                        <td><input type="radio" name="primaryContact" value="{{$user->user_id}}" onchange="editPrimaryContact()"
+                                                   class="primaryInput" disabled></td>
+                                    @endif
+                                @else
+                                    <td></td>
+                                @endif
+
+                            </form>
                             <td>
                                 <a href="/user/{{ $user->user_id }}/edit"><i class="fa fa-edit"></i></a>
                                 <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
@@ -193,61 +339,11 @@
                     </p>
                 @endif
                 <br/>
-
-            {{--<tr>--}}
-                {{--<th class="col-md-2">--}}
-                    {{--Company Name:--}}
-                {{--</th>--}}
-                {{--<td>--}}
-                    {{--{{$compInfo->company->name}}--}}
-                {{--</td>--}}
-            {{--</tr>--}}
-            {{--@if($compInfo->company->owner != null)--}}
-                {{--<tr>--}}
-                    {{--<th>--}}
-                        {{--Owner:--}}
-                    {{--</th>--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->company->owner}}--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-            {{--@endif--}}
-            {{--<tr>--}}
-                {{--<th>--}}
-                    {{--Primary Contact:--}}
-                {{--</th>--}}
-                {{--@if($compInfo->contact != null)--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}--}}
-                    {{--</td>--}}
-                {{--@else--}}
-                    {{--<td>--}}
-                        {{--Contact has been deleted via Settings>Users Page--}}
-                    {{--</td>--}}
-                {{--@endif--}}
-            {{--</tr>--}}
-            {{--<tr>--}}
-                {{--<th>--}}
-                    {{--Contact Email:--}}
-                {{--</th>--}}
-                {{--@if($compInfo->contact != null)--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->contact->email}}--}}
-                    {{--</td>--}}
-                {{--@else--}}
-                    {{--<td>--}}
-                        {{--Contact has been deleted via Settings>Users Page--}}
-                    {{--</td>--}}
-                {{--@endif--}}
-            {{--</tr>--}}
             </div>
         </table>
     </div>
 
-    <div id="Subscription" class="tabcontent padding-top">
-        {{--<div id="Subscription" class="tabcontent">--}}
-
-        {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
+    <div id="Subscription" class="tabcontent padding-top padding-left-15">
 
         {{--Trial or Plan Details--}}
         @if(isset($trial))
@@ -258,11 +354,29 @@
                     Kindly reminding you to subscribe to a plan before your free trial ends.
                 </div>
 
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                {{--todo: terms and conditions link--}}
+
+                <div class="settings-sub-btns">
+
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                            id="upgradeBtn">Upgrade Plan
+                    </button>
+
+                    <button type="button" class="btn btn-info" onclick="updateCreditCard()">Update Credit Card
+                    </button>
+
+                    {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+                    <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
+
+                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                </div>
 
                 <p class="nonlist-heading">Trial period ends:</p>
 
                 <p>{{$trialEndsAt}}</p>
+                <br/>
             @else
                 {{--trial has ended, not subscribed--}}
                 <div class="alert alert-danger">
@@ -270,13 +384,40 @@
                     Kindly subscribe to a plan to continue using the application suite.
                 </div>
 
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+                <div class="settings-sub-btns">
+
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                            id="upgradeBtn">Upgrade Plan
+                        {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
+                    </button>
+
+                    {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+                    <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
+
+                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                </div>
+
+                {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
 
             @endif
         @else
                 @if(isset($subscriptionTerm))
+                <div class="settings-sub-btns">
 
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                            id="upgradeBtn">Upgrade Plan
+                    </button>
+
+                    <button type="button" class="btn btn-info" onclick="updateCreditCard()">Update Credit Card
+                    </button>
+
+                    <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
+
+                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                </div>
+                {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
 
                 {{--active subscription--}}
                     <p class="nonlist-heading">Your Plan:</p>
@@ -318,8 +459,19 @@
                         Subscription cancelled! <br />
                         Kindly subscribe to a plan to continue using the application suite.
                     </div>
+                <div class="settings-sub-btns">
 
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                            id="upgradeBtn">Upgrade Plan
+                        {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
+                    </button>
+
+                    {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+                    <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
                     <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                </div>
+                    {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
                 @elseif(isset($subTermGrace))
                     {{--onGracePeriod--}}
 
@@ -327,8 +479,19 @@
                         Subscription cancelled! <br />
                         Kindly subscribe to a plan to continue using the application suite beyond the grace period.
                     </div>
+                <div class="settings-sub-btns">
 
+                    <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                            id="upgradeBtn">Upgrade Plan
+                        {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
+                    </button>
+
+                    {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+                    <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
                     <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+                </div>
+                    {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
 
                     <p class="nonlist-heading">Grace Period Ends:</p>
                     <p>{{$subTrialGrace}}</p>
@@ -350,24 +513,7 @@
                 Contact has been deleted via Settings>Users Page
             </p>
         @endif
-        <br/>
-
-        {{--todo: terms and conditions link--}}
-
-        <div style="padding:15px 0px 10px 0px;">
-
-            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
-                    id="upgradeBtn">Upgrade Plan
-                {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
-            </button>
-
-            {{--todo: check with Nigel what to do here, cancel or contact us?--}}
-            <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
-
-        </div>
-
-
+        {{--<br/>--}}
 
     </div>
-
 @stop

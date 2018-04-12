@@ -790,6 +790,20 @@ table.table.no-borders > tbody > tr > td{
     border: none;
 }
 
+.settings-sub-btns{
+    padding:15px 0px 30px 0px;
+}
+
+#Subscription>p{
+    padding-left: 10px;
+
+}
+
+/*#checkboxPrimary{*/
+    /**/
+    /*disabled: disabled;*/
+/*}*/
+
 /*Header*/
 .header-custom{
     margin-top: 10px;
@@ -1145,6 +1159,12 @@ textarea#desc.form-control.case-desc{
 .padding-left{
 
     padding-left: 10px;
+}
+
+.padding-left-15{
+
+    padding-left: 15px !important;
+
 }
 
 .word-wrap{

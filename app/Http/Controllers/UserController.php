@@ -60,7 +60,7 @@ class UserController extends Controller
 
                 $subscription = getSubscription();
 
-//                dd($subscription);
+//                dd($compInfo, $users);
 
                 //trial
                 $inTrial = $subscription->get('inTrial');
@@ -854,7 +854,7 @@ class UserController extends Controller
                     if(isset($result->primaryContact)){
                         //user is not the primar contact
                         $msg = 'FAILED to update subscription. Only the primary contact is authorized to manage subscriptions. 
-                        The primary contact can be edited in settings>users';
+                        The primary contact can be changed in settings>users';
 
                         return Redirect::to('/subscription/upgrade')->withErrors($msg);
                     }
@@ -1038,6 +1038,13 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $error);
 
         }
+    }
+
+    public function editPrimaryContact(Request $request){
+
+        dd("editPrimaryContact UserController arrived at");
+
+
     }
 
     public function test(){

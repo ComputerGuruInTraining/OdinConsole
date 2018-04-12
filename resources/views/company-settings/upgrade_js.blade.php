@@ -201,12 +201,6 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
         //if there is a session, ie this page has not been accessed via a public route
         if(sessionId !== ""){
             return sessionId === primaryContact;
-//                return true;
-//
-//            }else{
-//                //route users to same page with an error subscription/upgrade
-//                return false;
-//            }
         }
         return false;//extra measure to ensure if user not logged in cannot process payment
 
