@@ -531,6 +531,11 @@ input:checked + .slider:before {
 
 }
 
+.margin-15{
+
+    margin: 15px;
+}
+
 
 .margin-bottom{
     margin-bottom: 10px;
@@ -789,6 +794,20 @@ table.table.no-borders > tbody > tr > th,
 table.table.no-borders > tbody > tr > td{
     border: none;
 }
+
+.settings-sub-btns{
+    padding-bottom: 30px;
+}
+
+#Subscription>p{
+    padding-left: 10px;
+
+}
+
+/*#checkboxPrimary{*/
+    /**/
+    /*disabled: disabled;*/
+/*}*/
 
 /*Header*/
 .header-custom{
@@ -1145,6 +1164,12 @@ textarea#desc.form-control.case-desc{
 .padding-left{
 
     padding-left: 10px;
+}
+
+.padding-left-15{
+
+    padding-left: 15px !important;
+
 }
 
 .word-wrap{

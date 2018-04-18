@@ -1,20 +1,44 @@
 @extends('layouts.master_layout')
 @extends('sidebar')
+@include('layouts.functions_js')
 
 @section('title-item') Settings @stop
 
 @section('custom-scripts')
+
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+
     <script>
+
+        var originalPrimary = null;
+
+        //for subscription is active
+        var subscriptionTerm = "<?php echo $subscriptionTerm?>";//either null or hold a value of monthly/yearly
 
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function(){
+
             openSetting(event, 'Users');
 
             document.getElementById('loadPgTab').className += " active";
 
-//            enableUpgradeBtn();
-
         }, false);
+
+
+        function getPrimaryContact() {
+            var inputArraySelected = document.getElementsByName('primaryContact');
+
+            for (var x = 0; x < inputArraySelected.length; x++) {
+
+                if (inputArraySelected[x].checked === true) {
+
+                    originalPrimary = inputArraySelected[x].value;//the current primary contact's user_id
+
+                    console.log("originalPrimary" + originalPrimary);
+
+                }
+            }
+        }
 
         function openSetting(evt, name) {
             // Declare all variables
@@ -35,8 +59,192 @@
             // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(name).style.display = "block";
             evt.currentTarget.className += " active";
+
+            //hide the divs that shouldn't display until required
+            hideDiv('error-custom-users');
+            hideDiv('info-edit-active');
+            hideDiv('info-edit-non-active');
+            hideDiv('error-custom-users');
+
+            getPrimaryContact();
+
+            //disabled the radio btns by default
+            disableEditPrimary();
         }
 
+        function hideDiv(id){
+            var errorPrimary = document.getElementById(id);
+            errorPrimary.style.display = "none";
+
+        }
+
+        function displayDiv(id){
+            var errorPrimary = document.getElementById(id);
+            errorPrimary.style.display = "block";
+
+        }
+
+        //option1: enable only for current user if active subscription
+        //option2: enable for all users other than current primary contact
+        function enableEditPrimary(){
+
+            var inputArray = document.getElementsByName('primaryContact');//get all radio buttons
+
+            if(subscriptionTerm !== "") {
+                //current user
+                var sessionId = "<?php echo session('id');?>";
+
+                //only enable the current user's radio button
+                for(var i = 0; i < inputArray.length; i++) {
+
+                    //for the current user only
+                    if (sessionId === inputArray[i].value) {
+                        inputArray[i].removeAttribute('disabled');
+                        break;
+                    }
+                }
+
+                //show msg re edit primary contact for users with active subscription
+                displayDiv('info-edit-active');
+
+            }else{
+                //enable all radio btns other than the current primary contact
+                for (var a = 0; a < inputArray.length; a++) {
+
+                    //for all users other than the current primary contact (value stored in OriginalPrimary)
+                    if(inputArray[a].value !== originalPrimary)
+                        inputArray[a].removeAttribute('disabled');
+
+                }
+
+                //show msg re edit primary contact for users without an active subscription
+                displayDiv('info-edit-non-active');
+
+            }
+        }
+
+        //disable all radio buttons
+        function disableEditPrimary(){
+
+            var inputArray = document.getElementsByName('primaryContact');
+
+            for (var i = 0; i < inputArray.length; i++) {
+
+                inputArray[i].setAttribute('disabled','disabled');
+            }
+        }
+
+        //update credit card if the logged in user == primary contact
+        function updateCreditCard(){
+
+            //check if user is the primary contact first, else, redirect them to same page with an error msg
+            var verifyUserSwap = verifyUserPrimaryContact();
+
+            if (verifyUserSwap === true) {
+
+                //present checkout widget to user if meets condition
+                stripeCheckout('updateCard');
+
+            }else{
+
+                displayDiv('error-custom-users');
+            }
+        }
+
+        //conditions 1: only the current logged in user is enabled as an option, and only if the current logged in user
+        // is a manager will they be able to edit
+
+        //requirements 1/condition2: only current user can become the primary contact as entering credit card details next (dealt with by only enabling the current user's radio)
+        //requirements 2: only users that role == manager are allowed to be the primary contact (dealt with on view)
+        //requirements 3: only users that role == manager are allowed to change the primary contact (dealt with  on view)
+        function editPrimaryContact() {
+
+            var inputArray = document.getElementsByName('primaryContact');
+
+            for (var i = 0; i < inputArray.length; i++) {
+
+                if (inputArray[i].checked === true) {
+
+                    var selectedValue = inputArray[i].value;
+                    break;
+                }
+            }
+
+            //put the new primary contact in the form input field
+            var newPrimaryElem = document.getElementById('newPrimaryContact');
+            newPrimaryElem.value = selectedValue;
+
+            //if current subscription, update the credit card details, else simply change the primary contact person
+            if(subscriptionTerm !== "") {
+
+                stripeCheckout('editPrimary');
+            }else{
+                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
+
+            }
+        }
+
+        //Usage: 1.update credit card details ($0)
+        // 2.edit primary contact (a:current subscription active: collect credit card details and create new subscription beginning when current subscription ends, so with trial days $0)
+        //2.edit primary contact (c:onGracePeriod subscription: no, we will not bother creating and cancelling a new subscripton which is what this would entail,
+        // rather we will leave subscription, then if the new primary contact opts to resume subscription (and get subscription should still display the graceperiod and take user to resume)
+        // then we will instead of resuming in this ijnstance, we will create a new subscription with trial days equeal to grace period. )
+        //2.edit primary contact (d:inTrial no subscription created yet: switch trial days to the new primary contact)
+
+        //these scenarios, we will not in essence switch the subscription to the new primary contact
+        //2.edit primary contact (b:cancelled subscription)
+        //2.edit primary contact (e:notInTrial no subscription created yet)
+        function stripeCheckout(feature) {
+
+            var currency = 'USD';//todo: make user toggle and variable
+            var logo = "<?php echo asset("/bower_components/AdminLTE/dist/img/odinlogoSm.jpg")?>";
+            var company = "<?php echo Config::get('constants.COMPANY_NAME');?>";
+            var key = "<?php echo Config::get('services.stripe.key');;?>";
+            var userEmail = "<?php echo $email?>";
+
+            //assign the token returned by checkout widget request to the hidden inputs on the forms
+            var token = function (res) {
+
+                if (feature === "updateCard") {
+                    //update credit card route
+
+                    var tokenRes = document.getElementById('stripeCardToken');
+                    var tokenEmail = document.getElementById('stripeCardEmail');
+
+                    tokenRes.value = res.id;
+                    tokenEmail.value = res.email;
+
+                    document.getElementById("updateCard").submit();
+
+                } else {
+                    //edit primary contact route
+                    var tokenResEdit = document.getElementById('stripeEditToken');
+                    var tokenEmailEdit = document.getElementById('stripeEditEmail');
+
+                    tokenResEdit.value = res.id;
+                    tokenEmailEdit.value = res.email;
+
+                    document.getElementById("radioPrimary").submit();
+
+                }
+            };
+
+            panelLabel = 'Submit Details';
+            desc = 'Update Credit Card Details';
+
+            StripeCheckout.open({
+                key: key,
+                name: company,
+                email: userEmail,
+                image: logo,
+                description: desc,
+                panelLabel: panelLabel,
+                currency: currency,
+                locale: 'auto',
+                zipCode: true,
+                token: token
+            });
+        }
 
     </script>
 @stop
@@ -82,11 +290,14 @@
             border-top: none;
         }
 
-        /*.alert-danger{*/
-            /*border-color: #d73925;*/
-            /*color: #fff !important;*/
-            /*background-color: #990000 !important;*/
-        /*}*/
+        #error-custom-users, #info-edit-active, #info-edit-non-active{
+            display: none;
+        }
+
+        #updateCard{
+            width: 100px;
+            display: inline;
+        }
 
     </style>
 @stop
@@ -98,7 +309,7 @@
     </div>
 
     @if (count($errors) > 0)
-        <div class="alert alert-danger">
+        <div class="alert alert-danger padding">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -106,6 +317,32 @@
             </ul>
         </div>
     @endif
+
+
+    @if (session('status'))
+        <div class="white-font alert alert-odin-success margin-top">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    {{--DEFAULT do not display, but is made visible if a non primary contact attempts to change credit card details--}}
+    <div class="alert alert-danger margin-15" id="error-custom-users">
+        Only the primary contact is authorized to update credit card details.
+        The primary contact can be changed via the users tab.
+    </div>
+
+    <div class="alert alert-odin-info margin-15" id="info-edit-active">
+        To successfully change the primary contact: <br/><br/>
+        *The primary contact's user role must be manager.<br/>
+        *The primary contact is the only user authorized to manage subscriptions so we will require their credit card details as part of the process.<br/>
+        *As we request credit card details, users are only able to change the primary contact to themselves.<br/>
+        *If someone other than yourself is required to be the new primary contact, kindly ask them to make the change personally.
+    </div>
+
+    <div class="alert alert-odin-info margin-15" id="info-edit-non-active">
+        To successfully change the primary contact: <br/><br/>
+        *The primary contact's user role must be manager.
+    </div>
 
     <div id="Users" class="tabcontent col-md-12">
 
@@ -121,27 +358,61 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
+
+                        {{--Edit Primary Contact--}}
+                        @if(session('role') == "Manager")
+                            <th>Primary Contact <button type="button" id="editPrimaryBtn" onclick="enableEditPrimary()"><i class="fa fa-edit"></i></button></th>
+                        @else
+                            <th>Primary Contact <button type="button" id="editPrimaryBtn" onclick="enableEditPrimary()" disabled><i class="fa fa-edit"></i></button></th>
+                        @endif
+
                         <th>Manage</th>
                     </tr>
                     </thead>
 
-                    <tbody>
-                    @foreach ($users as $user)
-                        <tr>
-                            <td>{{ $user->first_name }}</td>
-                            <td>{{ $user->last_name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->role }}</td>
-                            <td>
-                                <a href="/user/{{ $user->user_id }}/edit"><i class="fa fa-edit"></i></a>
-                                <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
+                    <form action="/edit-primary-contact" method="POST" id="radioPrimary">
+                        {{ csrf_field() }}
+
+                        <input type="hidden" name="newPrimaryContact" value="" id="newPrimaryContact"/>
+                        <input type="hidden" name="stripeEditToken" value="" id="stripeEditToken"/>
+                        <input type="hidden" name="stripeEditEmail" value="" id="stripeEditEmail"/>
+
+                        <tbody>
+
+                        @foreach ($users as $user)
+
+                            <tr>
+                                <td>{{ $user->first_name }}</td>
+                                <td>{{ $user->last_name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role }}</td>
+
+                                {{--Primary Contact radio--}}
+                                @if($user->role == "Manager")
+                                    @if($user->user_id == $compInfo->contact->id)
+                                        <td>{{ Form::radio('primaryContact', $user->user_id, true, [
+                                        'onchange' => 'editPrimaryContact()', 'disabled' => 'disabled'
+                                        ])}}</td>
+                                    @else
+                                        <td>{{ Form::radio('primaryContact', $user->user_id, false, [
+                                        'onchange' => 'editPrimaryContact()',  'disabled' => 'disabled'
+                                        ])}}</td>
+                                    @endif
+                                @else
+                                    <td></td>
+                                @endif
+
+                                <td>
+                                    <a href="/user/{{ $user->user_id }}/edit"><i class="fa fa-edit"></i></a>
+                                    <a href="/confirm-delete/{{$user->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+
+                        </tbody>
+                    </form>
 
                 </table>
-
         </div>
     </div>
     <div id="Company" class="tabcontent padding-top">
@@ -163,8 +434,8 @@
                     <p>
                         {{$compInfo->company->owner}}
                     </p>
+                    <br/>
                 @endif
-                <br/>
 
                 <p class="nonlist-heading">
                     Primary Contact:
@@ -193,63 +464,13 @@
                     </p>
                 @endif
                 <br/>
-
-            {{--<tr>--}}
-                {{--<th class="col-md-2">--}}
-                    {{--Company Name:--}}
-                {{--</th>--}}
-                {{--<td>--}}
-                    {{--{{$compInfo->company->name}}--}}
-                {{--</td>--}}
-            {{--</tr>--}}
-            {{--@if($compInfo->company->owner != null)--}}
-                {{--<tr>--}}
-                    {{--<th>--}}
-                        {{--Owner:--}}
-                    {{--</th>--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->company->owner}}--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-            {{--@endif--}}
-            {{--<tr>--}}
-                {{--<th>--}}
-                    {{--Primary Contact:--}}
-                {{--</th>--}}
-                {{--@if($compInfo->contact != null)--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->contact->first_name}} {{$compInfo->contact->last_name}}--}}
-                    {{--</td>--}}
-                {{--@else--}}
-                    {{--<td>--}}
-                        {{--Contact has been deleted via Settings>Users Page--}}
-                    {{--</td>--}}
-                {{--@endif--}}
-            {{--</tr>--}}
-            {{--<tr>--}}
-                {{--<th>--}}
-                    {{--Contact Email:--}}
-                {{--</th>--}}
-                {{--@if($compInfo->contact != null)--}}
-                    {{--<td>--}}
-                        {{--{{$compInfo->contact->email}}--}}
-                    {{--</td>--}}
-                {{--@else--}}
-                    {{--<td>--}}
-                        {{--Contact has been deleted via Settings>Users Page--}}
-                    {{--</td>--}}
-                {{--@endif--}}
-            {{--</tr>--}}
             </div>
         </table>
     </div>
 
-    <div id="Subscription" class="tabcontent padding-top">
-        {{--<div id="Subscription" class="tabcontent">--}}
+    <div id="Subscription" class="tabcontent padding-top padding-left-15">
 
-        {{--<img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>--}}
-
-        {{--Trial or Plan Details--}}
+        {{--alert msgs to user at top of view--}}
         @if(isset($trial))
             @if($trial === true)
 
@@ -257,26 +478,69 @@
                 <div class="alert alert-odin-info">
                     Kindly reminding you to subscribe to a plan before your free trial ends.
                 </div>
-
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
-
-                <p class="nonlist-heading">Trial period ends:</p>
-
-                <p>{{$trialEndsAt}}</p>
             @else
                 {{--trial has ended, not subscribed--}}
                 <div class="alert alert-danger">
                     Trial period ended! <br />
                     Kindly subscribe to a plan to continue using the application suite.
                 </div>
-
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
-
             @endif
         @else
-                @if(isset($subscriptionTerm))
+            @if(isset($subTermCancel))
+                {{--cancelled subscription--}}
 
-                <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+                <div class="alert alert-danger">
+                    Subscription cancelled! <br />
+                    Kindly subscribe to a plan to continue using the application suite.
+                </div>
+            @elseif(isset($subTermGrace))
+                {{--onGracePeriod--}}
+
+                <div class="alert alert-danger">
+                    Subscription cancelled! <br />
+                    Kindly subscribe to a plan to continue using the application suite beyond the grace period.
+                </div>
+            @endif
+        @endif
+
+        {{--page icon--}}
+        <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
+
+        {{--buttons--}}
+        <div class="settings-sub-btns">
+
+            {{--todo: terms and conditions link--}}
+            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
+                    id="upgradeBtn">Upgrade Plan
+            </button>
+
+            {{--display option to update credit card details for current subscriptions--}}
+            @if(isset($subscriptionTerm))
+                <form id="updateCard" action="/update-credit-card" method="POST" type="hidden">
+                    {{ csrf_field() }}
+
+                    <input type="hidden" name="stripeCardToken" value="" id="stripeCardToken"/>
+                    <input type="hidden" name="stripeCardEmail" value="" id="stripeCardEmail"/>
+                    <button type="button" class="btn btn-info" onclick="updateCreditCard()">Update Credit Card
+                    </button>
+                </form>
+
+                {{--todo: check with Nigel what to do here, cancel or contact us?--}}
+
+                <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
+            @endif
+
+        </div>
+
+
+        {{--Trial or Plan Details--}}
+            @if(isset($trial))
+                <p class="nonlist-heading">Trial period ends:</p>
+
+                <p>{{$trialEndsAt}}</p>
+                <br/>
+            @else
+                @if(isset($subscriptionTerm))
 
                 {{--active subscription--}}
                     <p class="nonlist-heading">Your Plan:</p>
@@ -306,34 +570,17 @@
 
                         <p>{{ucwords($subscriptionTerm)}}</p>
 
-                {{--todo: wip--}}
+                        {{--todo: wip--}}
                         {{--<p>Credit card will have next payment deducted on:</p>--}}
 
                         <br/>
                     @endif
 
-                @elseif(isset($subTermCancel))
-                    {{--cancelled subscription--}}
-                    <div class="alert alert-danger">
-                        Subscription cancelled! <br />
-                        Kindly subscribe to a plan to continue using the application suite.
-                    </div>
-
-                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
                 @elseif(isset($subTermGrace))
                     {{--onGracePeriod--}}
-
-                    <div class="alert alert-danger">
-                        Subscription cancelled! <br />
-                        Kindly subscribe to a plan to continue using the application suite beyond the grace period.
-                    </div>
-
-                    <img src="{{ asset("/bower_components/AdminLTE/dist/img/if_price-tag.png") }}" alt="subscription icon" class="page-icon"/>
-
                     <p class="nonlist-heading">Grace Period Ends:</p>
                     <p>{{$subTrialGrace}}</p>
                     <br/>
-
             @endif
         @endif
 
@@ -350,24 +597,5 @@
                 Contact has been deleted via Settings>Users Page
             </p>
         @endif
-        <br/>
-
-        {{--todo: terms and conditions link--}}
-
-        <div style="padding:15px 0px 10px 0px;">
-
-            <button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade'"
-                    id="upgradeBtn">Upgrade Plan
-                {{--todo: once subscriptions in place<button type="button" class="btn btn-success" onclick="window.location.href='/subscription/upgrade/{{$current}}'">Upgrade Plan--}}
-            </button>
-
-            {{--todo: check with Nigel what to do here, cancel or contact us?--}}
-            <a href="/support/users" style="padding-left:10px;color:#333; font-size: smaller;"><span>Cancel Plan</span></a>
-
-        </div>
-
-
-
     </div>
-
 @stop

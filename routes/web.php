@@ -46,6 +46,10 @@ Route::get('/download/{foldername}/{filename}', 'CaseNoteController@download');
 
 Route::resource('/user', 'UserController');
 
+Route::post('/edit-primary-contact', 'UserController@editPrimaryContact');
+
+Route::post('/update-credit-card', 'UserController@updateCreditCard');
+
 Route::resource('/case-notes', 'CaseNoteController');
 
 Route::get('/map-geolocation', 'DashboardController@index');
@@ -152,6 +156,7 @@ Route::get('/pdfSave-{id}', 'ReportController@pdfSave');
 
 Route::get('/pdfview', 'ReportController@pdfView')->name('pdfview');
 
+///support view for  non logged in users
 Route::get('/support', 'DashboardController@support');
 
 Route::get('/privacy', 'DashboardController@privacy');
@@ -166,6 +171,7 @@ Route::get('cancel-delete', function(){
     }
 });
 
+//support view for logged in users
 Route::get('/support/users', 'HomeController@support');
 
 /*****Mailgun Failed Emails Route***/
