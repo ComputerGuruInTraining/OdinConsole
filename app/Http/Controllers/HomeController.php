@@ -20,8 +20,6 @@ class HomeController extends BaseController
     public function getIndex($plan = null, $term = null)
     {
         try {
-//            dd($plan, $term);
-
             //check for the presence of term, amount and term will be passed through together if at all
             if($term == null) {
                 return View::make('home.index');

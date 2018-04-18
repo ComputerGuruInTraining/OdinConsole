@@ -67,4 +67,10 @@ return [
     'TEST_PLAN1_MONTHLY' => 'plan_CXk0vEO3OII8ZU',
     'TEST_PLAN1_YEARLY' => 'plan_CXk0hfbFwLLvVd',
 
+    /*Error Codes*/
+    'EDIT_PRIMARY_CONTACT_ERROR' => 'EPC',
+    'NEW_SUBSCRIPTION_ERROR' => 'NS',
+    'EDIT_PRIMARY_CONTACT_NEW_SUBSCRIPTION' => 'EPCNS',
+
+
 ];

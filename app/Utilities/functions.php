@@ -249,8 +249,6 @@ if (!function_exists('oauth2')) {
                 $userDetails = $user[0];
             }
 
-//            dd($userDetails, $userDetails->status);
-
             //company account has been created but has not been activated via email authentication
             if ($userDetails->status != "active") {
                 return false;
@@ -285,6 +283,7 @@ if (!function_exists('oauth2')) {
     }
 }
 
+//format database dates to be in the form 3rd January 2107
 if (!function_exists('formatDates')) {
     function formatDates($date)
     {
@@ -1105,6 +1104,62 @@ if (!function_exists('planNumUsers')) {
     }
 }
 
+//need the subscription table id for the cancel request
+if (!function_exists('cancelSubscription')) {
+
+    function cancelSubscription($subscriptionId)
+    {
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post(Config::get('constants.API_URL') . 'subscription/cancel', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json',
+                ),
+                'json' => array(
+                    'subId' => $subscriptionId
+                )
+            )
+        );
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        return $responseBody;
+
+    }
+}
+//need the subscription table id for the cancel request
+if (!function_exists('putPrimaryContact')) {
+
+    function putPrimaryContact($newPrimaryContact)
+    {
+        $token = session('token');
+
+        $client = new GuzzleHttp\Client;
+
+        $response = $client->post(Config::get('constants.API_URL') . '/user/primary/contact', array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json',
+                    'X-HTTP-Method-Override' => 'PUT'
+
+                ),
+                'json' => array(
+                    'primaryContact' => $newPrimaryContact
+                )
+            )
+        );
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        return $responseBody;
+
+    }
+}
+
+
 //create subscription in db and with stripe service
 //returns either success = false and primaryContact = false
 //or returns success = false only if subscription did not update for some reason
@@ -1236,7 +1291,6 @@ if (!function_exists('getSubscription')) {
                 $trialEndsAt = jsonDate($subscriptionStatus->trial_ends_at);
 
                 if($subscriptionStatus->trial == true){
-//                if (isset($subscriptionStatus->trial_ends_at)) {
 
                     $inTrial = true;
 
@@ -1407,7 +1461,6 @@ if (!function_exists('stripePlan')) {
 //
 //        $strpos = strpos($string, $separator);
 //
-////dd($strpos);
 //        if($strpos != 0) {
 //            //get the portion at the end of the original string
 //            $string2 = substr($string, ($strpos+1));//term
@@ -1415,7 +1468,6 @@ if (!function_exists('stripePlan')) {
 //            //get the portion at the beginning of the original string
 //            $string1 = substr($string, 0, ($strpos));//plan
 //
-////        dd($strpos, $string2, $string1);
 //
 //
 //            $collection = collect(['string1' => $string1, 'string2' => $string2,]);

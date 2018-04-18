@@ -48,6 +48,8 @@ Route::resource('/user', 'UserController');
 
 Route::post('/edit-primary-contact', 'UserController@editPrimaryContact');
 
+Route::post('/update-credit-card', 'UserController@updateCreditCard');
+
 Route::resource('/case-notes', 'CaseNoteController');
 
 Route::get('/map-geolocation', 'DashboardController@index');
