@@ -11,6 +11,7 @@
     <script>
 
         var originalPrimary = null;
+//        var newPrimary = null;
 
         //for subscription is active
         var subscriptionTerm = "<?php echo $subscriptionTerm?>";//either null or hold a value of monthly/yearly
@@ -22,20 +23,41 @@
 
             document.getElementById('loadPgTab').className += " active";
 
+            getPrimaryContact();//set originalPrimary
+
         }, false);
 
-
+//use the value in the input which will the primary contact as determined by database data
         function getPrimaryContact() {
             var inputArraySelected = document.getElementsByName('primaryContact');
 
+            var sessionPrimary = "<?php echo session('primaryContact');?>";//fixme: error here? ensure session('primaryContact") updated effectively
+
             for (var x = 0; x < inputArraySelected.length; x++) {
 
-                if (inputArraySelected[x].checked === true) {
+                if (inputArraySelected[x].value === sessionPrimary) {
 
                     originalPrimary = inputArraySelected[x].value;//the current primary contact's user_id
+console.log('originalPrimary' + originalPrimary);
+                    break;
+                }
+            }
+        }
 
-                    console.log("originalPrimary" + originalPrimary);
+        //when open the tab, reset to original value so the user must select again, operates best for when cancel on modal selected or cancel checkout widget
+        function resetRadio(){
 
+            var inputArraySelected = document.getElementsByName('primaryContact');
+
+            var sessionPrimary = "<?php echo session('primaryContact');?>";//fixme: error here? ensure session('primaryContact") updated effectively
+
+            for (var x = 0; x < inputArraySelected.length; x++) {
+
+                if (inputArraySelected[x].value === sessionPrimary) {
+
+                    inputArraySelected[x].checked = true;//the current primary contact is selected upon tab open
+console.log('sessionPrimary' + sessionPrimary);
+                    break;
                 }
             }
         }
@@ -66,10 +88,10 @@
             hideDiv('info-edit-non-active');
             hideDiv('error-custom-users');
 
-            getPrimaryContact();
-
             //disabled the radio btns by default
             disableEditPrimary();
+
+            resetRadio();
         }
 
         function hideDiv(id){
@@ -175,13 +197,14 @@
             newPrimaryElem.value = selectedValue;
 
             //if current subscription, update the credit card details, else simply change the primary contact person
-            if(subscriptionTerm !== "") {
+//            if(subscriptionTerm !== "") {
 
-                stripeCheckout('editPrimary');
-            }else{
-                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
+                displayModal();
 
-            }
+//            }else{
+//                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
+//
+//            }
         }
 
         //Usage: 1.update credit card details ($0)
@@ -230,7 +253,7 @@
             };
 
             panelLabel = 'Submit Details';
-            desc = 'Update Credit Card Details';
+            desc = 'Credit Card Details';
 
             StripeCheckout.open({
                 key: key,
@@ -242,8 +265,79 @@
                 currency: currency,
                 locale: 'auto',
                 zipCode: true,
-                token: token
+                token: token,
+                closed: resetRadio,
             });
+
+//            StripeCheckout.close({
+//                resetRadio()
+//            });
+        }
+
+        function displayModal(){
+
+            var modalText = document.getElementById("modal-text");
+
+            if(subscriptionTerm !== "") {
+
+                modalText.style.display = "block";
+
+            }else{
+                modalText.style.display = "none";
+
+//                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
+
+            }
+
+            // Get the modal
+            var modal = document.getElementById("myModal2");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close-odin2")[0];
+
+            // When the user clicks on the button, open the modal
+            modal.style.display = "block";
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+            /**end Modal JS**/
+        }
+
+        function confirmEdit(){
+            var modal = document.getElementById("myModal2");
+            //close the modal and then submit the form
+            modal.style.display = "none";
+
+            //if current subscription, update the credit card details, else simply change the primary contact person
+            if(subscriptionTerm !== "") {
+
+                //present checkoutWidget
+                stripeCheckout('editPrimary');
+
+            }else{
+                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
+
+            }
+
+        }
+
+        function cancelEdit(){
+            var modal = document.getElementById("myModal2");
+
+            //close the modal, do not display checkout widget
+            modal.style.display = "none";
+
+            resetRadio();
+
         }
 
     </script>
@@ -302,6 +396,23 @@
     </style>
 @stop
 @section('page-content')
+    {{--Modal that displays when a user opts to swap a plan via public view pricing model, then logs in, and modal displays to confirm the swap--}}
+    <div id="myModal2" class="modal2-odin">
+        <div class="modal2-odin-content">
+            <div class="modal2-odin-header">
+                <span class="close-odin2">&times;</span>
+                <h3>Change Primary Contact</h3>
+            </div>
+            <div class="modal2-odin-body">
+                <span id="modal-text"><p>Changing the primary contact will transfer the subscription as well, which means the new primary contact's credit card details will need to be provided. </p>
+                <p>The new credit card will be billed when the next bill is due (see Settings>Subscription for billing date).</p></span>
+                <p class="padding-bottom-10">Kindly confirm you would like to change the primary contact?</p>
+                <button type="button" class="btn btn-border" onclick="confirmEdit()">Confirm</button>
+                <button type="button" class="btn btn-border" onclick="cancelEdit()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="tab">
         <button class="tablinks" onclick="openSetting(event, 'Users')" id="loadPgTab">Users</button>
         <button class="tablinks" onclick="openSetting(event, 'Company')">Company</button>
@@ -309,15 +420,14 @@
     </div>
 
     @if (count($errors) > 0)
-        <div class="alert alert-danger padding">
+        <div class="alert alert-danger padding margin-15">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li>{!! $error !!}</li>
                 @endforeach
             </ul>
         </div>
     @endif
-
 
     @if (session('status'))
         <div class="white-font alert alert-odin-success margin-top">
@@ -333,10 +443,10 @@
 
     <div class="alert alert-odin-info margin-15" id="info-edit-active">
         To successfully change the primary contact: <br/><br/>
-        *The primary contact's user role must be manager.<br/>
         *The primary contact is the only user authorized to manage subscriptions so we will require their credit card details as part of the process.<br/>
         *As we request credit card details, users are only able to change the primary contact to themselves.<br/>
-        *If someone other than yourself is required to be the new primary contact, kindly ask them to make the change personally.
+        *If someone other than yourself is required to be the new primary contact, kindly ask them to make the change personally.<br/>
+        *The primary contact's user role must be manager.
     </div>
 
     <div class="alert alert-odin-info margin-15" id="info-edit-non-active">

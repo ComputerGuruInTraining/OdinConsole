@@ -266,7 +266,7 @@ if (!function_exists('oauth2')) {
                         'role' => $userDetails->role,
                         'compId' => $userDetails->compId,
                         'compName' => $userDetails->name,
-                        'primaryContact' => $userDetails->primary_contact,
+                        'primaryContact' => $userDetails->primary_contact,//id
                         'trialEndsAt' => $userDetails->trial_ends_at
                         ]);
 
@@ -572,6 +572,36 @@ if (!function_exists('storeErrorLog')) {
         return $result;
     }
 }
+
+if (!function_exists('errorLogNotify')) {
+
+    function errorLogNotify($event, $recipient, $subject, $errorCode)
+    {
+
+        if (session()->has('token')) {
+            $token = session('token');
+
+            $client = new GuzzleHttp\Client;
+
+            $response = $client->post(Config::get('constants.API_URL').'notify/log/error', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ],
+                'json' => array(
+                    'event' => $event,
+                    'recipient' => $recipient,
+                    'description' => $subject,
+                    'errorCode' => $errorCode,
+                )
+            ]);
+
+            $responseBody = json_decode((string)$response->getBody());
+
+            return $responseBody;
+        }
+    }
+}
+
 
 //function to remove the first and last character of a string
 if (!function_exists('stringRemove1stAndLast')) {
@@ -1126,6 +1156,8 @@ if (!function_exists('cancelSubscription')) {
 
         $responseBody = json_decode((string)$response->getBody());
 
+//        dd($responseBody);
+
         return $responseBody;
 
     }
@@ -1139,7 +1171,7 @@ if (!function_exists('putPrimaryContact')) {
 
         $client = new GuzzleHttp\Client;
 
-        $response = $client->post(Config::get('constants.API_URL') . '/user/primary/contact', array(
+        $response = $client->post(Config::get('constants.API_URL') . 'user/primary/contact', array(
                 'headers' => array(
                     'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json',
@@ -1166,7 +1198,7 @@ if (!function_exists('putPrimaryContact')) {
 //or returns success = true
 if (!function_exists('postSubscription')) {
 
-    function postSubscription($plan, $stripeToken, $period, $trialEndsAt)
+    function postSubscription($plan, $stripeToken, $period, $trialEndsAt, $editPrimary = null)
     {
         if (session()->has('token')) {
             $token = session('token');
@@ -1182,7 +1214,8 @@ if (!function_exists('postSubscription')) {
                         'plan' => $plan,
                         'stripeToken' => $stripeToken,
                         'term' => $period,
-                        'trialEndsAt' => $trialEndsAt
+                        'trialEndsAt' => $trialEndsAt,
+                        'editPrimary' => $editPrimary
                     )
                 )
             );

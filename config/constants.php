@@ -70,7 +70,9 @@ return [
     /*Error Codes*/
     'EDIT_PRIMARY_CONTACT_ERROR' => 'EPC',
     'NEW_SUBSCRIPTION_ERROR' => 'NS',
+    //usage for EPCNS: if the original subscription was cancelled and the new subscription and subsequently resume subscription failed. and didn't revert to original primary contact~
     'EDIT_PRIMARY_CONTACT_NEW_SUBSCRIPTION' => 'EPCNS',
-
+    //usage for EPCCS: subscription wasn't transferred and then didn't revert back to original primary contact. original subscription is still intact.
+    'EDIT_PRIMARY_CONTACT_CANCEL_SUBSCRIPTION' => 'EPCCS',
 
 ];

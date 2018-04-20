@@ -402,20 +402,14 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
 
                 } else {
 
-
                     // Get the modal
                     var modal = document.getElementById('myModal');
-
-                    // Get the button that opens the modal
-//                    var btn = document.getElementById("myBtn");
 
                     // Get the <span> element that closes the modal
                     var span = document.getElementsByClassName("close-odin")[0];
 
                     // When the user clicks on the button, open the modal
-//                    btn.onclick = function() {
                         modal.style.display = "block";
-//                    }
 
                     // When the user clicks on <span> (x), close the modal
                     span.onclick = function() {
@@ -431,10 +425,11 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
                     /**end Modal JS**/
                 }
             }
-        }else{
-            console.log("no subscription to swap");
-
         }
+//        else{
+////            console.log("no subscription to swap");
+//
+//        }
     }
 
     function submitSwap(){
