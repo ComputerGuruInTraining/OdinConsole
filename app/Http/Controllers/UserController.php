@@ -49,6 +49,13 @@ class UserController extends Controller
 
                 $users = array_sort($users, 'last_name', SORT_ASC);
 
+                //retrieve id from session data
+                $id = session('id');
+
+                $user = getUser($id);
+
+                $email = $user->email;
+
                 //company tab
                 $resp = $client->get(Config::get('constants.API_URL') . 'company/' . $compId, [
                     'headers' => [
@@ -59,8 +66,6 @@ class UserController extends Controller
                 $compInfo = json_decode((string)$resp->getBody());
 
                 $subscription = getSubscription();
-
-//                dd($subscription);
 
                 //trial
                 $inTrial = $subscription->get('inTrial');
@@ -102,11 +107,13 @@ class UserController extends Controller
                     'url' => $url,
 
                     'currentUser' => $currentUser,
+                    'email' => $email,
 
                     //subscription tab, all subscription statuses ie cancelled, inGracePeriod, active
                     'numUsers' => $numUsers,
 
                     //subscription tab, if subscription
+                    'current' => $current,
                     'subscriptionTerm' => $subscriptionTerm,
                     'subscriptionTrial' => $subscriptionTrial,
 
@@ -145,7 +152,7 @@ class UserController extends Controller
 
         } catch (\TokenMismatchException $mismatch) {
 
-            return Redirect::to('/');
+            return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
 
         } catch (\InvalidArgumentException $invalid) {
             $error = 'Error loading users';
@@ -282,6 +289,32 @@ class UserController extends Controller
 	{
         try {
             if (session()->has('token')) {
+
+                //before displaying the user to edit, check if the user is the primary contact
+                if($id == session('primaryContact')){
+
+                    //check if subscription is current
+                    $subscription = getSubscription();
+                    $current = $subscription->get('subscriptionPlan');
+
+                    if(isset($current)) {
+
+                        $err = 'The primary contact cannot be edited at this stage.
+                            If you must edit the primary contact email, we recommend: <br><br>
+                            1. Creating a new user with the new email address, and make the new user the primary contact.<br>
+                            2. Changing the primary contact to a different user and then the old primary contact will be editable.<br><br>
+                            Kindly be aware that both of these processes will involve transferring the subscription to 
+                            the new primary contact and providing credit card details. 
+                            As such the change of primary contact must be completed by whomever will be the new primary contact. <br><br>
+                            We sincerely apologise for any inconvenience.';
+
+                        $errors = collect($err);
+
+                        return Redirect::to('/user')->with('errors', $errors);
+                    }
+
+                }
+
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 
@@ -468,7 +501,7 @@ class UserController extends Controller
             }
             //user does not have a valid token
             else {
-                return Redirect::to('/login');
+                return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
             }
         }//api error
         catch (GuzzleHttp\Exception\BadResponseException $e) {
@@ -706,7 +739,6 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
-//            dd($error);
             $e = 'Error displaying subscription page';
             return view('error-msg')->with('msg', $e);
 
@@ -854,7 +886,7 @@ class UserController extends Controller
                     if(isset($result->primaryContact)){
                         //user is not the primar contact
                         $msg = 'FAILED to update subscription. Only the primary contact is authorized to manage subscriptions. 
-                        The primary contact can be edited in settings>users';
+                        The primary contact can be changed in settings>users';
 
                         return Redirect::to('/subscription/upgrade')->withErrors($msg);
                     }
@@ -918,8 +950,6 @@ class UserController extends Controller
 
                 $subscription = getSubscription();
 
-//                dd($subscription, $plan, $term, $subscription->get('inTrial'));
-
                 //in trial
                 $inTrial = $subscription->get('inTrial');
                 $trialEndsAt = $subscription->get('trialEndsAt');
@@ -972,8 +1002,6 @@ class UserController extends Controller
                     }
                 }
 
-//                dd($inTrial, $inTrialJS);
-
                 //end remove soon
 
                 return view('company-settings/upgrade')
@@ -1017,7 +1045,6 @@ class UserController extends Controller
             return view('error-msg')->with('msg', $err);
 
         } catch (\ErrorException $error) {
-            dd($error);
             $e = 'Error displaying subscription page';
             return view('error-msg')->with('msg', $e);
 
@@ -1040,23 +1067,538 @@ class UserController extends Controller
         }
     }
 
+//Process: 1. update primary contact and then cancel subscription (of the original primary contact) and then create new subscription (new primary contact)
+//if all successful, all good. Otherwise....
+//if fail to cancel the subscription or fail to create new subscription,
+//              revert back to original primary contact so the company are aware that billing will still be via original primary contact
+//              and store error in db and notify ourselves as this matter needs to be followed up
+//if fail to create the subscription also need to resume the old subscription todo!
+    public function editPrimaryContact(Request $request){
+
+        try {
+            if(session()->has('token')) {
+
+            //optional values (scope to use the function elsewhere)
+                $stripeToken = $request->stripeEditToken;
+
+//                $stripeEmail = $request->stripeEditEmail;
+
+                //required field
+                $newPrimaryContact = $request->newPrimaryContact;
+
+                //step 1. edit primary contact as create and cancel subscription check to make sure the user is the primary contact
+                $responseBodyPrimary = putPrimaryContact($newPrimaryContact);
+
+                if($responseBodyPrimary->success == true) {
+                    //update the session primary contact
+                    session(['primaryContact' => $responseBodyPrimary->newPrimaryContact]);
+
+                    //for active subscriptions, cancel the current subscription and make a new subscription with new primary contact
+                    if(isset($stripeToken)) {
+
+                        //data needed for api requests
+                        $subscription = getSubscription();
+
+                        //old subscription
+                        $subscriptionPlan = $subscription->get('subscriptionPlan');//ie subPlanActive
+                        $subscriptionTerm = $subscription->get('subscriptionTerm');
+                        $oldActiveSub = $subscription->get('subscription');
+                        $subscriptionId = $oldActiveSub->id;
+
+                        //step 2. cancel the current subscription, need returned to us:
+                        $responseBody = cancelSubscription($subscriptionId);
+
+                        if ($responseBody->success == true) {
+                            if ($responseBody->result == "on grace period") {
+
+                                /*the cancelled subscription ends at date will be the new subscriptions trial days*/
+                                $endsAt = $responseBody->endsAt;//currently in the format 2018-06-05 02:42:27
+
+                                //for the create subscription, the $trialEndsAt needs to be in the format = 5th June 2018
+                                $trialEndsAt = formatDates($endsAt);
+
+                            } else {
+                                //cancelled effective now
+                                $trialEndsAt = null;
+                            }
+
+                            //step 3. create new subscription with cancelled subscription details
+                            $responseBodySubscribe = postSubscription($subscriptionPlan, $stripeToken, $subscriptionTerm, $trialEndsAt, true);
+
+                            if ($responseBodySubscribe->success == true) {
+
+                                //success msg to user
+                                return redirect('/user')->with('status', 'Primary Contact Updated!');
+
+                            } else {
+                                //create subscription failed
+
+                                //change the primary contact back to the original and advise the user the attempt failed. Provide a meaningful error msg if can.
+                                $responseBodyPrimary = putPrimaryContact($oldActiveSub->user_id);
+
+                                if ($responseBodyPrimary->success == true) {
+
+                                    //update the session primary contact
+                                    session(['primaryContact' => $responseBodyPrimary->newPrimaryContact]);
+
+                                    //the change primary contact failed at the postSubscription point,
+                                    // so we reverted to original primary contact and provide an error code
+                                    $epcns = Config::get('constants.EDIT_PRIMARY_CONTACT_NEW_SUBSCRIPTION');
+
+                                    $err = 'Failed to change the primary contact. 
+                                    Please contact support for further assistance and advise them the error code is: ' . $epcns;
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+//                                        return Redirect::back()
+//                                            ->withErrors('Failed to change the primary contact.
+//                                        Please contact support for further assistance and advise them the error code is: ' . $epcns);
+
+                                } else {
+                                    $epcns = Config::get('constants.EDIT_PRIMARY_CONTACT_NEW_SUBSCRIPTION');
+
+                                    //notify ourselves
+                                    errorLogNotify('Edit Primary Contact Failed at Create Subscription', 'na',
+                                        'Transferring the subscription to the new primary contact failed at Create Subscription, 
+                                        and then reverting back to original primary contact also failed. Important! Original Subscription was cancelled!', $epcns);
+
+                                    //todo! important Resume Subscription!
+                                    //AND MAYBE todo: and just change the credit card details for the user as an attempt before notifying ourselves and advising the user of the error.
+
+                                    if(isset($responseBodyPrimary->exception)){
+
+                                        //most helpful for debugging as will provide a meaningful message as to the cause
+                                        //in production, if all common errors dealt with, exceptions might be things such as "Could not resolve host" but less elegant than this
+                                        $err = $responseBodyPrimary->exception;
+
+                                        $errors = collect($err);
+
+                                        return Redirect::to('/user')->with('errors', $errors);
+
+                                    }else {
+
+                                        //we failed to revert back so the change is in place but the subscription has not swapped to the new primary contact.
+                                        $err = 'Failed to successfully update all details associated with the primary contact. 
+                                        The company subscription did not successfully update to include the new credit card details. 
+                                        Please update credit card details via the subscriptions tab.';
+
+                                        $errors = collect($err);
+
+                                        return Redirect::to('/user')->with('errors', $errors);
+
+                                    }
+                                }
+                            }
+
+                        } else {
+                            //cancel subscription failed
+
+                            //change the primary contact back to the original and advise the user the attempt failed. Provide a meaningful error msg if can.
+                            $responseBodyPrimary = putPrimaryContact($oldActiveSub->user_id);//todo,check, it is correct is it not. or else return the old primary contact when create a rpimar cotnatc.t
+
+                            if ($responseBodyPrimary->success == true) {
+
+                                //update the session primary contact
+                                session(['primaryContact' => $responseBodyPrimary->newPrimaryContact]);
+
+                                //atm, result on a false success will == "unauthorized", but scope for other error msgs as required/encountered
+                                if ($responseBody->result == "unauthorized") {
+                                    $err = 'User is not authorized to cancel the subscription on behalf of the company.';
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+                                }
+
+                            } else {
+
+                                $epccs = Config::get('constants.EDIT_PRIMARY_CONTACT_CANCEL_SUBSCRIPTION');
+
+                                //notify ourselves
+                                errorLogNotify('Edit Primary Contact Failed at Cancel Subscription', 'na',
+                                    'Transferring the subscription to the new primary contact failed at Cancel Subscription, 
+                                    and then reverting back to original primary contact also failed', $epccs);
+
+                                if(isset($responseBodyPrimary->exception)){
+
+                                    //most helpful for debugging as will provide a meaningful message as to the cause
+                                    //in production, if all common errors dealt with, exceptions might be things such as "Could not resolve host" but less elegant than this
+                                    $err = $responseBodyPrimary->exception;
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+                                }else {
+
+                                        $err = 'Failed to update the primary contact. 
+                                        Please contact support for further assistance and advise them the error code is: ' . $epccs;
+
+                                        $errors = collect($err);
+
+                                        return Redirect::to('/user')->with('errors', $errors);
+                                }
+                            }
+                        }
+
+                    }
+                    //else, for companies that do not have a subscription active at the moment,
+
+                    return redirect('/user')->with('status', 'Primary Contact Updated!');
+
+                }else {
+                    //success of update primary contact == false
+                    if(isset($responseBodyPrimary->exception)){
+
+                        //most helpful for debugging as will provide a meaningful message as to the cause
+                        //in production, if all common errors dealt with, exceptions might be things such as "Could not resolve host" but less elegant than this
+                        $err = $responseBodyPrimary->exception;
+
+                        $errors = collect($err);
+
+                        return Redirect::to('/user')->with('errors', $errors);
+
+                    }else {
+                        $err = 'Failed to update the primary contact.';
+
+                        $errors = collect($err);
+
+                        return Redirect::to('/user')->with('errors', $errors);
+                    }
+                }
+            //end if(session()->has('token'))
+            }else {
+                return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
+
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+
+            $err = 'Error communicating with server.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\ErrorException $error) {
+
+            $err = 'Error sending through primary contact details.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\Exception $err) {
+
+            $err = 'Error updating primary contact.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            $err = 'Session has expired. Kindly login again.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/')->with('errors', $errors);
+
+        } catch (\InvalidArgumentException $invalid) {
+
+            $err = 'Error exception editing primary contact.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch(\handleViewException $handle){
+
+            $err = 'Error editing primary contact details.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+        }
+    }
+
+    public function updateCreditCard(Request $request){
+        try {
+            if (session()->has('token')) {
+
+                $stripeToken = $request->stripeCardToken;
+
+                //api request to update the credit card details
+                dd($stripeToken);
+
+
+            }else{
+                return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
+
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $err = 'Error sending credit card details to the server.';
+
+            return Redirect::back()
+                ->withErrors($err);
+
+        } catch (\ErrorException $error) {
+            $err = 'Error updating credit card details.';
+
+            return Redirect::back()
+                ->withErrors($err);
+
+        } catch (\Exception $err) {
+            $error = 'Error updating credit card.';
+
+            return Redirect::back()
+                ->withErrors($error);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
+
+        } catch (\InvalidArgumentException $invalid) {
+            $err = 'Error exception updating credit card details.';
+
+            return Redirect::back()
+                ->withErrors($err);
+
+        } catch(\handleViewException $handle){
+            $err = 'Error updating credit card details on the server.';
+
+            return Redirect::back()
+                ->withErrors($err);
+
+        }
+    }
+
     public function test(){
 
-        $signature = '%2FyRVzgyQeGB8x0N6ZruXbWFla3KrP3l3%2BV3TcHG%2BRU8%3D';
+        try {
+            if(session()->has('token')) {
 
-        $signature = rawurlencode($signature);
+                //optional values (scope to use the function elsewhere)
+                $stripeToken = 'tok_1CIAikARm1DhvNyDaeQR6DTm';
 
-        $myUrl = 'https://odinlitestorage.blob.core.windows.net/images/1518068557291.jpeg?st=2018-03-20T23%3A59%3A00Z&se=2018-03-22T08%3A00%3A00Z&sr=b&sp=r&sv=2017-04-17&rsct=image/jpeg&sig=';
+                $stripeEmail = 'odinlitebtestingmyappstoo@gmail.com';
 
-        return view('home.test')->with(array(
-                    'signature' => $signature,
-                    'myUrl' => $myUrl,
+                //required field
+                $newPrimaryContact = 1924;
 
-                ));
+                //step 1. edit primary contact as create and cancel subscription check to make sure the user is the primary contact
+                $responseBodyPrimary = putPrimaryContact($newPrimaryContact);
 
-        dd($signature);
+                if($responseBodyPrimary->success == true) {
+                    //for active subscriptions, cancel the current subscription and make a new subscription with new primary contact
+                    if(isset($stripeToken)) {
 
-        $myUrl = 'https://odinlitestorage.blob.core.windows.net/images/1518068557291.jpeg?st=2018-03-20T23%3A59%3A00Z&se=2018-03-22T08%3A00%3A00Z&sr=b&sp=r&sv=2017-04-17&rsct=image/jpeg&sig=';
+                        //data needed for api requests
+                        $subscription = getSubscription();
+
+                        //old subscription
+                        $subscriptionPlan = $subscription->get('subscriptionPlan');//ie subPlanActive
+                        $subscriptionTerm = $subscription->get('subscriptionTerm');
+                        $oldActiveSub = $subscription->get('subscription');
+                        $subscriptionId = $oldActiveSub->id;//fixme: field correct?
+
+                        $primaryContact = $oldActiveSub->user_id;//fixme: field correct?
+
+//                            //api request to update the credit card details
+//                    dd("stripeToken", $stripeToken, '$newPrimaryContact', $newPrimaryContact, '$stripeEmail', $stripeEmail,
+//                        '$subscriptionId', $subscriptionId, '$primaryCotnact', $primaryContact);
+
+
+                        //step 2. cancel the current subscription, need returned to us:
+                        $responseBody = cancelSubscription($subscriptionId);
+
+                        if ($responseBody->success == true) {
+                            if ($responseBody->result == "on grace period") {
+
+                                //onGracePeriod
+                                $endsAt = $responseBody->endsAt;//currently in the format 2018-06-05 02:42:27
+
+                                //for the create subscription, the $endsAt needs to be in the format = 5th June 2018
+                                $trialEndsAt = formatDates($endsAt);
+
+                            } else {
+                                //cancelled effective now
+                                $trialEndsAt = null;
+                            }
+
+                            //step 3. create new subscription with cancelled subscription details
+                            $responseBodySubscribe = postSubscription($subscriptionPlan, $stripeToken, $subscriptionTerm, $trialEndsAt);
+
+                            if ($responseBodySubscribe->success == true) {
+                                //update the session primary contact
+                                session(['primaryContact' => $responseBodyPrimary->newPrimaryContact]);
+                                //success msg to user
+                                return redirect('/user')->with('status', 'Primary Contact Updated!');
+
+                            } else {
+                                //create subscription failed
+
+                                //change the primary contact back to the original and advise the user the attempt failed. Provide a meaningful error msg if can.
+                                $responseBodyPrimary = putPrimaryContact($oldActiveSub->user_id);//todo,check, it is correct is it not. or else return the old primary contact when create a rpimar cotnatc.t
+
+                                if ($responseBodyPrimary->success == true) {
+
+                                    //the change primary contact failed at the postSubscription point,
+                                    // so we reverted to original primary contact and provide an error code
+                                    $epcns = Config::get('constants.EDIT_PRIMARY_CONTACT_NEW_SUBSCRIPTION');
+
+                                    $err = 'Failed to change the primary contact. 
+                                        Please contact support for further assistance and advise them the error code is: ' . $epcns;
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+//                                        return Redirect::back()
+//                                            ->withErrors('Failed to change the primary contact.
+//                                        Please contact support for further assistance and advise them the error code is: ' . $epcns);
+
+                                } else {
+
+                                    //we failed to revert back so the change is in place but the subscription has not swapped to the new primary contact.
+                                    //therefore, todo: notify ourselves of the error and advise user that the process didn't complete smoothly.
+                                    //try todo: and just change the credit card details for the user as an attempt before notifying ourselves and advising the user of the error.
+                                    $err = 'Failed to successfully update all details associated with the primary contact. 
+                                        The company subscription did not successfully update to include the new credit card details. 
+                                        Please update credit card details via the subscriptions tab.';
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+
+//                                        return
+//
+//                                            Redirect::back()
+//                                            ->withErrors('Failed to successfully update all details associated with the primary contact.
+//                                        The company subscription did not successfully update to include the new credit card details.
+//                                        Please update credit card details via the subscriptions tab.');
+                                }
+                            }
+
+                        } else {
+                            //cancel subscription failed
+
+                            //atm, result on a false success will == "unauthorized", but scope for other error msgs as required/encountered
+                            if ($responseBody->result == "unauthorized") {
+
+                                //change the primary contact back to the original and advise the user the attempt failed. Provide a meaningful error msg if can.
+                                $responseBodyPrimary = putPrimaryContact($oldActiveSub->user_id);//todo,check, it is correct is it not. or else return the old primary contact when create a rpimar cotnatc.t
+
+                                if ($responseBodyPrimary->success == true) {
+//
+//                                        $err = 'User is not authorized to cancel the subscription on behalf of the company.';
+//
+//                                        return Redirect::back()->withErrors($err);
+
+                                    $err = 'User is not authorized to cancel the subscription on behalf of the company.';
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+
+                                } else {
+
+                                    //todo: notify ourselves
+                                    $epcns = Config::get('constants.EDIT_PRIMARY_CONTACT');
+
+                                    $err = 'Failed to update the primary contact. 
+                                        Please contact support for further assistance and advise them the error code is: ' . $epcns;
+
+                                    $errors = collect($err);
+
+                                    return Redirect::to('/user')->with('errors', $errors);
+
+//                                        return Redirect::back()
+//                                            ->withErrors('Failed to update the primary contact.
+//                                        Please contact support for further assistance and advise them the error code is: ' . $epcns);
+
+                                }
+                            }
+
+                        }
+                    }
+                    //else, for companies that do not have a subscription active at the moment,
+
+                    //update the session primary contact
+                    session(['primaryContact' => $responseBodyPrimary->newPrimaryContact]);
+
+                    return redirect('/user')->with('status', 'Primary Contact Updated!');
+
+                }else {
+                    //success of update primary contact == false
+                    $err = 'Failed to update the primary contact.';
+
+                    $errors = collect($err);
+
+                    return Redirect::to('/user')->with('errors', $errors);
+
+//                    $err = 'Failed to update the primary contact.';
+//
+//                    return Redirect::back()
+//                        ->withErrors($err);
+                }
+                //end if(session()->has('token'))
+            }else {
+                return Redirect::to('/')->withErrors('Session has expired. Kindly login again.');
+
+            }
+        }catch (GuzzleHttp\Exception\BadResponseException $e) {
+
+            $err = 'Error communicating with server.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\ErrorException $error) {
+
+            $err = 'Error sending through primary contact details.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\Exception $err) {
+
+            $err = 'Error updating primary contact.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch (\TokenMismatchException $mismatch) {
+
+            $err = 'Session has expired. Kindly login again.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/')->with('errors', $errors);
+
+        } catch (\InvalidArgumentException $invalid) {
+
+            $err = 'Error exception editing primary contact.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+
+        } catch(\handleViewException $handle){
+
+            $err = 'Error editing primary contact details.';
+
+            $errors = collect($err);
+
+            return Redirect::to('/user')->with('errors', $errors);
+        }
     }
+
 
 }

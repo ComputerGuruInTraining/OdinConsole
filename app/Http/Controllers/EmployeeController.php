@@ -401,6 +401,32 @@ class EmployeeController extends Controller
     {
         try {
             if (session()->has('token')) {
+
+                //before displaying the user to edit, check if the user is the primary contact
+                if($id == session('primaryContact')){
+
+                    //check if subscription is current
+                    $subscription = getSubscription();
+                    $current = $subscription->get('subscriptionPlan');
+
+                    if(isset($current)) {
+
+                        $err = 'The selected user is the primary contact and cannot be edited at this stage.
+                            If you must edit the primary contact email, we recommend (via settings>users): <br><br>
+                            1. Creating a new user with the new email address, and make the new user the primary contact.<br>
+                            2. Changing the primary contact to a different user and then the old primary contact will be editable.<br><br>
+                            Kindly be aware that both of these processes will involve transferring the subscription to 
+                            the new primary contact and providing credit card details. 
+                            As such the change of primary contact must be completed by whomever will be the new primary contact. <br><br>
+                            We sincerely apologise for any inconvenience.';
+
+                        $errors = collect($err);
+
+                        return Redirect::to('/employees')->with('errors', $errors);
+                    }
+
+                }
+
                 //retrieve token needed for authorized http requests
                 $token = session('token');
 

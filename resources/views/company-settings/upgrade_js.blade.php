@@ -16,8 +16,6 @@
         var chosenTerm = "<?php echo $chosenTerm?>";//term or null
         var current = "<?php echo $current?>";//active sub or php null which == "" for js purposes
 
-//console.log(current);
-
         //check to see if the selected variable has a value, if so, open checkout widget
         // else it will be a blank string if initialised as null on controller ie routed via = '/subscription/upgrade'
         //Usage: '/upgrade/subscription/{plan}/{term}' route passes through the plan and term
@@ -48,11 +46,9 @@
                      if(inTrialJS === "true"){
 
                          submitDetailsBtn(selected);//set the value of plan which will be passed through with form submission
-//                        stripeConfig(selected, chosenTerm, 0);
                      }else{
                          //create subscription option 2: in trial == false and no subscription ever therefore $Costs
                          submitBtn(selected);
-//                         stripeConfig(selected, chosenTerm);
                      }
 
                  }else{
@@ -201,12 +197,6 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
         //if there is a session, ie this page has not been accessed via a public route
         if(sessionId !== ""){
             return sessionId === primaryContact;
-//                return true;
-//
-//            }else{
-//                //route users to same page with an error subscription/upgrade
-//                return false;
-//            }
         }
         return false;//extra measure to ensure if user not logged in cannot process payment
 
@@ -412,20 +402,14 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
 
                 } else {
 
-
                     // Get the modal
                     var modal = document.getElementById('myModal');
-
-                    // Get the button that opens the modal
-//                    var btn = document.getElementById("myBtn");
 
                     // Get the <span> element that closes the modal
                     var span = document.getElementsByClassName("close-odin")[0];
 
                     // When the user clicks on the button, open the modal
-//                    btn.onclick = function() {
                         modal.style.display = "block";
-//                    }
 
                     // When the user clicks on <span> (x), close the modal
                     span.onclick = function() {
@@ -441,10 +425,11 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
                     /**end Modal JS**/
                 }
             }
-        }else{
-            console.log("no subscription to swap");
-
         }
+//        else{
+////            console.log("no subscription to swap");
+//
+//        }
     }
 
     function submitSwap(){
@@ -465,6 +450,8 @@ console.log("subTrialGrace" + subTrialGrace, "subTermCancel" + subTermCancel);
     }
 
     //collect credit card details again to be sure
+    //conditions check 1. if on grace period and primary contact has been edited since the grace period begun
+    // OR alternatively the user id is not the current primary contact for the onGracePeriod most recent subscriptions
     //either stripeConfig with a 4th optional pm, (change all 3rd non parameters to be null or going to need another function)
     //different form submit route.
     // or have an input field which we set and then reset once form submitted (so on payment/upgrade route) which says resume/swap/create

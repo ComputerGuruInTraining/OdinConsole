@@ -66,14 +66,14 @@ GREYS:
 
 .btn-border{
 
-    border: 1px solid #28C309 !important;
+    border: 1px solid #333 !important;
     background-color: #ffffff;
 
 }
 
 /*Modal*/
 /* The Modal (background) */
-.modal-odin {
+.modal-odin, .modal2-odin{
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -90,7 +90,7 @@ GREYS:
 }
 
 /* Modal Content */
-.modal-odin-content {
+.modal-odin-content, .modal2-odin-content {
     position: relative;
     background-color: #fefefe;
     margin: auto;
@@ -116,31 +116,37 @@ GREYS:
 }
 
 /* The Close Button */
-.close-odin {
-    color: white;
+.close-odin, .close-odin2 {
+    color: #333;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
 .close-odin:hover,
-.close-odin:focus {
+.close-odin:focus,
+.close-odin2:hover,
+.close-odin2:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
 }
 
-.modal-odin-header {
+.modal-odin-header, .modal2-odin-header {
     padding: 1px 16px 0px 16px;
-    background-color: #28C309;
-    color: white;
+    background-color: #bfff80;
+    color: #333;
     height: 60px;
 }
 
-.modal-odin-body {
+.modal-odin-body, .modal2-odin-body {
     padding: 16px;
     line-height: 2;
 }
+
+/*#modal-text{*/
+    /*display: none;*/
+/*}*/
 /*end Modal*/
 
 /*Discount ribbon*/
@@ -531,6 +537,11 @@ input:checked + .slider:before {
 
 }
 
+.margin-15{
+
+    margin: 15px;
+}
+
 
 .margin-bottom{
     margin-bottom: 10px;
@@ -789,6 +800,20 @@ table.table.no-borders > tbody > tr > th,
 table.table.no-borders > tbody > tr > td{
     border: none;
 }
+
+.settings-sub-btns{
+    padding-bottom: 30px;
+}
+
+#Subscription>p{
+    padding-left: 10px;
+
+}
+
+/*#checkboxPrimary{*/
+    /**/
+    /*disabled: disabled;*/
+/*}*/
 
 /*Header*/
 .header-custom{
@@ -1145,6 +1170,12 @@ textarea#desc.form-control.case-desc{
 .padding-left{
 
     padding-left: 10px;
+}
+
+.padding-left-15{
+
+    padding-left: 15px !important;
+
 }
 
 .word-wrap{
@@ -3207,6 +3238,7 @@ a {
 .box-input {
     max-width: 200px;
 }
+
 .modal .panel-body {
     color: #444;
 }
