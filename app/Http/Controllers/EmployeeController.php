@@ -422,7 +422,7 @@ class EmployeeController extends Controller
 
                         $errors = collect($err);
 
-                        return Redirect::to('/user')->with('errors', $errors);
+                        return Redirect::to('/employees')->with('errors', $errors);
                     }
 
                 }
