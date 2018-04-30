@@ -159,6 +159,10 @@ console.log('sessionPrimary' + sessionPrimary);
         //update credit card if the logged in user == primary contact
         function updateCreditCard(){
 
+            //todo proper credit card update code
+            alert("Update Credit Card is a Work in Progress. Please watch this space.");
+            /*
+
             //check if user is the primary contact first, else, redirect them to same page with an error msg
             var verifyUserSwap = verifyUserPrimaryContact();
 
@@ -170,7 +174,7 @@ console.log('sessionPrimary' + sessionPrimary);
             }else{
 
                 displayDiv('error-custom-users');
-            }
+            }*/
         }
 
         //conditions 1: only the current logged in user is enabled as an option, and only if the current logged in user
@@ -196,15 +200,8 @@ console.log('sessionPrimary' + sessionPrimary);
             var newPrimaryElem = document.getElementById('newPrimaryContact');
             newPrimaryElem.value = selectedValue;
 
-            //if current subscription, update the credit card details, else simply change the primary contact person
-//            if(subscriptionTerm !== "") {
+            displayModal();
 
-                displayModal();
-
-//            }else{
-//                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
-//
-//            }
         }
 
         //Usage: 1.update credit card details ($0)
@@ -269,9 +266,6 @@ console.log('sessionPrimary' + sessionPrimary);
                 closed: resetRadio,
             });
 
-//            StripeCheckout.close({
-//                resetRadio()
-//            });
         }
 
         function displayModal(){
@@ -284,8 +278,6 @@ console.log('sessionPrimary' + sessionPrimary);
 
             }else{
                 modalText.style.display = "none";
-
-//                document.getElementById("radioPrimary").submit();//stripeEditToken & stripeEditEmail will be null
 
             }
 
