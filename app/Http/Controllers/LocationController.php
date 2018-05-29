@@ -213,6 +213,13 @@ class LocationController extends Controller
                         'entity' => 'Location')
                     );
                 } else {
+                    
+                    if(isset($reply->exception)){
+                    
+                        $errors = collect($reply->exception);
+                        return view('location/create-locations')->with('errors', $errors);
+                    }
+
                     return Redirect::to('/location-create');
                 }
 
