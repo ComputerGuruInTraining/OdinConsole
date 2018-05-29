@@ -517,6 +517,7 @@ class LocationController extends Controller
                     ->withInput()
                     ->withErrors($e);
             } else {
+                dd($error->getMessage());
                 return Redirect::to('/location-create')
                     ->withInput()
                     ->withErrors('Unable to store the location. Probably due to invalid input.');
