@@ -68,11 +68,15 @@ Route::resource('/reports', 'ReportController', ['except' => [
 
 Route::resource('/rosters', 'RosterController');
 
-Route::resource('/employees', 'EmployeeController');
+Route::resource('/employees', 'EmployeeController', ['except' => [
+    'show'
+]]);
 
 Route::get('employee/create-existing', 'EmployeeController@selectUser');
 
-Route::post('/employees/create-existing-user', 'EmployeeController@createExisting');
+// Route::post('/employees/create-existing-user', 'EmployeeController@createExisting');
+
+Route::get('/employee/create-existing/{userId}', 'EmployeeController@createExisting');
 
 Route::post('/employee/create-existing/{userId}', 'EmployeeController@storeExisting');
 

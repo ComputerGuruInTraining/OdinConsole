@@ -42,6 +42,8 @@ class EmployeeController extends Controller
                 ]);
 
                 $employees = json_decode((string)$response->getBody());
+
+// dd($employees);
                 //format dates to be mm/dd/yyyy for case notes
                 foreach ($employees as $i => $item) {
                     //convert string date to DateTime and format date
@@ -144,18 +146,31 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createExisting(Request $request)
+    // public function createExisting(Request $request)
+        public function createExisting($userId)
+
     {
         try {
             if (session()->has('token')) {
 
                 //get userId from the input
-                $userId = Input::get('user');
+                // $userId = Input::get('user');
 
                 //get user details from db via api using a function defined in functions.php
+                // $user = getUser($userId);
                 $user = getUser($userId);
 
-                return view('employee/add-employee-user')->with('user', $user);
+                $verified = verifyCompanyConsole($user);
+
+                if($verified){
+
+                    return view('employee/add-employee-user')->with('user', $user);
+
+                }else{
+                    $err = 'Access to employee details denied.';
+                    return view('error-msg')->with(array('msg'=> $err, 'errorTitle' => 'Unauthenticated'));
+
+                }
 
             } else {
                 return Redirect::to('/login');
@@ -375,7 +390,7 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-//    public function show(Employee $employee)
+//    public function show($id)
 //    {
 //        try {
 //            if (session()->has('token')) {

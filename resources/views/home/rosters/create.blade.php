@@ -14,7 +14,7 @@
         window.addEventListener("load", function () {
 
             //default tab to open
-            openStep(event, 1);
+            openStep(null, 1);
             document.getElementById('loadPgTab').className += " active";
 
             //default show location & employee list
@@ -50,7 +50,10 @@
 
             // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(stepNum).style.display = "block";
-            evt.currentTarget.className += " active";
+
+            if(evt !== null){
+                evt.currentTarget.className += " active";
+            }
 
             if (stepNum == 4) {
                 checksInput();

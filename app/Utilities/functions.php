@@ -549,6 +549,25 @@ if (!function_exists('getUserRole')) {
     }
 }
 
+//Purpose: verify a user belongs to the same company as the current logged in user's company
+if (!function_exists('verifyCompanyConsole')) {
+
+    function verifyCompanyConsole($model)
+    {
+        //if empty model ie {}, $model instance == null
+        if($model == null) {
+            return "empty";
+        }
+
+        //need to check the user's company
+        if (session('compId') == $model->company_id) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('storeErrorLog')) {
 
     function storeErrorLog($event, $recipient, $subject = null)
