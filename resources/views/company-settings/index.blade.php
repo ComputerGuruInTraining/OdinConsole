@@ -19,7 +19,7 @@
         //open contact tab upon page load and show the tab as active
         window.addEventListener("load", function(){
 
-            openSetting(event, 'Users');
+            openSetting(null, 'Users');
 
             document.getElementById('loadPgTab').className += " active";
 
@@ -38,7 +38,7 @@
                 if (inputArraySelected[x].value === sessionPrimary) {
 
                     originalPrimary = inputArraySelected[x].value;//the current primary contact's user_id
-console.log('originalPrimary' + originalPrimary);
+// console.log('originalPrimary' + originalPrimary);
                     break;
                 }
             }
@@ -56,7 +56,7 @@ console.log('originalPrimary' + originalPrimary);
                 if (inputArraySelected[x].value === sessionPrimary) {
 
                     inputArraySelected[x].checked = true;//the current primary contact is selected upon tab open
-console.log('sessionPrimary' + sessionPrimary);
+// console.log('sessionPrimary' + sessionPrimary);
                     break;
                 }
             }
@@ -80,7 +80,10 @@ console.log('sessionPrimary' + sessionPrimary);
 
             // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(name).style.display = "block";
-            evt.currentTarget.className += " active";
+
+            if(evt !== null){
+                evt.currentTarget.className += " active";
+            }
 
             //hide the divs that shouldn't display until required
             hideDiv('error-custom-users');
@@ -622,14 +625,14 @@ console.log('sessionPrimary' + sessionPrimary);
 
             {{--display option to update credit card details for current subscriptions--}}
             @if(isset($subscriptionTerm))
-                <form id="updateCard" action="/update-credit-card" method="POST" type="hidden">
+                <!--<form id="updateCard" action="/update-credit-card" method="POST" type="hidden">
                     {{ csrf_field() }}
 
                     <input type="hidden" name="stripeCardToken" value="" id="stripeCardToken"/>
                     <input type="hidden" name="stripeCardEmail" value="" id="stripeCardEmail"/>
                     <button type="button" class="btn btn-info" onclick="updateCreditCard()">Update Credit Card
                     </button>
-                </form>
+                </form>-->
 
                 {{--todo: check with Nigel what to do here, cancel or contact us?--}}
 
