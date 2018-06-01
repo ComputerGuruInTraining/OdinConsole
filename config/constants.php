@@ -9,11 +9,11 @@
 //api routes
 return [
 
-    // 'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
-    // 'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
+    'STANDARD_URL' => 'https://odinliteapi.azurewebsites.net/',
+    'API_URL' => 'https://odinliteapi.azurewebsites.net/api/',
     /*****Api*****/
-   'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
-   'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
+//    'STANDARD_URL' => 'https://odinliteapitest.azurewebsites.net/',
+//    'API_URL' => 'https://odinliteapitest.azurewebsites.net/api/',
 
     /*****Company Specs******/
     'COMPANY_EMAIL' => 'admin@odinlite.net',
