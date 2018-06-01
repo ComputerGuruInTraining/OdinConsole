@@ -15,7 +15,7 @@
 @section('page-content')
     <div class='form-pages col-md-8'>
 
-        {{ Form::open(['role' => 'form', 'url' => '/employees/create-existing-user']) }}
+        <!--{{ Form::open(['role' => 'form', 'url' => '/employees/create-existing-user']) }}-->
 
         <div class='form-group'>
             {!! Form::Label('users', 'Select User *') !!}
@@ -29,11 +29,13 @@
         </div>
 
         <div class='form-group form-buttons'>
-            {{ Form::submit('Next', ['class' => 'btn btn-primary']) }}
-            <a href="/reports" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
+            <!--{{ Form::submit('Next', ['class' => 'btn btn-primary']) }}-->
+            <a href="/employee/create-existing/{{$user->id}}" class="btn btn-info" style="margin-right: 3px;">Next</a>
+
+            <a href="/employees" class="btn btn-info" style="margin-right: 3px;">Cancel</a>
         </div>
 
-        {{ Form::close() }}
+        <!--{{ Form::close() }}-->
 
     </div>
 @stop

@@ -51,8 +51,11 @@
 
                         <td>
                             <a href="/employees/{{$employee->user_id}}/edit"><i class="fa fa-edit"></i></a>
-                            <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
-
+                            @if(session('id') != $employee->user_id)
+                                <a href="/confirm-delete/{{$employee->user_id}}/{{$url}}" style="color: #990000;"><i class="fa fa-trash-o icon-padding"></i></a>
+                            @else
+                                <i class="fa fa-trash-o icon-padding"></i>
+                            @endif
                         </td>
 
                     </tr></tbody>
