@@ -213,6 +213,13 @@ class LocationController extends Controller
                         'entity' => 'Location')
                     );
                 } else {
+                    
+                    if(isset($reply->exception)){
+                    
+                        $errors = collect($reply->exception);
+                        return view('location/create-locations')->with('errors', $errors);
+                    }
+
                     return Redirect::to('/location-create');
                 }
 
@@ -440,7 +447,17 @@ class LocationController extends Controller
     public function geoCode($address)
     {
         $prepAddr = str_replace(' ', '+', $address);
-        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew');
+
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
+        $geocode = file_get_contents('https://maps.google.com/maps/api/geocode/json?address=' . $prepAddr . '&key=AIzaSyA1HtcSijw1F0mJRLpsr8ST5koG4T9_tew',
+        false, stream_context_create($arrContextOptions));
+
         $output = json_decode($geocode);
         return $output;
     }
@@ -510,6 +527,14 @@ class LocationController extends Controller
                     ->withInput()
                     ->withErrors($e);
             } else {
+                // if (strpos($a, 'are') !== false) {
+                if(strpos($error->getMessage(), 'SSL') !== false){
+
+                    return Redirect::to('/location-create')
+                    ->withInput()
+                    ->withErrors('Unable to store the location. Non-standard OpenSSL issue.');
+                }
+
                 return Redirect::to('/location-create')
                     ->withInput()
                     ->withErrors('Unable to store the location. Probably due to invalid input.');

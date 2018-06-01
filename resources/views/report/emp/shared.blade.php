@@ -51,7 +51,7 @@
 
                         {{--GeoLocation uses check in geoLocation--}}
                         @if(isset($show))
-                            @if($item->distance_check_in != null)
+                            @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                                 @if($item->distance_check_in <= 0.2)
                                     <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
                                 @elseif($item->distance_check_in <= 0.5)
@@ -63,7 +63,7 @@
                                 <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                             @endif
                         @else
-                            @if($item->distance_check_in != null)
+                            @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                                 @if($item->distance_check_in <= 0.2)
                                     <td>
                                         <img src="{{base_path("public/icons/if_checkmark-g_86134.png")}}"/>
@@ -137,7 +137,7 @@
 
                 {{--GeoLocation uses check in geoLocation--}}
                 @if(isset($show))
-                    @if($item->distance_check_in != null)
+                   @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                         @if($item->distance_check_in <= 0.2)
                             <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
                         @elseif($item->distance_check_in <= 0.5)
@@ -149,7 +149,7 @@
                         <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
                 @else
-                    @if($item->distance_check_in != null)
+                   @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                         @if($item->distance_check_in <= 0.2)
                             <td>
                                 <img src="{{base_path("public/icons/if_checkmark-g_86134.png")}}"/>
@@ -206,7 +206,7 @@
 
                 {{--GeoLocation uses check in geoLocation--}}
                 @if(isset($show))
-                    @if($item->distance_check_in != null)
+                   @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                         @if($item->distance_check_in <= 0.2)
                             <td><i class="fa fa-check green-tick" aria-hidden="true"></i></td>
                         @elseif($item->distance_check_in <= 0.5)
@@ -218,7 +218,7 @@
                         <td><i class="fa fa-minus" aria-hidden="true"></i></td>
                     @endif
                 @else
-                    @if($item->distance_check_in != null)
+                   @if(($item->distance_check_in !== "0")&&($item->distance_check_in !== ""))
                         @if($item->distance_check_in <= 0.2)
                             <td>
                                 <img src="{{base_path("public/icons/if_checkmark-g_86134.png")}}"/>
