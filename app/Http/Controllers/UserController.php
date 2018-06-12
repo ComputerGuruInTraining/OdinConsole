@@ -9,7 +9,7 @@ use Model;
 use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
-use Hash;
+use Illuminate\Support\Facades\Hash;
 use Config;
 use DateTime;
 use Carbon\Carbon;
