@@ -9,7 +9,7 @@ use Model;
 use GuzzleHttp;
 use Psy\Exception\ErrorException;
 use Redirect;
-use Illuminate\Support\Facades\Hash;
+use Hash;
 use Config;
 use DateTime;
 use Carbon\Carbon;
@@ -554,6 +554,8 @@ class UserController extends Controller
             //send encrypted password
             $pw = $request->input('password');
             $pwEnc = Hash::make($pw);
+
+//            dd($pwEnc);
 
             //initialize in case no value input by user
             $owner = null;
