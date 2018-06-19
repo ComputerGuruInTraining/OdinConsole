@@ -422,7 +422,7 @@ class UserController extends Controller
                     return view('confirm')->with('theAction', $msg);
                 }
                 else {
-                    return Redirect::to('company/settings')->withErrors('Error updating user. Please ensure email is valid.');
+                    return Redirect::to('/settings')->withErrors('Error updating user. Please ensure email is valid.');
                 }
             }
             //user does not have a valid token
