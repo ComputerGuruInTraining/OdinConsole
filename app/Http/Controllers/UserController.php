@@ -422,7 +422,7 @@ class UserController extends Controller
                     return view('confirm')->with('theAction', $msg);
                 }
                 else {
-                    return Redirect::to('company/settings')->withErrors('Error updating user. Please ensure email is valid.');
+                    return Redirect::to('/settings')->withErrors('Error updating user. Please ensure email is valid.');
                 }
             }
             //user does not have a valid token
@@ -550,7 +550,12 @@ class UserController extends Controller
             $first = $request->input('first');
             $last = $request->input('last');
             $emailUser = $request->input('emailUser');
+
+            //send encrypted password
             $pw = $request->input('password');
+            $pwEnc = Hash::make($pw);
+
+//            dd($pwEnc);
 
             //initialize in case no value input by user
             $owner = null;
@@ -577,7 +582,7 @@ class UserController extends Controller
                     ),
                     'json' => array('company' => $company, 'owner' => $owner,
                         'first_name' => $first, 'last_name' => $last, 'email_user' => $emailUser,
-                        'pw' => $pw, 'stripeToken' => $stripeToken
+                        'pw' => $pwEnc, 'stripeToken' => $stripeToken
                     )
                 )
             );
