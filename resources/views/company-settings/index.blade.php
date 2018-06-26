@@ -466,9 +466,15 @@
 
                         {{--Edit Primary Contact--}}
                         @if(session('role') == "Manager")
-                            <th>Primary Contact <button type="button" id="editPrimaryBtn" onclick="enableEditPrimary()"><i class="fa fa-edit"></i></button></th>
+                            <th>Primary Contact
+                                {{--fixme: atm do not include the change primary contact feature until all errors on active campaign and stripe that arise due to a change are corrected.--}}
+                                <button type="button" id="editPrimaryBtn" style="display:none;" onclick="enableEditPrimary()"><i class="fa fa-edit"></i></button>
+                            </th>
                         @else
-                            <th>Primary Contact <button type="button" id="editPrimaryBtn" onclick="enableEditPrimary()" disabled><i class="fa fa-edit"></i></button></th>
+                            <th>Primary Contact
+                                {{--fixme atm do not include the change primary contact feature until all errors on active campaign and stripe that arise due to a change are corrected.--}}
+                                <button type="button" id="editPrimaryBtn" style="display:none;" onclick="enableEditPrimary()" disabled><i class="fa fa-edit"></i></button>
+                            </th>
                         @endif
 
                         <th>Manage</th>
