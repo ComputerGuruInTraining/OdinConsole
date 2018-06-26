@@ -299,13 +299,17 @@ class UserController extends Controller
 
                     if(isset($current)) {
 
+//                        $err = 'The primary contact cannot be edited at this stage.
+//                            If you must edit the primary contact email, we recommend: <br><br>
+//                            1. Creating a new user with the new email address, and make the new user the primary contact.<br>
+//                            2. Changing the primary contact to a different user and then the old primary contact will be editable.<br><br>
+//                            Kindly be aware that both of these processes will involve transferring the subscription to
+//                            the new primary contact and providing credit card details.
+//                            As such the change of primary contact must be completed by whomever will be the new primary contact. <br><br>
+//                            We sincerely apologise for any inconvenience.';
+
                         $err = 'The primary contact cannot be edited at this stage.
-                            If you must edit the primary contact email, we recommend: <br><br>
-                            1. Creating a new user with the new email address, and make the new user the primary contact.<br>
-                            2. Changing the primary contact to a different user and then the old primary contact will be editable.<br><br>
-                            Kindly be aware that both of these processes will involve transferring the subscription to 
-                            the new primary contact and providing credit card details. 
-                            As such the change of primary contact must be completed by whomever will be the new primary contact. <br><br>
+                           <br><br>
                             We sincerely apologise for any inconvenience.';
 
                         $errors = collect($err);
@@ -841,7 +845,7 @@ class UserController extends Controller
                         $confirm = 'SUCCESS! Plan upgraded. You have not been billed for this upgrade.';
 
                     }else {
-                        if (isset($trialEndsAt)) {
+                        if (isset($subscriptionTrial)) {
                             $confirm = 'SUCCESS! Plan upgraded. You have not been billed for this upgrade.';
 
                         } else {
