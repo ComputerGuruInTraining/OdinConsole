@@ -62,7 +62,10 @@
                 @if(isset($newNumUsers))
                     <p>New Subscription&nbsp&nbsp&nbsp&nbsp&nbsp- Billing Cycle: {{ucfirst($chosenTerm)}}; Number of Users: {{$newNumUsers}}</p>
                 @endif
-                <p class="padding-bottom-10">Kindly confirm you would like to change your subscription?</p>
+                <p class="padding-bottom-10">Kindly confirm you would like to change your subscription?
+                    <br/><br/>If your trial period has ended and you are changing the billing cycle,
+                    you will be billed immediately.
+                    Otherwise you will not be billed for the change at this stage. </p>
                 <button type="button" class="btn btn-border" onclick="submitSwap()">Confirm</button>
                 <button type="button" class="btn btn-border" onclick="cancelSwap()">Cancel</button>
             </div>

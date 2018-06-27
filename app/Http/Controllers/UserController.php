@@ -842,7 +842,7 @@ class UserController extends Controller
 
                     if($formPath == "swap") {
 
-                        $confirm = 'SUCCESS! Plan upgraded. You have not been billed for this upgrade.';
+                        $confirm = 'SUCCESS! Plan upgraded.';
 
                     }else {
                         if (isset($subscriptionTrial)) {
